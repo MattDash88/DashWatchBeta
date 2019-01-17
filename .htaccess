@@ -1,5 +1,0 @@
-<Files ".env">
-     order allow,deny
-     Deny from All
-     allow from 127.0.0.1
-</Files>
