@@ -6,6 +6,7 @@ Dash Watch Beta Website by MattDash
             <li>Improved outlining of images on Navbar and Month page</li>
             <li>Added API call for internal Dash Watch propoct</li>
             <li>A couple of other fixes and improvements.</li>
+            <br>
             <div className="aboutHeader">Changelog v0.9</div>
             Proposal List Page
             <li>Added filter for opted out and reporting concluded proposals.</li>
