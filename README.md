@@ -4,7 +4,7 @@ Dash Watch Beta Website by MattDash
             <li>Added header to Proposal List</li>
             <li>Fixed some bugs in the colour coding of some KPI metrics</li>
             <li>Improved outlining of images on Navbar and Month page</li>
-            <li>Added API call for internal Dash Watch propoct</li>
+            <li>Added API call for internal Dash Watch project</li>
             <li>A couple of other fixes and improvements.</li>
             <br>
             <div className="aboutHeader">Changelog v0.9</div>
