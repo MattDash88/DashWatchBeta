@@ -1,0 +1,228 @@
+/*Styling of the title row of the card*/
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+@import url('https://fonts.googleapis.com/css?family=Titillium+Web');
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+/* Month page wrapper */
+.monthPageWrapper {
+    display: block;
+    background-color: white;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Styling of button of inactive tab */
+.monthTab {
+    display: inline-flex;    
+    line-height: 1 rem;
+    vertical-align: middle;
+    color: white;
+    background-color: #008de4;
+    width: 20%;
+    height: 40px;
+    margin-right: 6px;
+    cursor: pointer;
+    transition: 0.15s;
+    box-shadow: inset 0 -2px 4px -3px black;
+}
+
+/* Styling of button of active tab */
+.monthTab[value='Active'] {
+    display: inline-flex;    
+    line-height: 1 rem;
+    vertical-align: middle;
+    color: black;
+    background-color: white;
+    width: 20%;
+    height: 40px;
+    margin-right: 6px;
+    cursor: pointer;
+    box-shadow: none;
+    transition: 0.15s;
+}
+
+/* Styling of Text in tab button */
+.monthTabText {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+    margin: auto;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+/*
+Style elements for the top of the month list table
+*/
+
+/* Wrapper of the month list index row */
+.monthIndexWrapper {
+    display: flex;
+    height: 3rem;
+    border-bottom: 0.1rem solid black;
+    background: white;
+    min-width: 600px;
+    max-width: 1000px;
+}
+
+/* Div for the cells of the index */
+.monthIndexItem {
+    display: flex;
+    flex-direction: column;
+    -webkit-box-pack: center;
+    line-height: 1rem;
+    justify-content: center;
+    margin-right: auto;
+    min-width: 0px;
+    width: 75%;
+}
+
+/* Text styling of the index */
+.monthColumnTitle {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    overflow: hidden;
+    margin: 2px;
+}
+
+/* Styling of the title of the month list page*/
+.monthHeader {
+    color: #003347;
+    padding: 1rem;
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    text-align: center;
+    font-size: 2rem;
+}
+
+/* Wrapper for the month list rows  */
+.monthProposalWrapper {
+    display: flex;
+    height: 4rem;
+    border-bottom: 0.1rem solid rgb(216, 220, 227);
+    background: white;
+    min-width: 600px;
+    max-width: 1000px;
+}
+
+/* Wrapper of the first cell of the month list table, 
+the one containing the proposal name and proposal owner*/
+.monthItemTitle {
+    display: flex;
+    flex-direction: column;
+    -webkit-box-pack: center;
+    line-height: 1rem;
+    justify-content: center;
+    margin-right: auto;
+    min-width: 0px;
+    width: 75%;
+    cursor: pointer;
+}
+
+/* Div of the other cells of the month list table*/
+.monthItem {
+    display: flex;
+    flex-direction: column;
+    line-height: 1rem;
+    justify-content: center;
+    margin-right: auto;
+    min-width: 0px;
+    width: 75%;
+}
+
+/* Text styling proposal name*/
+.monthProposalName {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    line-height: 1rem;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    margin: 2px;
+}
+
+/* Text styling proposal owner*/
+.monthOwnerName { 
+    font-family: 'Titillium Web', sans-serif;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    margin-right: 2rem;
+    margin: 2px;
+}
+
+/* Text styling of proposal type*/
+.monthProposalType { 
+    font-family: 'Titillium Web', sans-serif;
+    font-size: 1rem;
+    margin-right: 1rem;
+    margin: 10px;
+    cursor: pointer;
+}
+
+/* Colour styling of the proposal type*/ 
+.monthProposalType[value="Development"] { 
+    color: #f1c232;
+}
+
+.monthProposalType[value="Education"] { 
+    color: #93c47d;
+}
+
+.monthProposalType[value="Governance"] { 
+    color: #7e550c;
+}
+
+.monthProposalType[value="Integration"] { 
+    color: #3d85c6;
+}
+
+.monthProposalType[value="Marketing"] { 
+    color: rgb(234, 64, 181);
+}
+
+.monthProposalType[value="Other"] { 
+    color: black;
+}
+
+/* Text styling of the report linkvoting status*/
+.monthReportLink {
+    font-family: 'Roboto', sans-serif;
+    color: #008de4;
+    font-weight: 400;
+    font-size: 16px;
+    vertical-align: middle;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.monthItem img {
+    vertical-align: middle;
+}
+
+/* Text styling of voting status link*/
+.monthVoteLink {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    text-transform: uppercase;
+    text-align: left;
+    text-decoration: none;
+}
+
+/* Colour styling of voting status link*/
+.monthVoteLink[value="Up for Vote"] {
+    color: #008de4;
+    cursor: pointer;
+}
+
+.monthVoteLink[value="New Proposal"] {
+    color: #008de4;
+    cursor: pointer;
+}
+
+.monthVoteLink[value="Funded"] {
+    color: black;
+}

@@ -1,0 +1,286 @@
+/*
+Styles used in ModalFrame.js
+*/
+/* Modal screen makes the area around the modal darker*/
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width:100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+}
+  
+/* The modal itself */
+.modal-main {
+    position:fixed;
+    background: white;
+    width: 80%;
+    max-width: 800px;
+    height: auto;
+    top:50%;
+    left:50%;
+    border-radius:5px 5px 5px 5px;
+    transform: translate(-50%,-50%);
+    align-items: left;
+}
+
+/* Display modal */
+.display-block {
+    display: block;
+}
+
+/* Do not display modal */
+.display-none {
+    display: none;
+}
+
+/*
+Styling used in ModalContent.js
+*/
+
+/* Outer border of the modal */
+.modalWrapper {
+    min-width: 500px;
+    max-width: 800px;
+    min-height: 500px;
+    border: 2px solid black;
+    border-radius:5px 5px 5px 5px;
+    background: #ffffff;
+}
+
+/* Blue title area of the modal proposal card */
+.modalCardTitle { 
+    font-family: 'Montserrat', sans-serif;
+    color: white;
+    background-color: #012060;
+    min-width: 450px;
+    max-width: 100%;
+    height: 45px;
+    padding: 5px;
+}
+
+/* Span to allow Close button placement in Title area */
+.modalHeader {
+    display: inline-block;
+    min-width: 450px;
+    width: 100%;
+}
+
+/* Styling of the proposal name, special in modal because of width requirements */
+.modalProposalName { 
+    display: inline-block;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 20px;
+    width: 80%;
+    min-width: 350px;
+    color: white;
+}
+
+/* Styling of the proposal owner name also used in modal */
+.modalOwnerName { 
+    font-family: 'Titillium Web', sans-serif;
+    font-size: 16px;
+    font-weight: normal;
+    width: 80%;
+    min-width: 350px;
+    color: white;
+}
+
+/* Styling for modal close button */ 
+.modalCloseButton {
+    display: inline-block;
+    position: fixed;
+    color: white;
+    top:0;
+    right:0;
+    font-family: 'Roboto', sans-serif;
+    padding-top: 5px;
+    padding-right: 10px;
+    font-size: 20px;
+    font-weight: normal;
+    height: 20px;
+    min-width: 50px;
+    width: 15%;
+    text-transform: uppercase;
+    text-align: right;
+    cursor: pointer;
+}
+
+/* Area surrounding the tabs, also used for report sub tabs */
+.modalTabWrapper {
+    overflow: hidden;
+    min-width: 600px;
+    max-width: 800px;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+/* Styling of the modal tab buttons */
+.modalTabButton {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    min-width: 150px;
+    height: 50px;
+    width: 24%;
+    float: left;
+    border: 1px solid rgb(190, 189, 189);
+    outline: none;
+    padding: 5px 5px;
+    border-radius:3px 3px 0px 0px;
+    transition: 0.15s;
+}
+
+/* Styling when the tab is active */
+.modalTabButton[value="active"] {
+    color: white;
+    background-color:  #111921;
+}
+
+/* Styling when the tab is inactive */
+.modalTabButton[value="inactive"] {
+    color: black;
+    background-color:  #ccc;
+}
+
+/* Change background color of buttons on hover */
+.modalTabButton[value="inactive"]:hover {
+    background-color: #ddd;
+}
+
+/*
+Styling used in the modal tab files (ModalTabMain, ModalTabPerformance, ModalTabFunding and ModalTabReports
+*/
+
+/* Styling to make tab content visible or not */
+.modalTabContent[value="active"] {
+    display: block;
+}
+
+.modalTabContent[value="inactive"] {
+    display: none;
+}
+
+/* Styling of the headers on modal tabs */
+.modalHeader { 
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: left; 
+    color: black;
+    margin-left: 10px;
+    margin-top: 5px;
+}
+
+/* Styling of smaller subheaders on modal tabs */
+.modalSubHeader {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: left; 
+    color: black;
+    margin-top: 5px;
+    margin-left: 10px;
+}
+
+/* Div containing both the Property Title and Property Item */
+.modalPropertyDiv {
+    display: inline-block;
+    text-align: left; 
+    align-items: top;
+    width: 21%;
+    height: 60px;
+    min-width: 200px;
+    margin-left: 10px;
+    margin-top: 5px;
+}
+
+/* Element name styling, Status, Budget Status, etc. */
+.modalPropertyTitle {  
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 'bold';
+    text-align: left; 
+    color: black;
+    height: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Div containg the value, Completed, On Schedule, etc. Text itself is styled in status_styling.css */
+.modalPropertyItem {
+    font-family: 'Titillium Web', sans-serif;
+    font-weight: bold;
+    font-size: 14px;
+    height: 40px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+}
+
+/* Styling of text on tabs in modal*/
+.modalProposalText {
+    font-family: 'Titillium Web', sans-serif;
+    font-size: 14px;
+    color: black;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-left: 10px;
+    padding-top: 0.3rem;
+    padding-bottom: 5px;
+    padding-right: 3rem;
+
+}
+
+/* Block containing the links on tabs of modal (permalink and DC link) */
+.modalLinkDiv {
+    display: block;
+    margin-top: 10px;
+    margin-left: 10px;
+    width: 95%;
+}
+
+/* Title of report on modal Report Tab*/
+.modalLinkTitle {
+    display: inline-block;
+    font-family: 'Montserrat', sans-serif;
+    text-align: left;
+    color: black;
+    height: 20px;
+    width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Sub div containing the links */
+.modalLinkItem {
+    display: inline-block;
+    text-align: left;
+    height: 25px;
+}
+
+/* Styling of links on Funding and Performance modal Tabs */
+.modalTabLink {
+    display: block;
+    text-align: center;
+    padding-top: 1rem;
+    height: 1rem;
+}
+
+/* Styling of report link on modal Report Tab*/
+.modalReportLink {
+    display: inline-block;
+    font-family: 'Roboto', sans-serif;
+    text-transform: uppercase;
+    text-align: left;
+    color: #008de4;
+    height: 20px;
+    vertical-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

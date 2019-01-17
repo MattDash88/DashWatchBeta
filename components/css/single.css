@@ -1,0 +1,504 @@
+/*
+Styles used in Single.js
+*/
+
+/* Styling for the wrapper of the single page */
+.singlePageWrapper {
+    background: white;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 10px;
+    padding-bottom: 20px;
+    min-width: 600px;
+    max-width: 1000px;
+    height: 100%;    
+}
+
+/* Div containing back button */
+.backButtonDiv {
+    float: left;
+    padding-top: 0px;
+    padding-bottom: 10px;
+    height: 20px;
+}
+
+/* Styling of the back button itself */
+.backButton {
+    font-family: 'Roboto', sans-serif;
+    color: #008de4;
+    font-weight: 400;
+    text-transform: uppercase;
+    text-decoration: none;
+    text-align: left;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+/* Creates chevon of back button */
+i {
+    border: solid #008de4;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    height: 9px;
+    width: 9px;
+    transform: rotate(135deg);
+    -webkit-transform: rotate(135deg);    
+  }
+
+  /* Wrapper of the single card, creates border around it */
+.singleCardWrapper {
+    display: inline-block;
+    min-height: 500px;
+    width: 100%;
+    border: 1px solid #ccc;
+}
+
+/* Blue title area of the single proposal card */
+.singleCardTitle { 
+    font-family: 'Montserrat', sans-serif;
+    color: white;
+    background-color: #012060;
+    min-width: 500px;
+    max-width: 100%;
+    height: 45px;
+    padding: 5px;
+}
+
+/* Area surrounding the tabs, also used for report sub tabs */
+.tabWrapper {
+    overflow: hidden;
+    min-width: 600px;
+    max-width: 1000px;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+/* Styling of the top tab buttons */
+.tabButton {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 16px;
+    min-width: 200px;
+    height: 50px;
+    width: 24%;
+    float: left;
+    border: 1px solid rgb(190, 189, 189);
+    outline: none;
+    padding: 5px 5px;
+    border-radius:3px 3px 0px 0px;
+    transition: 0.15s;
+}
+
+/* Styling when the tab is active */
+.tabButton[value="active"] {
+   color: white;
+   background-color:  #111921;
+}
+
+/* Styling when the tab is inactive */
+.tabButton[value="inactive"] {
+    color: black;
+    background-color:  #ccc;
+    cursor: pointer;
+}
+
+/* Change background color of tab buttons on hover */
+.tabButton[value="inactive"]:hover {
+    background-color: #ddd;
+}
+
+.subTabWrapper {
+    overflow: hidden;
+    min-width: 600px;
+    max-width: 1000px;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+    margin-top: 10px
+}
+
+/* Styling of text on tabs in Single proposal page*/
+.subTabWrapperText {
+    font-family: 'Titillium Web', sans-serif;
+    font-size: 16px;
+    color: black;
+    margin-left: 10px;
+}
+
+/*
+Styling in the tab files (TabMain, TabPerformance, TabFunding and TabReports
+*/
+
+/* Styling to make tab content visible or not */
+.tabContent[value="active"] {
+    display: block;
+}
+
+.tabContent[value="inactive"] {
+    display: none;
+}
+
+/* Styling of the headers on tabs */
+.tabHeader {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: left; 
+    color: black;
+    margin-top: 5px;
+    margin-left: 10px;
+}
+
+/* Styling of smaller subheaders on tabs */
+.tabSubHeader {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: left; 
+    color: black;
+    margin-left: 10px;
+}
+
+/* Div containing both the Property Title and Property Item */
+.tabPropertyDiv {
+    display: inline-block;
+    text-align: left; 
+    align-items: top;
+    width: 21%;
+    height: 60px;
+    min-width: 200px;
+    padding-top: 0px;
+    margin-left: 10px;
+    margin-top: 5px;
+}
+
+/* Element name styling, Status, Budget Status, etc. */
+.tabPropertyTitle {  
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 'bold';
+    text-align: left; 
+    font-size: 14px;
+    color: black;
+    height: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Div containg the value, Completed, On Schedule, etc. Text itself is styled in status_styling.css */
+.tabPropertyItem {
+    height: 50px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Styling of text on tabs in Single proposal page*/
+.tabProposalText {
+    font-family: 'Titillium Web', sans-serif;
+    font-size: 14px;
+    color: black;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-left: 10px;
+    padding-top: 0.3rem;
+    padding-bottom: 10px;
+    padding-right: 3rem;
+}
+
+/* Block containing the links on tabs of Single proposal page (permalink and DC link) */
+.tabLinkDiv {
+    display: block;
+    margin-top: 10px;
+    margin-left: 10px;
+    width: 95%;
+}
+
+/* Sub div containing the links*/
+.tabLinkItem {
+    display: inline-block;
+    text-align: left;
+    height: 25px;
+}
+
+/* Title of report on Report Tab*/
+.tabLinkTitle {
+    display: inline-block;
+    font-family: 'Montserrat', sans-serif;
+    text-align: left;
+    color: black;
+    vertical-align: center;
+    height: 20px;
+    width: 15%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Styling of report link on Report Tab*/
+.tabReportLink {
+    display: inline-block;
+    font-family: 'Roboto', sans-serif;
+    color: #008de4;
+    text-align: left;
+    height: 20px;
+    vertical-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Break line separating top section from the bottom section (with the report tabs) of the tab content */
+.tabBreak {
+    margin-bottom: 1rem;
+}
+
+/*
+Styling of elements in TabPerformance and TabFunding
+*/
+
+/* Styling for the Funding and Performance tab sub tabs */
+.subTab {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    min-width: 100px;
+    height: 35px;
+    width: 15%;
+    float: left;
+    border: 1px solid rgb(190, 189, 189);
+    outline: none;
+    padding: 5px 5px;
+    cursor: pointer;
+    border-radius:3px 3px 0px 0px;
+    transition: 0.15s;
+}
+
+/* Styling when the tab is active */
+.subTab[value="Active"] {
+    color: white;
+    background-color:  #111921;
+}
+
+/* Styling when the tab is active */
+.subTab[value="Inactive"] {
+    color: black;
+    background-color:  #ccc;
+}
+
+/* Change background color of tab buttons on hover */
+.subTab[value="inactive"]:hover {
+    background-color: #ddd;
+}
+
+/* Slightly smaller headers for the subtab */
+.subTabHeader {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: left; 
+    color: black;
+    margin-top: 5px;
+    margin-left: 1rem;
+}
+
+/* Styling of note that accompanies funding or performance information */
+.subTabNoteText {
+    font-family: 'Titillium Web', sans-serif;
+    font-size: 14px;
+    font-style: italic;
+    color: #3f51b5;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-left: 1rem;
+    padding-top: 0.3rem;
+    padding-bottom: 10px;
+    padding-right: 3rem;
+
+}
+
+/* Show content of the active sub tab */
+.reportTab[value="Active"] {
+    display: visible;    
+}
+
+.reportTab[value="Inactive"] {
+    display: none;    
+}
+
+/* The Funding report tab has two columns */
+.reportTabFundingColumn {
+    display: inline-block;
+    vertical-align: top;
+    min-width: 300px;
+    margin-right: 4rem;
+    margin-bottom: 0.5rem;
+}
+
+/*
+Styling specifically for the funding report Tabs
+*/
+
+/* Div containing both the Property Title and Property Item */
+.reportTabFundingPropertyDiv {
+    display: block;
+    text-align: left; 
+    height: 60px;
+    min-width: 200px;
+    margin-left: 1rem;
+    margin-top: 5px;
+}
+
+/* Element name styling, Dash Received, Dash Converted, etc. */
+.reportTabFundingPropertyTitle {  
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 'bold';
+    font-size: 14px;
+    color: black;
+    height: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Element value styling */
+.reportTabFundingPropertyItem {
+    font-family: 'Titillium Web', sans-serif;
+    font-weight: bold;
+    font-size: 14px;
+    color: black;
+    height: 40px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Bottom result of report funding sub tab */
+.reportTabFundingAvailable {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: right;
+    border-top: 1px solid black;
+    color: black;
+    margin-top: 5px;
+    margin-left: 1rem;
+}
+
+/*
+Styling specifically for the performance report Tabs
+*/
+
+/* Header of KPI subtab per section */
+.subTabKpiHeader {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: left; 
+    color: #003347;
+    margin-top: 5px;
+    margin-left: 1rem;
+}
+
+/* Styling for performance elements where the value is below the metric name, for example "Consumer meetups per month" */
+.tabReportPerformancePropertyDiv1 {
+    display: inline-block;
+    text-align: left; 
+    height: 60px;
+    max-width: 200px;
+    margin-left: 1rem;
+    margin-top: 5px;
+}
+
+/* Title element for tabReportPerformancePropertyDiv1 */
+.tabPerformancePropertyTitle1 {  
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    color: black;
+    height: 2rem;
+}
+
+/* Styling for performance elements where the value is next to the metric name, for example "New Wallets Created This Month" */
+.tabReportPerformancePropertyDiv2 {
+    display: block;
+    text-align: left; 
+    height: 80px;
+    min-width: 400px;
+    margin-left: 1rem;
+    margin-top: 5px;
+}
+
+/* Styling for final Merchant KPI performance element, prevent spacing with other KPIs */
+.tabReportPerformancePropertyDiv3 {
+    display: block;
+    text-align: left; 
+    height: 40px;
+    min-width: 400px;
+    margin-left: 1rem;
+    margin-top: 5px;
+}
+
+/* Title element for tabReportPerformancePropertyDiv2 sub group*/
+.tabPerformanceGroupTitle {  
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    color: black;
+    font-weight: bold;
+    height: 1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Sub Div containing both tabPerformancePropertyTitle2 and tabPerformancePropertyItem */
+.tabPerformancePropertySubDiv2 {
+    display: block;
+}
+
+/* Inline title of Performance property */
+.tabPerformancePropertyTitle2 {
+    display: inline-block;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    color: black;
+    min-width: 300px;
+}
+
+/* Styling for the KPI value */
+.tabPerformancePropertyItem {
+    font-family: 'Titillium Web', sans-serif;
+    font-size: 14px;
+    color: #2196f3;
+    font-weight: bold;
+    height: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Wrapper for Social Media KPIs, may be used in the future to put two next to each other */
+.tabSocialPerformanceWrapper {
+    display: inline-block;
+    text-align: left; 
+    width: 400px;
+    margin-bottom: 15px;
+}
+
+/* Styling for Social Media performance elements, they are generaly shorter. Currently also used for Public Relations KPIs */
+.tabSocialPerformanceDiv {
+    display: block;
+    text-align: left; 
+    padding: none;
+    height: 40px;
+    margin-left: 1rem;
+    margin-top: 5px;
+}
+
+/* Title element for Social Media Performance property, currently also used for Public Relations KPIs*/
+.tabSocialPropertyTitle {  
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    color: black;
+    height: 16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

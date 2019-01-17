@@ -1,0 +1,404 @@
+/* Loading used fonts */
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+@import url('https://fonts.googleapis.com/css?family=Titillium+Web');
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+body {
+    background-color: #e4e3e3c2;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* 
+Styles used in index.js
+*/
+
+/* General page wrapper */
+.pagewrapper {
+    align-items: middle;
+    min-width: 600px;
+    width: 100%;
+    max-width: 1000px;
+    padding-top: 65px; /* Clearing from Navbar */
+    margin: 0 auto;
+}
+
+/* Styling for the whole navBar */
+.menu{
+    position: fixed;
+    top: 0; /* Position the navbar at the top of the page */
+    min-width: 600px;
+    width: 100%; /* Full width */
+    list-style-type: none;
+    overflow: hidden;
+    background-color: #012060;
+}
+
+/* Sub div of navbar*/
+.menuContent {
+    align-items: middle;
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* Button links on navbar*/
+.menuItem {
+    display: inline-flex;
+    vertical-align: middle;
+    color: white;
+}
+
+/* Link item styling of navbar buttons*/
+.menuItem a {
+    display: inline-flex;
+    font-family: 'Montserrat', sans-serif;
+    text-align: center; 
+    margin: 14px 16px;
+    cursor: default;   
+}
+
+/* Show Red line under active page */
+.menuItem a[value="Active"] {
+    border-bottom: 2px solid #e90056;
+}
+
+/* Styling of the inactive menu item */
+.menuItem a[value="Inactive"] {
+    cursor: pointer;
+}
+
+.menuItem a[value="Inactive"]:hover {
+    background-color: #ddd;
+    color: rgb(28, 31, 34);
+}
+
+/* Styling for Dash Watch Logo on Navbar */
+.menuItem img {
+    display: inline-flex;
+    vertical-align: middle;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-bottom: 2px;
+    color: white;
+}
+
+/* Styling for search form element */
+.searchForm{
+    display: inline-flex;    
+    padding: 10px;
+    color: #cfe3f4;
+    
+}
+
+/* Styling for search form element */
+.searchField{   
+    display: inline-flex;
+    font-family: 'Montserrat', sans-serif;
+    text-align: left;
+    color: black;
+    font-size: 14px;
+    min-width: 250px;
+    border: 1px solid black;
+    line-height: 1.42857143;
+    box-shadow: 1px 1px 0 0 rgba(255,255,255,.41), inset 1px 1px 3px 0 rgba(0,0,0,.10);
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
+/* Styling for search input field*/
+input[type=submit] {    
+    color: white;   
+    border: 1px solid black;
+    outline: none;
+    cursor: pointer;
+    border-radius:2px 2px 0px 0px;
+    width: 80px;
+    height: 22px;
+}
+
+
+/* Checkbox styling */
+/* The container */
+.container {
+    display: block;
+    position: relative;
+    padding-left: 30px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  /* Normal text styling in Proposal List Header */
+  .container p {
+    font-family: 'Titillium Web', sans-serif;
+    font-size: 14px;
+    color: black;
+}
+  
+  /* Hide the browser's default checkbox */
+  .container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 16px;
+    width: 16px;
+    border: 1px solid black;
+  }
+
+   /* Create a custom checkbox */
+   .checkmark {
+    position: absolute;
+    top: 2px;
+    left: 0;
+    height: 16px;
+    width: 16px;
+    background-color: white;  
+    border: 1px solid black;
+  }
+  
+  /* On mouse-over, add a grey background color */
+  .container:hover input ~ .checkmark {
+    background-color: #ccc;
+  }
+  
+  /* When the checkbox is checked, add a blue background */
+  .container input:checked ~ .checkmark {
+    background-color: #2196F3;
+  }
+  
+  /* Create the checkmark/indicator (hidden when not checked) */
+  .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+  
+  /* Show the checkmark when checked */
+  .container input:checked ~ .checkmark:after {
+    display: block;
+  }
+  
+  /* Style the checkmark/indicator */
+  .container .checkmark:after {
+    left: 4px;
+    top: 0px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+  
+/* Proposal View Header styling */
+.listHeader {
+    color: #003347;
+    font-family: 'Montserrat', sans-serif;
+    padding: 1rem;
+    margin: 0;
+    text-align: left;
+    width: 100%;
+    font-size: 2rem;
+}
+
+/* Proposal list div containing header */
+.headerLeftDiv {
+    display: inline-block;
+    padding-left: 1rem;
+    align-self: left;
+    vertical-align: top;
+    width: 60%;
+}
+
+/* Proposal list div containing result counter and filter */
+.headerRightDiv {
+    display: inline-block;
+    align-self: right;
+    vertical-align: top;
+    width: 35%;
+}
+
+/* Styling of normal text in header */
+.headerText {
+    font-family: 'Titillium Web', sans-serif;
+    font-size: 14px;
+    color: black;
+}
+
+/* Scroll to top button */
+.scroll {
+    opacity: 0.5;
+    background-color: white;
+    width: 40px;
+    height: 40px;
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    border-radius: 5px;
+    border: none;
+}
+    
+.scroll:hover {
+      opacity: 1;
+}
+
+/* Up sign on scroll button*/
+.glyph {
+    border: solid #012060;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    height: 12px;
+    width: 12px;
+    transform: rotate(225deg);
+    -webkit-transform: rotate(225deg);    
+}
+
+/* 
+Style elements used in Post.js 
+*/
+
+/* Outer div of the cards, handles margin */
+.cardDiv {
+    border: 2px solid black;
+    border-radius:5px 5px 5px 5px;
+    box-shadow: 2px 2px 1px grey;
+    min-height: 210px;
+    background: #ffffff;
+    min-width: 600px;
+    margin-bottom: 30px;
+    max-width: 900px;
+}
+
+/* Inner div wrapper of the cards, handles inside */
+.cardWrapper {
+    /* border-bottom: 2px solid lightgray; */
+    min-width: 600px;
+}
+
+/* Blue title header of the card*/
+.cardTitle { 
+    font-family: 'Montserrat', sans-serif;
+    color: white;
+    background-color: #012060;
+    min-width: 500px;
+    max-width: 100%;
+    height: 45px;
+    padding: 5px;
+    cursor: pointer;
+}
+
+/* Div of area that is clickable to activate the Modal */
+.cardPropertyWrapper {
+    cursor: pointer;
+}
+
+/* Styling of the proposal name, also used in Single.js */
+.proposalName { 
+    font-family: 'Montserrat', sans-serif;
+    font-size: 20px;
+    color: white;
+}
+
+/* Styling of the proposal owner name also used in Single.js */
+.ownerName { 
+    font-family: 'Titillium Web', sans-serif;
+    font-size: 16px;
+    font-weight: normal;
+    color: white;
+}
+
+/* Div containing both the Property Title and Property Item */
+.cardPropertyDiv {
+    display: inline-block;
+    text-align: left; 
+    align-items: top;
+    width: 21%;
+    height: 60px;
+    min-width: 200px;
+    margin-left: 10px;
+    margin-top: 5px;
+}
+
+/* Element name styling, Status, Budget Status, etc. */
+.cardPropertyTitle {  
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 'bold';
+    text-align: left; 
+    font-size: 14px;
+    color: black;
+    height: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Element value styling, Completed, On Schedule, etc. */
+.cardPropertyItem {
+    height: 40px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Div wrapping the report element of the card*/
+.reportDiv {
+    width: 90%;
+    padding: 10px;
+}
+
+.reportTitle {
+    display: inline-block;
+    font-family: 'Montserrat', sans-serif;
+    text-align: left;
+    color: black;
+    height: 20px;
+    width: 25%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Styling of the report link*/ 
+.reportItem {
+    display: inline-block;
+    font-family: 'Roboto', sans-serif;
+    width: 70%;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Div around the links on the bottom of the card*/
+.linkDiv {
+    display: inline-block;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: 99%;
+}
+
+/* Styling of the text of the bottom links*/
+.linkItem {
+    display: inline-block;
+    font-family: 'Roboto', sans-serif;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    color: #008de4;
+    text-align: center;
+    width: 33%;
+    height: 20px;
+}
+
+/* Styling for links in general */
+.link {
+    font-family: 'Roboto', sans-serif;
+    color: #008de4;
+    font-weight: 400;
+    height: 20px;
+    text-align: center;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+}

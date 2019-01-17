@@ -1,0 +1,118 @@
+/* Loading used fonts */
+@import url('https://fonts.googleapis.com/css?family=Titillium+Web');
+
+/* Colour styling for Card and main Tabs elements */
+.statusPropertyValue {
+    font-family: 'Titillium Web', sans-serif;
+    font-weight: bold;
+    font-size: 14px;
+    text-align: left; 
+}
+
+/*Colour coding for Status elements */
+.statusPropertyValue[value="Completed"] {
+    color: #13c645;
+}
+
+.statusPropertyValue[value="In Progress"] {
+    color: black;
+}
+
+.statusPropertyValue[value="Delayed"] {
+    color: #f48c06;
+}
+
+.statusPropertyValue[value="Obstructed"] {
+    color: #f48c06;
+}
+
+.statusPropertyValue[value="Abandoned"] {
+    color: #f44336;
+}
+
+/*Colour coding for Budget elements */
+.statusPropertyValue[value="On Budget"] {
+    color: #13c645;
+}
+
+.statusPropertyValue[value="Over Budget due to extenuating circumstances"] {
+    color: #f48c06;
+}
+
+.statusPropertyValue[value="Over Budget due to increased scope"] {
+    color: #f48c06;
+}
+
+.statusPropertyValue[value="On Budget but underfunded due to the depreciation of Dash"] {
+    color: #ffc107;
+}
+
+/*Colour coding for Schedule elements */
+.statusPropertyValue[value="Ahead of Schedule"] {
+    color: #13c645;
+}
+
+.statusPropertyValue[value="On Schedule"] {
+    color: #13c645;
+}
+
+.statusPropertyValue[value="Behind Schedule"] {
+    color: #f48c06;
+}
+
+/*Colour coding for Communication elements */
+.statusPropertyValue[value="In communication with Dash Watch"] {
+    color: #13c645;
+}
+
+.statusPropertyValue[value="Dash Watch reporting concluded"] {
+    color: #3f51b5;
+}
+
+.statusPropertyValue[value="Opted out of Dash Watch"] {
+    color: #3f51b5;
+}
+
+.statusPropertyValue[value="In communication but did not provide a new update"] {
+    color: #f48c06;
+}
+
+.statusPropertyValue[value="Not in communication with Dash Watch"] {
+    color: #f44336;
+}
+
+.statusPropertyValue[value="Unreachable"] {
+    color: #f406a8;
+}
+
+/* Colour styling for Funding Tab elements */
+.fundingPropertyValue {
+    font-family: 'Titillium Web', sans-serif;
+    font-weight: bold;
+    font-size: 14px;
+    text-align: left; 
+}
+
+.fundingPropertyValue[value="Not provided"] {
+    color: #f44336;
+}
+
+/* Colour styling for Performance Tab elements */
+.performancePropertyValue {
+    font-family: 'Titillium Web', sans-serif;
+    font-weight: bold;
+    font-size: 14px;
+    text-align: left; 
+}
+
+.performancePropertyValue[value="Not provided by proposal"] {
+    color: #f44336;
+}
+
+.performancePropertyValue[value="Not Provided"] {
+    color: #f44336;
+}
+
+.performancePropertyValue[value="Not Tracked by Proposal"] {
+    color: #f48c06;
+}

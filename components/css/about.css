@@ -1,0 +1,47 @@
+/*
+Styles used in About.js
+*/
+
+/* Styling for the wrapper of the about page */
+.aboutWrapper {
+    font-family: 'Titillium Web', sans-serif;
+    font-size: 16px;
+    background: white;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
+    max-width: 800px;
+    
+}
+
+/* Styling of the headers on about */
+.aboutHeader {
+    display: block;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: left; 
+    color: black;
+    padding-top: 10px;
+    margin-bottom: 5px;
+}
+
+/* Styling of the links on about */
+.aboutLink {
+    display: inline-flex;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    color: #008de4;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+}
+
+/* Border around Changelog box */
+.changelogWrapper {
+    padding: 1rem;
+    border: 1px solid black;
+    margin: 1rem;
+}
