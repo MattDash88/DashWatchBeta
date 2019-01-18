@@ -1,6 +1,6 @@
 import fetch from 'isomorphic-unfetch'
 import ReactGA from 'react-ga';
-ReactGA.initialize('UA-132694074-1', { debug: true });
+ReactGA.initialize('UA-132694074-1');
 
 // Import pages
 import SinglePost from '../components/Permalink'

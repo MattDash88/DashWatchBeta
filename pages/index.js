@@ -2,7 +2,7 @@ import fetch from 'isomorphic-unfetch';
 import shortid from 'shortid';
 import React from 'react';
 import ReactGA from 'react-ga';
-ReactGA.initialize('UA-132694074-1', { debug: true });
+ReactGA.initialize('UA-132694074-1');
 
 // Import pages
 import Post from '../components/Post';

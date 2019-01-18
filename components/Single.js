@@ -13,7 +13,7 @@ import './css/single.css';
 
 const trackPage = (page) => {
   console.log(page)
-  ReactGA.initialize('UA-132694074-1', { debug: true });
+  ReactGA.initialize('UA-132694074-1');
   ReactGA.event({
     category: 'Tab',
     action: 'Changed tab',
