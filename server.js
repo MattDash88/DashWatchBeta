@@ -9,6 +9,8 @@ const qs = require('query-string');
 const dev = process.env.NODE_ENV !== 'production'
 const port = process.env.PORT
 const app = next({ dev })
+const ReactGA = require('react-ga');
+
 
 const serialize = data => JSON.stringify({ data })
 var cacheExpirationTime = process.env.CACHEEXPIRATION;  //Time until cache expires, can be adjusted for testing purposes
@@ -169,6 +171,16 @@ const getMerchantKpiData = () => {
   })
 }
 
+// Function for Analytics
+const trackPage = (page) => {
+  console.log(page)
+  ReactGA.initialize('UA-132694074-1', { debug: true });
+  ReactGA.event({
+    category: 'Report',
+    action: 'Opened report',
+  });
+}
+
 app.prepare()
   .then(() => {
     const server = express()
@@ -270,7 +282,7 @@ app.prepare()
       });
     })
 
-// Routing for single proposal page
+// Routing for proposal page
 server.get('/p/:slug', (req, res) => {
   const actualPage = '/SinglePage'
   const queryParams = {
@@ -279,6 +291,19 @@ server.get('/p/:slug', (req, res) => {
 
   app.render(req, res, actualPage, queryParams)
 })
+
+// Routing for reports
+    server.get('/r/:month/:reportId', (req, res) => {     
+      const actualPage = `https://dashwatchbeta.org/r/${req.params.month}/${req.params.reportId}.pdf`
+
+      // Sending (anonymous) pageview request to Analytics
+      fetch(`http://www.google-analytics.com/collect?v=1&tid=UA-132694074-1&cid=555&t=pageview&dp=%2F/r/${req.params.month}/${req.params.reportId}`,
+        {
+          method: 'post',
+        })
+
+      res.redirect(actualPage);
+    })
 
 // Routing to main page
 server.get('*', (req, res) => {

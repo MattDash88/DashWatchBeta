@@ -1,4 +1,6 @@
 import React from 'react';
+
+// Import css
 import "../css/style.css";
 
 class ScrollButton extends React.Component {

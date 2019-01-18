@@ -1,4 +1,6 @@
 import React from 'react';
+
+// Import css
 import "./css/style.css";
 import './css/monthstyle.css';
 import './css/single.css';
@@ -41,7 +43,6 @@ class AboutPage extends React.Component {
             <div><a link href="http://dashwatchbeta.org/api/p/Dash-Help-Support-Center_201811">Dash-Help-Support-Center_201811</a></div>
             <br></br>
             Dash Watch website revisited v0.9.1 by Matt available on GitHub <a link href="https://github.com/MattDash88/DashWatchBeta">HERE</a><br></br>
-
         </div>
         )
     }

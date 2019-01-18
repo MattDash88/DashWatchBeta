@@ -1,5 +1,7 @@
 import React from 'react';
 import shortid from 'shortid';
+
+// Import css
 import '../css/single.css';
 import '../css/style.css';
 

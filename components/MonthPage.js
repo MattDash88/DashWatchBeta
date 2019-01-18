@@ -1,13 +1,13 @@
 import shortid from 'shortid';
 import React from 'react';
 
-// Import css
-import './css/style.css';
-import './css/monthstyle.css';
-
 // Import other elements 
 import ModalFrame from './modal/ModalFrame';
 import ModalContent from './modal/ModalContent';
+
+// Import css
+import './css/style.css';
+import './css/monthstyle.css';
 
 class MonthPage extends React.Component {
   constructor(props) {

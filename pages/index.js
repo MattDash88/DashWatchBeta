@@ -1,15 +1,17 @@
 import fetch from 'isomorphic-unfetch';
 import shortid from 'shortid';
 import React from 'react';
-
-// Import css
-import "../components/css/style.css";
+import ReactGA from 'react-ga';
+ReactGA.initialize('UA-132694074-1', { debug: true });
 
 // Import pages
 import Post from '../components/Post';
 import SinglePost from '../components/Single';
 import MonthPage from '../components/MonthPage';
 import AboutPage from '../components/About';
+
+// Import css
+import "../components/css/style.css";
 
 // Import other elements 
 import ScrollButton from '../components/buttons/ScrollButton';  // Scroll to top button
@@ -63,6 +65,11 @@ const filterPost = (query) => {
     }))
   })
 )}
+
+// Function for Google analytics
+const trackPage = (page) => {
+  ReactGA.pageview(page);
+}
    
 class Home extends React.Component {
   constructor() {
@@ -230,7 +237,11 @@ class Home extends React.Component {
             toggleFilter={this.handleFilter}    // Handle toggle of inactive proposal filter
             goBack={this.handleBack}            // Handle going back to previous page from singlepage
             search={this.state.search}          // To show what the results are for
-            showInactivePosts={this.state.showInactivePosts} />
+            showInactivePosts={this.state.showInactivePosts} 
+
+            // Elements for Analytics
+            singleProposalId = {this.state.singleProposalId}
+            />
         </section>
       </main>
     )
@@ -281,9 +292,15 @@ class ProposalList extends React.Component {
       showTab,        // Element for initial tab to show on "single proposal page"
       monthId,        // Id of the current retrieved month, passed on to month list page
       search,         // Used to display query at top
+
+      // Elements for Analytics
+      singleProposalId,
     } = this.props
+
+    
     
       if (showPage == 'all') {  // Code for rendering All proposal Page
+        trackPage('/proposalList')   // Send page view to analytics
         if (!Array.isArray(airtableData) && !Array.isArray(displayData)) {
           // Still loading Airtable data
           return (
@@ -327,6 +344,7 @@ class ProposalList extends React.Component {
         }
       } // End of All Page if
       else if (showPage == 'single') {  // Code for rendering single proposal Page
+        trackPage(`/p/${singleProposalId}`)   // Send page view to analytics
         return (
           <SinglePost
             key={shortid.generate()}
@@ -343,6 +361,7 @@ class ProposalList extends React.Component {
         )
       } // End of Single page if
       else if (showPage == 'month') { // Code for rendering month list Page
+        trackPage('/monthList')   // Send page view to analytics
         if (!Array.isArray(monthListData) || !monthListData.length) {
           // Still loading Airtable data
           return (
@@ -365,6 +384,7 @@ class ProposalList extends React.Component {
         }
       } // End of month list page if 
       else if (showPage == 'about') { // Code for rendering About Page
+        trackPage('/about')   // Send page view to analytics
         return (
           <main>
             <AboutPage></AboutPage>

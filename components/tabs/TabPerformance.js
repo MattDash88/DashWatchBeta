@@ -1,6 +1,4 @@
 import React from 'react';
-import '../css/single.css';
-import '../css/style.css';
 import shortid from 'shortid';
 
 // Import classes for KPI types
@@ -8,6 +6,10 @@ import MerchantKpiContent from './kpi_subtab/MerchantKpiContent'
 import EventKpiContent from './kpi_subtab/EventKpiContent'
 import SocialMediaKpiContent from './kpi_subtab/SocialMediaKpiContent'
 import PublicRelationsKpiContent from './kpi_subtab/PublicRelationsKpiContent'
+
+// Import css
+import '../css/single.css';
+import '../css/style.css';
 
 class TabPerformance extends React.Component {
   constructor(props) {

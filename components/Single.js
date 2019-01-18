@@ -1,14 +1,24 @@
 import React from 'react';
-
-// Import css
-import './css/style.css';
-import './css/single.css';
+import ReactGA from 'react-ga';
 
 // Import tab elements
 import TabMain from './tabs/TabMain'
 import TabPerformance from './tabs/TabPerformance'
 import TabFunding from './tabs/TabFunding'
 import TabReports from './tabs/TabReports'
+
+// Import css
+import './css/style.css';
+import './css/single.css';
+
+const trackPage = (page) => {
+  console.log(page)
+  ReactGA.initialize('UA-132694074-1', { debug: true });
+  ReactGA.event({
+    category: 'Tab',
+    action: 'Changed tab',
+  });
+}
 
 class SinglePost extends React.Component {
   constructor(props) {
@@ -31,7 +41,10 @@ class SinglePost extends React.Component {
   // Returns the corresponding Tab based on the selected button
   handleTab(e) {
     this.setState({ displayTab: e.currentTarget.id })
+    trackPage('test')
   }
+
+  
 
   render() {
     const {   // Declare grouped elements to pass on to the tabs         

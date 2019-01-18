@@ -1,14 +1,14 @@
 import React from 'react';
 
-// Import css
-import './css/style.css';
-import './css/single.css';
-
 // Import tab elements
 import TabMain from './tabs/TabMain'
 import TabPerformance from './tabs/TabPerformance'
 import TabFunding from './tabs/TabFunding'
 import TabReports from './tabs/TabReports'
+
+// Import css
+import './css/style.css';
+import './css/single.css';
 
 class SinglePost extends React.Component {
   constructor(props) {

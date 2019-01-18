@@ -1,7 +1,18 @@
 import fetch from 'isomorphic-unfetch'
+import ReactGA from 'react-ga';
+ReactGA.initialize('UA-132694074-1', { debug: true });
+
+// Import pages
 import SinglePost from '../components/Permalink'
+
+// Import css
 import "../components/css/permalink.css";
 import "../components/css/style.css";
+
+// Function for Google analytics
+const trackPage = (page) => {
+  ReactGA.pageview(page);
+}
 
 class Single extends React.Component {
   constructor(props) {
@@ -15,6 +26,8 @@ class Single extends React.Component {
       financial_data,
       report_data,
     } = this.props
+
+    trackPage(`/p/${main_data.slug}`)   // Send page view to analytics
 
     return (
       // Simplified navbar code
