@@ -1,4 +1,7 @@
 Dash Watch Beta Website by MattDash
+            <div className="aboutHeader">Changelog v0.9.3</div>
+            <li>Added temporary /reports page for January cycle</li>
+            <li>Fixed minor issue with Completion Date title not showing on modal</li>
             <div className="aboutHeader">Changelog v0.9.2</div>
             <li>Added redirector for shorter and nicer links to reports</li>
             <li>Added (anonymous) Google Analytics. This is for internal use to determine what aspects of our work site users are most interested in.</li>
