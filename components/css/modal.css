@@ -213,6 +213,7 @@ Styling used in the modal tab files (ModalTabMain, ModalTabPerformance, ModalTab
     font-family: 'Titillium Web', sans-serif;
     font-weight: bold;
     font-size: 14px;
+    color: black; /* Temporary styling to fix */
     height: 40px;
     overflow: hidden;
     text-overflow: ellipsis;

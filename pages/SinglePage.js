@@ -1,13 +1,13 @@
 import fetch from 'isomorphic-unfetch'
 import ReactGA from 'react-ga';
-ReactGA.initialize('UA-132694074-1');
+ReactGA.initialize('UA-132765425-1');
 
 // Import pages
 import SinglePost from '../components/Permalink'
 
 // Import css
-import "../components/css/permalink.css";
 import "../components/css/style.css";
+import "../components/css/permalink.css";
 
 // Function for Google analytics
 const trackPage = (page) => {

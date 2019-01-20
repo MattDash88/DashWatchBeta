@@ -124,6 +124,43 @@ const getMonthList = () => {
   })
 }
 
+// Temporary extra function for January reports
+const getFastMonthList = () => {  
+  return new Promise((resolve, reject) => {
+    // Read cache for this function
+    cache.get('monthFastData2', function (error, data) {
+      if (error) throw error
+  
+      if (!!data) {   // If value was already retrieved recently, grab from cache
+        resolve(JSON.parse(data))
+      }
+      else {    // If cache is empty, retrieve from Airtable
+
+        Promise.resolve(airtableFunctions.FastReportPosts('Month List Reports')).then(function (valArray) {
+          const storeAirtablePosts = []   // Create const to push all proposal data in
+
+          // Sorting out all valArray items
+          monthReportData = valArray
+
+          Object.keys(monthReportData).map((item) => {
+            if (typeof monthReportData[item].id !== 'undefined' ) {    //Check if record exists
+                monthData = processingFunctions.processFastListData(monthReportData[item])
+                storeAirtablePosts.push(monthData)
+            }
+          })
+         
+          // Store results in Redis cache, cache expire time is defined in .env
+          cache.setex('monthFastData2', cacheExpirationTime, JSON.stringify(storeAirtablePosts))
+          resolve(storeAirtablePosts)
+        }).catch((error) => {
+          reject({ error })
+          console.log(error)
+        })      
+      }
+    })
+  })
+}
+
 // Function to prepare data for Peyton's data processing project
 const getMerchantKpiData = () => {
   return new Promise((resolve, reject) => {
@@ -170,16 +207,6 @@ const getMerchantKpiData = () => {
   })
 }
 
-// Function for Analytics
-const trackPage = (page) => {
-  console.log(page)
-  ReactGA.initialize('UA-132694074-1');
-  ReactGA.event({
-    category: 'Report',
-    action: 'Opened report',
-  });
-}
-
 app.prepare()
   .then(() => {
     const server = express()
@@ -216,6 +243,29 @@ app.prepare()
           'Content-Type': 'application/json'
         })
         return res.end(serialize(monthSelection))
+      }).catch((error) => {
+        console.log(error)
+        // Send empty JSON otherwise page load hangs indefinitely
+        res.writeHead(200, { 'Content-Type': 'application/json' })
+        return res.end(serialize({}))
+      });
+    })
+
+    // Internal API call to create Reports page
+    server.get('/api/get/fastmonth/:month', (req, res) => {
+      fastQuery = req.params.month.toLowerCase()
+      fastSelection = []
+      Promise.resolve(getFastMonthList()).then(function (valArray) {       
+        Object.keys(valArray).map((item) => {          
+          if (valArray[item].list_data.published_month.toLowerCase() == fastQuery) {
+            fastSelection.push(valArray[item])
+          }
+        })
+        res.writeHead(200, {
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': 'application/json'
+        })
+        return res.end(serialize(fastSelection))
       }).catch((error) => {
         console.log(error)
         // Send empty JSON otherwise page load hangs indefinitely
@@ -289,6 +339,19 @@ server.get('/p/:slug', (req, res) => {
   }
 
   app.render(req, res, actualPage, queryParams)
+})
+
+// Routing for reports list page
+server.get('/reports', (req, res) => {
+  const actualPage = '/ReportPage'
+
+  // Sending (anonymous) pageview request to Analytics
+  fetch(`http://www.google-analytics.com/collect?v=1&tid=UA-132694074-1&cid=555&t=pageview&dp=%2F/reports`,
+  {
+    method: 'post',
+  })
+
+  app.render(req, res, actualPage)
 })
 
 // Routing for reports

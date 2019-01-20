@@ -136,6 +136,81 @@ const MonthReportPosts = function getMonthReportPosts(tableId) {
     })
 }
 
+// Code that retrieves The Month Report Overview Records
+const FastReportPosts = function getFastReportPosts(tableId) {
+    const base = new Airtable.base('appaaPlruu0gGKXE7')  // Connect to Base
+    return new Promise((resolve, reject) => {
+        cache.get('fastReportsCache', function (error, data) {
+            if (error) {
+                reject({ error })
+            }
+            if (!!data) {       // If value was already retrieved recently, grab from cache
+                resolve(JSON.parse(data))
+            }
+            else {              // If cache is empty, retrieve from Airtable
+                const storeAirtablePosts = []       // Create const to store results in
+
+                // Query to feed to Airtable
+                const apiQuery = {
+                    pageSize: 50,
+                    sort: [{ field: 'Voting Status', direction: 'asc' },
+                    { field: 'Proposal Name', direction: 'asc' }
+
+                    ]
+                }
+
+                // Get the data from the table
+                base(tableId).select(apiQuery).eachPage((records, fetchNextPage) => {
+                    // This function (`page`) will get called for each page of records.
+
+                    // Create a const with the desired fields
+                    records.forEach(function (record) {
+                        const post = {
+                            project_name: record.get('Project Name'),                           
+                            proposal_type: record.get('Proposal Type'),
+                            proposal_ref: record.get('Proposal ID'),
+                            voting_status: record.get('Voting Status'),
+                            voting_dc_link: record.get('Voting DC Link'),
+                            report_status: record.get('Status'),             // This variable is used to handle pending reports 
+                            published_month: record.get('Published Month'),  // Variable used to determine in which list it should be published
+                            report_link: record.get('Report URL'),
+                            report_type: record.get('Report Type'),          // Written report or Video
+                            report_ref: record.get('Report ID'),
+                            id: record.id,                          // Used as unique record identifier
+                            
+                            // Extra elements for JAN19 test
+                            proposal_owner: record.get('Proposal Owner'),
+                            slug: record.get('Proposal ID Text'),
+                            proposal_description: record.get('Proposal Description'),
+                            payment_date: record.get('Date of First Payment'),
+                            last_updated: record.get('Date Updated'),
+                            status: record.get('Proposal Status'),
+                            budget_status: record.get('Budget Status'),
+                            schedule_status: record.get('Schedule Status'),
+                            estimated_completion_date: record.get('Estimated Completion Date'),
+                            actual_completion_date: record.get('Actual Completion'),
+                            comm_status: record.get('Communication Status'),
+                            funding_received_usd: record.get('Funding Received (USD)'),
+                        }
+
+                        storeAirtablePosts.push(post)   // Push data to const
+                    })
+
+                    fetchNextPage()  // Continue to next record
+                }, function done(error) {
+                    if (error) reject({ error })
+
+                    // Store results in Redis, cache expire time is defined in .env
+                    cache.setex('fastReportsCache', cacheExpirationTime, JSON.stringify(storeAirtablePosts))
+
+                    // Finish
+                    resolve(storeAirtablePosts)
+                })
+            }
+        })
+    })
+}
+
 // Airtable Query for Proposal Owners Table Data, currently unused
 const ProposalOwnerPosts = function getProposalOwnerPosts(tableId) {
     const base = new Airtable.base('appaaPlruu0gGKXE7')     // Connect to Base
@@ -596,6 +671,7 @@ const getAirtablePost = (recordId, baseId) => {
 module.exports = {
     MainProposalPosts,
     MonthReportPosts,
+    FastReportPosts,    // Test function for January
     ProposalOwnerPosts,
     FinanceDataPosts,
     MerchantKpiPosts,

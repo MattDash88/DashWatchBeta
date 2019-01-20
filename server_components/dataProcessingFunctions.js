@@ -233,6 +233,58 @@ var processMonthListData = function reportDataFunction(proposalData, monthReport
     return storeReportData
 }
 
+// Temporary function for January 2019 Tests
+var processFastListData = function fastDataFunction(monthReportData) {
+    storeReportData = []        // Create Array to store report data in
+
+    // Format funding received
+    monthReportData.funding_received_usd = monthReportData.funding_received_usd.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+
+    // Determine type of completion date, anticipated or actual completion date
+    if (typeof monthReportData.estimated_completion_date !== 'undefined') {
+        monthReportData.completion_elem_type = 'Anticipated Completion'
+        monthReportData.completion_elem = monthReportData.estimated_completion_date
+    } else if (typeof monthReportData.actual_completion_date !== 'undefined') {
+        monthReportData.completion_elem_type = 'Actual Completion'
+        monthReportData.completion_elem = monthReportData.actual_completion_date
+    } else {
+        monthReportData.completion_elem_type = 'Anticipated Completion'
+        monthReportData.completion_elem = 'N/A'
+    }
+
+    // Iterate through all month records
+    const monthListData = {   // Create Array to store report data in
+        list_data: {
+            project_name: monthReportData.project_name,
+            proposal_type: monthReportData.proposal_type,
+            voting_status: monthReportData.voting_status,
+            voting_dc_link: monthReportData.voting_dc_link,
+            report_status: monthReportData.report_status,
+            report_type: monthReportData.report_type,
+            published_month: monthReportData.published_month,
+        },
+        main_data: {
+            slug: monthReportData.slug,
+            proposal_owner: monthReportData.proposal_owner,
+            payment_date: monthReportData.payment_date,
+            status: monthReportData.status,
+            budget_status: monthReportData.budget_status,
+            schedule_status: monthReportData.schedule_status,
+            comm_status: monthReportData.comm_status,
+            completion_elem_type: monthReportData.completion_elem_type,
+            completion_elem: monthReportData.completion_elem,
+            funding_received_usd: monthReportData.funding_received_usd,
+            last_updated: monthReportData.last_updated,
+            proposal_description: monthReportData.proposal_description,
+            proposal_ref: monthReportData.id,
+        }
+    }
+    storeReportData=monthListData
+    //storeReportData.push(monthListData)         
+
+    return storeReportData
+}
+
 // Function to return the record when the info of a single proposal is requested
 var singleProposalQuery = function singleProposalFunction(proposalData, query) {
     storeProposalData = []        // Create Array to store report data in
@@ -296,4 +348,5 @@ module.exports = {
     processMonthListData,
     singleProposalQuery,
     processMerchantKpiData,     // Function for Peyton's project
+    processFastListData,        // Temporary function for January 2019 tests
 }

@@ -7,9 +7,9 @@ import ModalTabFunding from './ModalTabFunding'
 import ModalTabReports from './ModalTabReports'
 
 // Import css
-import '../css/single.css';
-import '../css/modal.css'
 import '../css/style.css';
+import '../css/single.css';
+import '../css/modal.css';
 
 class ModalContent extends React.Component {
     constructor(props) {

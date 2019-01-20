@@ -1,8 +1,8 @@
 {
-  "name": "matts-dw-site-0.9.2",
+  "name": "matts-dw-site-0.9.3",
   "scripts": {
     "dev": "node server.js",
-    "build": "next build",
+    "build": "node server.js",
     "start": "node server.js"
   },
   "dependencies": {
