@@ -53,17 +53,18 @@ Styles used in index.js
     display: inline-flex;
     font-family: 'Montserrat', sans-serif;
     text-align: center; 
-    margin: 14px 16px;
     cursor: default;   
 }
 
 /* Show Red line under active page */
 .menuItem a[value="Active"] {
+    margin: 14px 16px;
     border-bottom: 2px solid #e90056;
 }
 
 /* Styling of the inactive menu item */
 .menuItem a[value="Inactive"] {
+    padding: 14px 16px;
     cursor: pointer;
 }
 

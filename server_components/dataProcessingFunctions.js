@@ -261,6 +261,7 @@ var processFastListData = function fastDataFunction(monthReportData) {
             voting_dc_link: monthReportData.voting_dc_link,
             report_status: monthReportData.report_status,
             report_type: monthReportData.report_type,
+            report_link: monthReportData.report_link,
             published_month: monthReportData.published_month,
         },
         main_data: {

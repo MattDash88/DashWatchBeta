@@ -37,9 +37,13 @@
     width: 20%;
     height: 40px;
     margin-right: 6px;
-    cursor: pointer;
+    cursor: default;
     box-shadow: none;
     transition: 0.15s;
+}
+
+.monthTab[value='Inactive']:hover {
+    background-color: #1999e9;
 }
 
 /* Styling of Text in tab button */
@@ -240,16 +244,26 @@ Temporary styling for the ReportPage January 2019
 
 /* Link item styling of navbar buttons*/
 .tempMenuItem a {
-    display: inline-flex;
     color: white;
     text-decoration: none;
     cursor: pointer;
     font-family: 'Montserrat', sans-serif;
     text-align: center; 
-    margin: 14px 16px;  
+    height: 100%;
+    padding: 14px 16px;  
+    padding-bottom: auto;
+    padding-top: auto;
 }
 
 .tempMenuItem a:hover {
     background-color: #ddd;
     color: rgb(28, 31, 34);
+}
+
+.tempMenuItem img {
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-bottom: 7px;
+    padding-top: auto;
+    color: white;
 }

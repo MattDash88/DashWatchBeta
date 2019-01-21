@@ -15,7 +15,7 @@ import "../components/css/style.css";
 import '../components/css/monthstyle.css';
 
 
-var basepath = 'http://localhost:5000' 
+var basepath = 'https://dashwatchbeta.org' 
 
 // Function for Google analytics
 const trackEvent = (event) => {
@@ -49,6 +49,7 @@ class Month extends React.Component {
 
     // Bind functions used in class
     this.handleSelectMonth = this.handleSelectMonth.bind(this);
+    this.callEvent = this.callEvent.bind(this);
   }
 
   // Function initiated when a month list button is pressed, requests the data for that month from index.js
@@ -56,6 +57,10 @@ class Month extends React.Component {
     event.preventDefault();
     this.setState({monthId: event.currentTarget.id})
     trackEvent('Changed Month')
+  }
+
+  callEvent(event) {
+    trackEvent(event)
   }
 
   componentDidMount() {     
@@ -85,7 +90,17 @@ class Month extends React.Component {
     if (!Array.isArray(monthListData)) {
       // Still loading Airtable data
       return (
+        <main>
+          <div className="menu">
+        <nav className="menuContent">
+            <li className="tempMenuItem"><img id="Logo" src="https://dashwatchbeta.org/Logo/logo_white20.png" onClick={trackEvent('Clicked top corner logo')}></img></li>
+            <li className="tempMenuItem"><a href="https://dashwatchbeta.org" target="https://dashwatchbeta.org" onClick={trackEvent('Opened Full Beta site')}>Full Dash Watch Beta Website</a></li>
+          </nav>
+            </div>
+            <section className="pagewrapper">
         <p>Loading&hellip;</p>
+        </section>
+        </main>
       )
     } else {
 
@@ -94,7 +109,7 @@ class Month extends React.Component {
         <div className="menu">
         <nav className="menuContent">
             <li className="tempMenuItem"><img id="Logo" src="https://dashwatchbeta.org/Logo/logo_white20.png"></img></li>
-            <li className="tempMenuItem"><a href="https://dashwatchbeta.org" target="https://dashwatchbeta.org" onClick={trackEvent('Opened Full Beta site')}>Full Dash Watch Beta Website</a></li>
+            <li className="tempMenuItem" onClick={trackEvent('Opened Full Beta site')}><a href="https://dashwatchbeta.org" target="https://dashwatchbeta.org">Full Dash Watch Beta Website</a></li>
           </nav>
             </div>
         <section className="pagewrapper">
@@ -210,7 +225,7 @@ class MonthReportRow extends React.Component {
           <p className="monthOwnerName">by {main_data.proposal_owner}</p></div>
           {reportLink}
           <div className="monthItem" onClick={this.showModal}><p className="monthProposalType" value={list_data.proposal_type}>{list_data.proposal_type}</p></div>
-          <div className="monthItem"><a className="monthVoteLink" href={list_data.voting_dc_link} target={list_data.voting_dc_link} value={list_data.voting_status} title={list_data.voting_dc_link} onClick={trackEvent('Clicked Voting Link')}>{list_data.voting_status}</a>
+          <div className="monthItem" onClick={trackEvent('Clicked Voting Link')}><a className="monthVoteLink" href={list_data.voting_dc_link} target={list_data.voting_dc_link} value={list_data.voting_status} title={list_data.voting_dc_link}>{list_data.voting_status}</a>
           </div> 
           {modal}
       </div>

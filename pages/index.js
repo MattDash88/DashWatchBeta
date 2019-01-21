@@ -2,7 +2,7 @@ import fetch from 'isomorphic-unfetch';
 import shortid from 'shortid';
 import React from 'react';
 import ReactGA from 'react-ga';
-ReactGA.initialize('UA-132765425-1');
+ReactGA.initialize('UA-132694074-1');
 
 // Import pages
 import Post from '../components/Post';
@@ -16,7 +16,7 @@ import "../components/css/style.css";
 // Import other elements 
 import ScrollButton from '../components/buttons/ScrollButton';  // Scroll to top button
 
-var basepath = 'http://localhost:5000' 
+var basepath = 'https://dashwatchbeta.org' 
 
 // Airtable query requesting Proposal List data
 const getPosts = () => {

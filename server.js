@@ -342,11 +342,11 @@ server.get('/p/:slug', (req, res) => {
 })
 
 // Routing for reports list page
-server.get('/reports', (req, res) => {
+server.get('/list', (req, res) => {
   const actualPage = '/ReportPage'
 
   // Sending (anonymous) pageview request to Analytics
-  fetch(`http://www.google-analytics.com/collect?v=1&tid=UA-132694074-1&cid=555&t=pageview&dp=%2F/reports`,
+  fetch(`http://www.google-analytics.com/collect?v=1&tid=UA-132694074-1&cid=555&t=pageview&dp=%2F/list`,
   {
     method: 'post',
   })
