@@ -16,7 +16,7 @@ import "../components/css/style.css";
 // Import other elements 
 import ScrollButton from '../components/buttons/ScrollButton';  // Scroll to top button
 
-var basepath = 'https://dashwatchbeta.org' 
+var basepath = 'http://localhost:5000' 
 
 // Airtable query requesting Proposal List data
 const getPosts = () => {

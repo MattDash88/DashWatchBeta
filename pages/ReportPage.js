@@ -15,7 +15,7 @@ import "../components/css/style.css";
 import '../components/css/monthstyle.css';
 
 
-var basepath = 'https://dashwatchbeta.org' 
+var basepath = 'http://localhost:5000' 
 
 // Function for Google analytics
 const trackEvent = (event) => {
@@ -86,11 +86,19 @@ class Month extends React.Component {
       monthListData,
       monthId,
     } = this.state
-    
+
     if (!Array.isArray(monthListData)) {
       // Still loading Airtable data
-      return (
-        <main>
+      return (          
+          <main>
+          <title>Dash Watch Reports</title>          
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:site" content="dashwatchbeta.org" />
+          <meta name="twitter:creator" content="@DashWatchTeam" />
+          <meta name="twitter:title" content="Dash Watch January Reports" />
+          <meta name="twitter:description" content="We recognize that Dash MNOs and community members have limited time to review all the reports and metrics available on the Dash Watch website and have created a simple document that organizes and displays links to all of our current January 2019 reports. " />
+          <meta name="twitter:image" content="https://dashwatchbeta.org/images/preview.png" />        
+
           <div className="menu">
         <nav className="menuContent">
             <li className="tempMenuItem"><img id="Logo" src="https://dashwatchbeta.org/Logo/logo_white20.png" onClick={trackEvent('Clicked top corner logo')}></img></li>
@@ -107,38 +115,79 @@ class Month extends React.Component {
     return ( 
       <main>
         <div className="menu">
-        <nav className="menuContent">
+          <nav className="menuContent">
             <li className="tempMenuItem"><img id="Logo" src="https://dashwatchbeta.org/Logo/logo_white20.png"></img></li>
             <li className="tempMenuItem" onClick={trackEvent('Opened Full Beta site')}><a href="https://dashwatchbeta.org" target="https://dashwatchbeta.org">Full Dash Watch Beta Website</a></li>
           </nav>
-            </div>
+        </div>
         <section className="pagewrapper">
-      <div className="monthTab" id='November 2018' value={this.state.monthId == 'November 2018' ? "Active" : 
-        "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">November 2018</p></div>
-      <div className="monthTab" id='December 2018' value={this.state.monthId == 'December 2018' ? "Active" : 
-        "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">December 2018</p></div>
-      <div className="monthTab" id='January 2019' value={this.state.monthId == 'January 2019' ? "Active" : 
-        "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">January 2019</p></div>
-      <div className="monthPageWrapper">
-      <h1 className="monthHeader">Dash Watch {monthId} Reports</h1>
-      <p>This is a live table and will be updated with additional reports in the upcoming days.</p>
-      <div className="monthIndexWrapper">
-        <div className="monthIndexItem"><p className="monthColumnTitle">Proposal</p></div>
-        <div className="monthIndexItem"><p className="monthColumnTitle">Report Link</p></div>
-        <div className="monthIndexItem"><p className="monthColumnTitle">Proposal Type</p></div>
-        <div className="monthIndexItem"><p className="monthColumnTitle">Voting Status</p></div>    
-    </div>
-      {monthListData.map((post) =>
-        <MonthReportRow
-          key={shortid.generate()}
-          monthListData={post}      // Elements for the Month report list     
+          <div className="monthTab" id='November 2018' value={this.state.monthId == 'November 2018' ? "Active" :
+            "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">November 2018</p></div>
+          <div className="monthTab" id='December 2018' value={this.state.monthId == 'December 2018' ? "Active" :
+            "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">December 2018</p></div>
+          <div className="monthTab" id='January 2019' value={this.state.monthId == 'January 2019' ? "Active" :
+            "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">January 2019</p></div>
+          <div className="monthPageWrapper">
+            <h1 className="monthHeader">Dash Watch {monthId} Reports</h1>
+            <p>This is a live table and will be updated with additional reports in the upcoming days.</p>
+            <div className="monthIndexWrapper">
+              <div className="monthIndexItem"><p className="monthColumnTitle">Proposal</p></div>
+              <div className="monthIndexItem"><p className="monthColumnTitle">Report Link</p></div>
+              <div className="monthIndexItem"><p className="monthColumnTitle">Proposal Type</p></div>
+              <div className="monthIndexItem"><p className="monthColumnTitle">Voting Status</p></div>
+            </div>
+            {monthListData.map((post) =>
+              <MonthReportRow
+                key={shortid.generate()}
+                monthListData={post}      // Elements for the Month report list     
 
-        />
-  )}
-    </div>
-    </section>
-    <ScrollButton scrollStepInPx="125" delayInMs="16.66"/>
-    </main>
+              />
+            )}
+
+          <section className="tempOptOutDiv" value={this.state.monthId == "January 2019" ? "Active" : "Inactive"}>
+        <h1 className="tempOptOutHeader">Proposal teams opted out of Dash Watch reporting</h1>
+        <div className="tempOptOutWrapper" id="firstRow">
+          <div className="monthItemTitle" onClick={this.showModal}><p className="monthProposalName">Alt36</p></div>
+          <div className="monthItem" onClick={trackEvent('Clicked Voting Link')}><a className="monthVoteLink" href="" target="" value='Funded' title='Alt36'>FUNDED</a>
+          </div> 
+        </div>
+        <div className="tempOptOutWrapper">
+          <div className="monthItemTitle" onClick={this.showModal}><p className="monthProposalName">Dash Core</p></div>
+          <div className="monthItem" onClick={trackEvent('Clicked Voting Link')}><a className="monthVoteLink" href="https://www.dashcentral.org/p/coreteamcomp0219" target="https://www.dashcentral.org/p/coreteamcomp0219" value='New Proposal' title='Dash Core'>NEW PROPOSAL</a>
+          </div> 
+        </div>
+        <div className="tempOptOutWrapper">
+          <div className="monthItemTitle" onClick={this.showModal}><p className="monthProposalName">Dash Embassy D-A-CH</p></div>
+          <div className="monthItem" onClick={trackEvent('Clicked Voting Link')}><a className="monthVoteLink" href="https://www.dashcentral.org/p/DACH_Business_Development_Q1_19" target="https://www.dashcentral.org/p/DACH_Business_Development_Q1_19" value='New Proposal' title='Dash Embassy D-A-CH'>NEW PROPOSAL</a>
+          </div> 
+        </div>
+        <div className="tempOptOutWrapper">
+          <div className="monthItemTitle" onClick={this.showModal}><p className="monthProposalName">Dash Force</p></div>
+          <div className="monthItem" onClick={trackEvent('Clicked Voting Link')}><a className="monthVoteLink" href="https://www.dashcentral.org/p/Dash_Force_January-April" target="https://www.dashcentral.org/p/Dash_Force_January-April" value='Up for Vote' title='Dash Force'>UP FOR VOTE</a>
+          </div> 
+          </div>
+          <div className="tempOptOutWrapper">
+          <div className="monthItemTitle" onClick={this.showModal}><p className="monthProposalName">Dash Nexus</p></div>
+          <div className="monthItem" onClick={trackEvent('Clicked Voting Link')}><a className="monthVoteLink" href="https://www.dashcentral.org/p/dash-nexus-migration" target="https://www.dashcentral.org/p/dash-nexus-migration" value='New Proposal' title='Dash Nexus'>NEW PROPOSAL</a>
+          </div> 
+        </div>
+        </section>
+          
+          <div className="monthBottomDiv">
+          <div className="monthSubHeader">Questions, Comments, Concerns? Contact Us</div>
+          E-mail: <a href="mailto:team@dashwatch.org" target="mailto:team@dashwatch.org">team@dashwatch.org</a><br></br>
+          DashWatchTeam#5277 Discord<br></br>          
+          Dash-AI#1455 Discord<br></br>
+          MattDash#6481 Discord (This web page)<br></br>
+          paragon#2778 Discord<br></br>
+          Twitter: <a href="https://twitter.com/DashWatch" target="https://twitter.com/DashWatch">@DashWatch</a>
+          </div>
+          </div>
+          
+
+        </section>
+        <ScrollButton scrollStepInPx="125" delayInMs="16.66" />
+      </main>
   )
 }
 }

@@ -1,6 +1,6 @@
 import fetch from 'isomorphic-unfetch'
 import ReactGA from 'react-ga';
-ReactGA.initialize('UA-132765425-1');
+ReactGA.initialize('UA-132694074-1');
 
 // Import pages
 import SinglePost from '../components/Permalink'
@@ -51,7 +51,7 @@ class Single extends React.Component {
 }
 
 Single.getInitialProps = async (context) => {
-  const basePath = 'https://dashwatchbeta.org'
+  const basePath = 'http://localhost:5000'
   const { slug } = context.query
 
   const res = await fetch(`${basePath}/api/p/${slug}`)

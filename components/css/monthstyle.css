@@ -6,9 +6,11 @@
 /* Month page wrapper */
 .monthPageWrapper {
     display: block;
+    align-items: middle;
     background-color: white;
     padding-left: 10px;
     padding-right: 10px;
+    padding-bottom: 20px;
     font-family: 'Roboto', sans-serif;
 }
 
@@ -100,6 +102,15 @@ Style elements for the top of the month list table
     font-family: 'Montserrat', sans-serif;
     text-align: center;
     font-size: 2rem;
+}
+
+/* Styling of the sub title of the month list page*/
+.monthSubHeader {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: left; 
+    color: black;
 }
 
 /* Wrapper for the month list rows  */
@@ -266,4 +277,59 @@ Temporary styling for the ReportPage January 2019
     padding-bottom: 7px;
     padding-top: auto;
     color: white;
+}
+
+/* Wrapper for the month list rows  */
+.tempOptOutWrapper {
+    display: flex;
+    height: 3rem;
+    border-bottom: 0.1rem solid rgb(216, 220, 227);
+    background: white;
+    min-width: 300px;
+    max-width: 500px;
+}
+
+/* Wrapper for the month list rows  */
+.tempOptOutWrapper[id="firstRow"] {
+    border-top: 0.1rem solid rgb(216, 220, 227);
+}
+
+/* Temp Header for opted-out proposals */
+.tempOptOutHeader {
+    color: #003347;
+    padding-left: 1rem;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    text-align: left;
+    font-size: 1.3rem;
+}
+
+.tempOptOutDiv[value='Inactive'] {
+    display: none;
+}
+
+
+
+/* Styling of the header in the contact information div */
+.monthSubHeader {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: left; 
+    color: black;
+}
+
+/* Styling for bottom contact information div */
+.monthBottomDiv {
+    width: 400px;   
+    align-items: right;
+    font-family: 'Titillium Web', sans-serif;
+    font-size: 14px;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+    margin-left: auto;
+    margin-right: auto;
+    border: solid 1px black;
 }

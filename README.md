@@ -1,4 +1,8 @@
 Dash Watch Beta Website by MattDash
+            <div className="aboutHeader">Changelog v0.9.4</div>
+            <li>Added box with contact information to the /list page.</li>
+            <li>Added temporary link unfurl to the /list page (for January 2019 cycle only).</li>
+            <li>Added temporary section for opted-out proposal owners to the /list page (for January 2019 cycle only).</li>
             <div className="aboutHeader">Changelog v0.9.3</div>
             <li>Added temporary /list page for January cycle</li>
             <li>Fixed minor issue with Completion Date title not showing correctly on modal</li>
