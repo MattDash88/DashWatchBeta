@@ -1,6 +1,7 @@
 import React from 'react';
-import '../../css/single.css';
 import '../../css/style.css';
+import '../../css/single.css';
+import '../../css/status_styling.css';
 
 class SocialMediaKpiContent extends React.Component {
     constructor(props) {

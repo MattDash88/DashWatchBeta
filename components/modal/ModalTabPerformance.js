@@ -1,33 +1,43 @@
 import React from 'react';
+import ReactGA from 'react-ga';
+
+// Analytics
+import getGAKey from '../functions/analytics';
+ReactGA.initialize(getGAKey);
 
 // Import css
 import '../css/style.css';
 import '../css/modal.css';
 
+const trackEvent = (event) => {
+  ReactGA.event({
+      category: 'Full Modal',
+      action: event,
+  });
+}
+
 class TabPerformance extends React.Component {
   constructor(props) {
     super(props);
     // Binding functions in this class
-    this.showProposalPage = this.showProposalPage.bind(this);
+    this.callEvent = this.callEvent.bind(this);
   }
 
-  showProposalPage(e) {
-    e.preventDefault();
-    this.props.handleProposalPage(e.currentTarget.id);
+  // Google Analytics function to track User interaction on page
+  callEvent(event) {
+    trackEvent('clicked ' + event.currentTarget.id)
   }
-    render() {
+    
+  render() {
       const {
         slug,
-      } = this.props
-
-      const {   // Declare individual elements used in this class
         openTab,
       } = this.props
   
       return (
         <div className="modalTabContent" value={openTab == "TabPerformance" ? "active" : "inactive"}>
         <div className="modalTabLink">
-            <div className="link" type="link" onClick={this.showProposalPage} id={slug}>Click here to see the Performance Data from the reports</div>
+            <a className="link" href={`/p/${slug}?tab=TabPerformance`} target="" id="directPerformanceLink" onClick={this.callEvent}>Click here to see the Performance Data from the reports</a>
           </div>
       </div>
       )

@@ -1,7 +1,6 @@
 import React from 'react';
 
 // Import css
-import '../css/single.css';
 import '../css/style.css';
 import '../css/modal.css'
 

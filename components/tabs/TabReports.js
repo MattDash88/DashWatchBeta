@@ -1,11 +1,24 @@
 import React from 'react';
-import shortid from 'shortid';
+import ReactGA from 'react-ga';
+
+// Analytics
+import getGAKey from '../functions/analytics';
+ReactGA.initialize(getGAKey);
 
 // Import css
-import '../css/single.css';
 import '../css/style.css';
+import '../css/single.css';
+import '../css/status_styling.css';
+
+const trackEvent = (event) => {
+    ReactGA.event({
+        category: 'Full Modal',
+        action: event,
+    });
+}
 
 class TabReports extends React.Component {
+    
     render() {
         const { // Declare grouped elements used in reports tab 
             report_data,
@@ -21,23 +34,34 @@ class TabReports extends React.Component {
                 </div>
             )
         } else {    // If there are reports run this
-        return (
-            <div className="tabContent" value={openTab == "TabReports" ? "active" : "inactive"}>
-                <div className="tabHeader">Dash Watch Reports:</div>
-                <div className="tabLinkDiv">
-                    {report_data.map((post) =>
-                        <ReportDiv
-                            key={shortid.generate()}
-                            report_data={post}
-                        />
-                    )}
+            return (
+                <div className="tabContent" value={openTab == "TabReports" ? "active" : "inactive"}>
+                    <div className="tabHeader">Dash Watch Reports:</div>
+                    <div className="tabLinkDiv">
+                        {report_data.map((post) =>
+                            <ReportDiv
+                                key={`${post.report_ref}_report`}
+                                report_data={post}
+                            />
+                        )}
+                    </div>
                 </div>
-            </div>
-        )}
+            )
+        }
     }
 }
 
 class ReportDiv extends React.Component {
+    constructor(props) {
+        super(props);
+        // Binding functions in this class
+        this.callEvent = this.callEvent.bind(this);
+    }
+    // Google Analytics function to track User interaction on page
+    callEvent(event) {
+        trackEvent('clicked ' + event.currentTarget.id)
+    }
+    
     render() {
         const { // Declare elements used in the ReportDiv Class  
             report_name,
@@ -49,7 +73,7 @@ class ReportDiv extends React.Component {
             <div>
                 <span className="tabLinkTitle">{report_date}:</span>
                 <span className="tabReportLink">
-                <a className="tabReportLink" link href={report_link} target={report_link}>{report_name}</a></span><br></br>
+                    <a className="tabReportLink" href={report_link} target="_blank" id="ReportLink" onClick={this.callEvent}>{report_name}</a></span><br></br>
             </div>
         )
     }

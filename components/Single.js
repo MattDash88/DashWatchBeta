@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactGA from 'react-ga';
+ReactGA.initialize('UA-132694074-1');
 
 // Import tab elements
 import TabMain from './tabs/TabMain'
@@ -11,20 +12,19 @@ import TabReports from './tabs/TabReports'
 import './css/style.css';
 import './css/single.css';
 
-const trackPage = (page) => {
-  console.log(page)
-  ReactGA.initialize('UA-132694074-1');
+// Track Event Google Analytics function
+const trackEvent = (event) => {
   ReactGA.event({
-    category: 'Tab',
-    action: 'Changed tab',
+    category: 'Single Page',
+    action: event,
   });
 }
 
-class SinglePost extends React.Component {
+class SinglePost extends React.Component {  
   constructor(props) {
     super(props);
     this.state = {
-      displayTab: ""    // State for the opened tab
+      displayTab: props.displayTab    // State for the opened tab
     };
 
     // Binding functions in this class
@@ -33,18 +33,17 @@ class SinglePost extends React.Component {
   }
 
   //Go back but don't reset querry
-  backButton(e) {
-    e.preventDefault();
-    this.props.getBack();
+  backButton() {
+    history.back();
+    trackEvent('Clicked + event.currentTarget.id')
   }
 
   // Returns the corresponding Tab based on the selected button
-  handleTab(e) {
-    this.setState({ displayTab: e.currentTarget.id })
-    trackPage('test')
+  handleTab(event) {
+    event.preventDefault()
+    this.setState({ displayTab: event.currentTarget.id })
+    trackEvent('Changed Single Page Tab')
   }
-
-  
 
   render() {
     const {   // Declare grouped elements to pass on to the tabs         
@@ -52,41 +51,27 @@ class SinglePost extends React.Component {
       kpi_data,
       financial_data,
       report_data,
-    
-      // Functions
-      showTab,      
     } = this.props
 
-    const { // Declare main_data elements that are used in the header
-      proposal_owner,
-      slug,
-    } = this.props.main_data
-
-    if (this.state.displayTab == "") {
-      this.setState({ displayTab: this.props.showTab })
-    }
-
-    return (              
-      <div className="singlePageWrapper">
-      <div className="backButtonDiv">
-            <div className="backButton" type="link" onClick={this.backButton}><i></i> BACK</div>
-      </div>
-          <div className='singleCardWrapper'> 
-          <div className="singleCardTitle">
-            <div className="proposalName">{slug}</div>
-            <div className="ownerName">by {proposal_owner}</div>
-          </div>
-          <div className="tabWrapper">
-            <button className="tabButton" title="Proposal_Details" id="TabMain" value={this.state.displayTab == "TabMain" ? "active" : 
-          "inactive"} onClick={this.handleTab}>Proposal Details</button>
-            <button className="tabButton" title="Proposal_Details" id="TabPerformance" value={this.state.displayTab == "TabPerformance" ? "active" : 
-          "inactive"} onClick={this.handleTab}>Key Performance Indicators</button>
-            <button className="tabButton" title="Proposal_Details" id="TabFunding" value={this.state.displayTab == "TabFunding" ? "active" : 
-          "inactive"} onClick={this.handleTab}>Funding and Expenses</button>
-            <button className="tabButton" title="Proposal_Reports" id="TabReports" value={this.state.displayTab == "TabReports" ? "active" : 
-          "inactive"} onClick={this.handleTab}>Reports</button>
-            <br></br>
-          </div>
+    if (typeof main_data == "undefined") {  // Still loading Airtable data  
+      var cardTitle = (
+        <div>
+        </div>
+      )
+      var pageContent = (
+        <section>
+          Loading&hellip;
+        </section>
+      )      
+    } else {         // Render content
+      var cardTitle = (
+        <div>
+        <div className="proposalName">{main_data.slug}</div>
+        <div className="ownerName">by {main_data.proposal_owner}</div>
+        </div>
+      )
+      var pageContent = (
+        <section>
           <TabMain
             main_data={main_data}
             openTab={this.state.displayTab}     // Determines tab content visibility  
@@ -94,7 +79,7 @@ class SinglePost extends React.Component {
           <TabPerformance
             main_data={main_data}
             kpi_data={kpi_data}
-            openTab={this.state.displayTab}     // Determines tab content visibility  
+            openTab={this.state.displayTab}      // Determines tab content visibility  
           />
           <TabFunding
             main_data={main_data}
@@ -102,12 +87,36 @@ class SinglePost extends React.Component {
             openTab={this.state.displayTab}     // Determines tab content visibility  
           />
           <TabReports
-            report_data={report_data}   
-            openTab={this.state.displayTab}     // Determines tab content visibility        
-        />
+            report_data={report_data}
+            openTab={this.state.displayTab}      // Determines tab content visibility        
+          />
+        </section>
+      )      
+    }   // End of pageContent if
+
+    return (
+      <div className="singlePageWrapper">
+        <div className="backButtonDiv">
+          <div className="backButton" id="backButton" type="link" onClick={this.backButton}><i></i> BACK</div>
+        </div>
+        <div className='singleCardWrapper'>
+          <div className="singleCardTitle">
+            {cardTitle}
+          </div>
+          <div className="tabWrapper">
+            <button className="tabButton" title="Proposal_Details" id="TabMain" value={this.state.displayTab == "TabMain" ? "active" :
+              "inactive"} onClick={this.handleTab}>Proposal Details</button>
+            <button className="tabButton" title="Proposal_Details" id="TabPerformance" value={this.state.displayTab == "TabPerformance" ? "active" :
+              "inactive"} onClick={this.handleTab}>Key Performance Indicators</button>
+            <button className="tabButton" title="Proposal_Details" id="TabFunding" value={this.state.displayTab == "TabFunding" ? "active" :
+              "inactive"} onClick={this.handleTab}>Funding and Expenses</button>
+            <button className="tabButton" title="Proposal_Reports" id="TabReports" value={this.state.displayTab == "TabReports" ? "active" :
+              "inactive"} onClick={this.handleTab}>Reports</button>
+            <br></br>
+          </div>
+          {pageContent}
         </div>
       </div>
-
     );
   }
 }

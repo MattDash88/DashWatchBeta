@@ -1,4 +1,3 @@
-import shortid from 'shortid';
 import React from 'react';
 
 // Import other elements 
@@ -59,7 +58,8 @@ class Post extends React.Component {
       proposal_owner,
       schedule_status,
       slug,
-      status,    
+      status,
+      id,    
     } = this.props.main_data
 
     const { // Declare report_data elements to use in render()
@@ -96,7 +96,7 @@ class Post extends React.Component {
          show={this.state.show}
        >
          <ModalContent
-           key={shortid.generate()}
+           key={id}
 
            // Group data elements passed on to Modal
            main_data={main_data}
@@ -214,7 +214,7 @@ class Post extends React.Component {
           </div>
 
           <div className="linkItem">
-            <div className="link" type="link" onClick={this.showProposalPage} id={slug}>DASH WATCH PAGE</div>
+          <a className="link" href={`/p/${slug}`} target="">DASH WATCH PAGE</a>
           </div>
 
           <div className="linkItem" text-align="right">

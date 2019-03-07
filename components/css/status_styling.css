@@ -5,6 +5,7 @@
 .statusPropertyValue {
     font-family: 'Titillium Web', sans-serif;
     font-weight: bold;
+    color: black;
     font-size: 14px;
     text-align: left; 
 }
@@ -69,7 +70,7 @@
     color: #3f51b5;
 }
 
-.statusPropertyValue[value="Opted out of Dash Watch"] {
+.statusPropertyValue[value="Opted out of Dash Watch Reporting"] {
     color: #3f51b5;
 }
 
@@ -115,4 +116,76 @@
 
 .performancePropertyValue[value="Not Tracked by Proposal"] {
     color: #f48c06;
+}
+
+/* 
+Temporary Tests 
+*/
+
+/* Status */
+.simple_modalPropertyDiv[value="Completed"] {
+    background: #c4f0c4;
+}
+
+.simple_modalPropertyDiv[value="Obstructed"] {
+    background: #ffefe0;
+}
+
+.simple_modalPropertyDiv[value="Abandoned"] {
+    background: #eebcbc;
+}
+
+/* Communication Status */
+.simple_modalPropertyDiv[value="In communication with Dash Watch"] {
+    background: #c4f0c4;
+}
+
+.simple_modalPropertyDiv[value="In communication but did not provide a new update"] {
+    background: #eebcbc;
+}
+
+.simple_modalPropertyDiv[value="Not in communication with Dash Watch"] {
+    background: #eebcbc;
+}
+
+/* Budget Status */
+.simple_modalPropertyDiv[value="On Budget"] {
+    background: #c4f0c4;
+}
+
+.simple_modalPropertyDiv[value="Over Budget and Underfunded"] {
+    background: #ffefe0;
+}
+
+.simple_modalPropertyDiv[value="On Budget but underfunded due to the depreciation of Dash"] {
+    background: lightyellow;
+}
+
+.simple_modalPropertyDiv[value="Unfunded"] {
+    background: lightyellow;
+}
+
+.simple_modalPropertyDiv[value="Under Budget and underfunded due to depreciation"] {
+    background: r#ffefe0;
+}
+
+.simple_modalPropertyDiv[value="On Budget and overfunded due to the appreciation of Dash"] {
+    background: lightyellow;
+}
+
+.simple_modalPropertyDiv[value="Opted out of financial reporting"] {
+    background: #dac4da;
+}
+
+/*Schedule Status */
+.simple_modalPropertyDiv[value="On Schedule"] {
+    background: #c4f0c4;
+}
+
+.simple_modalPropertyDiv[value="Behind Schedule"] {
+    background: #ffefe0;
+}
+
+.simple_modalPropertyDiv[value="Unknown"] {
+    background: #dac4da;
 }

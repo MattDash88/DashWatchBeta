@@ -1,0 +1,167 @@
+/*
+Styles used in ModalFrame.js
+*/
+/* Modal screen makes the area around the modal darker*/
+
+/*
+Styling used in ModalContent.js
+*/
+
+/* Outer border of the modal */
+.simple_modalWrapper {
+    min-width: 500px;
+    max-width: 800px;
+    min-height: 500px;
+    box-shadow: 2px 2px 1px grey;
+    border-radius:5px 5px 5px 5px;
+    background: #ffffff;
+}
+
+/* Blue title area of the modal proposal card */
+.simple_modalCardTitle { 
+    font-family: 'Montserrat', sans-serif;
+    min-width: 450px;
+    max-width: 100%;
+    background: #008de4;
+    border-radius: 5px 5px 0px 0px;
+    height: 75px;
+}
+
+/* Span to allow Close button placement in Title area */
+.simple_modalHeader {
+    display: inline-block;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    text-transform: uppercase;
+    min-width: 450px;
+    width: 100%;
+    margin-left: 10px;
+}
+
+/* Styling of the proposal name, special in modal because of width requirements */
+.simple_modalProposalName { 
+    display: block;
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.5rem;
+    width: 100%;
+    min-width: 350px;
+    text-align: center;
+}
+
+/* Styling of the proposal owner name also used in modal */
+.simple_modalOwnerName { 
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    font-weight: normal;
+    text-align: center;
+    width: 100%;
+    min-width: 350px;
+    color: white;
+}
+
+/* Styling for modal close button */ 
+.simple_modalCloseButton {
+    display: block;
+    position: fixed;
+    color: white;
+    top:0;
+    right:0;
+    font-family: 'Roboto', sans-serif;
+    padding-top: 3px;
+    padding-right: 10px;
+    font-size: 20px;
+    font-weight: normal;
+    height: 20px;
+    min-width: 50px;
+    width: 15%;
+    text-transform: uppercase;
+    text-align: right;
+    cursor: pointer;
+}
+
+/*
+Styling used in the modal tab files (ModalTabMain, ModalTabPerformance, ModalTabFunding and ModalTabReports
+*/
+
+/* Styling to make tab content visible or not */
+.simple_modalTabContent[value="active"] {
+    display: flex;
+}
+
+.simple_modalTabContent[value="inactive"] {
+    display: none;
+}
+
+/* Styling of smaller subheaders on modal tabs */
+.simple_modalSubHeader {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    text-align: left; 
+    text-transform: uppercase;
+    color: black;
+    margin-top: 15px;
+    margin-left: 10px;
+}
+
+/* Div containing both the Property Title and Property Item */
+.simple_modalPropertyDiv {
+    flex: 0 0 30%;                       /* don't grow, don't shrink, width */
+    height: 60px;
+    text-align: left; 
+    border: 1px solid lightgrey;
+    height: 60px;
+    width: 30%;
+    padding: 5px;
+    margin-bottom: 5px;
+}
+
+.simple_modalPropertyDiv[id="linkPropertyDiv"] {
+    border: none;
+}
+
+
+/* Element name styling, Status, Budget Status, etc. */
+.simple_modalPropertyTitle {  
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 'bold';
+    color: black;
+    height: 20px;    
+
+}
+
+/* Div containg the value, Completed, On Schedule, etc. Text itself is styled in status_styling.css */
+.simple_modalPropertyItem {
+    font-family: 'Titillium Web', sans-serif;
+    font-weight: bold;
+    font-size: 14px;
+    height: 40px;
+
+}
+
+/* Styling of text on tabs in modal*/
+.simple_modalProposalText {
+    font-family: 'Titillium Web', sans-serif;
+    font-size: 14px;
+    color: black;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-left: 10px;
+    padding-top: 0.3rem;
+    padding-bottom: 5px;
+    padding-right: 3rem;
+
+}
+
+.simple_modalPropertyGrid {
+    display: flex;                       /* establish flex container */
+    flex-wrap: wrap;                     /* enable flex items to wrap */
+    justify-content: space-around;    
+    margin-top: 0.1rem;
+  }
+
+  .simple_modalOwnerNameText {
+    text-transform: uppercase;
+  }

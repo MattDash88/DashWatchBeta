@@ -136,6 +136,7 @@ var processKpiData = function kpiDataFunction(proposalReportData, merchantKpiDat
         const reportKpiData = {
             report_date: proposalReportData[report_item].report_date,       // Date of the report KPI data was in
             report_type: proposalReportData[report_item].report_type,       // Report type, video interviews currently have no kpi data
+            report_ref: proposalReportData[report_item].report_ref, 
             kpi_metrics: kpiDataArray,                                      // Const containing all kpi data of the report
         }
 
@@ -214,22 +215,56 @@ var processReportData = function reportDataFunction(proposalData, proposalReport
 }
 
 // Function to return the records for the requested month report list
-var processMonthListData = function reportDataFunction(proposalData, monthReportData) {
+var processMonthListData = function monthDataFunction(monthReportData) {
     storeReportData = []        // Create Array to store report data in
 
-    // Iterate through all month records
-    Object.keys(proposalData).map((proposal_item) => {
-        if (proposalData[proposal_item].main_data.id == monthReportData.proposal_ref) {
-            const monthListData = {   // Create Array to store report data in
-                list_data: monthReportData,
-                main_data: proposalData[proposal_item].main_data,
-                report_data: proposalData[proposal_item].report_data,
-            }
-            storeReportData=monthListData
-            //storeReportData.push(monthListData)         
-        }
-        
-    }) // End of proposalData loop
+    // Format funding received
+    monthReportData.funding_received_usd = monthReportData.funding_received_usd.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+
+    // Determine type of completion date, anticipated or actual completion date
+    if (typeof monthReportData.estimated_completion_date !== 'undefined') {
+        monthReportData.completion_elem_type = 'Anticipated Completion'
+        monthReportData.completion_elem = monthReportData.estimated_completion_date
+    } else if (typeof monthReportData.actual_completion_date !== 'undefined') {
+        monthReportData.completion_elem_type = 'Actual Completion'
+        monthReportData.completion_elem = monthReportData.actual_completion_date
+    } else {
+        monthReportData.completion_elem_type = 'Anticipated Completion'
+        monthReportData.completion_elem = 'N/A'
+    }
+
+    // Create data construct for proposal
+    const monthListData = {   // Create Array to store report data in
+        list_data: {
+            project_name: monthReportData.project_name,
+            proposal_type: monthReportData.proposal_type,
+            voting_status: monthReportData.voting_status,
+            voting_dc_link: monthReportData.voting_dc_link,
+            response_status: monthReportData.response_status,
+            report_status: monthReportData.report_status,
+            report_type: monthReportData.report_type,
+            report_link: monthReportData.report_link,
+            published_month: monthReportData.published_month,
+            id: monthReportData.id,
+        },
+        main_data: {
+            slug: monthReportData.slug,
+            proposal_name: monthReportData.proposal_name,
+            proposal_owner: monthReportData.proposal_owner,
+            payment_date: monthReportData.payment_date,
+            status: monthReportData.status,
+            budget_status: monthReportData.budget_status,
+            schedule_status: monthReportData.schedule_status,
+            comm_status: monthReportData.comm_status,
+            completion_elem_type: monthReportData.completion_elem_type,
+            completion_elem: monthReportData.completion_elem,
+            funding_received_usd: monthReportData.funding_received_usd,
+            last_updated: monthReportData.last_updated,
+            proposal_description: monthReportData.proposal_description,
+            proposal_ref: monthReportData.proposal_ref,
+        },
+    }
+    storeReportData=monthListData
     return storeReportData
 }
 

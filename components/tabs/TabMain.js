@@ -1,8 +1,8 @@
 import React from 'react';
 
 // Import css
-import '../css/single.css';
 import '../css/style.css';
+import '../css/single.css';
 import '../css/status_styling.css';
 
 class TabMain extends React.Component { 
@@ -21,21 +21,17 @@ class TabMain extends React.Component {
       slug,
     } = this.props.main_data
 
-    const { // Declare grouped elements to pass on to modal   
-    } = this.props
-
     const {   // Declare individual elements used in this class
       openTab,
     } = this.props
     
     // Code to generate Dashcentral link
     let dclink = null;
-    const permalink = '/p/' + slug
-    if (slug.match("Dash-Help-Support-Center") !== null) { //Code to handle Dash-Help proposals
-      dclink = ('http://dashcentral.org/p/Dash-Help-Support-Center')
-    } else {    // Pattern for all other proposals
-      dclink = ('http://dashcentral.org/p/' + slug) 
-    }
+      if (slug.match("Dash-Help-Support-Center") !== null) { //Code to handle Dash-Help proposals
+        dclink = ('http://dashcentral.org/p/Dash-Help-Support-Center')
+      } else {    // Pattern for all other proposals
+        dclink = ('http://dashcentral.org/p/' + slug)
+      }
 
     return (
       <div className="tabContent" value={openTab == "TabMain" ? "active" : "inactive"}>
@@ -120,14 +116,6 @@ class TabMain extends React.Component {
             <a className="link" href={dclink} target="_blank">Dashcentral Link</a>
           </div><br></br>
         </div>
-        <div className="tabLinkDiv">
-          <div className="tabLinkItem">
-            <a className="link" href={permalink} target="_blank">Dash Watch Permalink</a>
-          </div>
-        </div>
-
-
-
       </div>
     )
   }

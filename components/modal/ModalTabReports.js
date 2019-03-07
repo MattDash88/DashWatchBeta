@@ -1,5 +1,4 @@
 import React from 'react';
-import shortid from 'shortid';
 
 // Import css
 import '../css/style.css';
@@ -27,7 +26,7 @@ class ModalTabReports extends React.Component {
                     <div className="modalLinkDiv">
                         {report_data.map((post) =>
                             <ReportDiv
-                                key={shortid.generate()}
+                                key={post.report_ref}
                                 report_data={post}
                             />
                         )}
@@ -50,7 +49,7 @@ class ReportDiv extends React.Component {
             <main>
                 <div className="modalLinkTitle">{report_date}:</div>
                 <span className="modalReportLink">
-                <a className="link" link href={report_link} target={report_link}>{report_name}</a></span><br></br>
+                <a className="link" href={report_link} target={report_link}>{report_name}</a></span><br></br>
             </main>
         )
     }

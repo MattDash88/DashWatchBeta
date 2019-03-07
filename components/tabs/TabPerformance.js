@@ -1,5 +1,10 @@
 import React from 'react';
 import shortid from 'shortid';
+import ReactGA from 'react-ga';
+
+// Analytics
+import getGAKey from '../functions/analytics';
+ReactGA.initialize(getGAKey);
 
 // Import classes for KPI types
 import MerchantKpiContent from './kpi_subtab/MerchantKpiContent'
@@ -8,67 +13,75 @@ import SocialMediaKpiContent from './kpi_subtab/SocialMediaKpiContent'
 import PublicRelationsKpiContent from './kpi_subtab/PublicRelationsKpiContent'
 
 // Import css
-import '../css/single.css';
 import '../css/style.css';
+import '../css/single.css';
+import '../css/status_styling.css';
+
+const trackEvent = (event) => {
+  ReactGA.event({
+      category: 'Single Page',
+      action: event,
+  });
+}
 
 class TabPerformance extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      reportTab: "" //State which report tab is selected
+      reportTab: props.kpi_data[0].report_date //State which report tab is selected
     };
     // Binding functions in this class
     this.displayTab = this.displayTab.bind(this);
   }
 
   // Function selecting which subtab to show
-  displayTab(e) {
-    this.setState({ reportTab: e.currentTarget.title })
+  displayTab(event) {
+    event.preventDefault();
+    this.setState({ reportTab: event.currentTarget.title })
+    trackEvent('Changed Performance subtab')                 // Track Event on Google Analytics
   }
 
-    render() {
-      const { // Declare grouped elements used in the performance tab 
-        kpi_data,
-        openTab,
-      } = this.props
+  render() {
+    const { // Declare grouped elements used in the performance tab 
+      kpi_data,
+      openTab,
+    } = this.props
 
     // Code to generate the performance subtabs
-    let reportdata = null;    
+    let reportdata = null;
     if (kpi_data[0].report_date == "N/A") { // If no reports are available, no subtabs
       reportdata = (
-      <p className="subTabWrapperText">No Reports available.</p>
+        <p className="subTabWrapperText">No Reports available.</p>
       )
     } else {  // If there are reports, make subtabs
-      if (this.state.reportTab == "") { // Open first subtab as default
-        this.setState({ reportTab: kpi_data[0].report_date })
-      }
       // Make a tab button for every report
-      reportdata = (  
+      reportdata = (
         kpi_data.map((post) =>
-        <button className="subTab" title={post.report_date} id={post.report_date} value={this.state.reportTab == post.report_date ? "Active" : 
-        "Inactive"} onClick={this.displayTab}>{post.report_date}</button>
+          <button className="subTab" title={post.report_date} id={post.report_date} value={this.state.reportTab == post.report_date ? "Active" :
+            "Inactive"} key={post.report_ref} onClick={this.displayTab}>{post.report_date}</button>
         )
       )
     } // End of KPI subtab if
-  
-      return (
-        <div className="tabContent" value={openTab == "TabPerformance" ? "active" : "inactive"}>
-          <div className="tabHeader">Proposal KPI data from Reports:</div>
-          <div className="subTabWrapper">
+
+    return (
+      <div className="tabContent" value={openTab == "TabPerformance" ? "active" : "inactive"}>
+        <div className="tabHeader">Proposal KPI data from Reports:</div>
+        <div className="subTabWrapper">
           {reportdata}
-          </div>
+        </div>
         {kpi_data.map((post) =>
-            <ReportTabContent
+          <ReportTabContent
             key={shortid.generate()}
+            report_ref={post.report_ref}
             report_date={post.report_date}
             kpi_metrics={post.kpi_metrics}
             report_tab={this.state.reportTab}
-        />       
+          />
         )}
-        </div>
-      )
-    }
+      </div>
+    )
   }
+}
 
 class ReportTabContent extends React.Component {
   constructor(props) {
@@ -79,7 +92,7 @@ class ReportTabContent extends React.Component {
     const {
       report_date,
       kpi_metrics,
-      report_tab
+      report_tab,
     } = this.props
 
     if (kpi_metrics == 'No KPI data found') { // If no kpi data is available, show this message
@@ -91,18 +104,19 @@ class ReportTabContent extends React.Component {
         </main>
       )
     } else { // If there is kpi data, push it to RenderKpi
-    return (
-      <main>
-        {kpi_metrics.map((post) =>
-          <RenderKpi
-            key={shortid.generate()}
-            report_date={report_date}
-            kpi_metrics={post}
-            report_tab={report_tab}
-          />
-        )}
-      </main>
-    )}
+      return (
+        <main>
+          {kpi_metrics.map((post) =>
+            <RenderKpi
+              key={shortid.generate()}
+              report_date={report_date}
+              kpi_metrics={post}
+              report_tab={report_tab}
+            />
+          )}
+        </main>
+      )
+    }
   }
 }
 
@@ -115,7 +129,7 @@ class RenderKpi extends React.Component {
     const { // Declare elements used in this class
       report_date,
       kpi_metrics,
-      report_tab
+      report_tab,
     } = this.props
 
     // Sort kpi data on type and push it to the right function
@@ -127,16 +141,16 @@ class RenderKpi extends React.Component {
             kpi_metrics={kpi_metrics}
             report_tab={this.props.report_tab}
           />
-          </main>
+        </main>
       )
     } else if (kpi_metrics.kpi_type == 'event_kpis') { // Event KPIs
       return (
         <main>
-            <EventKpiContent
-              report_date={report_date}
-              kpi_metrics={kpi_metrics}
-              report_tab={this.props.report_tab}
-            />
+          <EventKpiContent
+            report_date={report_date}
+            kpi_metrics={kpi_metrics}
+            report_tab={this.props.report_tab}
+          />
         </main>
       )
     } else if (kpi_metrics.kpi_type == 'social_media_kpis') {  // Social Media KPIs
@@ -154,17 +168,17 @@ class RenderKpi extends React.Component {
     } else if (kpi_metrics.kpi_type == 'public_relations_kpis') {  // Public Relations KPIs
       return (
         <main>
-            <PublicRelationsKpiContent
-              report_date={report_date}
-              kpi_metrics={kpi_metrics}
-              report_tab={this.props.report_tab}
-            />
+          <PublicRelationsKpiContent
+            report_date={report_date}
+            kpi_metrics={kpi_metrics}
+            report_tab={this.props.report_tab}
+          />
         </main>
       )
     } else {    // No KPIs
       return (
         <main className="reportTab" value={report_tab == report_date ? "Active" :
-        "Inactive"}><p className="tabProposalText">If this shows up there is an error in the data. Please report the proposal you're looking at to the Dash Watch report team.</p></main>
+          "Inactive"}><p className="tabProposalText">If this shows up there is an error in the data. Please report the proposal you're looking at to the Dash Watch report team.</p></main>
       )
     }
   }

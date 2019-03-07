@@ -1,13 +1,32 @@
 import React from 'react';
+import ReactGA from 'react-ga';
+
+// Analytics
+import getGAKey from '../functions/analytics';
+ReactGA.initialize(getGAKey);
 
 // Import css
 import '../css/style.css';
 import '../css/modal.css';
 import '../css/status_styling.css';
 
+const trackEvent = (event) => {
+  ReactGA.event({
+      category: 'Full Modal',
+      action: event,
+  });
+}
+
 class ModalTabMain extends React.Component {
   constructor(props) {
     super(props);
+    
+    this.callEvent = this.callEvent.bind(this);
+  }
+
+  // Google Analytics function to track User interaction on page
+  callEvent(event) {
+    trackEvent('clicked ' + event.currentTarget.id)
   }
   
   render() {
@@ -23,7 +42,6 @@ class ModalTabMain extends React.Component {
       proposal_description,
       funding_received_usd,
       slug,
-      id,
     } = this.props.main_data
 
     const {   // Declare individual elements used in this class
@@ -32,7 +50,6 @@ class ModalTabMain extends React.Component {
 
     // Code to generate Dashcentral link
     let dclink = null;
-    const permalink = '/p/' + slug
     if (slug.match("Dash-Help-Support-Center") !== null) { //Code to handle Dash-Help proposals
       dclink = ('http://dashcentral.org/p/Dash-Help-Support-Center')
     } else {  // Pattern for all other proposals
@@ -119,12 +136,12 @@ class ModalTabMain extends React.Component {
       <div className="modalHeader">Links:</div>
       <div className="modalLinkDiv">
         <span className="modalLinkItem">
-        <a className="link" href={dclink} target={dclink}>Dashcentral Link</a>
+        <a className="link" href={dclink} target="_blank" onClick={this.callEvent}>Dashcentral Link</a>
         </span>
       </div>
       <div className="modalLinkDiv">
         <span className="modalLinkItem">
-        <a className="link" href={permalink} target={permalink}>Dash Watch Permalink</a>
+        <a className="link" href={`/p/${slug}`} target="" onClick={this.callEvent}>Dash Watch Page</a>
         </span>
       </div>
     </div>

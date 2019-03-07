@@ -53,8 +53,11 @@ Styles used in index.js
     display: inline-flex;
     font-family: 'Montserrat', sans-serif;
     text-align: center; 
+    color: white;
+    text-decoration: none;
+    height: 100%;
     margin: 14px 16px;
-    cursor: default;   
+    cursor: pointer;   
 }
 
 /* Show Red line under active page */
@@ -62,12 +65,8 @@ Styles used in index.js
     border-bottom: 2px solid #e90056;
 }
 
-/* Styling of the inactive menu item */
-.menuItem a[value="Inactive"] {
-    cursor: pointer;
-}
-
-.menuItem a[value="Inactive"]:hover {
+/* Show Red line under active page */
+.menuItem:hover {
     background-color: #ddd;
     color: rgb(28, 31, 34);
 }
@@ -81,6 +80,12 @@ Styles used in index.js
     padding-bottom: 2px;
     color: white;
 }
+
+.menuItem[id="image"]:hover {
+    background-color: #012060;
+    color: #012060;
+}
+
 
 /* Styling for search form element */
 .searchForm{

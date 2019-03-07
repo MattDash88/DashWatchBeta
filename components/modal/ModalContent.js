@@ -1,4 +1,9 @@
 import React from 'react';
+import ReactGA from 'react-ga';
+
+// Analytics
+import getGAKey from '../functions/analytics';
+ReactGA.initialize(getGAKey);
 
 // Import other elements 
 import ModalTabMain from './ModalTabMain'
@@ -7,9 +12,16 @@ import ModalTabFunding from './ModalTabFunding'
 import ModalTabReports from './ModalTabReports'
 
 // Import css
-import '../css/single.css';
-import '../css/modal.css'
 import '../css/style.css';
+import '../css/modal.css'
+
+// Track Event Google Analytics function
+const trackEvent = (event) => {
+  ReactGA.event({
+      category: 'Full Modal',
+      action: event,
+  });
+}
 
 class ModalContent extends React.Component {
     constructor(props) {
@@ -18,23 +30,21 @@ class ModalContent extends React.Component {
           displayTab: "TabMain"
         };
         this.handleTab = this.handleTab.bind(this);
-        this.handleProposalPage = this.handleProposalPage.bind(this);
         this.handleClose = this.handleClose.bind(this);
-      }
-      
-      // Function to direct the user to the right tab when Proposal Page is opened from the Modal
-      handleProposalPage(slug) {
-        this.props.handleProposalPage(slug, this.state.displayTab);
       }
 
       // Returns the corresponding Tab based on the selected button
-      handleTab(e) {
-        this.setState({ displayTab: e.currentTarget.id })
+      handleTab(event) {
+        event.preventDefault()
+        this.setState({ displayTab: event.currentTarget.id })
+        trackEvent('Changed Modal Tab')                 // Track Event on Google Analytics
       }
     
       // Function to close the modal
      handleClose() {
+      event.preventDefault()
       this.props.handleClose();
+      trackEvent('Closed Modal Button')                 // Track Event on Google Analytics
     }
     
     // If user clicks outside modal area, run handleClose
@@ -42,6 +52,7 @@ class ModalContent extends React.Component {
       if (e.target.id == "outside")
       {
         this.handleClose()
+        trackEvent('Closed Modal Outside')                 // Track Event on Google Analytics
       } 
     }
 
@@ -88,12 +99,10 @@ class ModalContent extends React.Component {
               />
               <ModalTabPerformance
                 slug={slug}
-                handleProposalPage={this.handleProposalPage}
                 openTab={this.state.displayTab}     // Determines tab content visibility  
               />
               <ModalTabFunding
                 main_data={main_data}
-                handleProposalPage={this.handleProposalPage}
                 openTab={this.state.displayTab}     // Determines tab content visibility  
               />
               <ModalTabReports

@@ -1,397 +1,415 @@
 import fetch from 'isomorphic-unfetch';
-import shortid from 'shortid';
 import React from 'react';
 import ReactGA from 'react-ga';
-ReactGA.initialize('UA-132694074-1');
+
+// Analytics
+import getGAKey from '../components/functions/analytics';
+ReactGA.initialize(getGAKey);
 
 // Import pages
-import Post from '../components/Post';
-import SinglePost from '../components/Single';
-import MonthPage from '../components/MonthPage';
-import AboutPage from '../components/About';
 
 // Import css
 import "../components/css/style.css";
+import "../components/css/monthstyle.css";
+import '../components/css/simplified_modal.css';
+import "../components/css/status_styling.css";
 
 // Import other elements 
-import ScrollButton from '../components/buttons/ScrollButton';  // Scroll to top button
+import Header from '../components/headers/IndexHeader';
+import ScrollButton from '../components/elements/ScrollButton';  // Scroll to top button
+import NavBar from "../components/elements/NavBar"
+import ModalFrame from '../components/modal/ModalFrame';
+import ModalContent from '../components/modal/SimplifiedModalContent';
 
-var basepath = 'https://dashwatchbeta.org' 
+var basepath = 'https://dashwatchbeta.org'
 
-// Airtable query requesting Proposal List data
-const getPosts = () => {
-  return (
-      new Promise((resolve) => {
-          fetch(`${basepath}/api/get/posts`)
-          .then((res) => res.json()
-            .then((res)=> {
-              resolve(res.data)              
-    }))
-  })
-)}
-
-// Airtable query requesting data for the selected month, passed on to the month list page
-const getMonthList = (month) => {
-  return (
-      new Promise((resolve) => {
-          fetch(`${basepath}/api/get/monthlist/${month}`)
-          .then((res) => res.json()
-            .then((res)=> {
-              resolve(res.data)              
-    }))
-  })
-)}
-
-// Airtable query requesting data for a Single Proposal passed on to the Single Proposal Page
-const getSinglePost = (proposalID) => {
-  return (
-      new Promise((resolve) => {
-          fetch(`${basepath}/api/p/${proposalID}`)
-          .then((res) => res.json()
-            .then((res)=> {
-              resolve(res.data)              
-    }))
-  })
-)}
-
-// Airtable query requesting queried data, used by the filters and search function
-const filterPost = (query) => {
-  return (
-      new Promise((resolve) => {
-          fetch(`${basepath}/api/filter/${query}`)
-          .then((res) => res.json()
-            .then((res)=> {
-              resolve(res.data)              
-    }))
-  })
-)}
-
-// Function for Google analytics
-const trackPage = (page) => {
-  ReactGA.pageview(page);
+const trackEvent = (event) => {
+    ReactGA.event({
+        category: 'Reports Page',
+        action: event,
+    });
 }
-   
-class Home extends React.Component {
-  constructor() {
-    super()
 
-    this.state = {
-      search: '',
-      airtableData: [],             // All Proposal data
-      displayData: [],              // Data filtered on querry
-      monthListData: [],            // Data for report page
-      singlePostData: [],           // Data of a single proposal
-      showPage: 'month',            // State for the page that is shown, initial state directs to month list page
-      showTab: '',                  // State that handles the initial tab on the Single Proposal page, the modal can direct the user directly to the funding and performance tabs
-      monthListId: 'January 2019',  // State for the month shown on the Month list, initial state directs to the most recent month
-      showInactivePosts: false,     // State of the inactive proposal filter, opted-out or concluded proposals are hidden by default to increase rendering performance
-      singleProposalId: '',         // State for single proposal page, which proposal is shown 
-    }
-
-    // Binding functions in this class
-    this.handleSubmit = this.handleSubmit.bind(this);       // Submit search query
-    this.handleClick = this.handleClick.bind(this);         // Selection from navbar
-    this.handleFilter = this.handleFilter.bind(this);       // Toggle filter of inactive proposals
-    this.setSinglePage = this.setSinglePage.bind(this);     // Select a proposal page
-    this.handleSelectMonth = this.handleSelectMonth.bind(this); // Select a month on month page
-    this.handleBack = this.handleBack.bind(this);           // Handle back button from single proposal page 
-    
-  }
-
-  // Function that handles the submission of the search Form
-  handleSubmit(event) {
-    event.preventDefault();
-    this.setState({
-      search: event.target[0].value,
-      showPage: 'all'
-    });    
-  }
-
-  // Function to handles page selection from Navbar
-  handleClick(event) {
-    event.preventDefault();
-    this.setState({
-      query: '',
-      singleProposalId: '',
-      showPage: event.currentTarget.id,
-    }); 
-  }
-
-  // Function that initiates the single page if selected
-  setSinglePage(newVal, openTab) {
-    this.setState({      
-      //showPage: 'single',
-      singleProposalId: newVal,
-      showTab: openTab,     
-    })
-  }
-
-  // Function that handles the back button from the "single proposal page"
-  handleBack() {
-    this.setState({      
-      showPage: 'all',      // For now the back button will always return to the proposal list page
-      singleProposalId: '', 
-    })
-  }
-
-  // Function for the month selection on "the month list page"
-  handleSelectMonth(monthId) {
-    this.setState({
-      monthListId: monthId
-    })
-  }
-
-  // Function that initiates the "single proposal page" if selected
-  handleFilter() {
-    this.setState({showInactivePosts: !this.state.showInactivePosts})    
-  }
-
-  componentDidMount() { 
-    // Promise to get the initial "month list" records 
-    Promise.resolve(getMonthList(this.state.monthListId)).then(data => { 
-      this.setState({ monthListData: data })
-    }) 
-    
-    // Promise to get all proposal records   
-    Promise.resolve(getPosts()).then(data => { 
-      this.setState({ airtableData: data })      
-    })       
-    
-    // Promise to get initial filtered records     
-    const query = `search=${this.state.search.toLowerCase()}&show_inactive=${this.state.showInactivePosts}` 
-    Promise.resolve(filterPost(query)).then(data => {
-      this.setState({ displayData: data })
-    })
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    // Update "Proposal list" data for search and filters
-    if (prevState.search !== this.state.search || prevState.showInactivePosts !== this.state.showInactivePosts) {
-      const query = `search=${this.state.search.toLowerCase()}&show_inactive=${this.state.showInactivePosts}`
-      Promise.resolve(filterPost(query)).then(data => {
-        this.setState({
-          displayData: data,
-        })
-      })
-    }
-
-    // Retrieve data for chosen proposal for "single proposal page"
-    if (prevState.singleProposalId !== this.state.singleProposalId) {
-      Promise.resolve(getSinglePost(this.state.singleProposalId)).then(data => {
-        this.setState({
-          singlePostData: data,
-          showPage: 'single',
-        })
-      })
-    }
-
-    // Update "month list" data if another month is selected
-    if (prevState.monthListId !== this.state.monthListId) {
-      Promise.resolve(getMonthList(this.state.monthListId)).then(data => {
-        this.setState({
-          monthListData: data,
-        })
-      })
-    }
-  }
-
-  render() {
-    const { // Declare data arrays used in class
-        airtableData,
-        displayData,
-        monthListData,
-      } = this.state
-
+const getMonthList = () => {
     return (
-      // Navbar code
-      <main>
-        <div className="menu">
-          <nav className="menuContent">
-            <li className="menuItem"><img id="Logo" src="https://dashwatchbeta.org/Logo/logo_white20.png"></img></li>
-            <li className="menuItem"><a title="Report List" id="month" value={this.state.showPage == "month" ? "Active" : "Inactive"} onClick={this.handleClick}>Reports</a></li>
-            <li className="menuItem"><a title="All Proposals" id="all" value={this.state.showPage == "all" ? "Active" : "Inactive"}onClick={this.handleClick}>Proposals View</a></li>
-            <form className="searchForm" onSubmit={this.handleSubmit}>
-              <input className="searchField"
-                placeholder="Search proposal ID or proposer"
-                value={this.state.value}
-                ref={(input) => this.textInput = input}
-              />
-            </form>
-            <li className="menuItem"><a title="About" id="about" value={this.state.showPage == "about" ? "Active" : "Inactive"}onClick={this.handleClick} onClick={this.handleClick}>About</a></li>
-          </nav>
-        </div>
-        <section className="pagewrapper">
-          <ProposalList
-            // Arrays containing the data
-            airtableData={airtableData}      // All data, currently only used to check if data retrieval has been successful
-            displayData={displayData}        // Data for the "Proposal List" page after filters
-            monthListData={monthListData}    // Data for the month list page
-            singlePostData={this.state.singlePostData}  // Data for a single proposal page           
-
-            // Elements for functions
-            showPage={this.state.showPage}      // State that determines which page is shown (month, single, proposal list or about)
-            setSinglePage={this.setSinglePage}  // Handle directing to the single page of selected proposal
-            showTab={this.state.showTab}        // Direct to tab on single page from modal
-            getMonthId={this.handleSelectMonth} // Handle selecting a different month on Month Page
-            monthId={this.state.monthListId}
-            toggleFilter={this.handleFilter}    // Handle toggle of inactive proposal filter
-            goBack={this.handleBack}            // Handle going back to previous page from singlepage
-            search={this.state.search}          // To show what the results are for
-            showInactivePosts={this.state.showInactivePosts} 
-
-            // Elements for Analytics
-            singleProposalId = {this.state.singleProposalId}
-            />
-        </section>
-      </main>
+        new Promise((resolve) => {
+            fetch(`${basepath}/api/get/monthlist`)
+                .then((res) => res.json()
+                    .then((res) => {
+                        resolve(res.data)
+                    })
+                )
+        })
     )
-  }
 }
 
-class ProposalList extends React.Component {
-  constructor(props) {
-    super(props);    
+const getOptOutList = () => {
+    return (
+        new Promise((resolve) => {
+            fetch(`${basepath}/api/get/optoutlist`)
+                .then((res) => res.json()
+                    .then((res) => {
+                        resolve(res.data)
+                    })
+                )
+        })
+    )
+}
 
-    // Binding functions used in this class
-    this.handleProposalPage = this.handleProposalPage.bind(this); // Pass on single proposal click to Home
-    this.handleBack = this.handleBack.bind(this);                 // Pass on back button click to Home 
-    this.handleSelectMonth = this.handleSelectMonth.bind(this);   // Pass on selected month on "month list" to Home
-    this.handleChangeChk = this.handleChangeChk.bind(this);       // Pass on filter toggle to Home
-  }
+class Month extends React.Component {
+    static async getInitialProps(ctx) {
+        const props = {
+            month: typeof ctx.query.month == "undefined" ? "Feb19" : ctx.query.month,   // Default no month to latest
+            url: ctx.pathname,
+            as: ctx.asPath,
+        }
+        return props
+    }
 
-  // Pass on single proposal click to Home
-  handleProposalPage(slug, openTab) {
-    this.props.setSinglePage(slug, openTab)
-  }
+    constructor(props) {
+        super(props);
 
-  // Pass on back button click to Home 
-  handleBack() {
-    this.props.goBack()
-  } 
+        this.state = {
+            monthId: props.month,
+            monthListData: '',
+            optOutListData: '',
+            url: '/reports',
+            as: props.as,
+        }
 
-  // Pass on selected month on "month list" to Home
-  handleSelectMonth(monthId) {
-    this.props.getMonthId(monthId) 
-  }
+        // Bind functions used in class
+        this.handleSelectMonth = this.handleSelectMonth.bind(this);
+        this.callEvent = this.callEvent.bind(this);
+    }
 
-  // Pass on filter toggle to Home
-  handleChangeChk() {
-    this.props.toggleFilter() 
-  }
+    // Function initiated when a month list button is pressed, requests the data for that month from index.js
+    handleSelectMonth(event) {
+        event.preventDefault();
+        this.setState({
+            monthId: event.currentTarget.id,        // Change state to load different month
+            as: `/reports?month=${event.currentTarget.id}`,
+        })
+
+        history.pushState(this.state, '', `/reports?month=${event.currentTarget.id}`)   // Push State to history
+        trackEvent('Changed Month')                 // Track Event on Google Analytics                                                   // Track event in Google Analytics       
+    }
+
+    // Google Analytics function to track User interaction on page
+    callEvent(event) {
+        event.preventDefault();
+        trackEvent('clicked ' + event.currentTarget.className)
+    }
+
+    componentDidMount() {
+        // To handle calls from history (forward and back buttons)
+        onpopstate = event => {
+            if (event.state) {
+                this.setState(event.state)
+            }
+        }
+
+        var monthListPromise = Promise.resolve(getMonthList());
+        var optOutListPromise = Promise.resolve(getOptOutList());
+
+        // Promise to get the initial "month list" records 
+        Promise.all([monthListPromise, optOutListPromise]).then(data => {
+            this.setState({
+                monthListData: data[0],
+                optOutListData: data[1],
+            })
+        }).then(history.replaceState(this.state, '', `${this.state.as}`))
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.monthId !== this.state.monthId) {
+            var monthListPromise = Promise.resolve(getMonthList());
+            var optOutListPromise = Promise.resolve(getOptOutList());
+
+            // Promise to get the initial "month list" records 
+            Promise.all([monthListPromise, optOutListPromise]).then(data => {
+                this.setState({
+                    monthListData: data[0],
+                    optOutListData: data[1],
+                })
+            }).then(history.replaceState(this.state, '', `${this.state.as}`))
+        }
+    }
 
     render() {
-    const { 
-      // Arrays with data
-      airtableData,   // All proposal data
-      displayData,    // Data for the "Proposal List" page, dataset after filters
-      monthListData,  // Data for the "month list" page
-      singlePostData, // Data for a single proposal page 
+        const { // Declare data arrays used in class
+            monthListData,
+            optOutListData,
+            monthId,
+        } = this.state
 
-      // Elements for functions
-      showPage,       // Element that determines which page is shown (month, single, proposal list or about)
-      showTab,        // Element for initial tab to show on "single proposal page"
-      monthId,        // Id of the current retrieved month, passed on to month list page
-      search,         // Used to display query at top
-
-      // Elements for Analytics
-      singleProposalId,
-    } = this.props
-
-    
-    
-      if (showPage == 'all') {  // Code for rendering All proposal Page
-        trackPage('/proposalList')   // Send page view to analytics
-        if (!Array.isArray(airtableData) && !Array.isArray(displayData)) {
-          // Still loading Airtable data
-          return (
-            <p>Loading&hellip;</p>
-          )
-        } else if (!Array.isArray(displayData)) { 
-          return (
-            <p>No proposals found</p>
-          )
+        let monthText
+        if (monthId == "Nov18") {
+            monthText = "Dash Watch November 2018 Reports"
+        } else if (monthId == "Dec18") {
+            monthText = "Dash Watch December 2018 Reports"
+        } else if (monthId == "Jan19") {
+            monthText = "Dash Watch January 2019 Reports"
+        } else if (monthId == "Feb19") {
+            monthText = "Dash Watch February 2019 Reports"
         } else {
-          // Loaded
-          return (
-            <section>
-              <h1 className="listHeader">List of Dash funded proposals</h1>
-              <div className="headerLeftDiv">
-              <label className="container">
-                <input type="checkbox" checked={this.props.showInactivePosts} onChange={this.handleChangeChk}/>
-                <span className="checkmark"></span><p>Show inactive proposals</p>
-              </label>
-              </div>
-              <div className="headerRightDiv">
-              <div><p className="headerText">Currently showing <b>{displayData.length}</b> of <b>{airtableData.length}</b> proposals</p></div>
-              
-              </div>
-              
-              {displayData.map((post) =>
-                <Post
-                  key={shortid.generate()}
-                  // Elements for Main Post
-                  main_data={post.main_data}
-                  report_data={post.report_data}
-
-                  // For handling functions
-                  showTab={showTab}
-                  getProposalID={this.handleProposalPage}
-                />
-              )}
-              <ScrollButton scrollStepInPx="500" delayInMs="16.66"/>  
-            </section>
-          )
+            monthText = "Please select a month tab to view reports"
         }
-      } // End of All Page if
-      else if (showPage == 'single') {  // Code for rendering single proposal Page
-        trackPage(`/p/${singleProposalId}`)   // Send page view to analytics
-        return (
-          <SinglePost
-            key={shortid.generate()}
-            main_data={singlePostData.main_data}
-            kpi_data={singlePostData.kpi_data}
-            financial_data={singlePostData.financial_data}
-            report_data={singlePostData.report_data}
 
-            // Elements for handling functions
-            showTab={showTab}   // Code to show the correct tab when the singlepage is accessed from the modal
-            getBack={this.handleBack}
-            toggleFilter={this.handleChangeChk}
-          />
-        )
-      } // End of Single page if
-      else if (showPage == 'month') { // Code for rendering month list Page
-        trackPage('/monthList')   // Send page view to analytics
-        if (!Array.isArray(monthListData) || !monthListData.length) {
-          // Still loading Airtable data
-          return (
-            <p>Loading&hellip;</p>
-          )
+        if (!Array.isArray(monthListData)) {
+            var pageContent = (
+                <div>
+                    <p>Loading&hellip;</p>
+                </div>
+            )
         } else {
-          return (
+            var pageContent = (
+                <div>
+                    {monthListData.map((post) =>
+                        <MonthReportRow                       
+                            key={`${post.list_data.id}`}
+                            monthListData={post}      // Elements for the Month report list     
+                            showMonth={this.state.monthId}
+                        />
+                    )}
+                    <section id="optOutDiv">
+                        <h1 className="optOutHeader">Proposal teams opted out of Dash Watch reporting</h1>
+                        {optOutListData.map((post2) =>
+                            <OptOutRow
+                                key={`${post2.list_data.id}`}
+                                optOutListData={post2}      // Elements for the Month report list  
+                                showMonth={this.state.monthId}   
+                            />
+                        )}
+                    </section>
+                </div>
+            )
+        }
+
+        // Still loading Airtable data
+        return (
             <main>
-              <MonthPage
-                monthListData={monthListData}      // Elements for the Month report list
-                monthId={monthId}
-
-                // For handling functions
-                getProposalID={this.handleProposalPage}
-                getMonthId={this.handleSelectMonth}
-              />
-              <ScrollButton scrollStepInPx="125" delayInMs="16.66"/>
+                <Header></Header>
+                <NavBar
+                    showPage="reports"
+                />
+                <section className="pagewrapper">
+                    <div className="monthTab" id='Nov18' value={this.state.monthId == 'Nov18' ? "Active" :
+                        "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">November 2018</p></div>
+                    <div className="monthTab" id='Dec18' value={this.state.monthId == 'Dec18' ? "Active" :
+                        "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">December 2018</p></div>
+                    <div className="monthTab" id='Jan19' value={this.state.monthId == 'Jan19' ? "Active" :
+                        "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">January 2019</p></div>
+                    <div className="monthTab" id='Feb19' value={this.state.monthId == 'Feb19' ? "Active" :
+                        "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">February 2019</p></div>
+                    <div className="monthPageWrapper">
+                        <h1 className="monthHeader">{monthText}</h1>
+                        <div className="monthIndexWrapper">
+                            <div className="monthIndexItem"><p className="monthColumnTitle">Proposal</p></div>
+                            <div className="monthIndexItem"><p className="monthColumnTitle">Report Link</p></div>
+                            <div className="monthIndexItem"><p className="monthColumnTitle">Proposal Type</p></div>
+                            <div className="monthIndexItem"><p className="monthColumnTitle">Voting Status</p></div>
+                        </div>
+                        {pageContent}
+                        <div className="monthBottomDiv">
+                            <div className="monthSubHeader">Questions, Comments, Concerns? Contact Us</div>
+                            E-mail: <a href="mailto:team@dashwatch.org" target="mailto:team@dashwatch.org">team@dashwatch.org</a><br></br>
+                            DashWatchTeam#5277 Discord<br></br>
+                            Dash-AI#1455 Discord<br></br>
+                            MattDash#6481 Discord (This web page)<br></br>
+                            paragon#2778 Discord<br></br>
+                            Twitter: <a href="https://twitter.com/DashWatch" target="_blank">@DashWatch</a>
+                        </div>
+                    </div>
+                </section>
+                <ScrollButton scrollStepInPx="125" delayInMs="16.66" />
+                <section className="pagewrapper">
+                </section>
             </main>
-          )
-        }
-      } // End of month list page if 
-      else if (showPage == 'about') { // Code for rendering About Page
-        trackPage('/about')   // Send page view to analytics
-        return (
-          <main>
-            <AboutPage></AboutPage>
-          </main>
         )
-      } // End of About Page if    
-  }
+
+    }
 }
 
-export default Home
+// Component for Report List Table
+class MonthReportRow extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            show: false  // Visibility state of modal
+        };
+
+        // Binding functions in this class
+        this.hideModal = this.hideModal.bind(this);
+        this.callEvent = this.callEvent.bind(this);
+    }
+
+    // Function to show modal
+    showModal = () => {
+        this.setState({ show: true });
+        trackEvent('Opened Modal')
+    };
+
+    // Function to close modal
+    hideModal = () => {
+        this.setState({ show: false });
+    };
+
+    callEvent(event) {
+        trackEvent('clicked ' + event.currentTarget.className)
+    }
+
+    render() {
+        const { // Declare grouped elements used in class
+            showMonth,
+        } = this.props
+
+        const { // Declare grouped elements used in class
+            list_data,
+            main_data,
+        } = this.props.monthListData
+
+        // Code to generate report link
+        let reportLink = null;
+        if (list_data.report_status == "Pending") { // If report is pending show "Pending"
+            reportLink = (
+                <div className="monthItem">Pending</div>
+            )
+        } else {  // If report is published, show links to report and modal
+            if (list_data.report_type == "Video") {
+                reportLink = (
+                    <div className="monthItem"><div><a className="monthReportLink" href={list_data.report_link} target="_blank" title={list_data.report_link} onClick={this.callEvent}>
+                        <img className="reportIcon" id="YouTube" src="https://dashwatchbeta.org/images/Video.png" height="30"></img> Video</a></div></div>
+                )
+            } else if (list_data.report_type == "Podcast") {
+                reportLink = (
+                    <div className="monthItem"><div><a className="monthReportLink" href={list_data.report_link} target="_blank" title={list_data.report_link} onClick={this.callEvent}>
+                        <img className="reportIcon" id="YouTube" src="https://dashwatchbeta.org/images/Podcast.png" height="30"></img> Podcast</a></div></div>
+                )
+            } else {
+                reportLink = (
+                    <div className="monthItem"><div><a className="monthReportLink" href={list_data.report_link} target="_blank" title={list_data.report_link} onClick={this.callEvent}><img id="PDF" src="https://dashwatchbeta.org/images/PDF.png" height="30"></img> Report</a></div></div>
+                )
+            }
+        } // End of report status if
+
+        // Code to generate Modal or not
+        let modal = null;
+        if (this.state.show == true) {   // Show modal
+            modal = (
+                <div><ModalFrame
+                    show={this.state.show}
+                >
+                    <ModalContent
+                        key={main_data.id}
+
+                        // Group data elements passed on to Modal
+                        list_data={list_data}
+                        main_data={main_data}
+
+                        // For functions
+                        show={this.state.show}   // Show modal or not
+                        handleClose={this.hideModal} // Function to close modal
+                    />
+                </ModalFrame></div>
+            )
+        } else {   // Show nothing
+            modal = (
+                <div></div>
+            )
+        }
+
+        // Output for the month list rows
+        return (
+            <div className="monthProposalWrapper" month={this.props.showMonth == list_data.published_month ? "Active" :
+            "Inactive"} response={list_data.response_status == "No" ? "No" :
+            "Yes"}>
+                <div className="monthItemTitle" onClick={this.showModal}><p className="monthProposalName">{list_data.project_name}</p>
+                    <p className="monthOwnerName">by {main_data.proposal_owner}</p></div>
+                {reportLink}
+                <div className="monthItem" onClick={this.showModal}><p className="monthProposalType" value={list_data.proposal_type}>{list_data.proposal_type}</p></div>
+                <div className="monthItem" onClick={this.callEvent}><a className="monthVoteLink" href={list_data.voting_dc_link} target="_blank" value={list_data.voting_status} title={list_data.voting_dc_link}>{list_data.voting_status}</a>
+                </div>
+                {modal}
+            </div>
+        )
+    }
+}
+
+// Component for Opted-out Table
+class OptOutRow extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            show: false  // Visibility state of modal
+        };
+
+        // Binding functions in this class
+        this.hideModal = this.hideModal.bind(this);
+        this.callEvent = this.callEvent.bind(this);
+    }
+
+    // Function to show modal
+    showModal = () => {
+        this.setState({ show: true });
+        trackEvent('Opened Modal')
+    };
+
+    // Function to close modal
+    hideModal = () => {
+        this.setState({ show: false });
+    };
+
+    callEvent(event) {
+        trackEvent('clicked ' + event.currentTarget.className)
+    }
+
+    render() {
+        const { // Declare grouped elements used in class
+            showMonth,
+        } = this.props
+
+        const { // Declare grouped elements used in class
+            list_data,
+            main_data,
+        } = this.props.optOutListData
+
+        // Code to generate Modal or not
+        let modal = null;
+        if (this.state.show == true) {   // Show modal
+            modal = (
+                <div><ModalFrame
+                    show={this.state.show}
+                >
+                    <ModalContent
+                        key={main_data.id}
+
+                        // Group data elements passed on to Modal
+                        list_data={list_data}
+                        main_data={main_data}
+
+                        // For functions
+                        show={this.state.show}   // Show modal or not
+                        handleClose={this.hideModal} // Function to close modal
+                    />
+                </ModalFrame></div>
+            )
+        } else {   // Show nothing
+            modal = (
+                <div></div>
+            )
+        }
+
+        // Output for the month list rows
+        return (
+            <div className="optOutWrapper" month={this.props.showMonth == list_data.published_month ? "Active" :
+            "Inactive"}>
+                <div className="optOutItemTitle" onClick={this.showModal} value="optedOut"><p className="monthProposalName">{list_data.project_name}</p></div>
+                <div className="monthItem" onClick={this.callEvent}><a className="monthVoteLink" href={list_data.voting_dc_link} target="_blank" value={list_data.voting_status} title={list_data.voting_dc_link}>{list_data.voting_status}</a>
+                </div>
+                {modal}
+            </div>
+        )
+    }
+}
+
+export default Month

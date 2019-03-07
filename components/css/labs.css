@@ -1,0 +1,13 @@
+    /* div to show and hide correct plotter */
+.plotWrapper[value="Inactive"] {
+    display: none;
+}
+
+/* Month page wrapper */
+.plotPageWrapper {
+    align-items: middle;
+    width: 100%;
+    width: 1000px;
+    padding-top: 65px; /* Clearing from Navbar */
+    margin: 0 auto;
+}
