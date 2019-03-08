@@ -37,7 +37,7 @@ class ModalContent extends React.Component {
       handleTab(event) {
         event.preventDefault()
         this.setState({ displayTab: event.currentTarget.id })
-        trackEvent('Changed Modal Tab')                 // Track Event on Google Analytics
+        trackEvent(`Changed Modal Tab to ${event.currentTarget.id}`)                 // Track Event on Google Analytics
       }
     
       // Function to close the modal

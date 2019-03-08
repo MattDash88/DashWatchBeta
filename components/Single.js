@@ -42,7 +42,7 @@ class SinglePost extends React.Component {
   handleTab(event) {
     event.preventDefault()
     this.setState({ displayTab: event.currentTarget.id })
-    trackEvent('Changed Single Page Tab')
+    trackEvent(`Changed Single Page Tab to ${event.currentTarget.id}`)
   }
 
   render() {

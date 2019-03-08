@@ -13,6 +13,7 @@ const app = next({ dev })
 const ReactGA = require('react-ga');
 ReactGA.initialize(gaKey);
 
+
 const serialize = data => JSON.stringify({ data })
 var cacheExpirationTime = process.env.CACHEEXPIRATION;  //Time until cache expires, can be adjusted for testing purposes
 
@@ -171,6 +172,7 @@ app.prepare()
 
     // Internal API call to get Airtable data
     server.get('/api/get/posts', (req, res) => {
+      console.log(process.env.NODE_ENV !== 'production')
       Promise.resolve(getAirtableData()).then(function (valArray) {
         res.writeHead(200, {
           'Access-Control-Allow-Origin': '*',
