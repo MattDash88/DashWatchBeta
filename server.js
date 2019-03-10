@@ -96,7 +96,7 @@ const getMonthList = () => {
         resolve(JSON.parse(data))
       }
       else {    // If cache is empty, retrieve from Airtable
-        Promise.resolve(airtableFunctions.MonthReportPosts('Month List Reports v010')).then(function (valArray) {
+        Promise.resolve(airtableFunctions.MonthReportPosts('Month List Reports')).then(function (valArray) {
           const storeAirtablePosts = []   // Create const to push all proposal data in
 
           // Sorting out all valArray items
