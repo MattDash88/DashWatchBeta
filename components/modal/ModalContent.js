@@ -42,7 +42,6 @@ class ModalContent extends React.Component {
     
       // Function to close the modal
      handleClose() {
-      event.preventDefault()
       this.props.handleClose();
       trackEvent('Closed Modal Button')                 // Track Event on Google Analytics
     }

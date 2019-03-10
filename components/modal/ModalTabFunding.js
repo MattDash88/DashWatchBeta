@@ -48,56 +48,56 @@ class ModalTabFunding extends React.Component {
     return (
       <div className="modalTabContent" value={openTab == "TabFunding" ? "active" : "inactive"}>
         <div className="modalHeader">Proposal Funding Details:</div>
-        <div className="tabPropertyDiv">
-          <div className="tabPropertyTitle">
+        <div className="modalPropertyDiv">
+          <div className="modalPropertyTitle">
             First Date Paid:
             </div>
-          <div className="tabPropertyItem" title={payment_date}>
+          <div className="modalPropertyItem" title={payment_date}>
           <span className="statusPropertyValue">{payment_date}</span>
           </div>
         </div>
 
-        <div className="tabPropertyDiv">
-        <div className="tabPropertyTitle">
+        <div className="modalPropertyDiv">
+        <div className="modalPropertyTitle">
           No. of Payments Received:
             </div>
-        <div className="tabPropertyItem" title={payments_received}>
+        <div className="modalPropertyItem" title={payments_received}>
         <span className="statusPropertyValue">{payments_received}</span>
         </div>
         </div>
 
-         <div className="tabPropertyDiv">
-        <div className="tabPropertyTitle">
+         <div className="modalPropertyDiv">
+        <div className="modalPropertyTitle">
           Funding per Payment:
             </div>
-        <div className="tabPropertyItem" title={funding_per_payment}>
+        <div className="modalPropertyItem" title={funding_per_payment}>
         <span className="statusPropertyValue">{funding_per_payment} Dash</span>
         </div>
         </div>
 
-         <div className="tabPropertyDiv">
-        <div className="tabPropertyTitle">
+         <div className="modalPropertyDiv">
+        <div className="modalPropertyTitle">
           Funding Received (Dash):
             </div>
-        <div className="tabPropertyItem" title={funding_received_dash}>
+        <div className="modalPropertyItem" title={funding_received_dash}>
         <span className="statusPropertyValue">{funding_received_dash} Dash</span>
         </div>
         </div>
 
-        <div className="tabPropertyDiv">
-        <div className="tabPropertyTitle">
+        <div className="modalPropertyDiv">
+        <div className="modalPropertyTitle">
           Funding Received (USD):
             </div>
-        <div className="tabPropertyItem" title={funding_received_usd}>
+        <div className="modalPropertyItem" title={funding_received_usd}>
         <span className="statusPropertyValue">&#36;{funding_received_usd}</span>
         </div>
         </div>
 
-        <div className="tabPropertyDiv">
-        <div className="tabPropertyTitle">
+        <div className="modalPropertyDiv">
+        <div className="modalPropertyTitle">
           Escrow:
             </div>
-        <div className="tabPropertyItem" title={escrow_agent}>
+        <div className="modalPropertyItem" title={escrow_agent}>
         <span className="statusPropertyValue">{escrow_agent}</span>
         </div>
         </div>
