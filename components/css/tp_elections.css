@@ -3,8 +3,9 @@
 @import url('https://fonts.googleapis.com/css?family=Titillium+Web');
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 
+
 /* Month page wrapper */
-.monthPageWrapper {
+.tpPageWrapper {
     display: block;
     background-color: white;
     padding-left: 10px;
@@ -13,8 +14,8 @@
     font-family: 'Roboto', sans-serif;
 }
 
-/* Styling of button of inactive tab */
-.monthTab {
+/* Styling of button of active tab */
+.tpTab {
     display: inline-flex;    
     line-height: 1 rem;
     vertical-align: middle;
@@ -26,10 +27,11 @@
     cursor: pointer;
     transition: 0.15s;
     box-shadow: inset 0 -2px 4px -3px black;
+    cursor: pointer;
 }
 
 /* Styling of button of active tab */
-.monthTab[value='Active'] {
+.tpTab[value='Active'] {
     display: inline-flex;    
     line-height: 1 rem;
     vertical-align: middle;
@@ -41,14 +43,15 @@
     cursor: default;
     box-shadow: none;
     transition: 0.15s;
+    cursor: default;
 }
 
-.monthTab[value='Inactive']:hover {
+.tpTab[value='Inactive']:hover {
     background-color: #1999e9;
 }
 
 /* Styling of Text in tab button */
-.monthTabText {
+.tpTabText {
     font-family: 'Montserrat', sans-serif;
     font-weight: 400;
     margin: auto;
@@ -58,7 +61,7 @@
 }
 
 /* Styling of the header in the contact information div */
-.monthSubHeader {
+.tpSubHeader {
     font-family: 'Montserrat', sans-serif;
     font-size: 16px;
     font-weight: bold;
@@ -67,7 +70,7 @@
 }
 
 /* Styling for bottom contact information div */
-.monthBottomDiv {
+.tpBottomDiv {
     width: 400px;   
     align-items: right;
     font-family: 'Titillium Web', sans-serif;
@@ -79,12 +82,10 @@
     border: solid 1px black;
 }
 
-/*
-Style elements for the top of the month list table
-*/
+
 
 /* Wrapper of the month list index row */
-.monthIndexWrapper {
+.tpIndexWrapper {
     display: flex;
     height: 3rem;
     border-bottom: 0.1rem solid black;
@@ -94,8 +95,21 @@ Style elements for the top of the month list table
 }
 
 /* Div for the cells of the index */
-.monthIndexItem {
+.tpIndexItemFirst {
     display: flex;
+    text-align: left;
+    flex-direction: column;
+    -webkit-box-pack: center;
+    line-height: 1rem;
+    justify-content: center;
+    margin-right: auto;
+    min-width: 0px;
+    width: 75%;
+}
+
+.tpIndexItem {
+    display: flex;
+    text-align: left;
     flex-direction: column;
     -webkit-box-pack: center;
     line-height: 1rem;
@@ -106,7 +120,7 @@ Style elements for the top of the month list table
 }
 
 /* Text styling of the index */
-.monthColumnTitle {
+.tpColumnTitle {
     font-family: 'Montserrat', sans-serif;
     font-weight: 500;
     white-space: nowrap;
@@ -117,7 +131,7 @@ Style elements for the top of the month list table
 }
 
 /* Styling of the title of the month list page*/
-.monthHeader {
+.tpHeader {
     color: #003347;
     padding: 1rem;
     margin: 0;
@@ -127,7 +141,7 @@ Style elements for the top of the month list table
 }
 
 /* Wrapper for the month list rows  */
-.monthProposalWrapper {
+.tpProposalWrapper {
     display: flex;
     height: 4rem;
     border-bottom: 0.1rem solid rgb(216, 220, 227);
@@ -136,29 +150,14 @@ Style elements for the top of the month list table
     max-width: 1000px;
 }
 
-.monthProposalWrapper:hover {
+.tpProposalWrapper:hover {
     background: #f3f3f3;
 }
 
-/* Styling of wrapper for the month list rows  */
-.monthProposalWrapper[response="No"] {
-    background: #eebcbc;
-}
-
-.monthProposalWrapper[response="No"]:hover {
-    background: #e0b1b1;
-}
-
-.monthProposalWrapper[month="Inactive"] {
-    display: None;
-}
-
-
-
-/* Wrapper of the first cell of the month list table, 
-the one containing the proposal name and proposal owner*/
-.monthItemTitle {
+/* Div of the other cells of the month list table*/
+.tpItemFirst {
     display: flex;
+    text-align: left;
     flex-direction: column;
     -webkit-box-pack: center;
     line-height: 1rem;
@@ -167,160 +166,12 @@ the one containing the proposal name and proposal owner*/
     min-width: 0px;
     width: 75%;
     border: 1px;
-    cursor: pointer;
-}
-
-.monthItemTitle:hover {
-    box-shadow: outset 0 -2px 4px -3px black;
 }
 
 /* Div of the other cells of the month list table*/
-.monthItem {
+.tpItem {
     display: flex;
-    flex-direction: column;
-    line-height: 1rem;
-    justify-content: center;
-    margin-right: auto;
-    min-width: 0px;
-    width: 75%;
-}
-
-/* Text styling proposal name*/
-.monthProposalName {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
-    line-height: 1rem;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    margin: 2px;
-}
-
-/* Text styling proposal owner*/
-.monthOwnerName { 
-    font-family: 'Titillium Web', sans-serif;
-    text-transform: uppercase;
-    font-size: 0.8rem;
-    margin-right: 2rem;
-    margin: 2px;
-}
-
-/* Text styling of proposal type*/
-.monthProposalType { 
-    font-family: 'Titillium Web', sans-serif;
-    font-size: 1.1rem;
-    margin-right: 1rem;
-    margin: 10px;
-    cursor: pointer;
-}
-
-/* Colour styling of the proposal type*/ 
-.monthProposalType[value="Development"] { 
-    color: #f1c232;
-}
-
-.monthProposalType[value="Education"] { 
-    color: #93c47d;
-}
-
-.monthProposalType[value="Governance"] { 
-    color: #7e550c;
-}
-
-.monthProposalType[value="Integration"] { 
-    color: #3d85c6;
-}
-
-.monthProposalType[value="Marketing"] { 
-    color: rgb(234, 64, 181);
-}
-
-.monthProposalType[value="Other"] { 
-    color: black;
-}
-
-.monthProposalType[value="No Update"] { 
-    color: black;
-}
-
-/* Text styling of the report linkvoting status*/
-.monthReportLink {
-    font-family: 'Roboto', sans-serif;
-    color: #008de4;
-    font-weight: 200;
-    font-size: 1.2rem;
-    vertical-align: middle;
-    text-transform: uppercase;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-.monthItem img {
-    vertical-align: middle;
-}
-
-/* Text styling of voting status link*/
-.monthVoteLink {
-    font-family: 'Roboto', sans-serif;
-    font-weight: 400;
-    text-transform: uppercase;
     text-align: left;
-    text-decoration: none;
-}
-
-/* Colour styling of voting status link*/
-.monthVoteLink[value="Up for Vote"] {
-    color: #008de4;
-    cursor: pointer;
-}
-
-.monthVoteLink[value="New Proposal"] {
-    color: #008de4;
-    cursor: pointer;
-}
-
-.monthVoteLink[value="Funded"] {
-    color: black;
-}
-
-/*
-Styling for Opt-out Table
-*/
-
-/* Wrapper for the month list rows  */
-.optOutWrapper {
-    display: flex;
-    height: 3rem;
-    border-bottom: 0.1rem solid #d8dce3;
-    background: white;
-    min-width: 300px;
-    max-width: 500px;
-}
-
-/* Wrapper for the month list rows  */
-.optOutWrapper[id="firstRow"] {
-    border-top: 0.1rem solid #d8dce3;
-}
-
-/* Wrapper for the month list rows  */
-.optOutWrapper[month="Inactive"] {
-    display: None;
-}
-
-/* Temp Header for opted-out proposals */
-.optOutHeader {
-    color: #003347;
-    padding-left: 1rem;
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
-    margin: 0;
-    font-family: 'Montserrat', sans-serif;
-    text-align: left;
-    font-size: 1.3rem;
-}
-
-.optOutItemTitle {
-    display: flex;
     flex-direction: column;
     -webkit-box-pack: center;
     line-height: 1rem;
@@ -328,4 +179,55 @@ Styling for Opt-out Table
     margin-right: auto;
     min-width: 0px;
     width: 75%;
+    border: 1px;
+}
+
+/* Text styling proposal name*/
+.tpCandidateName {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    font-size: 1rem;
+    line-height: 1rem;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    margin: 1px;
+}
+
+/* Text styling proposal owner*/
+.tpCandidateAlias { 
+    font-family: 'Titillium Web', sans-serif;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    margin-right: 2rem;
+    margin: 2px;
+}
+
+.tpCandidateContact {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    font-size: 0.9rem;
+    line-height: 0.9rem;
+    margin: 1px;
+}
+
+/* Text styling of the report linkvoting status*/
+.tpReportLink {
+    font-family: 'Roboto', sans-serif;
+    color: #008de4;
+    font-weight: 200;
+    font-size: 1rem;
+    vertical-align: middle;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.votingTallyWrapper {
+    display: flex;
+    height: 2rem;
+    border-bottom: 0.1rem solid #d8dce3;
+    background: white;
+    min-width: 300px;
+    max-width: 500px;
 }

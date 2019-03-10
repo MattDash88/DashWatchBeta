@@ -1,5 +1,5 @@
 {
-  "name": "matts-dw-site-0.10.0",
+  "name": "matts-dw-site-0.10.1",
   "scripts": {
     "dev": "node server.js",
     "build": "next build",
