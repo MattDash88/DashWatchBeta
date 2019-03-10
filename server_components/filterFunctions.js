@@ -4,11 +4,13 @@
 var searchQuery = function searchFunction(proposalData, query) {
     storeProposalData = []        // Create Array to store report data in
     Object.keys(proposalData).map((item) => {
-        
+
         // Filter out other props like 'url', etc.
-        if (typeof proposalData[item].main_data !== 'undefined') {
-            // Return data when a match is found
-            if (proposalData[item].main_data.proposal_owner[0].toLowerCase().match(query) !== null || proposalData[item].main_data.slug.toLowerCase().match(query) !== null || proposalData[item].main_data.title.toLowerCase().match(query)) {
+        if (typeof proposalData[item].main_data !== 'undefined') {            
+            if (typeof proposalData[item].main_data.proposal_owner == 'undefined') {
+                // Do nothing, skip entry
+            } else if (proposalData[item].main_data.proposal_owner[0].toLowerCase().match(query) !== null || proposalData[item].main_data.slug.toLowerCase().match(query) !== null || proposalData[item].main_data.title.toLowerCase().match(query)) {
+                // Return data when a match is found   
                 storeProposalData.push(proposalData[item])
             }
         }
@@ -34,5 +36,5 @@ var filterQuery = function filterInactiveFunction(proposalData) {
 // Export the Airtable functions to be imported in server.js
 module.exports = {
     filterQuery,
-    searchQuery,    
+    searchQuery,
 }

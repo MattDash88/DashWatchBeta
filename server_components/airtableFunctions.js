@@ -55,6 +55,11 @@ const MainProposalPosts = function getMainProposalPosts(tableId) {
                             id: record.id,                    // Used as unique record identifier
                         }
 
+                        // Handling for proposals that received zero payments, because Airtable gives an object as output
+                        if (post.payments_received == 0) {
+                            post.funding_per_payment='N/A'
+                        }
+
                         // Push retrieved data to const
                         storeAirtablePosts.push(post)
                     })

@@ -172,7 +172,6 @@ app.prepare()
 
     // Internal API call to get Airtable data
     server.get('/api/get/posts', (req, res) => {
-      console.log(process.env.NODE_ENV !== 'production')
       Promise.resolve(getAirtableData()).then(function (valArray) {
         res.writeHead(200, {
           'Access-Control-Allow-Origin': '*',

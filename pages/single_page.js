@@ -91,6 +91,8 @@ class Single extends React.Component {
       report_data,
     } = this.state.airtableData
 
+    
+
     return (
       // Simplified navbar code
       <main>
