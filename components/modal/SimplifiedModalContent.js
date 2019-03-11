@@ -35,7 +35,6 @@ class ModalContent extends React.Component {
 
   // If user clicks outside modal area, run handleClose
   handleClick = (e) => {
-    e.preventDefault()
     if (e.target.id == "outside") {      
       this.props.handleClose()
     }
