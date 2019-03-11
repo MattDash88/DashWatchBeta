@@ -79,7 +79,7 @@ class ModalContent extends React.Component {
     return (
       <div className="simple_modalWrapper" id="Modal">
       <div className="simple_modalCardTitle">
-            <div className="simple_modalCloseButton" onClick={this.handleClose}>[ close ]</div><br></br>
+            <div className="simple_modalCloseButton" onClick={this.handleClose}>[ close ]</div>
             <div className="simple_modalProposalName">{proposal_name}</div>
             <div className="simple_modalOwnerName">proposed by <span className="simple_modalOwnerNameText">{proposal_owner}</span></div>
           <div className="simple_modalTabContent">
