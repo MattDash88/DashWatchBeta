@@ -371,7 +371,7 @@ app.prepare()
 
     // Routing to main page
     server.get('*', (req, res) => {
-      const actualPage = '/index'
+      const actualPage = '/'
 
       const queryParams = req.query // Pass on queries
 
