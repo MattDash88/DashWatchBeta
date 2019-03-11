@@ -18,8 +18,8 @@ const trackEvent = (event) => {
 }
 
 class ModalTabFunding extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
 
     // Binding functions in this class
     this.callEvent = this.callEvent.bind(this);
@@ -103,7 +103,7 @@ class ModalTabFunding extends React.Component {
         </div>
 
         <div className="modalTabLink">
-            <a className="link" href={`/p/${slug}?tab=TabFunding`} target="" id="directFundingLink" onClick={this.callEvent}>SHOW MORE FUNDING AND EXPENSE DATA FROM REPORTS</a>
+            <a className="link" id="directFundingLink" href={`/p/${slug}?tab=TabFunding`} target="" onClick={this.callEvent}>SHOW MORE FUNDING AND EXPENSE DATA FROM REPORTS</a>
           </div>
       </div>
       )

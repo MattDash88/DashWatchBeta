@@ -307,6 +307,10 @@ Styling for Opt-out Table
     display: None;
 }
 
+.optOutWrapper:hover {
+    background: #f3f3f3;
+}
+
 /* Temp Header for opted-out proposals */
 .optOutHeader {
     color: #003347;
@@ -328,5 +332,6 @@ Styling for Opt-out Table
     margin-right: auto;
     min-width: 0px;
     width: 75%;
+    cursor: pointer;
 }
 

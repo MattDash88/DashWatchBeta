@@ -35,9 +35,9 @@ class ModalContent extends React.Component {
 
   // If user clicks outside modal area, run handleClose
   handleClick = (e) => {
-    if (e.target.id == "outside") {
-      this.handleClose()
-      trackEvent('Closed Modal Outside')                 // Track Event on Google Analytics
+    e.preventDefault()
+    if (e.target.id == "outside") {      
+      this.props.handleClose()
     }
   }
 
@@ -163,8 +163,8 @@ class ModalContent extends React.Component {
           <div className="simple_modalPropertyTitle">
               Links:
             </div>
-            <a id="modalDcLink" className="link" href={dclink} target="_blank"><img id="DcLogo" onClick={this.callEvent} src="https://dashwatchbeta.org/images/DashCentral.png" height="40"></img></a>
-            <a id="modalDwLink" className="link" href={`/p/${slug}`} target="" onClick={this.callEvent}><img id="Logo" src="https://dashwatchbeta.org/images/DashWatch.png" height="40"></img></a> 
+            <a className="link" id="modalDcLink" href={dclink} target="_blank" onClick={this.callEvent}><img id="DcLogo" src="https://dashwatchbeta.org/images/DashCentral.png" height="40"></img></a>
+            <a className="link" id="modalDwLink" href={`/p/${slug}`} target="" onClick={this.callEvent}><img id="Logo" src="https://dashwatchbeta.org/images/DashWatch.png" height="40"></img></a> 
               
           </div>
           </div>          

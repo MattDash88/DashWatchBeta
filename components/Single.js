@@ -1,6 +1,9 @@
 import React from 'react';
 import ReactGA from 'react-ga';
-ReactGA.initialize('UA-132694074-1');
+
+// Analytics
+import getGAKey from './functions/analytics';
+ReactGA.initialize(getGAKey);
 
 // Import tab elements
 import TabMain from './tabs/TabMain'
@@ -33,9 +36,9 @@ class SinglePost extends React.Component {
   }
 
   //Go back but don't reset querry
-  backButton() {
+  backButton(event) {
     history.back();
-    trackEvent('Clicked + event.currentTarget.id')
+    trackEvent('Clicked ' + event.currentTarget.id)
   }
 
   // Returns the corresponding Tab based on the selected button

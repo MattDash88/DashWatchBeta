@@ -50,8 +50,7 @@ class ModalContent extends React.Component {
     handleClick = (e) => {
       if (e.target.id == "outside")
       {
-        this.handleClose()
-        trackEvent('Closed Modal Outside')                 // Track Event on Google Analytics
+        this.props.handleClose()
       } 
     }
 

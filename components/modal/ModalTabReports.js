@@ -1,8 +1,20 @@
 import React from 'react';
+import ReactGA from 'react-ga';
+
+// Analytics
+import getGAKey from '../functions/analytics';
+ReactGA.initialize(getGAKey);
 
 // Import css
 import '../css/style.css';
 import '../css/modal.css';
+
+const trackEvent = (event) => {
+    ReactGA.event({
+        category: 'Full Modal',
+        action: event,
+    });
+}
 
 class ModalTabReports extends React.Component {
     render() {
@@ -38,6 +50,17 @@ class ModalTabReports extends React.Component {
 }
 
 class ReportDiv extends React.Component {
+    constructor() {
+        super();
+        // Binding functions in this class
+        this.callEvent = this.callEvent.bind(this);
+    }
+
+    // Google Analytics function to track User interaction on page
+    callEvent(event) {
+        trackEvent('Clicked ' + event.currentTarget.id)
+    }
+
     render() {
         const {     // Declare single elements used in this Modal tab   
             report_name,
@@ -49,7 +72,7 @@ class ReportDiv extends React.Component {
             <main>
                 <div className="modalLinkTitle">{report_date}:</div>
                 <span className="modalReportLink">
-                <a className="link" href={report_link} target={report_link}>{report_name}</a></span><br></br>
+                    <a className="link" id="modalReportLink" href={report_link} target={report_link} onClick={this.callEvent}>{report_name}</a></span><br></br>
             </main>
         )
     }

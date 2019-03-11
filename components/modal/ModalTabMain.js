@@ -18,8 +18,8 @@ const trackEvent = (event) => {
 }
 
 class ModalTabMain extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     
     this.callEvent = this.callEvent.bind(this);
   }
@@ -136,12 +136,12 @@ class ModalTabMain extends React.Component {
       <div className="modalHeader">Links:</div>
       <div className="modalLinkDiv">
         <span className="modalLinkItem">
-        <a className="link" href={dclink} target="_blank" onClick={this.callEvent}>Dashcentral Link</a>
+        <a className="link" id="modalDcLink" href={dclink} target="_blank" onClick={this.callEvent}>Dashcentral Link</a>
         </span>
       </div>
       <div className="modalLinkDiv">
         <span className="modalLinkItem">
-        <a className="link" href={`/p/${slug}`} target="" onClick={this.callEvent}>Dash Watch Page</a>
+        <a className="link" id="modalDwLink" href={`/p/${slug}`} target="" onClick={this.callEvent}>Dash Watch Page</a>
         </span>
       </div>
     </div>

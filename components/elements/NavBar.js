@@ -1,6 +1,9 @@
 import React from 'react';
 import ReactGA from 'react-ga';
-ReactGA.initialize('UA-132694074-1');
+
+// Analytics
+import getGAKey from '../functions/analytics';
+ReactGA.initialize(getGAKey);
 
 // Import css
 import "../css/style.css";
@@ -31,7 +34,7 @@ class NavBar extends React.Component {
         event.preventDefault();
         history.pushState(null, null, `/proposals?search=${event.target[0].value}`)
         location.replace(`/proposals?search=${event.target[0].value}`)
-        trackSearch('Searched ' + event.target[0].value)
+        trackSearch('Searched: ' + event.target[0].value )
     }
 
     callEvent(event) {

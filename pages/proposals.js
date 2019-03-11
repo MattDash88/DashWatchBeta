@@ -82,7 +82,7 @@ class Home extends React.Component {
 
     // Function that initiates the "single proposal page" if selected
     handleFilter(event) {
-        event.preventDefault();        
+        event.preventDefault();
         this.setState({ 
             showInactivePosts: !this.state.showInactivePosts,
             as: `/proposals?search=${this.state.search}&toggleInactive=${!this.state.showInactivePosts}`,
@@ -118,7 +118,7 @@ class Home extends React.Component {
     componentDidUpdate(prevProps, prevState) {
         // Update "Proposal list" data for search and filters
         if (prevState.search !== this.state.search || prevState.showInactivePosts !== this.state.showInactivePosts) {
-            
+
             // Set Promises for Promise.all
             const query = `search=${this.state.search.toLowerCase()}&show_inactive=${this.state.showInactivePosts}`
             var getPostsPromise = Promise.resolve(getPosts());
@@ -129,7 +129,7 @@ class Home extends React.Component {
                     airtableData: data[0],
                     displayData: data[1],
                 })
-            }).then(history.replaceState(this.state, '', this.state.as))
+            })//.then(history.replaceState(this.state, '', this.state.as))
         }
     }
 
