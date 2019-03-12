@@ -64,7 +64,7 @@
 .tpSubHeader {
     font-family: 'Montserrat', sans-serif;
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 800;
     text-align: left; 
     color: black;
 }
@@ -102,6 +102,10 @@
     margin-left: auto;
     margin-right: auto;
     border: solid 1px black;
+}
+
+.tpBottomDiv[value="Inactive"] {
+    display: none;
 }
 
 
@@ -260,4 +264,35 @@
 
 .tpPageTopSection[value="Inactive"] {
     display: none;
+}
+
+/* Special wrapper for the How To page */
+.tpHowToWrapper {
+    margin-left: 1rem;
+    margin-right: 1rem;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Container for How To images */
+.c3 {
+    display: flex;
+    width: 100%;
+    align-items: middle;
+}
+
+/* How to image styling */
+.c3 img {
+    display: inline-flex;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Styling of the header in the contact information div */
+.tpHowToSubHeader {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-align: center; 
+    margin-top: 2rem;
+    color: black;
 }

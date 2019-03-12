@@ -7,7 +7,8 @@ import getGAKey from '../components/functions/analytics';
 ReactGA.initialize(getGAKey);
 
 // Import pages
-import HowTo from '../components/HowTo';
+import HowTo from '../components/elections_content/HowTo';
+import Validation from '../components/elections_content/Validation';
 
 // Import css
 import "../components/css/style.css";
@@ -23,7 +24,7 @@ var basepath = 'https://dashwatchbeta.org'
 
 const trackEvent = (event) => {
     ReactGA.event({
-        category: 'TP Page',
+        category: 'Elections',
         action: event,
     });
 }
@@ -75,13 +76,12 @@ class TrustElections extends React.Component {
         })
 
         history.pushState(this.state, '', `/elections?tab=${event.currentTarget.id}`)   // Push State to history
-        trackEvent('Changed Tab')                 // Track Event on Google Analytics                                                     
+        trackEvent(`Changed Tab to ${event.currentTarget.id}`)                 // Track Event on Google Analytics                                                     
     }
 
     // Google Analytics function to track User interaction on page
     callEvent(event) {
-        event.preventDefault();
-        trackEvent('clicked ' + event.currentTarget.className)
+        trackEvent('clicked ' + event.currentTarget.id)
     }
 
     componentDidMount() {
@@ -116,37 +116,28 @@ class TrustElections extends React.Component {
             tabId,
         } = this.state
 
-        if (candidateListData.length == 0) {
-            var pageContent = (
-                <section>
-                <div>
-                    <p>Loading&hellip;</p>
-                </div>
-                </section>
-            )
-        } else if (tabId=="candidates") {       // Content of Candidates tab
-            var pageContent = (
-                <div>
-                    {candidateListData.map((post) =>
-                        <CandidateListRow                       
-                            key={`${post.id}`}
-                            airtableData={post}      // Elements for the Month report list    
-                            showTab={tabId} 
-                        />
-                    )}
-                </div>
-            )
-        } else if (tabId=="howTo") {       // Content of Candidates tab
-            var pageContent = (
-                <div>
-                    <h1 className="tpHeader">Dash Trust Protector Elections 2019 How to Vote</h1>
-                    <HowTo></HowTo>
-                </div>
-            )
-        } else {
-            <div></div>
-        }   // End of page content loop
-
+            if (candidateListData.length == 0) {    // Show if still loading content
+                var pageContent = (
+                    <section>
+                        <div>
+                            <p>Loading&hellip;</p>
+                        </div>
+                    </section>
+                )
+            } else {    // Show candidate list
+                var pageContent = (
+                    <div>
+                        {candidateListData.map((post) =>
+                            <CandidateListRow
+                                key={`${post.id}`}
+                                airtableData={post}      // Elements for the Month report list    
+                                showTab={tabId}
+                            />
+                        )}
+                    </div>
+                )
+            }   // End of page content loop
+           
         return (
             <main>
                 <Header></Header>
@@ -154,40 +145,46 @@ class TrustElections extends React.Component {
                     showPage="candidateList"
                 />
                 <section className="pagewrapper">
-                    <div className="tpTab" id='candidates' value={this.state.tabId == 'candidates' ? "Active" :
-                        "Inactive"} onClick={this.handleSelectTab}><p className="tpTabText">2019 Candidates</p></div>
-                    <div className="tpTab" id='voting' value={this.state.tabId == 'voting' ? "Active" :
-                        "Inactive"} onClick={this.handleSelectTab}><p className="tpTabText">Voting Data</p></div>
-                        <div className="tpTab" id='howTo' value={this.state.tabId == 'howTo' ? "Active" :
+                    <div className="tpTab" id="candidates" value={this.state.tabId == "candidates" ? "Active" :
+                        "Inactive"} onClick={this.handleSelectTab}><p className="tpTabText">2019 Candidates</p></div>                    
+                        <div className="tpTab" id="howTo" value={this.state.tabId == "howTo" ? "Active" :
                         "Inactive"} onClick={this.handleSelectTab}><p className="tpTabText">How to Vote</p></div>
+                        <div className="tpTab" id="voting" value={this.state.tabId == "voting" ? "Active" :
+                        "Inactive"} onClick={this.handleSelectTab}><p className="tpTabText">Validation</p></div>
                     <div className="tpPageWrapper">
-                    <section className="tpPageTopSection" value={this.state.tabId == 'candidates' ? "Active" :
+
+                    <section className="tpPageTopSection" value={this.state.tabId == "candidates" ? "Active" :
                         "Inactive"}>
-                        <h1 className="tpHeader">2019 Dash Trust Protector Election Candidates</h1>
-                        <p className="tpText">Want to vote? The voting tool for Dash MNOs is available at: <a href="https://trustvote.dash.org/" target="">trustvote.dash.org/</a><br></br>
-                        To help you along Dash Watch has made a <a href="http://bit.ly/DWTPHowTo2019">Elections 2019 How to Vote Guide</a></p>
+                        <h1 className="tpHeader">2019 Dash Trust Protector Elections Candidates</h1>
+                        <p className="tpText">Want to vote? The voting tool for Dash MNOs is available at: <a id="Trustvote Link" href="https://trustvote.dash.org/" target="" onClick={this.callEvent}>trustvote.dash.org/</a><br></br>
+                        To help you along Dash Watch has made a <span className="tpReportLink" id="howTo" onClick={this.handleSelectTab}>How to Vote Guide</span></p>
                         <div className="tpIndexWrapper">
                             <div className="tpIndexItemFirst"><p className="tpColumnTitle">Candidate</p></div>
                             <div className="tpIndexItem"><p className="tpColumnTitle">Contact</p></div>
                             <div className="tpIndexItem"><p className="tpColumnTitle">Dash Involvement</p></div>
                             <div className="tpIndexItem"><p className="tpColumnTitle">Interview Link</p></div>
                         </div>
-                    </section>
-                    <section className="tpPageTopSection" value={this.state.tabId == 'voting' ? "Active" :
-                        "Inactive"}>
-                        <h1 className="tpHeader">Trust Protector Election Voting Stats</h1>
-                        <p className="tpText">Want to vote? The voting tool for Dash MNOs is available at: <a href="https://trustvote.dash.org/" target="">trustvote.dash.org/</a></p>
-                    </section>
                         {pageContent}
-                        <div className="tpBottomDiv">
+                        <div className="tpBottomDiv" value={this.state.tabId == 'candidates' ? "Active" : "Inactive"}>
                             <div className="tpSubHeader">Questions, Comments, Concerns? Contact Us</div>
                             E-mail: <a href="mailto:team@dashwatch.org" target="mailto:team@dashwatch.org">team@dashwatch.org</a><br></br>
                             DashWatchTeam#5277 Discord<br></br>
                             Dash-AI#1455 Discord<br></br>
-                            MattDash#6481 Discord (This web page)<br></br>
+                            MattDash#6481 Discord<br></br>
                             paragon#2778 Discord<br></br>
                             Twitter: <a href="https://twitter.com/DashWatch" target="_blank">@DashWatch</a>
                         </div>
+                    </section>
+
+                    <section className="tpPageTopSection" value={this.state.tabId == 'voting' ? "Active" :
+                        "Inactive"}>
+                        <Validation></Validation>
+                    </section>
+
+                    <section className="tpPageTopSection" value={this.state.tabId == 'howTo' ? "Active" :
+                        "Inactive"}>
+                        <HowTo></HowTo>
+                    </section>
                     </div>
                 </section>
                 <ScrollButton scrollStepInPx="125" delayInMs="16.66" />

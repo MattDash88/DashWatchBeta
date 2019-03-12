@@ -14,7 +14,7 @@ export default class Header extends React.Component {
         super();
     }
     render() {
-        trackPage(`/reports`)
+        trackPage(`/elections`)
         return (
             <div>
                 <Head>
@@ -22,8 +22,8 @@ export default class Header extends React.Component {
                     <meta name="twitter:card" content="summary_large_image" />
                     <meta name="twitter:site" content="dashwatchbeta.org" />
                     <meta name="twitter:creator" content="@DashWatchTeam" />
-                    <meta name="twitter:title" content="Dash Watch February Reports" />
-                    <meta name="twitter:description" content="We recognize that Dash MNOs and community members have limited time to review all the reports and metrics available on the Dash Watch website and have created a page that clearly organizes and displays links to all of our current February 2019 reports, Financial Reviews and Video Interviews. " />
+                    <meta name="twitter:title" content="Dash Watch Trust Protector Elections Page" />
+                    <meta name="twitter:description" content='Here is a list of all the Dash Trust Protector Election candidates and a "How to voting guide".' />
                     <meta name="twitter:image" content="https://dashwatchbeta.org/images/preview_elections.png" />
                 </Head>
             </div>
