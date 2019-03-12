@@ -1,6 +1,9 @@
 import React from 'react';
 import ReactGA from 'react-ga';
-ReactGA.initialize('UA-132694074-1');
+
+// Analytics
+import getGAKey from '../functions/analytics';
+ReactGA.initialize(getGAKey);
 
 // Import css
 import "../css/style.css";
@@ -31,7 +34,7 @@ class NavBar extends React.Component {
         event.preventDefault();
         history.pushState(null, null, `/proposals?search=${event.target[0].value}`)
         location.replace(`/proposals?search=${event.target[0].value}`)
-        trackSearch('Searched ' + event.target[0].value)
+        trackSearch('Searched: ' + event.target[0].value )
     }
 
     callEvent(event) {
@@ -47,8 +50,8 @@ class NavBar extends React.Component {
             <div className="menu">
                 <nav className="menuContent">
                     <li className="menuItem" id="image"><a title="Home" id="home" href="/" target="" onClick={this.callEvent}><img id="Home" src="https://dashwatchbeta.org/Logo/logo_white20.png"></img></a></li>
-                    <li className="menuItem"><a title="Reports" id="reports" value={showPage == "reports" ? "Active" : "Inactive"} href="/reports" target="" onClick={this.callEvent}>Reports</a></li>
-                    <li className="menuItem"><a title="Proposals" id="proposals" value={showPage == "proposals" ? "Active" : "Inactive"} href="/proposals" target="" onClick={this.callEvent}>Proposals View</a></li>
+                    <li className="menuItem"><a title="Reports" id="reports" value={showPage == "reports" ? "Active" : "Inactive"} href="/reportlist" target="" onClick={this.callEvent}>Reports</a></li>
+                    <li className="menuItem"><a title="Proposals" id="proposals" value={showPage == "proposals" ? "Active" : "Inactive"} href="/proposals" target="" onClick={this.callEvent}>Proposals</a></li>
                     <form className="searchForm" onSubmit={this.handleSubmit}>
                         <input className="searchField"
                             placeholder={"Search proposal ID or proposer"}

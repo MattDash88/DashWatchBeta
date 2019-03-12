@@ -166,7 +166,7 @@ const getMerchantKpiData = () => {
   })
 }
 
-// Function to prepare data for Peyton's data processing project
+// Function to prepare data for Trust Protector Candidate List
 const getTrustProtectorData = () => {
   return new Promise((resolve, reject) => {
     // Read cache for this function
@@ -187,37 +187,6 @@ const getTrustProtectorData = () => {
 
           // Store results in Redis cache, cache expire time is defined in .env
           cache.setex('trustProtectorData', cacheExpirationTime, JSON.stringify(storeAirtablePosts))
-          resolve(storeAirtablePosts)
-        }).catch((error) => {
-          reject({ error })
-          console.log(error)
-        })
-      }
-    })
-  })
-}
-
-// Function to prepare data for Peyton's data processing project
-const getTpVoteData = () => {
-  return new Promise((resolve, reject) => {
-    // Read cache for this function
-    cache.get('votingTallyData', function (error, data) {
-      if (error) throw error
-
-      if (!!data) {   // If value was already retrieved recently, grab from cache
-        resolve(JSON.parse(data))
-      }
-      else {    // If cache is empty, retrieve from Airtable
-        Promise.resolve(airtableFunctions.ElectionVotingTally('Voting Tally')).then(function (valArray) {
-          const storeAirtablePosts = []   // Create const to push all proposal data in
-          Object.keys(valArray).map((item) => {            
-            if (typeof valArray[item].candidate !== 'undefined') {    //Check if record exists
-              storeAirtablePosts.push(valArray[item])
-            }
-          })
-
-          // Store results in Redis cache, cache expire time is defined in .env
-          cache.setex('votingTallyData', cacheExpirationTime, JSON.stringify(storeAirtablePosts))
           resolve(storeAirtablePosts)
         }).catch((error) => {
           reject({ error })
@@ -278,7 +247,7 @@ app.prepare()
       Promise.resolve(getMonthList()).then(function (valArray) {
         Object.keys(valArray).map((list_item) => {
           if (typeof valArray[list_item].list_data.report_status === 'undefined') {
-            
+            // Do nothing, skip entry
           } else if (valArray[list_item].list_data.report_status[0] == "Opted Out") {
             optOutSelection.push(valArray[list_item])
             }
@@ -370,22 +339,6 @@ app.prepare()
       });
     })
 
-    // API call for trust protector election candidates table
-    server.get('/api/get/tpVotingTally', (req, res) => {
-      Promise.resolve(getTpVoteData()).then(function (valArray) {
-        res.writeHead(200, {
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json'
-        })
-        return res.end(serialize(valArray))
-      }).catch((error) => {
-        console.log(error)
-        // Send empty JSON otherwise page load hangs indefinitely
-        res.writeHead(200, { 'Content-Type': 'application/json' })
-        return res.end(serialize({}))
-      });
-    })
-
     // Routing for reports
     server.get('/r/:month/:reportId', (req, res) => {
       const actualPage = `https://dashwatchbeta.org/reports/${req.params.month}/${req.params.reportId}.pdf`
@@ -401,7 +354,7 @@ app.prepare()
     })
 
     // Routing to main page
-    server.get('/reports', (req, res) => {
+    server.get('/reportlist', (req, res) => {
       const actualPage = '/index'
 
       const queryParams_reports = req.query // Pass on queries
@@ -413,8 +366,7 @@ app.prepare()
     server.get('/proposals', (req, res) => {
       const actualPage = '/proposals'
 
-      const queryParams_proposals = req.query // Pass on queries
-      
+      const queryParams_proposals = req.query // Pass on queries      
 
       app.render(req, res, actualPage, queryParams_proposals)
     })
@@ -441,9 +393,9 @@ app.prepare()
       const actualPage = '/labs'
 
       app.render(req, res, actualPage)
-    })
-    
-    // Routing to the labs page
+    })  
+
+    // Routing to the TP Elections page
     server.get('/tpelections', (req, res) => {
       const actualPage = '/tpelection'
 
@@ -476,7 +428,7 @@ app.prepare()
     server.get('*', (req, res) => {
       const actualPage = '/index'
 
-      const queryParams = req.query // Pass on queries
+      const queryParams = '' // Pass on queries
 
       app.render(req, res, actualPage, queryParams)
     })

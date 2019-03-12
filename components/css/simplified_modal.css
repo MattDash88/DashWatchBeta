@@ -9,8 +9,10 @@ Styling used in ModalContent.js
 
 /* Outer border of the modal */
 .simple_modalWrapper {
-    min-width: 500px;
+    min-width: 100%;
     max-width: 800px;
+    overflow-x: auto;
+    overflow-y: auto;
     min-height: 500px;
     box-shadow: 2px 2px 1px grey;
     border-radius:5px 5px 5px 5px;
@@ -20,7 +22,7 @@ Styling used in ModalContent.js
 /* Blue title area of the modal proposal card */
 .simple_modalCardTitle { 
     font-family: 'Montserrat', sans-serif;
-    min-width: 450px;
+    min-width: 600px;
     max-width: 100%;
     background: #008de4;
     border-radius: 5px 5px 0px 0px;
@@ -34,8 +36,6 @@ Styling used in ModalContent.js
     font-size: 14px;
     font-weight: 400;
     text-transform: uppercase;
-    min-width: 450px;
-    width: 100%;
     margin-left: 10px;
 }
 
@@ -64,18 +64,18 @@ Styling used in ModalContent.js
 /* Styling for modal close button */ 
 .simple_modalCloseButton {
     display: block;
-    position: fixed;
+    position: relative;
     color: white;
     top:0;
     right:0;
     font-family: 'Roboto', sans-serif;
     padding-top: 3px;
     padding-right: 10px;
+    padding-bottom: 0;
     font-size: 20px;
     font-weight: normal;
     height: 20px;
     min-width: 50px;
-    width: 15%;
     text-transform: uppercase;
     text-align: right;
     cursor: pointer;
@@ -129,7 +129,9 @@ Styling used in the modal tab files (ModalTabMain, ModalTabPerformance, ModalTab
     font-weight: 'bold';
     color: black;
     height: 20px;    
-
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* Div containg the value, Completed, On Schedule, etc. Text itself is styled in status_styling.css */
@@ -138,7 +140,6 @@ Styling used in the modal tab files (ModalTabMain, ModalTabPerformance, ModalTab
     font-weight: bold;
     font-size: 14px;
     height: 40px;
-
 }
 
 /* Styling of text on tabs in modal*/

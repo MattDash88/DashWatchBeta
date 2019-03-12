@@ -161,16 +161,24 @@ Temporary Tests
     background: lightyellow;
 }
 
-.simple_modalPropertyDiv[value="Unfunded"] {
-    background: lightyellow;
-}
-
 .simple_modalPropertyDiv[value="Under Budget and underfunded due to depreciation"] {
-    background: r#ffefe0;
+    background: lightyellow;
 }
 
 .simple_modalPropertyDiv[value="On Budget and overfunded due to the appreciation of Dash"] {
     background: lightyellow;
+}
+
+.simple_modalPropertyDiv[value="Over Budget due to extenuating circumstances"] {
+    background: #ffefe0;
+}
+
+.simple_modalPropertyDiv[value="Over Budget"] {
+    background: #ffefe0;
+}
+
+.simple_modalPropertyDiv[value="Out of funds"] {
+    background: #ffefe0;
 }
 
 .simple_modalPropertyDiv[value="Opted out of financial reporting"] {

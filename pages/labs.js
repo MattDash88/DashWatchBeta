@@ -204,7 +204,7 @@ class Labs extends React.Component {
         showPlotly: false,
       })
     }
-    trackEvent('Changed Tab')                 // Track Event on Google Analytics
+    trackEvent(`Changed Tab to ${event.currentTarget.id}`)                 // Track Event on Google Analytics
   }
 
   componentDidMount() {

@@ -15,19 +15,20 @@ Styles used in index.js
 /* General page wrapper */
 .pagewrapper {
     align-items: middle;
-    min-width: 600px;
+    min-width: 800px;
     width: 100%;
     max-width: 1000px;
-    padding-top: 65px; /* Clearing from Navbar */
+    padding-top: 25px; /* Clearing from Navbar */
     margin: 0 auto;
 }
 
 /* Styling for the whole navBar */
 .menu{
-    position: fixed;
+    position: relative;
     top: 0; /* Position the navbar at the top of the page */
-    min-width: 600px;
+    min-width: 1000px;    
     width: 100%; /* Full width */
+    overflow-x: auto;
     list-style-type: none;
     overflow: hidden;
     background-color: #012060;
@@ -75,8 +76,8 @@ Styles used in index.js
 .menuItem img {
     display: inline-flex;
     vertical-align: middle;
-    padding-left: 16px;
-    padding-right: 16px;
+    padding-left: 8px;
+    padding-right: 8px;
     padding-bottom: 2px;
     color: white;
 }

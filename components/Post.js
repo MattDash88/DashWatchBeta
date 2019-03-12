@@ -1,4 +1,9 @@
 import React from 'react';
+import ReactGA from 'react-ga';
+
+// Analytics
+import getGAKey from './functions/analytics';
+ReactGA.initialize(getGAKey);
 
 // Import other elements 
 import ModalFrame from './modal/ModalFrame';
@@ -8,38 +13,39 @@ import ModalContent from './modal/ModalContent';
 import './css/style.css';
 import './css/status_styling.css';
 
+// Track Event Google Analytics function
+const trackEvent = (event) => {
+  ReactGA.event({
+      category: 'Proposals Page',
+      action: event,
+  });
+}
+
 class Post extends React.Component {
   constructor(props) {
     super(props);
     this.state = { show: false };
 
     // Binding functions in this class
-    this.showProposalPage = this.showProposalPage.bind(this);
-    this.handleProposalPage = this.handleProposalPage.bind(this);
     this.hideModal = this.hideModal.bind(this);
     this.showModal = this.showModal.bind(this);
-  }
-
-  // Function to pass back the proposal ID when opening Proposal Page
-  showProposalPage(e) {
-    e.preventDefault();
-    this.props.getProposalID(e.currentTarget.id, 'TabMain');
-  }
-
-  // Function to direct the user to the right tab when Proposal Page is opened from the Modal
-  handleProposalPage(slug, openTab) {
-    this.props.getProposalID(slug, openTab);
+    this.callEvent = this.callEvent.bind(this);
   }
 
   // Function to show modal
-  showModal() {
+  showModal(event) {
     this.setState({ show: true });
+    trackEvent('Opened Modal: ' + event.target.className)
   };
 
   // Function to close Modal
   hideModal() {
     this.setState({ show: false });
   };
+
+  callEvent(event) {
+    trackEvent('clicked ' + event.currentTarget.id)
+}
 
   render() {    
     const { // Declare grouped elements to pass on to modal      
@@ -83,7 +89,7 @@ class Post extends React.Component {
       )
     } else {  //Show Latest report if available
       reportLink = (
-        <a className="link" href={report_link} target="_blank" title={report_link}>
+        <a className="link" id="reportLink" href={report_link} target="_blank" title={report_link} onClick={this.callEvent}>
                 <img id="PDF" src="https://image.flaticon.com/icons/svg/337/337946.svg" width="20"></img>{report_date} Report</a>
       )
     }
@@ -104,7 +110,6 @@ class Post extends React.Component {
 
            // For functions
            show={this.state.show}   // Show modal or not
-           handleProposalPage={this.handleProposalPage}   // Function to go to proposal page
            handleClose={this.hideModal} // Function to close modal
          />
        </ModalFrame></div> 
@@ -123,7 +128,7 @@ class Post extends React.Component {
             <div className="ownerName">by {proposal_owner}</div>
           </div>
 
-          <div className='cardPropertyWrapper' onClick={this.showModal}>
+          <div className="cardPropertyWrapper" onClick={this.showModal}>
 
           <div className="cardPropertyDiv">
             <div className="cardPropertyTitle">
@@ -210,11 +215,11 @@ class Post extends React.Component {
           </div>
 
           <div className="linkItem" text-align="left">
-            <a className="link" href={dclink} target="_blank">DASHCENTRAL LINK</a>
+            <a className="link" id="Dash Central Link" href={dclink} target="_blank" onClick={this.callEvent}>DASHCENTRAL LINK</a>
           </div>
 
           <div className="linkItem">
-          <a className="link" href={`/p/${slug}`} target="">DASH WATCH PAGE</a>
+          <a className="link" id="Dash Watch Link" href={`/p/${slug}`} target="" onClick={this.callEvent}>DASH WATCH PAGE</a>
           </div>
 
           <div className="linkItem" text-align="right">

@@ -12,7 +12,7 @@ import '../css/status_styling.css';
 
 const trackEvent = (event) => {
     ReactGA.event({
-        category: 'Full Modal',
+        category: 'Single Page',
         action: event,
     });
 }
@@ -73,7 +73,7 @@ class ReportDiv extends React.Component {
             <div>
                 <span className="tabLinkTitle">{report_date}:</span>
                 <span className="tabReportLink">
-                    <a className="tabReportLink" href={report_link} target="_blank" id="ReportLink" onClick={this.callEvent}>{report_name}</a></span><br></br>
+                    <a className="tabReportLink" id="ReportLink" href={report_link} target="_blank" onClick={this.callEvent}>{report_name}</a></span><br></br>
             </div>
         )
     }

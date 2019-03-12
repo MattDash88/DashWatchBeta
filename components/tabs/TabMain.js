@@ -1,11 +1,34 @@
 import React from 'react';
+import ReactGA from 'react-ga';
+
+// Analytics
+import getGAKey from '../functions/analytics';
+ReactGA.initialize(getGAKey);
 
 // Import css
 import '../css/style.css';
 import '../css/single.css';
 import '../css/status_styling.css';
 
+const trackEvent = (event) => {
+  ReactGA.event({
+      category: 'Single Page',
+      action: event,
+  });
+}
+
 class TabMain extends React.Component { 
+  constructor() {
+    super();
+    // Binding functions in this class
+    this.callEvent = this.callEvent.bind(this);
+  }
+
+  // Google Analytics function to track User interaction on page
+  callEvent(event) {
+    trackEvent('Clicked ' + event.currentTarget.id)
+  }
+
   render() {
     const { // Declare single elements used in this tab   
       status,
@@ -113,7 +136,7 @@ class TabMain extends React.Component {
         <div className="tabHeader">Links:</div>
         <div className="tabLinkDiv">
           <div className="tabLinkItem">
-            <a className="link" href={dclink} target="_blank">Dashcentral Link</a>
+            <a className="link" id="pageDcLink" href={dclink} target="_blank" onClick={this.callEvent}>Dashcentral Link</a>
           </div><br></br>
         </div>
       </div>
