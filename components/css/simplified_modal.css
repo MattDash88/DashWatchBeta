@@ -152,8 +152,7 @@ Styling used in the modal tab files (ModalTabMain, ModalTabPerformance, ModalTab
     margin-left: 10px;
     padding-top: 0.3rem;
     padding-bottom: 5px;
-    padding-right: 3rem;
-
+    padding-right: 0.3rem;
 }
 
 .simple_modalPropertyGrid {

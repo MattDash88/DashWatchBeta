@@ -7,18 +7,19 @@ import getGAKey from '../components/functions/analytics';
 ReactGA.initialize(getGAKey);
 
 // Import pages
+import HowTo from '../components/HowTo';
 
 // Import css
 import "../components/css/style.css";
-import "../components/css/tp_elections.css";
+import "../components/css/elections.css";
 import "../components/css/status_styling.css";
 
 // Import other elements 
-import Header from '../components/headers/IndexHeader';
+import Header from '../components/headers/ElectionsHeader';
 import ScrollButton from '../components/elements/ScrollButton';  // Scroll to top button
-import NavBar from "../components/elements/NavBar_TP"
+import NavBar from "../components/elements/NavBar"
 
-var basepath = 'http://localhost:5000'
+var basepath = 'https://dashwatchbeta.org'
 
 const trackEvent = (event) => {
     ReactGA.event({
@@ -40,20 +41,7 @@ const getCandidateList = () => {
     )
 }
 
-const getVotingTally = () => {
-    return (
-        new Promise((resolve) => {
-            fetch(`${basepath}/api/get/tpVotingTally`)
-                .then((res) => res.json()
-                    .then((res) => {
-                        resolve(res.data)
-                    })
-                )
-        })
-    )
-}
-
-class Month extends React.Component {
+class TrustElections extends React.Component {
     static async getInitialProps(ctx) {
         const props = {           
             tab: typeof ctx.query.tab == "undefined" ? "candidates" : ctx.query.tab,   // Default no month to latest
@@ -69,8 +57,7 @@ class Month extends React.Component {
         this.state = {
             tabId: props.tab,
             candidateListData: '',
-            tallyData: '',
-            url: '/TPelection',
+            url: '/elections',
             as: props.as,
         }
 
@@ -88,7 +75,7 @@ class Month extends React.Component {
         })
 
         history.pushState(this.state, '', `/elections?tab=${event.currentTarget.id}`)   // Push State to history
-        trackEvent('Changed Tab')                 // Track Event on Google Analytics                                                   // Track event in Google Analytics       
+        trackEvent('Changed Tab')                 // Track Event on Google Analytics                                                     
     }
 
     // Google Analytics function to track User interaction on page
@@ -98,7 +85,7 @@ class Month extends React.Component {
     }
 
     componentDidMount() {
-        // To handle calls from history (forward and back buttons)
+        // To handle calls from popstate when the page is called from history
         onpopstate = event => {
             if (event.state) {
                 this.setState(event.state)
@@ -106,32 +93,38 @@ class Month extends React.Component {
         }
 
         var candidateListPromise = Promise.resolve(getCandidateList());
-        var votingTallyPromise = Promise.resolve(getVotingTally());
+        //var votingTallyPromise = Promise.resolve(getVotingTally());
 
         // Promise to get the initial "month list" records 
-        Promise.all([candidateListPromise, votingTallyPromise]).then(data => {
+        Promise.all([candidateListPromise, candidateListPromise]).then(data => {
             this.setState({
                 candidateListData: data[0],
-                tallyListData: data[1],
             })
         }).then(history.replaceState(this.state, '', `${this.state.as}`))
+    }
 
+    
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.tabId !== this.state.tabId) {         // Just a history state update because it doesn't always work as desired in functions
+            history.replaceState(this.state, '', `${this.state.as}`)
+        }
     }
 
     render() {
         const { // Declare data arrays used in class
             candidateListData,
-            tallyListData,
             tabId,
         } = this.state
 
         if (candidateListData.length == 0) {
             var pageContent = (
+                <section>
                 <div>
                     <p>Loading&hellip;</p>
                 </div>
+                </section>
             )
-        } else if (tabId=="candidates") {
+        } else if (tabId=="candidates") {       // Content of Candidates tab
             var pageContent = (
                 <div>
                     {candidateListData.map((post) =>
@@ -143,39 +136,48 @@ class Month extends React.Component {
                     )}
                 </div>
             )
-        } else if (tabId=="tally") {
+        } else if (tabId=="howTo") {       // Content of Candidates tab
             var pageContent = (
                 <div>
-                    {tallyListData.map((post) =>
-                        <VotingTallyRow                       
-                            key={`${post.id}`}
-                            airtableData={post}      // Elements for the Month report list    
-                            showTab={tabId} 
-                        />
-                    )}
+                    <h1 className="tpHeader">Dash Trust Protector Elections 2019 How to Vote</h1>
+                    <HowTo></HowTo>
                 </div>
             )
-        }
+        } else {
+            <div></div>
+        }   // End of page content loop
 
-        // Still loading Airtable data
         return (
             <main>
+                <Header></Header>
                 <NavBar
                     showPage="candidateList"
                 />
                 <section className="pagewrapper">
                     <div className="tpTab" id='candidates' value={this.state.tabId == 'candidates' ? "Active" :
                         "Inactive"} onClick={this.handleSelectTab}><p className="tpTabText">2019 Candidates</p></div>
-                    <div className="tpTab" id='tally' value={this.state.tabId == 'tally' ? "Active" :
-                        "Inactive"} onClick={this.handleSelectTab}><p className="tpTabText">Voting Tally</p></div>
+                    <div className="tpTab" id='voting' value={this.state.tabId == 'voting' ? "Active" :
+                        "Inactive"} onClick={this.handleSelectTab}><p className="tpTabText">Voting Data</p></div>
+                        <div className="tpTab" id='howTo' value={this.state.tabId == 'howTo' ? "Active" :
+                        "Inactive"} onClick={this.handleSelectTab}><p className="tpTabText">How to Vote</p></div>
                     <div className="tpPageWrapper">
+                    <section className="tpPageTopSection" value={this.state.tabId == 'candidates' ? "Active" :
+                        "Inactive"}>
                         <h1 className="tpHeader">2019 Dash Trust Protector Election Candidates</h1>
+                        <p className="tpText">Want to vote? The voting tool for Dash MNOs is available at: <a href="https://trustvote.dash.org/" target="">trustvote.dash.org/</a><br></br>
+                        To help you along Dash Watch has made a <a href="http://bit.ly/DWTPHowTo2019">Elections 2019 How to Vote Guide</a></p>
                         <div className="tpIndexWrapper">
                             <div className="tpIndexItemFirst"><p className="tpColumnTitle">Candidate</p></div>
                             <div className="tpIndexItem"><p className="tpColumnTitle">Contact</p></div>
                             <div className="tpIndexItem"><p className="tpColumnTitle">Dash Involvement</p></div>
                             <div className="tpIndexItem"><p className="tpColumnTitle">Interview Link</p></div>
                         </div>
+                    </section>
+                    <section className="tpPageTopSection" value={this.state.tabId == 'voting' ? "Active" :
+                        "Inactive"}>
+                        <h1 className="tpHeader">Trust Protector Election Voting Stats</h1>
+                        <p className="tpText">Want to vote? The voting tool for Dash MNOs is available at: <a href="https://trustvote.dash.org/" target="">trustvote.dash.org/</a></p>
+                    </section>
                         {pageContent}
                         <div className="tpBottomDiv">
                             <div className="tpSubHeader">Questions, Comments, Concerns? Contact Us</div>
@@ -207,7 +209,7 @@ class CandidateListRow extends React.Component {
     }
 
     callEvent(event) {
-        trackEvent('clicked ' + event.currentTarget.className)
+        trackEvent('clicked: ' + event.currentTarget.id)
     }
 
     
@@ -223,9 +225,11 @@ class CandidateListRow extends React.Component {
             contact,
             dash_involvement,
             dash_involvement_link,
+            interview_link,
+            interview_type,
         } = this.props.airtableData
 
-        // Code to generate report link
+        // Code to generate involvement link
         let involvementLink = null;
         if (typeof dash_involvement == "undefined") { // If report is pending show "Pending"
             involvementLink = (
@@ -237,10 +241,10 @@ class CandidateListRow extends React.Component {
                 )
             } else {
                 involvementLink = (
-                    <div className="tpItem"><a className="tpReportLink" href={dash_involvement_link} target="_blank" title={dash_involvement_link} onClick={this.callEvent}>
+                    <div className="tpItem"><a className="tpReportLink" id="involvementLink" href={dash_involvement_link} target="_blank" title={dash_involvement_link} onClick={this.callEvent}>
                         {dash_involvement}</a></div>
                 )
-        } // End of report status if
+        } // End of involvement if
 
         let candidateNameCell = null;
         if (typeof alias == "undefined") {
@@ -253,7 +257,31 @@ class CandidateListRow extends React.Component {
                 <div><p className="tpCandidateName" title={candidate_name}>{candidate_name}</p>
                     <p className="tpCandidateAlias" title={alias}>aka {alias}</p></div>
             )
-        }
+        }   // End of candidate name if
+
+        // Code to generate interview link
+        let interviewLink = null;
+        if (typeof interview_type == "undefined") { // If report is pending show "Pending"
+            interviewLink = (
+                <div className="tpItem"></div>
+            )
+        } else {  // If report is published, show links to report and modal
+            if (interview_type == "Video") {
+                interviewLink = (
+                    <div className="tpItem" id="tpInterviewLink"><div><a className="tpReportLink" id="reportLink" href={interview_link} target="_blank" title={interview_link} onClick={this.callEvent}>
+                        <img className="reportIcon" id="YouTube" src="https://dashwatchbeta.org/images/Video.png" height="30"></img> Video</a></div></div>
+                )
+            } else if (interview_type == "Text") {
+                interviewLink = (
+                    <div className="tpItem" id="tpInterviewLink"><div><a className="tpReportLink" id="reportLink" href={interview_link} target="_blank" title={interview_link} onClick={this.callEvent}>
+                        <img className="reportIcon" id="Text" src="https://dashwatchbeta.org/images/PDF.png" height="30"></img> Text</a></div></div>
+                )
+            } else {
+                interviewLink = (
+                    <div className="tpItem"></div>
+                )
+            }
+        } // End of interview link if
 
         // Output for the month list rows
         return (
@@ -261,7 +289,7 @@ class CandidateListRow extends React.Component {
                 <div className="tpItemFirst">{candidateNameCell}</div>
                     <div className="tpItem"><p className="tpCandidateContact" title={contact}>{contact}</p></div>
                 {involvementLink}                
-                <div className="tpItem"></div>
+                <div className="tpItem">{interviewLink}</div>
             </div>
         )
     }
@@ -300,4 +328,4 @@ class VotingTallyRow extends React.Component {
     }
 }
 
-export default Month
+export default TrustElections

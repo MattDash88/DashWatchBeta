@@ -69,6 +69,28 @@
     color: black;
 }
 
+/* Styling of text on top of page */
+.tpText {
+    font-family: 'Titillium Web', sans-serif;
+    font-size: 1rem;
+    color: black;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-left: 10px;
+    padding-bottom: 5px;
+    padding-right: 0.3rem;
+}
+
+.tpText a {
+    font-family: 'Roboto', sans-serif;
+    color: #008de4;
+    font-weight: 200;
+    font-size: 1rem;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+}
+
 /* Styling for bottom contact information div */
 .tpBottomDiv {
     width: 400px;   
@@ -90,7 +112,7 @@
     height: 3rem;
     border-bottom: 0.1rem solid black;
     background: white;
-    min-width: 600px;
+    min-width: 750px;
     max-width: 1000px;
 }
 
@@ -146,7 +168,7 @@
     height: 4rem;
     border-bottom: 0.1rem solid rgb(216, 220, 227);
     background: white;
-    min-width: 600px;
+    min-width: 750px;
     max-width: 1000px;
 }
 
@@ -223,6 +245,10 @@
     cursor: pointer;
 }
 
+.tpItem img {
+    vertical-align: middle;
+}
+
 .votingTallyWrapper {
     display: flex;
     height: 2rem;
@@ -230,4 +256,8 @@
     background: white;
     min-width: 300px;
     max-width: 500px;
+}
+
+.tpPageTopSection[value="Inactive"] {
+    display: none;
 }

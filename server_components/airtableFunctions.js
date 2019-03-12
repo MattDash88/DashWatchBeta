@@ -646,8 +646,9 @@ const TrustProtectorList = function getTrustProtectors(tableId) {
                             contact: record.get('Contact'),                             // Way to contact the candidate
                             dash_involvement: record.get('Dash Involvement'),           // What the protector has done in the community
                             dash_involvement_link: record.get('Dash Involvement Link'), // Used to attach a link to the candidate's Dash activity, if available
-                            interview_link: record.get('Interview Link'),               // Interview document taken by Dash Watch
-                            id: record.id                                               // Used as unique record identifier
+                            interview_link: record.get('Interview Link'), 
+                            interview_type: record.get('Interview Type'),           // Interview document taken by Dash Watch
+                            id: record.id,                                          // Used as unique record identifier
                         }
 
                         storeAirtablePosts.push(post)       // Push data to const

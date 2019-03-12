@@ -91,7 +91,7 @@ class Month extends React.Component {
         })
 
         history.pushState(this.state, '', `/reportlist?month=${event.currentTarget.id}`)   // Push State to history
-        trackEvent('Changed Month')                 // Track Event on Google Analytics                                                   // Track event in Google Analytics       
+        trackEvent('Changed Month')                 // Track Event on Google Analytics    
     }
 
     // Google Analytics function to track User interaction on page

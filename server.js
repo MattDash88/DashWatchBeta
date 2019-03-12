@@ -396,8 +396,8 @@ app.prepare()
     })  
 
     // Routing to the TP Elections page
-    server.get('/tpelections', (req, res) => {
-      const actualPage = '/tpelection'
+    server.get('/elections', (req, res) => {
+      const actualPage = '/elections'
 
       const queryParams_elections = req.query // Pass on queries
 

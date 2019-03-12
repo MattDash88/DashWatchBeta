@@ -89,7 +89,7 @@ Style elements for the top of the month list table
     height: 3rem;
     border-bottom: 0.1rem solid black;
     background: white;
-    min-width: 600px;
+    min-width: 750px;
     max-width: 1000px;
 }
 
@@ -132,7 +132,7 @@ Style elements for the top of the month list table
     height: 4rem;
     border-bottom: 0.1rem solid rgb(216, 220, 227);
     background: white;
-    min-width: 600px;
+    min-width: 750px;
     max-width: 1000px;
 }
 
