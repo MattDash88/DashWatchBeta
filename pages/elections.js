@@ -149,7 +149,7 @@ class TrustElections extends React.Component {
                         "Inactive"} onClick={this.handleSelectTab}><p className="tpTabText">2019 Candidates</p></div>                    
                         <div className="tpTab" id="howTo" value={this.state.tabId == "howTo" ? "Active" :
                         "Inactive"} onClick={this.handleSelectTab}><p className="tpTabText">How to Vote</p></div>
-                        <div className="tpTab" id="voting" value={this.state.tabId == "voting" ? "Active" :
+                        <div className="tpTab" id="validation" value={this.state.tabId == "validation" ? "Active" :
                         "Inactive"} onClick={this.handleSelectTab}><p className="tpTabText">Validation</p></div>
                     <div className="tpPageWrapper">
 
@@ -157,7 +157,7 @@ class TrustElections extends React.Component {
                         "Inactive"}>
                         <h1 className="tpHeader">2019 Dash Trust Protector Elections Candidates</h1>
                         <p className="tpText">Want to vote? The voting tool for Dash MNOs is available at: <a id="Trustvote Link" href="https://trustvote.dash.org/" target="" onClick={this.callEvent}>trustvote.dash.org/</a><br></br>
-                        To help you along Dash Watch has made a <span className="tpReportLink" id="howTo" onClick={this.handleSelectTab}>How to Vote Guide</span></p>
+                        To help you along Dash Watch has made a <span className="tpHowToLink" id="howTo" onClick={this.handleSelectTab}>How to Vote Guide</span></p>
                         <div className="tpIndexWrapper">
                             <div className="tpIndexItemFirst"><p className="tpColumnTitle">Candidate</p></div>
                             <div className="tpIndexItem"><p className="tpColumnTitle">Contact</p></div>
@@ -176,7 +176,7 @@ class TrustElections extends React.Component {
                         </div>
                     </section>
 
-                    <section className="tpPageTopSection" value={this.state.tabId == 'voting' ? "Active" :
+                    <section className="tpPageTopSection" value={this.state.tabId == 'validation' ? "Active" :
                         "Inactive"}>
                         <Validation></Validation>
                     </section>
@@ -238,7 +238,7 @@ class CandidateListRow extends React.Component {
                 )
             } else {
                 involvementLink = (
-                    <div className="tpItem"><a className="tpReportLink" id="involvementLink" href={dash_involvement_link} target="_blank" title={dash_involvement_link} onClick={this.callEvent}>
+                    <div className="tpItem"><a className="tpInvolvementLink" id="involvementLink" href={dash_involvement_link} target="_blank" title={dash_involvement_link} onClick={this.callEvent}>
                         {dash_involvement}</a></div>
                 )
         } // End of involvement if
@@ -265,13 +265,13 @@ class CandidateListRow extends React.Component {
         } else {  // If report is published, show links to report and modal
             if (interview_type == "Video") {
                 interviewLink = (
-                    <div className="tpItem" id="tpInterviewLink"><div><a className="tpReportLink" id="reportLink" href={interview_link} target="_blank" title={interview_link} onClick={this.callEvent}>
-                        <img className="reportIcon" id="YouTube" src="https://dashwatchbeta.org/images/Video.png" height="30"></img> Video</a></div></div>
+                    <div className="tpItem" id="tpInterviewLink"><div><a className="tpInterviewLink" id="reportLink" href={interview_link} target="_blank" title={interview_link} onClick={this.callEvent}>
+                        <img className="reportIcon" id="YouTube" src="https://dashwatchbeta.org/images/Video.png" height="30"></img> Interview</a></div></div>
                 )
             } else if (interview_type == "Text") {
                 interviewLink = (
-                    <div className="tpItem" id="tpInterviewLink"><div><a className="tpReportLink" id="reportLink" href={interview_link} target="_blank" title={interview_link} onClick={this.callEvent}>
-                        <img className="reportIcon" id="Text" src="https://dashwatchbeta.org/images/PDF.png" height="30"></img> Text</a></div></div>
+                    <div className="tpItem" id="tpInterviewLink"><div><a className="tpInterviewLink" id="reportLink" href={interview_link} target="_blank" title={interview_link} onClick={this.callEvent}>
+                        <img className="reportIcon" id="Text" src="https://dashwatchbeta.org/images/PDF.png" height="30"></img> Interview</a></div></div>
                 )
             } else {
                 interviewLink = (

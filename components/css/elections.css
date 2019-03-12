@@ -91,6 +91,16 @@
     cursor: pointer;
 }
 
+.tpHowToLink {
+    font-family: 'Roboto', sans-serif;
+    color: #008de4;
+    font-weight: 200;
+    font-size: 1rem;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+}
+
 /* Styling for bottom contact information div */
 .tpBottomDiv {
     width: 400px;   
@@ -238,11 +248,23 @@
 }
 
 /* Text styling of the report linkvoting status*/
-.tpReportLink {
+.tpInvolvementLink {
     font-family: 'Roboto', sans-serif;
     color: #008de4;
     font-weight: 200;
     font-size: 1rem;
+    vertical-align: middle;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Text styling of the report linkvoting status*/
+.tpInterviewLink {
+    font-family: 'Roboto', sans-serif;
+    color: #008de4;
+    font-weight: 200;
+    font-size: 1.2rem;
     vertical-align: middle;
     text-transform: uppercase;
     text-decoration: none;
