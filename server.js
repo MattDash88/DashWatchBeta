@@ -307,7 +307,7 @@ app.prepare()
     })
 
     // Routing to main page
-    server.get('/reports', (req, res) => {
+    server.get('/reportlist', (req, res) => {
       const actualPage = '/index'
 
       const queryParams_reports = req.query // Pass on queries
@@ -319,8 +319,7 @@ app.prepare()
     server.get('/proposals', (req, res) => {
       const actualPage = '/proposals'
 
-      const queryParams_proposals = req.query // Pass on queries
-      
+      const queryParams_proposals = req.query // Pass on queries      
 
       app.render(req, res, actualPage, queryParams_proposals)
     })
@@ -371,9 +370,9 @@ app.prepare()
 
     // Routing to main page
     server.get('*', (req, res) => {
-      const actualPage = '/'
+      const actualPage = '/index'
 
-      const queryParams = req.query // Pass on queries
+      const queryParams = '' // Pass on queries
 
       app.render(req, res, actualPage, queryParams)
     })

@@ -73,7 +73,7 @@ class Month extends React.Component {
             monthId: props.month,
             monthListData: '',
             optOutListData: '',
-            url: '/reports',
+            url: '/reportlist',
             as: props.as,
         }
 
@@ -87,10 +87,10 @@ class Month extends React.Component {
         event.preventDefault();
         this.setState({
             monthId: event.currentTarget.id,        // Change state to load different month
-            as: `/reports?month=${event.currentTarget.id}`,
+            as: `/reportlist?month=${event.currentTarget.id}`,
         })
 
-        history.pushState(this.state, '', `/reports?month=${event.currentTarget.id}`)   // Push State to history
+        history.pushState(this.state, '', `/reportlist?month=${event.currentTarget.id}`)   // Push State to history
         trackEvent('Changed Month')                 // Track Event on Google Analytics                                                   // Track event in Google Analytics       
     }
 
