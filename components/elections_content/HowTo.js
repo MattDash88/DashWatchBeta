@@ -11,7 +11,7 @@ class HowTo extends React.Component {
     render() {
         return (
             <main className="tpHowToWrapper">
-                <h1 className="tpHeader">Dash Trust Protector Elections 2019 How to Vote</h1>
+                <h1 className="tpHeader">2019 Dash Trust Protector Elections How to Vote</h1>
                 <p className="c5 c7"><span className="c4"></span></p>                
                 <p>Masternode Vote from Dash Masternode Tool (DMT)</p>
                 <p>Masternode Vote from Dash Core</p>
