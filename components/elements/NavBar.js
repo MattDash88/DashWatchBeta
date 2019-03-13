@@ -52,6 +52,7 @@ class NavBar extends React.Component {
                     <li className="menuItem" id="image"><a title="Home" id="home" href="/" target="" onClick={this.callEvent}><img id="Home" src="https://dashwatchbeta.org/Logo/logo_white20.png"></img></a></li>
                     <li className="menuItem"><a title="Reports" id="reports" value={showPage == "reports" ? "Active" : "Inactive"} href="/reportlist" target="" onClick={this.callEvent}>Reports</a></li>
                     <li className="menuItem"><a title="Proposals" id="proposals" value={showPage == "proposals" ? "Active" : "Inactive"} href="/proposals" target="" onClick={this.callEvent}>Proposals</a></li>
+                    <li className="menuItem"><a title="Trust Protector Elections" id="elections" value={showPage == "elections" ? "Active" : "Inactive"} href="/elections" target="" onClick={this.callEvent}>Elections</a></li>
                     <form className="searchForm" onSubmit={this.handleSubmit}>
                         <input className="searchField"
                             placeholder={"Search proposal ID or proposer"}

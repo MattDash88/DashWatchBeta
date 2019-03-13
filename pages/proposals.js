@@ -133,11 +133,26 @@ class Home extends React.Component {
         }
     }
 
+    
+
     render() {
         const { // Declare data arrays used in class
             airtableData,
             displayData,
         } = this.state
+
+        // Showing search message
+        if (this.state.search !== "") {
+            var searchFilterMessage = (
+                <div>
+                Results for search: <b>{this.state.search}</b>
+                </div>
+            )
+        } else {
+            var searchFilterMessage = (
+                <div></div>
+            )
+        }
 
         return (
             <main>
@@ -155,9 +170,11 @@ class Home extends React.Component {
                         </label>
                     </div>
                     <div className="headerRightDiv">
-                        <div><p className="headerText">Currently showing <b>{displayData.length}</b> of <b>{airtableData.length}</b> proposals</p></div>
-
+                        <div><p className="headerText">{searchFilterMessage}
+                        Currently showing <b>{displayData.length}</b> of <b>{airtableData.length}</b> proposals
+                        </p></div>                        
                     </div>
+                    
                     <ProposalList
                         // Arrays containing the data
                         airtableData={airtableData}      // All data, currently only used to check if data retrieval has been successful

@@ -163,5 +163,7 @@ Styling used in the modal tab files (ModalTabMain, ModalTabPerformance, ModalTab
   }
 
   .simple_modalOwnerNameText {
+    font-family: 'Roboto', sans-serif;
+    color: white;
     text-transform: uppercase;
   }

@@ -142,7 +142,7 @@ class TrustElections extends React.Component {
             <main>
                 <Header></Header>
                 <NavBar
-                    showPage="candidateList"
+                    showPage="elections"
                 />
                 <section className="pagewrapper">
                     <div className="tpTab" id="candidates" value={this.state.tabId == "candidates" ? "Active" :

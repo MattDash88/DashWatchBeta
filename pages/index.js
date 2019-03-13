@@ -121,17 +121,8 @@ class Month extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevState.monthId !== this.state.monthId) {
-            var monthListPromise = Promise.resolve(getMonthList());
-            var optOutListPromise = Promise.resolve(getOptOutList());
-
-            // Promise to get the initial "month list" records 
-            Promise.all([monthListPromise, optOutListPromise]).then(data => {
-                this.setState({
-                    monthListData: data[0],
-                    optOutListData: data[1],
-                })
-            }).then(history.replaceState(this.state, '', `${this.state.as}`))
+        if (prevState.monthId !== this.state.monthId) {// Just a history state update because it doesn't always work as desired in functions
+            history.replaceState(this.state, '', `${this.state.as}`)
         }
     }
 

@@ -80,7 +80,7 @@ class ModalContent extends React.Component {
       <div className="simple_modalCardTitle">
             <div className="simple_modalCloseButton" onClick={this.handleClose}>[ close ]</div>
             <div className="simple_modalProposalName">{proposal_name}</div>
-            <div className="simple_modalOwnerName">proposed by <span className="simple_modalOwnerNameText">{proposal_owner}</span></div>
+            <div className="simple_modalOwnerName">proposed by <a className="simple_modalOwnerNameText" id="owner link" target="" href={`/proposals?search=${proposal_owner}`} onClick={this.callEvent}>{proposal_owner}</a></div>
           <div className="simple_modalTabContent">
           <div className="simple_modalSubHeader">Proposal Description:</div>
           <div className="simple_modalProposalText">{proposal_description}</div>
