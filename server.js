@@ -103,7 +103,7 @@ const getMonthList = () => {
           monthReportData = valArray
 
           Object.keys(monthReportData).map((item) => {
-            if (typeof monthReportData[item].id !== 'undefined') {     //Check if record exists
+            if (typeof monthReportData[item].proposal_ref !== 'undefined') {     //Check if record exists
               monthData = processingFunctions.processMonthListData(monthReportData[item])
               storeAirtablePosts.push(monthData)
             }
