@@ -71,7 +71,7 @@ class Month extends React.Component {
 
         this.state = {
             tabId: '2018',
-            monthId: 'November 2018',
+            monthId: 'November2018',
             monthListData: '',
             optOutListData: '',
             showMenu: false,
@@ -107,11 +107,10 @@ class Month extends React.Component {
 
     // Function to handle showing the month selected from the dropdown menu
     handleSelectMonth(event) {
-        event.preventDefault();
         this.setState({
             monthId: event.currentTarget.value,        // Change state to load different month
-            //showMenu: false,
-            as: `/oldreports?month=${event.currentTarget.id}`,
+            showMenu: false,
+            as: `/oldreports?month=${event.currentTarget.value}`,
         })
 
         history.pushState(this.state, '', `/oldreports?month=${event.currentTarget.id}`)   // Push State to history
@@ -120,7 +119,8 @@ class Month extends React.Component {
 
     // Function ran when the eventlistener is activated. Close dropdown menu if clicked outside of it
     handleClick = (event) => {
-        if (event.target.id !== "dropdownMenu" && event.target.id !== "dropdownButton") {
+        //console.log(event.target)
+        if (event.target.id !== "dropdownMenu") {
         this.setState({
             showMenu: false,
         }) 
@@ -160,11 +160,6 @@ class Month extends React.Component {
             history.replaceState(this.state, '', `${this.state.as}`)
         }
     }
-
-    componentWillUnmount() {
-        // Stop event listener when modal is unloaded
-        window.removeEventListener('mousedown', this.handleClick);
-      }
   
 
     render() {
@@ -217,15 +212,15 @@ class Month extends React.Component {
                     <div className="monthPageWrapper"> 
                         <div className="monthHeaderWrapper">
                             <div className="monthHeader">Dash Watch {this.state.monthId} reports</div>
-                            <a className="reportPageLink" id="newReports" href="/oldreports">New Reports<i id="newReports"></i></a>
+                            <a className="reportPageLink" id="newReports" href="/reportlist">Newer Reports<i id="newReports"></i></a>
                         </div>
                         <div className="dropdown" id="dropdownmenu">
-                            <div id="dropdownButton" onClick={this.handleDropdown} className="dropbtn">Select a month</div>
+                            <div id="dropdownMenu" onClick={this.handleDropdown} className="dropbtn">Select a month</div>
                             {
                                 this.state.showMenu ? (
-                                    <div className="dropdownMenu">
-                                        <div id="dropdownMenu2" value="November" className="dropdownItem"  onClick={this.handleSelectMonth}>November 2018</div>
-                                        <div id="dropdownMenu" value="December" className="dropdownItem"  onClick={this.handleSelectMonth}>December 2018</div>
+                                    <div className="dropdownMenu" id="dropdownMenu">
+                                        <button id="dropdownMenu" value="November2018" className="dropdownItem"  onClick={this.handleSelectMonth}>November 2018</button>
+                                        <button id="dropdownMenu" value="December2018" className="dropdownItem"  onClick={this.handleSelectMonth}>December 2018</button>
                                     </div>
                                 ) : (
                                         null

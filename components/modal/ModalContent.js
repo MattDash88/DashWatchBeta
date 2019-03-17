@@ -56,11 +56,11 @@ class ModalContent extends React.Component {
 
     componentDidMount() {
       // Event listener to check if user clicks outside of modal area
-      document.addEventListener('mousedown', this.handleClick);
+      window.addEventListener('mousedown', this.handleClick);
     }
 
     componentWillUnmount() {
-      // Close event listener when modal is unloaded
+      // Stop event listener when modal is unloaded
       window.removeEventListener('mousedown', this.handleClick);
     }
 

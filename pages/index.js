@@ -82,7 +82,7 @@ class Month extends React.Component {
         this.callEvent = this.callEvent.bind(this);
     }
 
-    // Function initiated when a month list button is pressed, requests the data for that month from index.js
+    // Function initiated when a month list button is pressed
     handleSelectMonth(event) {
         event.preventDefault();
         this.setState({
@@ -194,7 +194,7 @@ class Month extends React.Component {
                         "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">March 2019</p></div>
                     <div className="monthPageWrapper">
                         <div className="monthHeaderWrapper">
-                            <a className="reportPageLink" id="oldReports" href="/test"><i id="oldReports"></i>Old Reports</a>
+                            <a className="reportPageLink" id="oldReports" href="/oldreports"><i id="oldReports"></i>Older Reports</a>
                             <div className="monthHeader">{monthText}</div>
                         </div>
                         <div className="monthIndexWrapper">
