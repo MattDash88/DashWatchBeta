@@ -38,6 +38,7 @@ class ModalContent extends React.Component {
     if (e.target.id == "outside") {      
       this.props.handleClose()
     }
+    console.log('hit')
   }
 
   // Google Analytics function to track User interaction on page
@@ -47,7 +48,12 @@ class ModalContent extends React.Component {
 
   componentDidMount() {
     // Event listener to check if user clicks outside of modal area
-    document.addEventListener('mousedown', this.handleClick);
+    window.addEventListener('mousedown', this.handleClick);
+  }
+
+  componentWillUnmount() {
+    // Stop event listener when modal is unloaded
+    window.removeEventListener('mousedown', this.handleClick);
   }
 
   render() {
@@ -80,7 +86,7 @@ class ModalContent extends React.Component {
       <div className="simple_modalCardTitle">
             <div className="simple_modalCloseButton" onClick={this.handleClose}>[ close ]</div>
             <div className="simple_modalProposalName">{proposal_name}</div>
-            <div className="simple_modalOwnerName">proposed by <a className="simple_modalOwnerNameText" id="owner link" target="" href={`/proposals?search=${proposal_owner}`} onClick={this.callEvent}>{proposal_owner}</a></div>
+            <div className="simple_modalOwnerName">proposed by <a id="owner link" target="" href={`/proposals?search=${proposal_owner}`} onClick={this.callEvent}>{proposal_owner}</a></div>
           <div className="simple_modalTabContent">
           <div className="simple_modalSubHeader">Proposal Description:</div>
           <div className="simple_modalProposalText">{proposal_description}</div>
@@ -163,8 +169,9 @@ class ModalContent extends React.Component {
               Links:
             </div>
             <a className="link" id="modalDcLink" href={dclink} target="_blank" onClick={this.callEvent}><img id="DcLogo" src="https://dashwatchbeta.org/images/DashCentral.png" height="40"></img></a>
+            <div className="linkSeparator"></div>
             <a className="link" id="modalDwLink" href={`/p/${slug}`} target="" onClick={this.callEvent}><img id="Logo" src="https://dashwatchbeta.org/images/DashWatch.png" height="40"></img></a> 
-              
+            <div className="linkSeparator"></div>
           </div>
           </div>          
           </div>

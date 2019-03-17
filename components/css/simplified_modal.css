@@ -61,6 +61,13 @@ Styling used in ModalContent.js
     color: white;
 }
 
+
+.simple_modalOwnerName a {
+    font-family: 'Roboto', sans-serif;
+    text-transform: uppercase;
+    color: white;
+  }
+
 /* Styling for modal close button */ 
 .simple_modalCloseButton {
     display: block;
@@ -155,6 +162,7 @@ Styling used in the modal tab files (ModalTabMain, ModalTabPerformance, ModalTab
     padding-right: 0.3rem;
 }
 
+/* 3x3 grid with proposal properties in it */
 .simple_modalPropertyGrid {
     display: flex;                       /* establish flex container */
     flex-wrap: wrap;                     /* enable flex items to wrap */
@@ -162,8 +170,14 @@ Styling used in the modal tab files (ModalTabMain, ModalTabPerformance, ModalTab
     margin-top: 0.1rem;
   }
 
-  .simple_modalOwnerNameText {
-    font-family: 'Roboto', sans-serif;
-    color: white;
-    text-transform: uppercase;
-  }
+
+
+
+  /* Separator for image links */
+.linkSeparator {
+    display: inline-flex;
+    border-left: 1px solid lightgrey;
+    height: 35px;
+    margin-left: 10px;
+    padding-right: 10px;
+}

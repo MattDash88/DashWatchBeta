@@ -18,20 +18,21 @@ Styles used in index.js
     min-width: 800px;
     width: 100%;
     max-width: 1000px;
-    padding-top: 25px; /* Clearing from Navbar */
-    margin: 0 auto;
+    margin: 55px auto;
 }
 
 /* Styling for the whole navBar */
 .menu{
-    position: relative;
+    position: fixed;
     top: 0; /* Position the navbar at the top of the page */
     min-width: 1000px;    
     width: 100%; /* Full width */
     overflow-x: auto;
     list-style-type: none;
     overflow: hidden;
+    margin-bottom: .5rem;
     background-color: #012060;
+    z-index: 999;
 }
 
 /* Sub div of navbar*/

@@ -120,6 +120,41 @@ const getMonthList = () => {
   })
 }
 
+// Function to get data for the Month list
+const getOldList = () => {
+  return new Promise((resolve, reject) => {
+    // Read cache for this function
+    cache.get('oldListData', function (error, data) {
+      if (error) throw error
+
+      if (!!data) {   // If value was already retrieved recently, grab from cache
+        resolve(JSON.parse(data))
+      }
+      else {    // If cache is empty, retrieve from Airtable
+        Promise.resolve(airtableFunctions.OldReportPosts('Old Reports')).then(function (valArray) {
+          const storeAirtablePosts = []   // Create const to push all proposal data in
+
+          // Sorting out all valArray items
+          monthReportData = valArray
+
+          Object.keys(monthReportData).map((item) => {
+            if (typeof monthReportData[item].proposal_ref !== 'undefined') {     //Check if record exists
+              monthData = processingFunctions.processMonthListData(monthReportData[item])
+              storeAirtablePosts.push(monthData)
+            }
+          })
+          // Store results in Redis cache, cache expire time is defined in .env
+          cache.setex('oldListData', cacheExpirationTime, JSON.stringify(storeAirtablePosts))
+          resolve(storeAirtablePosts)
+        }).catch((error) => {
+          reject({ error })
+          console.log(error)
+        })
+      }
+    })
+  })
+}
+
 // Function to prepare data for Peyton's data processing project
 const getMerchantKpiData = () => {
   return new Promise((resolve, reject) => {
@@ -265,6 +300,54 @@ app.prepare()
       });
     })
 
+    // Internal API call to create Reports page
+    server.get('/api/get/old_monthlist', (req, res) => {
+      monthSelection = []
+      Promise.resolve(getOldList()).then(function (valArray) {
+        Object.keys(valArray).map((list_item) => {
+          if (typeof valArray[list_item].list_data.report_status === 'undefined') {
+            // Do nothing, skip entry
+          } else if (valArray[list_item].list_data.report_status[0] !== "Opted Out") {
+            monthSelection.push(valArray[list_item])
+          }
+        })
+        res.writeHead(200, {
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': 'application/json'
+        })
+        return res.end(serialize(monthSelection))
+      }).catch((error) => {
+        console.log(error)
+        // Send empty JSON otherwise page load hangs indefinitely
+        res.writeHead(200, { 'Content-Type': 'application/json' })
+        return res.end(serialize({}))
+      });
+    })
+
+    // Internal API call for Reports Page Opt-out table
+    server.get('/api/get/old_optoutlist', (req, res) => {
+      optOutSelection = []
+      Promise.resolve(getOldList()).then(function (valArray) {
+        Object.keys(valArray).map((list_item) => {
+          if (typeof valArray[list_item].list_data.report_status === 'undefined') {
+            // Do nothing, skip entry
+          } else if (valArray[list_item].list_data.report_status[0] == "Opted Out") {
+            optOutSelection.push(valArray[list_item])
+            }
+        })
+        res.writeHead(200, {
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': 'application/json'
+        })
+        return res.end(serialize(optOutSelection))
+      }).catch((error) => {
+        console.log(error)
+        // Send empty JSON otherwise page load hangs indefinitely
+        res.writeHead(200, { 'Content-Type': 'application/json' })
+        return res.end(serialize({}))
+      });
+    })
+
     // Internal API call to support search
     server.get('/api/filter/:query', (req, res) => {
       query = qs.parse(req.params.query)
@@ -356,6 +439,15 @@ app.prepare()
     // Routing to main page
     server.get('/reportlist', (req, res) => {
       const actualPage = '/index'
+
+      const queryParams_reports = req.query // Pass on queries
+
+      app.render(req, res, actualPage, queryParams_reports)
+    })
+
+    // Routing to main page
+    server.get('/oldreports', (req, res) => {
+      const actualPage = '/old_reports'
 
       const queryParams_reports = req.query // Pass on queries
 

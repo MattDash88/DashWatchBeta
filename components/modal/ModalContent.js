@@ -59,6 +59,11 @@ class ModalContent extends React.Component {
       document.addEventListener('mousedown', this.handleClick);
     }
 
+    componentWillUnmount() {
+      // Close event listener when modal is unloaded
+      window.removeEventListener('mousedown', this.handleClick);
+    }
+
     render() {
         const { // Declare grouped elements passed on to sub tab 
         main_data,

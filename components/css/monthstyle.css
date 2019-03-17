@@ -5,8 +5,12 @@
 
 /* Month page wrapper */
 .monthPageWrapper {
-    display: block;
+    display: flex;
+    z-index: 1;
+    position: relative;
+    flex-direction: column;
     background-color: white;
+    justify-content: center;
     padding-left: 10px;
     padding-right: 10px;
     padding-bottom: 20px;
@@ -45,6 +49,15 @@
 
 .monthTab[value='Inactive']:hover {
     background-color: #1999e9;
+}
+
+.monthHeaderWrapper {
+    display: flex;
+    justify-content: center;
+    min-width: 750px;
+    max-width: 100%;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
 }
 
 /* Styling of Text in tab button */
@@ -119,12 +132,50 @@ Style elements for the top of the month list table
 /* Styling of the title of the month list page*/
 .monthHeader {
     color: #003347;
-    padding: 1rem;
-    margin: 0;
+    position: absolute;
     font-family: 'Montserrat', sans-serif;
+    margin-left: auto;
+    margin-right: auto;
     text-align: center;
     font-size: 2rem;
+    font-weight: bold;
 }
+
+.reportPageLink {
+    position: relative;
+    color: #008de4;
+    text-transform: uppercase;
+    margin-top: 0.75rem;
+    text-decoration: none;
+}
+
+.reportPageLink[id="oldReports"] {
+    margin-right: auto;
+}
+
+.reportPageLink[id="newReports"] {
+    margin-left: auto;
+}
+
+/* Creates chevon of back button */
+i {
+    border: solid #008de4;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    height: 9px;
+    width: 9px;
+      
+  }
+
+i[id=oldReports] {
+    transform: rotate(135deg);
+    -webkit-transform: rotate(135deg);  
+  }
+
+  i[id=newReports] {
+    transform: rotate(315deg);
+    -webkit-transform: rotate(315deg);  
+  }
 
 /* Wrapper for the month list rows  */
 .monthProposalWrapper {
@@ -335,3 +386,46 @@ Styling for Opt-out Table
     cursor: pointer;
 }
 
+/*
+Styling for old reports
+*/
+
+.dropbtn {
+    background-color: #3498DB;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .dropbtn:hover, .dropbtn:focus {
+    background-color: #2980B9;
+  }
+  
+  .dropdown {
+    position: relative;
+    margin-right: auto;
+  }
+  
+  .dropdownMenu {
+    display: show;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    overflow: auto;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+  
+  .dropdownItem {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    cursor: pointer;
+  }
+  
+  .dropdownItem:hover {background-color: #ddd;}
+  
+  .show {display: block;}
