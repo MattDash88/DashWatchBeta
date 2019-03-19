@@ -14,9 +14,17 @@ import "../components/css/about.css";
 import Header from '../components/headers/AboutHeader';
 import NavBar from "../components/elements/NavBar"
 
+const trackPage = (page) => { // Function to track user actions on page
+  ReactGA.pageview(page);
+}
+
 class About extends React.Component {
   constructor(props) {
     super(props);
+  }
+
+  componentDidMount() {    
+    trackPage(`/about`) // Track Pageview in Analytics
   }
 
   render() {
@@ -48,7 +56,7 @@ class About extends React.Component {
             <div><a type="link" href="http://dashwatchbeta.org/api/p/Dash-Help-Support-Center_201808">Dash-Help-Support-Center_201808</a></div>
             <div><a type="link" href="http://dashwatchbeta.org/api/p/Dash-Help-Support-Center_201811">Dash-Help-Support-Center_201811</a></div>
             <br></br>
-            Dash Watch website revisited v0.10.1 by Matt available on GitHub <a type="link" href="https://github.com/MattDash88/DashWatchBeta">HERE</a><br></br>
+            Dash Watch website revisited v0.10.2 by Matt available on GitHub <a type="link" href="https://github.com/MattDash88/DashWatchBeta">HERE</a><br></br>
           </div>
         </section>
       </main>

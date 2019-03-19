@@ -28,6 +28,10 @@ const getProposal = (slug) => {
   )
 }
 
+const trackPage = (page) => {
+  ReactGA.pageview(page);
+}
+
 class Single extends React.Component {
   static async getInitialProps(ctx) {
     const props = {
@@ -56,6 +60,8 @@ class Single extends React.Component {
         this.setState(event.state)
       }
     }
+
+    trackPage(`/p/${this.state.proposal}`)  // Track Proposal Pageview in Analytics
 
     Promise.resolve(getProposal(this.state.proposal))
       .then(data =>

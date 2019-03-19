@@ -8,6 +8,13 @@ ReactGA.initialize(getGAKey);
 // Import css
 import "../css/style.css";
 
+const trackEvent = (event) => {
+    ReactGA.event({
+        category: 'Scrollbutton',
+        action: event,
+    });
+}
+
 class ScrollButton extends React.Component {
     constructor() {
         super();
@@ -27,6 +34,7 @@ class ScrollButton extends React.Component {
     scrollToTop() {
         let intervalId = setInterval(this.scrollStep.bind(this), this.props.delayInMs);
         this.setState({ intervalId: intervalId });
+        trackEvent('Used scroll to top button')                 // Track Event on Google Analytics 
     }
 
     render() {

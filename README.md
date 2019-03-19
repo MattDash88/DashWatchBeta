@@ -1,2 +1,2 @@
-Dash Watch Beta Website v0.10.1 by MattDash
-<li>Added section for 2019 Dash Trust protector elections and a few minor other tweaks.</li>
+Dash Watch Beta Website v0.10.2 by MattDash
+<li>Adding a section for lists of older reports and a few other small improvements.</li>

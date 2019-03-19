@@ -1,13 +1,4 @@
 import Head from 'next/head';
-import ReactGA from 'react-ga';
-
-// Analytics
-import getGAKey from '../functions/analytics';
-ReactGA.initialize(getGAKey);
-
-const trackPage = (page) => {
-    ReactGA.pageview(page);
-}
 
 export default class Header extends React.Component {
     constructor() {
@@ -17,7 +8,6 @@ export default class Header extends React.Component {
         const {
             proposal
         } = this.props
-        trackPage(`/p/${proposal}`)
         return (
             <div>
                 <Head>

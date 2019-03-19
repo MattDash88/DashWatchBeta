@@ -15,7 +15,6 @@ import '../components/css/simplified_modal.css';
 import "../components/css/status_styling.css";
 
 // Import other elements 
-import Header from '../components/headers/IndexHeader';
 import ScrollButton from '../components/elements/ScrollButton';  // Scroll to top button
 import NavBar from "../components/elements/NavBar"
 import ModalFrame from '../components/modal/ModalFrame';
@@ -23,13 +22,18 @@ import ModalContent from '../components/modal/SimplifiedModalContent';
 
 var basepath = 'http://localhost:5000'
 
-const trackEvent = (event) => {
+const trackPage = (page) => {   // Function to track page views
+    ReactGA.pageview(page);
+}
+
+const trackEvent = (event) => { // Function to track user interaction with page
     ReactGA.event({
-        category: 'Reports Page',
+        category: 'Old Reports Page',
         action: event,
     });
 }
 
+// API query requesting Report List data
 const getMonthList = () => {
     return (
         new Promise((resolve) => {
@@ -43,6 +47,7 @@ const getMonthList = () => {
     )
 }
 
+// API query requesting Opt-out List data
 const getOptOutList = () => {
     return (
         new Promise((resolve) => {
@@ -59,7 +64,8 @@ const getOptOutList = () => {
 class Month extends React.Component {
     static async getInitialProps(ctx) {
         const props = {
-            month: typeof ctx.query.month == "undefined" ? "November 2018" : ctx.query.month,   // Default no month to latest
+            year: typeof ctx.query.year == "undefined" ? "2018" : ctx.query.year,   // Default no month to latest
+            month: typeof ctx.query.month == "undefined" ? "November" : ctx.query.month,   // Default no month to latest
             url: ctx.pathname,
             as: ctx.asPath,
         }
@@ -71,7 +77,8 @@ class Month extends React.Component {
 
         this.state = {
             tabId: '2018',
-            monthId: 'November2018',
+            monthId: props.month,
+            yearId: props.year,
             monthListData: '',
             optOutListData: '',
             showMenu: false,
@@ -110,10 +117,10 @@ class Month extends React.Component {
         this.setState({
             monthId: event.currentTarget.value,        // Change state to load different month
             showMenu: false,
-            as: `/oldreports?month=${event.currentTarget.value}`,
+            as: `/oldreports?month=${event.currentTarget.value}&year=${this.state.yearId}`,
         })
 
-        history.pushState(this.state, '', `/oldreports?month=${event.currentTarget.id}`)   // Push State to history
+        history.pushState(this.state, '', `/oldreports?month=${event.currentTarget.value}&year=${this.state.yearId}`)   // Push State to history
         trackEvent('Changed Month')                 // Track Event on Google Analytics    
     }
 
@@ -141,7 +148,8 @@ class Month extends React.Component {
             }
         }
 
-        window.addEventListener('mousedown', this.handleClick);
+        trackPage(`/old_reports`) // Track Pageview in Analytics
+        window.addEventListener('mousedown', this.handleClick);     // Handles closing of dropdown menu
 
         var monthListPromise = Promise.resolve(getMonthList());
         var optOutListPromise = Promise.resolve(getOptOutList());
@@ -160,13 +168,18 @@ class Month extends React.Component {
             history.replaceState(this.state, '', `${this.state.as}`)
         }
     }
-  
 
+    componentWillUnmount() {
+        // Stop event listener when modal is unloaded
+        window.removeEventListener('mousedown', this.handleClick);
+    }
+  
     render() {
         const { // Declare data arrays used in class
             monthListData,
             optOutListData,
             monthId,
+            yearId,
         } = this.state
 
         if (!Array.isArray(monthListData)) {
@@ -183,18 +196,9 @@ class Month extends React.Component {
                             key={`${post.list_data.id}`}
                             monthListData={post}      // Elements for the Month report list     
                             showMonth={this.state.monthId}
+                            showYear={this.state.yearId}
                         />
                     )}
-                    <section id="optOutDiv">
-                        <h1 className="optOutHeader">Proposal teams opted out of Dash Watch reporting</h1>
-                        {optOutListData.map((post2) =>
-                            <OptOutRow
-                                key={`${post2.list_data.id}`}
-                                optOutListData={post2}      // Elements for the Month report list  
-                                showMonth={this.state.monthId}
-                            />
-                        )}
-                    </section>
                 </div>
             )
         }
@@ -202,7 +206,6 @@ class Month extends React.Component {
         // Still loading Airtable data
         return (
             <main>
-                <Header></Header>
                 <NavBar
                     showPage="reports"
                 />
@@ -211,22 +214,26 @@ class Month extends React.Component {
                         "Inactive"} onClick={this.handleTab}><p className="monthTabText">2018</p></div>
                     <div className="monthPageWrapper"> 
                         <div className="monthHeaderWrapper">
-                            <div className="monthHeader">Dash Watch {this.state.monthId} reports</div>
-                            <a className="reportPageLink" id="newReports" href="/reportlist">Newer Reports<i id="newReports"></i></a>
+                            <div className="monthHeader">Dash Watch {monthId} {yearId} reports</div>
+                            <a className="reportPageLink" id="newReports" href="/reportlist">New Reports<i id="newReports"></i></a>
                         </div>
+                        <p className="monthText">Select a month:</p> 
                         <div className="dropdown" id="dropdownmenu">
-                            <div id="dropdownMenu" onClick={this.handleDropdown} className="dropbtn">Select a month</div>
+                            <div id="dropdownMenu" onClick={this.handleDropdown} className="dropbtn">{monthId} {yearId}<i id="dropdownMenu"></i></div>
                             {
                                 this.state.showMenu ? (
                                     <div className="dropdownMenu" id="dropdownMenu">
-                                        <button id="dropdownMenu" value="November2018" className="dropdownItem"  onClick={this.handleSelectMonth}>November 2018</button>
-                                        <button id="dropdownMenu" value="December2018" className="dropdownItem"  onClick={this.handleSelectMonth}>December 2018</button>
+                                        <button id="dropdownMenu" value="October" className="dropdownItem"  onClick={this.handleSelectMonth}>June 2018</button>
+                                        <button id="dropdownMenu" value="October" className="dropdownItem"  onClick={this.handleSelectMonth}>July 2018</button>
+                                        <button id="dropdownMenu" value="October" className="dropdownItem"  onClick={this.handleSelectMonth}>August 2018</button>
+                                        <button id="dropdownMenu" value="October" className="dropdownItem"  onClick={this.handleSelectMonth}>September 2018</button>
+                                        <button id="dropdownMenu" value="October" className="dropdownItem"  onClick={this.handleSelectMonth}>October 2018</button>
+                                        <button id="dropdownMenu" value="November" className="dropdownItem"  onClick={this.handleSelectMonth}>November 2018</button>
                                     </div>
                                 ) : (
                                         null
                                     )
                             }
-
                         </div>  
                         <div className="monthIndexWrapper">
                             <div className="monthIndexItem"><p className="monthColumnTitle">Proposal</p></div>
@@ -277,6 +284,7 @@ class MonthReportRow extends React.Component {
     render() {
         const { // Declare grouped elements used in class
             showMonth,
+            showYear,
         } = this.props
 
         const { // Declare grouped elements used in class
@@ -336,7 +344,7 @@ class MonthReportRow extends React.Component {
 
         // Output for the month list rows
         return (
-            <div className="monthProposalWrapper" month={this.props.showMonth == list_data.published_month ? "Active" :
+            <div className="monthProposalWrapper" month={this.props.showMonth+this.props.showYear == list_data.published_month ? "Active" :
                 "Inactive"} response={list_data.response_status == "No" ? "No" :
                     "Yes"}>
                 <div className="monthItemTitle" onClick={this.showModal}><p className="monthProposalName">{list_data.project_name}</p>

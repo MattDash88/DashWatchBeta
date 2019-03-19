@@ -23,13 +23,7 @@ import ModalContent from '../components/modal/SimplifiedModalContent';
 
 var basepath = 'https://dashwatchbeta.org'
 
-const trackEvent = (event) => {
-    ReactGA.event({
-        category: 'Reports Page',
-        action: event,
-    });
-}
-
+// API query requesting Report List data
 const getMonthList = () => {
     return (
         new Promise((resolve) => {
@@ -43,6 +37,7 @@ const getMonthList = () => {
     )
 }
 
+// API query requesting Opt-out List data
 const getOptOutList = () => {
     return (
         new Promise((resolve) => {
@@ -54,6 +49,17 @@ const getOptOutList = () => {
                 )
         })
     )
+}
+
+const trackPage = (page) => {   // Function to track page views
+    ReactGA.pageview(page);
+}
+
+const trackEvent = (event) => { // Function to track user interaction with page
+    ReactGA.event({
+        category: 'Reports Page',
+        action: event,
+    });
 }
 
 class Month extends React.Component {
@@ -107,6 +113,8 @@ class Month extends React.Component {
                 this.setState(event.state)
             }
         }
+       
+        trackPage(`/reports`)   // Track Pageview in Analytics
 
         var monthListPromise = Promise.resolve(getMonthList());
         var optOutListPromise = Promise.resolve(getOptOutList());
@@ -303,6 +311,7 @@ class MonthReportRow extends React.Component {
                         // For functions
                         show={this.state.show}   // Show modal or not
                         handleClose={this.hideModal} // Function to close modal
+                        reportLink={reportLink}
                     />
                 </ModalFrame></div>
             )

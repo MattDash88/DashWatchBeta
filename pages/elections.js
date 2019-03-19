@@ -22,13 +22,7 @@ import NavBar from "../components/elements/NavBar"
 
 var basepath = 'https://dashwatchbeta.org'
 
-const trackEvent = (event) => {
-    ReactGA.event({
-        category: 'Elections',
-        action: event,
-    });
-}
-
+// API query requesting Trust Protector Candidate List data
 const getCandidateList = () => {
     return (
         new Promise((resolve) => {
@@ -40,6 +34,17 @@ const getCandidateList = () => {
                 )
         })
     )
+}
+
+const trackPage = (page) => {   // Function to track user actions on page
+    ReactGA.pageview(page);
+}
+
+const trackEvent = (event) => { // Function to track user interaction with page
+    ReactGA.event({
+        category: 'Elections',
+        action: event,
+    });
 }
 
 class TrustElections extends React.Component {
@@ -91,6 +96,8 @@ class TrustElections extends React.Component {
                 this.setState(event.state)
             }
         }
+        
+        trackPage(`/elections`) // Track Pageview in Analytics
 
         var candidateListPromise = Promise.resolve(getCandidateList());
         //var votingTallyPromise = Promise.resolve(getVotingTally());

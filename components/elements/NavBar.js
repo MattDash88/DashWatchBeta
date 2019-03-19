@@ -54,10 +54,19 @@ class NavBar extends React.Component {
                     <li className="menuItem"><a title="Proposals" id="proposals" value={showPage == "proposals" ? "Active" : "Inactive"} href="/proposals" target="" onClick={this.callEvent}>Proposals</a></li>
                     <li className="menuItem"><a title="Trust Protector Elections" id="elections" value={showPage == "elections" ? "Active" : "Inactive"} href="/elections" target="" onClick={this.callEvent}>Elections</a></li>
                     <form className="searchForm" onSubmit={this.handleSubmit}>
-                        <input className="searchField"
-                            placeholder={"Search proposal ID or proposer"}
-                            ref={(input) => this.textInput = input}
+                    {   // Display the search value in the field when the user is searching
+                        searchQuery == '' || typeof searchQuery == 'undefined' ? (
+                        <input className="searchField"                        
+                        placeholder={"Search proposal ID or proposer"}
+                        ref={(input) => this.textInput = input}
                         />
+                                ) : (
+                        <input className="searchField"                        
+                        defaultValue={searchQuery}
+                        ref={(input) => this.textInput = input}
+                        />
+                                )
+                    }                      
                     </form>
                     <li className="menuItem"><a title="Labs" id="labs" value={showPage == "labs" ? "Active" : "Inactive"} href="/labs" target="" onClick={this.callEvent}>Labs</a></li>
                     <li className="menuItem"><a title="About" id="about" value={showPage == "about" ? "Active" : "Inactive"} href="/about" target="" onClick={this.callEvent}>About</a></li>

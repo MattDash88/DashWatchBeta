@@ -9,11 +9,12 @@ Styling used in ModalContent.js
 
 /* Outer border of the modal */
 .simple_modalWrapper {
+    object-fit: cover;
     min-width: 100%;
     max-width: 800px;
-    overflow-x: auto;
-    overflow-y: auto;
-    min-height: 500px;
+    overflow: auto;
+    min-height: max-content;
+    max-height: 80vh;
     box-shadow: 2px 2px 1px grey;
     border-radius:5px 5px 5px 5px;
     background: #ffffff;
@@ -94,7 +95,8 @@ Styling used in the modal tab files (ModalTabMain, ModalTabPerformance, ModalTab
 
 /* Styling to make tab content visible or not */
 .simple_modalTabContent[value="active"] {
-    display: flex;
+    display: block;
+    height: 100%;
 }
 
 .simple_modalTabContent[value="inactive"] {
@@ -167,11 +169,8 @@ Styling used in the modal tab files (ModalTabMain, ModalTabPerformance, ModalTab
     display: flex;                       /* establish flex container */
     flex-wrap: wrap;                     /* enable flex items to wrap */
     justify-content: space-around;    
-    margin-top: 0.1rem;
+    margin-top: 0.3rem;
   }
-
-
-
 
   /* Separator for image links */
 .linkSeparator {
@@ -180,4 +179,11 @@ Styling used in the modal tab files (ModalTabMain, ModalTabPerformance, ModalTab
     height: 35px;
     margin-left: 10px;
     padding-right: 10px;
+}
+
+/* Div around the report link on the bottom of the modal*/
+.simple_modalReportDiv {
+    margin-top: 0.5rem;
+    margin-left: 0.5rem;
+    margin-bottom: 1rem;
 }

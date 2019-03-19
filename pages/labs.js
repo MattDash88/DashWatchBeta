@@ -16,7 +16,11 @@ import '../components/css/labs.css';
 import Header from '../components/headers/LabsHeader';
 import NavBar from "../components/elements/NavBar"
 
-const trackEvent = (event) => {
+const trackPage = (page) => { // Function to track page views
+  ReactGA.pageview(page);
+}
+
+const trackEvent = (event) => { // Function to track user interaction with page
   ReactGA.event({
     category: 'Labs Page',
     action: event,
@@ -213,6 +217,8 @@ class Labs extends React.Component {
       data: getData(this.state.dataId),
       tabTitle: getTabTitle(this.state.dataId),
     })
+    
+    trackPage(`/labs`)  // Track Pageview in Analytics
   }
 
   componentDidUpdate(prevProps, prevState) {

@@ -13,8 +13,8 @@ import '../css/status_styling.css';
 
 const trackEvent = (event) => {
   ReactGA.event({
-      category: 'Simple Modal',
-      action: event,
+    category: 'Simple Modal',
+    action: event,
   });
 }
 
@@ -35,7 +35,7 @@ class ModalContent extends React.Component {
 
   // If user clicks outside modal area, run handleClose
   handleClick = (e) => {
-    if (e.target.id == "outside") {      
+    if (e.target.id == "outside") {
       this.props.handleClose()
     }
     console.log('hit')
@@ -73,6 +73,7 @@ class ModalContent extends React.Component {
       last_updated
     } = this.props.main_data
 
+
     // Code to generate Dashcentral link
     let dclink = null;
     if (slug[0].match("Dash-Help-Support-Center") !== null) { //Code to handle Dash-Help proposals
@@ -83,99 +84,108 @@ class ModalContent extends React.Component {
 
     return (
       <div className="simple_modalWrapper" id="Modal">
-      <div className="simple_modalCardTitle">
-            <div className="simple_modalCloseButton" onClick={this.handleClose}>[ close ]</div>
-            <div className="simple_modalProposalName">{proposal_name}</div>
-            <div className="simple_modalOwnerName">proposed by <a id="owner link" target="" href={`/proposals?search=${proposal_owner}`} onClick={this.callEvent}>{proposal_owner}</a></div>
-          <div className="simple_modalTabContent">
+        <div className="simple_modalCardTitle">
+          <div className="simple_modalCloseButton" onClick={this.handleClose}>[ close ]</div>
+          <div className="simple_modalProposalName">{proposal_name}</div>
+          <div className="simple_modalOwnerName">proposed by <a id="owner link" target="" href={`/proposals?search=${proposal_owner}`} onClick={this.callEvent}>{proposal_owner}</a></div>
+        </div>
+        <div className="simple_modalTabContent">
           <div className="simple_modalSubHeader">Proposal Description:</div>
           <div className="simple_modalProposalText">{proposal_description}</div>
-          <div className="simple_modalHeader">Proposal Details:</div>
           <div className="simple_modalPropertyGrid">
-          <div className="simple_modalPropertyDiv">
-            <div className="simple_modalPropertyTitle">
-              First Date Paid:
+            <div className="simple_modalPropertyDiv">
+              <div className="simple_modalPropertyTitle">
+                First Date Paid:
             </div>
-            <div className="simple_modalPropertyItem" title={payment_date}>
-              <span className="statusPropertyValue">{payment_date}</span>
+              <div className="simple_modalPropertyItem" title={payment_date}>
+                <span className="statusPropertyValue">{payment_date}</span>
+              </div>
             </div>
-          </div>
 
-          <div className="simple_modalPropertyDiv" value={status}>
-            <div className="simple_modalPropertyTitle">
-              Status:
+            <div className="simple_modalPropertyDiv" value={status}>
+              <div className="simple_modalPropertyTitle">
+                Status:
             </div>
-            <div className="simple_modalPropertyItem" title={status} value={status}>
-              <span className="statusPropertyValue">{status}</span>
+              <div className="simple_modalPropertyItem" title={status} value={status}>
+                <span className="statusPropertyValue">{status}</span>
+              </div>
             </div>
-          </div>
 
-          <div className="simple_modalPropertyDiv" value={budget_status}>
-            <div className="simple_modalPropertyTitle">
-              Budget Status:
+            <div className="simple_modalPropertyDiv" value={budget_status}>
+              <div className="simple_modalPropertyTitle">
+                Budget Status:
             </div>
-            <div className="simple_modalPropertyItem" title={budget_status} value={budget_status}>
-              <span className="statusPropertyValue">{budget_status}</span>
+              <div className="simple_modalPropertyItem" title={budget_status} value={budget_status}>
+                <span className="statusPropertyValue">{budget_status}</span>
+              </div>
             </div>
-          </div>
 
-          <div className="simple_modalPropertyDiv" value={schedule_status}>
-            <div className="simple_modalPropertyTitle">
-              Schedule Status:
+            <div className="simple_modalPropertyDiv" value={schedule_status}>
+              <div className="simple_modalPropertyTitle">
+                Schedule Status:
             </div>
-            <div className="simple_modalPropertyItem" title={schedule_status}>
-              <span className="statusPropertyValue">{schedule_status}</span>
+              <div className="simple_modalPropertyItem" title={schedule_status}>
+                <span className="statusPropertyValue">{schedule_status}</span>
+              </div>
             </div>
-          </div>
 
-          <div className="simple_modalPropertyDiv" value={comm_status}>
-            <div className="simple_modalPropertyTitle">
-              Communication Status:
+            <div className="simple_modalPropertyDiv" value={comm_status}>
+              <div className="simple_modalPropertyTitle">
+                Communication Status:
             </div>
-            <div className="simple_modalPropertyItem" title={comm_status}>
-              <span className="statusPropertyValue">{comm_status}</span>
+              <div className="simple_modalPropertyItem" title={comm_status}>
+                <span className="statusPropertyValue">{comm_status}</span>
+              </div>
             </div>
-          </div>
 
-          <div className="simple_modalPropertyDiv">
-            <div className="simple_modalPropertyTitle">
-              {completion_elem_type}
+            <div className="simple_modalPropertyDiv">
+              <div className="simple_modalPropertyTitle">
+                {completion_elem_type}
+              </div>
+              <div className="simple_modalPropertyItem" title={completion_elem}>
+                <span className="statusPropertyValue">{completion_elem}</span>
+              </div>
             </div>
-            <div className="simple_modalPropertyItem" title={completion_elem}>
-              <span className="statusPropertyValue">{completion_elem}</span>
-            </div>
-          </div>
 
-          <div className="simple_modalPropertyDiv">
-            <div className="simple_modalPropertyTitle">
-              Total funding received:
+            <div className="simple_modalPropertyDiv">
+              <div className="simple_modalPropertyTitle">
+                Total funding received:
             </div>
-            <div className="simple_modalPropertyItem" title={funding_received_usd}>
-              <span className="statusPropertyValue">&#36;{funding_received_usd}</span>
+              <div className="simple_modalPropertyItem" title={funding_received_usd}>
+                <span className="statusPropertyValue">&#36;{funding_received_usd}</span>
+              </div>
             </div>
-          </div>
 
-          <div className="simple_modalPropertyDiv">
-            <div className="simple_modalPropertyTitle">
-              Last updated:
+            <div className="simple_modalPropertyDiv">
+              <div className="simple_modalPropertyTitle">
+                Last updated:
             </div>
-            <div className="simple_modalPropertyItem" title={last_updated}>
-              <span className="statusPropertyValue">{last_updated}</span>
+              <div className="simple_modalPropertyItem" title={last_updated}>
+                <span className="statusPropertyValue">{last_updated}</span>
+              </div>
             </div>
-          </div>
 
-          <div className="simple_modalPropertyDiv" id="linkPropertyDiv">
-          <div className="simple_modalPropertyTitle">
-              Links:
+            <div className="simple_modalPropertyDiv" id="linkPropertyDiv">
+              <div className="simple_modalPropertyTitle">
+                Links:
             </div>
-            <a className="link" id="modalDcLink" href={dclink} target="_blank" onClick={this.callEvent}><img id="DcLogo" src="https://dashwatchbeta.org/images/DashCentral.png" height="40"></img></a>
-            <div className="linkSeparator"></div>
-            <a className="link" id="modalDwLink" href={`/p/${slug}`} target="" onClick={this.callEvent}><img id="Logo" src="https://dashwatchbeta.org/images/DashWatch.png" height="40"></img></a> 
-            <div className="linkSeparator"></div>
-          </div>
-          </div>          
+              <a className="link" id="modalDcLink" href={dclink} target="_blank" onClick={this.callEvent}><img id="DcLogo" src="https://dashwatchbeta.org/images/DashCentral.png" height="40"></img></a>
+              <div className="linkSeparator"></div>
+              <a className="link" id="modalDwLink" href={`/p/${slug}`} target="" onClick={this.callEvent}><img id="Logo" src="https://dashwatchbeta.org/images/DashWatch.png" height="40"></img></a>
+              <div className="linkSeparator"></div>
+            </div>
           </div>
         </div>
+        { // Show report link or not
+          this.props.list_data.report_status == "Pending" ? (
+            null
+          ) : (
+            <section>
+            <div className="simple_modalReportDiv">
+            {this.props.reportLink}
+            </div></section>
+          )
+        }          
       </div>
     );
   }

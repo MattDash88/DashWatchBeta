@@ -46,8 +46,11 @@ const filterPost = (query) => {
     )
 }
 
-// Track Event Google Analytics function
-const trackEvent = (event) => {
+const trackPage = (page) => {   // Function to track user actions on page
+    ReactGA.pageview(page);
+}
+
+const trackEvent = (event) => { // Function to track user interaction with page
     ReactGA.event({
         category: 'Proposals Page',
         action: event,
@@ -101,6 +104,8 @@ class Home extends React.Component {
             }             
         }       
 
+        trackPage(`/proposals`) // Track Pageview in Analytics
+
         // Set Promises for Promise.all
         const query = `search=${this.state.search.toLowerCase()}&show_inactive=${this.state.showInactivePosts}`
         var getPostsPromise = Promise.resolve(getPosts());
@@ -145,12 +150,18 @@ class Home extends React.Component {
         if (this.state.search !== "") {
             var searchFilterMessage = (
                 <div>
-                Results for search: <b>{this.state.search}</b>
-                </div>
+                    <p className="headerText">Results for search: <b>{this.state.search}</b><br></br>
+                        Currently showing <b>{displayData.length}</b> of <b>{airtableData.length}</b> proposals
+                    </p>
+                </div> 
             )
         } else {
             var searchFilterMessage = (
-                <div></div>
+                <div>
+                    <p className="headerText">
+                        Currently showing <b>{displayData.length}</b> of <b>{airtableData.length}</b> proposals
+                    </p>
+                </div> 
             )
         }
 
@@ -170,9 +181,7 @@ class Home extends React.Component {
                         </label>
                     </div>
                     <div className="headerRightDiv">
-                        <div><p className="headerText">{searchFilterMessage}
-                        Currently showing <b>{displayData.length}</b> of <b>{airtableData.length}</b> proposals
-                        </p></div>                        
+                        {searchFilterMessage}                   
                     </div>
                     
                     <ProposalList
