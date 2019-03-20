@@ -20,7 +20,7 @@ import NavBar from "../components/elements/NavBar"
 import ModalFrame from '../components/modal/ModalFrame';
 import ModalContent from '../components/modal/SimplifiedModalContent';
 
-var basepath = 'http://localhost:5000'
+var basepath = 'https://dashwatchbeta.org'
 
 const trackPage = (page) => {   // Function to track page views
     ReactGA.pageview(page);
@@ -101,7 +101,7 @@ class Month extends React.Component {
             tabId: event.currentTarget.id,        // Change state to load different month
             as: `/oldreports?month=${event.currentTarget.id}`,
         })
-        trackEvent('Changed Month')                 // Track Event on Google Analytics    
+        trackEvent('Changed Year')                 // Track Event on Google Analytics    
     }
 
     // Function to activate dropdown menu with months
@@ -121,7 +121,7 @@ class Month extends React.Component {
         })
 
         history.pushState(this.state, '', `/oldreports?month=${event.currentTarget.value}&year=${this.state.yearId}`)   // Push State to history
-        trackEvent('Changed Month')                 // Track Event on Google Analytics    
+        trackEvent(`Changed Month to ${event.currentTarget.value} ${this.state.yearId}`)                 // Track Event on Google Analytics    
     }
 
     // Function ran when the eventlistener is activated. Close dropdown menu if clicked outside of it
@@ -223,13 +223,13 @@ class Month extends React.Component {
                             {
                                 this.state.showMenu ? (
                                     <div className="dropdownMenu" id="dropdownMenu">
-                                        <button id="dropdownMenu" value="October" className="dropdownItem"  onClick={this.handleSelectMonth}>June 2018</button>
-                                        <button id="dropdownMenu" value="October" className="dropdownItem"  onClick={this.handleSelectMonth}>July 2018</button>
-                                        <button id="dropdownMenu" value="October" className="dropdownItem"  onClick={this.handleSelectMonth}>August 2018</button>
-                                        <button id="dropdownMenu" value="October" className="dropdownItem"  onClick={this.handleSelectMonth}>September 2018</button>
-                                        <button id="dropdownMenu" value="October" className="dropdownItem"  onClick={this.handleSelectMonth}>October 2018</button>
                                         <button id="dropdownMenu" value="November" className="dropdownItem"  onClick={this.handleSelectMonth}>November 2018</button>
-                                    </div>
+                                        <button id="dropdownMenu" value="October" className="dropdownItem"  onClick={this.handleSelectMonth}>October 2018</button>
+                                        <button id="dropdownMenu" value="September" className="dropdownItem"  onClick={this.handleSelectMonth}>September 2018</button>
+                                        <button id="dropdownMenu" value="August" className="dropdownItem"  onClick={this.handleSelectMonth}>August 2018</button>
+                                        <button id="dropdownMenu" value="July" className="dropdownItem"  onClick={this.handleSelectMonth}>July 2018</button>
+                                        <button id="dropdownMenu" value="June" className="dropdownItem"  onClick={this.handleSelectMonth}>June 2018</button>
+                                   </div>
                                 ) : (
                                         null
                                     )
@@ -351,7 +351,7 @@ class MonthReportRow extends React.Component {
                     <p className="monthOwnerName">by {main_data.proposal_owner}</p></div>
                 {reportLink}
                 <div className="monthItem" onClick={this.showModal}><p className="monthProposalType" value={list_data.proposal_type}>{list_data.proposal_type}</p></div>
-                <div className="monthItem"><a className="monthVoteLink" href={list_data.voting_dc_link} target="_blank" value={list_data.voting_status} title={list_data.voting_dc_link} onClick={this.callEvent}>{list_data.voting_status}</a>
+                <div className="monthItem"><div title={list_data.voting_status}>{list_data.voting_status}</div>
                 </div>
                 {modal}
             </div>

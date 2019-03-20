@@ -8,6 +8,7 @@ ReactGA.initialize(getGAKey);
 
 // Import pages
 import HowTo from '../components/elections_content/HowTo';
+import VoteCharts from '../components/elections_content/VoteCharts';
 import Validation from '../components/elections_content/Validation';
 
 // Import css
@@ -27,6 +28,20 @@ const getCandidateList = () => {
     return (
         new Promise((resolve) => {
             fetch(`${basepath}/api/get/tpCandidates`)
+                .then((res) => res.json()
+                    .then((res) => {
+                        resolve(res.data)
+                    })
+                )
+        })
+    )
+}
+
+// API query requesting Trust Protector Candidate List data
+const getVoteData = () => {
+    return (
+        new Promise((resolve) => {
+            fetch(`${basepath}/api/get/tpVoteData`)
                 .then((res) => res.json()
                     .then((res) => {
                         resolve(res.data)
@@ -63,6 +78,9 @@ class TrustElections extends React.Component {
         this.state = {
             tabId: props.tab,
             candidateListData: '',
+            voteData: '',
+            chartDates: '',
+            chartData_participation: '',
             url: '/elections',
             as: props.as,
         }
@@ -100,12 +118,22 @@ class TrustElections extends React.Component {
         trackPage(`/elections`) // Track Pageview in Analytics
 
         var candidateListPromise = Promise.resolve(getCandidateList());
-        //var votingTallyPromise = Promise.resolve(getVotingTally());
+        var votingDataPromise = Promise.resolve(getVoteData());
 
         // Promise to get the initial "month list" records 
-        Promise.all([candidateListPromise, candidateListPromise]).then(data => {
+        Promise.all([candidateListPromise, votingDataPromise]).then(data => {
+            var dateArray = []
+            var participationArray = []
+            Object.keys(data[1]).map((item) => {
+                dateArray.push(data[1][item].date)
+                participationArray.push(data[1][item].vote_participation)
+            })
+            
             this.setState({
                 candidateListData: data[0],
+                voteData: data[1],
+                chartDates: dateArray,
+                chartData_participation: participationArray
             })
         }).then(history.replaceState(this.state, '', `${this.state.as}`))
     }
@@ -120,6 +148,9 @@ class TrustElections extends React.Component {
     render() {
         const { // Declare data arrays used in class
             candidateListData,
+            voteData,
+            chartDates,
+            chartData_participation,
             tabId,
         } = this.state
 
@@ -156,6 +187,8 @@ class TrustElections extends React.Component {
                         "Inactive"} onClick={this.handleSelectTab}><p className="tpTabText">2019 Candidates</p></div>                    
                         <div className="tpTab" id="howTo" value={this.state.tabId == "howTo" ? "Active" :
                         "Inactive"} onClick={this.handleSelectTab}><p className="tpTabText">How to Vote</p></div>
+                        <div className="tpTab" id="participation" value={this.state.tabId == "participation" ? "Active" :
+                        "Inactive"} onClick={this.handleSelectTab}><p className="tpTabText">Vote Participation</p></div>
                         <div className="tpTab" id="validation" value={this.state.tabId == "validation" ? "Active" :
                         "Inactive"} onClick={this.handleSelectTab}><p className="tpTabText">Validation</p></div>
                     <div className="tpPageWrapper">
@@ -169,7 +202,7 @@ class TrustElections extends React.Component {
                             <div className="tpIndexItemFirst"><p className="tpColumnTitle">Candidate</p></div>
                             <div className="tpIndexItem"><p className="tpColumnTitle">Contact</p></div>
                             <div className="tpIndexItem"><p className="tpColumnTitle">Dash Involvement</p></div>
-                            <div className="tpIndexItem"><p className="tpColumnTitle">Interview Link</p></div>
+                            <div className="tpIndexItem"><p className="tpColumnTitle">Profile Link</p></div>
                         </div>
                         {pageContent}
                         <div className="tpBottomDiv" value={this.state.tabId == 'candidates' ? "Active" : "Inactive"}>
@@ -183,15 +216,34 @@ class TrustElections extends React.Component {
                         </div>
                     </section>
 
-                    <section className="tpPageTopSection" value={this.state.tabId == 'validation' ? "Active" :
-                        "Inactive"}>
-                        <Validation></Validation>
-                    </section>
-
                     <section className="tpPageTopSection" value={this.state.tabId == 'howTo' ? "Active" :
                         "Inactive"}>
                         <HowTo></HowTo>
                     </section>
+
+                    <section className="tpPageTopSection" value={this.state.tabId == 'participation' ? "Active" :
+                        "Inactive"}>
+                        <h1 className="tpHeader">Masternode Voting Participation</h1>
+                        <div className="tpText">The chart is updated once a day until the end of the elections.</div>
+                        {
+                                voteData.length == 0 ? (
+                                    <div>
+                                        <p>Loading&hellip;</p>
+                                    </div>
+                                ) : (
+                        <VoteCharts
+                            vote_data = {voteData}
+                            chart_dates = {chartDates}
+                            data_participation = {chartData_participation}
+                        />
+                                )
+                        }
+                    </section>
+
+                    <section className="tpPageTopSection" value={this.state.tabId == 'validation' ? "Active" :
+                        "Inactive"}>
+                        <Validation></Validation>
+                    </section>                    
                     </div>
                 </section>
                 <ScrollButton scrollStepInPx="125" delayInMs="16.66" />
@@ -273,12 +325,12 @@ class CandidateListRow extends React.Component {
             if (interview_type == "Video") {
                 interviewLink = (
                     <div className="tpItem" id="tpInterviewLink"><div><a className="tpInterviewLink" id="reportLink" href={interview_link} target="_blank" title={interview_link} onClick={this.callEvent}>
-                        <img className="reportIcon" id="YouTube" src="https://dashwatchbeta.org/images/Video.png" height="30"></img> Interview</a></div></div>
+                        <img className="reportIcon" id="YouTube" src="https://dashwatchbeta.org/images/Video.png" height="30"></img> Profile</a></div></div>
                 )
             } else if (interview_type == "Text") {
                 interviewLink = (
                     <div className="tpItem" id="tpInterviewLink"><div><a className="tpInterviewLink" id="reportLink" href={interview_link} target="_blank" title={interview_link} onClick={this.callEvent}>
-                        <img className="reportIcon" id="Text" src="https://dashwatchbeta.org/images/PDF.png" height="30"></img> Interview</a></div></div>
+                        <img className="reportIcon" id="Text" src="https://dashwatchbeta.org/images/PDF.png" height="30"></img> Profile</a></div></div>
                 )
             } else {
                 interviewLink = (
@@ -294,39 +346,6 @@ class CandidateListRow extends React.Component {
                     <div className="tpItem"><p className="tpCandidateContact" title={contact}>{contact}</p></div>
                 {involvementLink}                
                 <div className="tpItem">{interviewLink}</div>
-            </div>
-        )
-    }
-}
-
-// Component for Opted-out Table
-class VotingTallyRow extends React.Component {
-    constructor(props) {
-        super(props);
-
-        // Binding functions in this class
-        this.callEvent = this.callEvent.bind(this);
-    }
-
-    callEvent(event) {
-        trackEvent('clicked ' + event.currentTarget.className)
-    }
-
-    render() {
-        const { // Declare grouped elements used in class
-            showTab,
-        } = this.props
-
-        const { // Declare grouped elements used in class
-            candidate,
-            votes,
-        } = this.props.airtableData
-
-        // Output for the month list rows
-        return (
-            <div className="votingTallyWrapper">
-                <div className="tpItemFirst"><p className="tpCandidateContact">{candidate}</p></div>
-                <div className="tpItem">{votes}</div>
             </div>
         )
     }

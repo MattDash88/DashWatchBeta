@@ -746,6 +746,59 @@ const TrustProtectorList = function getTrustProtectors(tableId) {
     })
 }
 
+// Airtable Query to create the Trust protector candidate table
+const VoteData = function getVoteData(tableId) {
+    const base = new Airtable.base('appXzI83ECDm5ggmA')     // Connect to Base
+
+    return new Promise((resolve, reject) => {
+        cache.get('voteDataCache', function (error, data) {
+            if (error) {
+                reject({ error })
+            }
+            if (!!data) {       // If value was already retrieved recently, grab from cache
+                resolve(JSON.parse(data))
+            }
+            else {              // If cache is empty, retrieve from Airtable
+                const storeAirtablePosts = []       // Create const to store results in
+
+                // Query to feed to Airtable
+                const apiQuery = {
+                    pageSize: 50,
+                    sort: [{ field: 'Date', direction: 'asc' }]
+                }
+
+                // Get the data from the table
+                base(tableId).select(apiQuery).eachPage((records, fetchNextPage) => {
+                    // This function (`page`) will get called for each page of records.
+
+                    // Create a const with the desired fields
+                    records.forEach(function (record) {
+                        const post = {
+                            date: record.get('Date'),   
+                            vote_participation: record.get('MNO Vote Participation'),       // Percentage of valid MNOs that voted
+                            valid_votes: record.get('Valid Votes'),       // Percentage of valid MNOs that voted
+                            number_of_masternodes: record.get('Number of MNs'),       // Percentage of valid MNOs that voted
+                            id: record.id,                                                  // Used as unique record identifier
+                        }
+
+                        storeAirtablePosts.push(post)       // Push data to const
+                    })
+
+                    fetchNextPage()     // Continue to next record
+                }, function done(error) {
+                    if (error) reject({ error })
+
+                    // Store results in Redis, cache expire time is defined in .env
+                    cache.setex('voteDataCache', cacheExpirationTime, JSON.stringify(storeAirtablePosts))
+
+                    // Finish
+                    resolve(storeAirtablePosts)
+                })
+            }
+        })
+    })
+}
+
 // Export the Airtable functions to be imported in server.js
 module.exports = {
     MainProposalPosts,
@@ -759,4 +812,5 @@ module.exports = {
     ReportPosts,
     OldReportPosts,
     TrustProtectorList,
+    VoteData,
 }

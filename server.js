@@ -232,6 +232,37 @@ const getTrustProtectorData = () => {
   })
 }
 
+// Function to prepare data for Vote Data of the Trust Protector Elections
+const getVoteData = () => {
+  return new Promise((resolve, reject) => {
+    // Read cache for this function
+    cache.get('voteData', function (error, data) {
+      if (error) throw error
+
+      if (!!data) {   // If value was already retrieved recently, grab from cache
+        resolve(JSON.parse(data))
+      }
+      else {    // If cache is empty, retrieve from Airtable
+        Promise.resolve(airtableFunctions.VoteData('Vote Data')).then(function (valArray) {
+          const storeAirtablePosts = []   // Create const to push all proposal data in
+          Object.keys(valArray).map((item) => {            
+            if (typeof valArray[item].date !== 'undefined' && typeof valArray[item].vote_participation !== 'undefined') {    //Check if record exists
+              storeAirtablePosts.push(valArray[item])
+            }
+          })
+
+          // Store results in Redis cache, cache expire time is defined in .env
+          cache.setex('voteData', cacheExpirationTime, JSON.stringify(storeAirtablePosts))
+          resolve(storeAirtablePosts)
+        }).catch((error) => {
+          reject({ error })
+          console.log(error)
+        })
+      }
+    })
+  })
+}
+
 app.prepare()
   .then(() => {
     const server = express()
@@ -409,6 +440,22 @@ app.prepare()
     // API call for trust protector election candidates table
     server.get('/api/get/tpCandidates', (req, res) => {
       Promise.resolve(getTrustProtectorData()).then(function (valArray) {
+        res.writeHead(200, {
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': 'application/json'
+        })
+        return res.end(serialize(valArray))
+      }).catch((error) => {
+        console.log(error)
+        // Send empty JSON otherwise page load hangs indefinitely
+        res.writeHead(200, { 'Content-Type': 'application/json' })
+        return res.end(serialize({}))
+      });
+    })
+
+    // API call for trust protector election candidates table
+    server.get('/api/get/tpVoteData', (req, res) => {
+      Promise.resolve(getVoteData()).then(function (valArray) {
         res.writeHead(200, {
           'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/json'

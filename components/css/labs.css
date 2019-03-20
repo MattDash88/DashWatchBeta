@@ -1,4 +1,22 @@
-    /* div to show and hide correct plotter */
+/* Loading used fonts */
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+@import url('https://fonts.googleapis.com/css?family=Titillium+Web');
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+/* Header of the labs tabs */
+.labsHeader {
+    display: block;
+    color: #003347;
+    position: relative;
+    font-family: 'Montserrat', sans-serif;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+/* div to show and hide correct plotter */
 .plotWrapper[value="Inactive"] {
     display: none;
 }

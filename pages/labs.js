@@ -233,7 +233,6 @@ class Labs extends React.Component {
   }
 
   render() {
-
     const options = {
       scales: {
         xAxes: [{
@@ -246,7 +245,6 @@ class Labs extends React.Component {
     }
 
     return (
-
       <main>
         <Header></Header>
         <NavBar
@@ -263,7 +261,7 @@ class Labs extends React.Component {
             "Inactive"} onClick={this.handleSelectTab}><p className="monthTabText">Dash Help</p></div>
           <div className="monthPageWrapper">
             <div className="plotWrapper" value={this.state.showPlotly ? "Inactive" : "Active"}>
-              <h1 className="monthHeader">{this.state.tabTitle}</h1>
+              <h1 className="labsHeader">{this.state.tabTitle}</h1>
               <Bar
                 data={this.state.data}
                 options={options}

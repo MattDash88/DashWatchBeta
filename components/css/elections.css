@@ -22,7 +22,7 @@
     color: white;
     background-color: #008de4;
     width: 20%;
-    height: 40px;
+    height: 50px;
     margin-right: 6px;
     cursor: pointer;
     transition: 0.15s;
@@ -38,7 +38,6 @@
     color: black;
     background-color: white;
     width: 20%;
-    height: 40px;
     margin-right: 6px;
     cursor: default;
     box-shadow: none;
@@ -317,4 +316,32 @@
     text-align: center; 
     margin-top: 2rem;
     color: black;
+}
+
+/* */
+/* Styling of text on top of page */
+.tpChartStatsDiv {
+    display: block;   
+    width: 400px;
+    font-family: 'Titillium Web', sans-serif;
+    font-size: 1rem;
+    color: black;
+    margin-top: .5rem;
+    margin-left: 10px;
+}
+
+.tpChartStatsTitle {
+    display: inline-flex;
+    width: 250px;
+    align-self: left;
+    text-align: left;
+    margin-right: auto;
+}
+
+.tpChartStatsItem {
+    display: inline-flex;
+    margin-left: auto;
+    align-self: right;
+    text-align: left;
+    font-weight: bold;
 }
