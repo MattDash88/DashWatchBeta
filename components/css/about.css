@@ -3,16 +3,23 @@ Styles used in About.js
 */
 
 /* Styling for the wrapper of the about page */
-.aboutWrapper {
-    font-family: 'Titillium Web', sans-serif;
-    font-size: 16px;
-    background: white;
+.aboutPageWrapper {
+    display: flex;
+    z-index: 1;
+    position: relative;
+    flex-direction: column;
+    background-color: white;
+    justify-content: center;
     padding-left: 10px;
     padding-right: 10px;
-    padding-top: 5px;
-    max-width: 800px;
-    
+    padding-bottom: 20px;
+    font-family: 'Roboto', sans-serif;
 }
+
+.aboutPageWrapper {
+    margin-left: 0;
+}
+
 
 /* Styling of the headers on about */
 .aboutHeader {

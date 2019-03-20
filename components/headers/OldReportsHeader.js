@@ -8,7 +8,7 @@ export default class Header extends React.Component {
         return (
             <div>
                 <Head>
-                    <title>Dash Watch Proposals List</title>
+                    <title>Dash Watch Reports</title>
                 </Head>
             </div>
         )

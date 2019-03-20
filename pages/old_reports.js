@@ -15,6 +15,7 @@ import '../components/css/simplified_modal.css';
 import "../components/css/status_styling.css";
 
 // Import other elements 
+import Header from '../components/headers/OldReportsHeader';
 import ScrollButton from '../components/elements/ScrollButton';  // Scroll to top button
 import NavBar from "../components/elements/NavBar"
 import ModalFrame from '../components/modal/ModalFrame';
@@ -206,6 +207,7 @@ class Month extends React.Component {
         // Still loading Airtable data
         return (
             <main>
+                <Header></Header>
                 <NavBar
                     showPage="reports"
                 />
