@@ -1,3 +1,5 @@
+Dash Watch Beta Website v0.10.3
+<li>Added a tab for the TPE2019 voting results.</li>
 Dash Watch Beta Website v0.10.2
 <li>Added a page for older report lists, a participation tab in the Election section and a few other small improvements.</li>
 Dash Watch Beta Website v0.10.1

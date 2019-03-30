@@ -9,6 +9,7 @@ ReactGA.initialize(getGAKey);
 // Import pages
 import HowTo from '../components/elections_content/HowTo';
 import VoteCharts from '../components/elections_content/VoteCharts';
+import VoteResults from '../components/elections_content/VoteResults';
 import Validation from '../components/elections_content/Validation';
 
 // Import css
@@ -51,6 +52,20 @@ const getVoteData = () => {
     )
 }
 
+// API query requesting Trust Protector Candidate List data
+const getVoteResults = () => {
+    return (
+        new Promise((resolve) => {
+            fetch(`${basepath}/api/get/voteResults`)
+                .then((res) => res.json()
+                    .then((res) => {
+                        resolve(res.data)
+                    })
+                )
+        })
+    )
+}
+
 const trackPage = (page) => {   // Function to track user actions on page
     ReactGA.pageview(page);
 }
@@ -79,6 +94,7 @@ class TrustElections extends React.Component {
             tabId: props.tab,
             candidateListData: '',
             voteData: '',
+            voteResults: '',
             chartDates: '',
             chartData_participation: '',
             url: '/elections',
@@ -119,9 +135,10 @@ class TrustElections extends React.Component {
 
         var candidateListPromise = Promise.resolve(getCandidateList());
         var votingDataPromise = Promise.resolve(getVoteData());
+        var voteResultsPromise = Promise.resolve(getVoteResults());
 
         // Promise to get the initial "month list" records 
-        Promise.all([candidateListPromise, votingDataPromise]).then(data => {
+        Promise.all([candidateListPromise, votingDataPromise, voteResultsPromise]).then(data => {
             var dateArray = []
             var participationArray = []
             Object.keys(data[1]).map((item) => {
@@ -132,6 +149,7 @@ class TrustElections extends React.Component {
             this.setState({
                 candidateListData: data[0],
                 voteData: data[1],
+                voteResults: data[2],
                 chartDates: dateArray,
                 chartData_participation: participationArray
             })
@@ -149,6 +167,7 @@ class TrustElections extends React.Component {
         const { // Declare data arrays used in class
             candidateListData,
             voteData,
+            voteResults,
             chartDates,
             chartData_participation,
             tabId,
@@ -188,9 +207,11 @@ class TrustElections extends React.Component {
                         <div className="tpTab" id="howTo" value={this.state.tabId == "howTo" ? "Active" :
                         "Inactive"} onClick={this.handleSelectTab}><p className="tpTabText">How to Vote</p></div>
                         <div className="tpTab" id="participation" value={this.state.tabId == "participation" ? "Active" :
-                        "Inactive"} onClick={this.handleSelectTab}><p className="tpTabText">Vote Participation</p></div>
+                        "Inactive"} onClick={this.handleSelectTab}><p className="tpTabText">Participation</p></div>
                         <div className="tpTab" id="validation" value={this.state.tabId == "validation" ? "Active" :
                         "Inactive"} onClick={this.handleSelectTab}><p className="tpTabText">Validation</p></div>
+                        <div className="tpTab" id="results" value={this.state.tabId == "results" ? "Active" :
+                        "Inactive"} onClick={this.handleSelectTab}><p className="tpTabText">Results</p></div>
                     <div className="tpPageWrapper">
 
                     <section className="tpPageTopSection" value={this.state.tabId == "candidates" ? "Active" :
@@ -243,7 +264,14 @@ class TrustElections extends React.Component {
                     <section className="tpPageTopSection" value={this.state.tabId == 'validation' ? "Active" :
                         "Inactive"}>
                         <Validation></Validation>
-                    </section>                    
+                    </section>   
+                    <section className="tpPageTopSection" value={this.state.tabId == "results" ? "Active" :
+                        "Inactive"}>
+                        <VoteResults
+                            vote_results = {voteResults}
+                        />
+                        
+                        </section>                 
                     </div>
                 </section>
                 <ScrollButton scrollStepInPx="125" delayInMs="16.66" />
