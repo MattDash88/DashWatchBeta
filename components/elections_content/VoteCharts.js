@@ -74,7 +74,7 @@ class VoteCharts extends React.Component {
         // Handle wrong entry of date
         let updatedDate
         if (typeof vote_data[vote_data.length - 1].date !== 'undefined') {
-            updatedDate = new Date(vote_data[vote_data.length - 1].date)
+            updatedDate = vote_data[vote_data.length - 1].date
         } else {
             updatedDate = 'N/A'
         }
@@ -82,7 +82,7 @@ class VoteCharts extends React.Component {
         return (
             <main>
                 <div className="tpChartStatsDiv">
-                    <div className="tpChartStatsTitle">Last updated:</div><div className="tpChartStatsItem" title={updatedDate.toDateString()}>{updatedDate.toDateString()}</div><br></br>
+                    <div className="tpChartStatsTitle">Last updated:</div><div className="tpChartStatsItem" title={updatedDate}>{updatedDate}</div><br></br>
                     <div className="tpChartStatsTitle">Number of eligible MNs:</div><div className="tpChartStatsItem" title={vote_data[vote_data.length - 1].number_of_masternodes}>{vote_data[vote_data.length - 1].number_of_masternodes}</div><br></br>
                     <div className="tpChartStatsTitle">Total valid votes cast:</div><div className="tpChartStatsItem" title={vote_data[vote_data.length - 1].valid_votes}>{vote_data[vote_data.length - 1].valid_votes}</div>
                 </div>
