@@ -19,7 +19,9 @@ var cacheExpirationTime = process.env.CACHEEXPIRATION;  //Time until cache expir
 
 // Get data processing functions from another file
 var airtableFunctions = require('./server_components/airtableFunctions');
+var labsAirtableFunctions = require('./server_components/labsAirtableFunctions');
 var processingFunctions = require('./server_components/dataProcessingFunctions');
+var labsProcessingFunctions = require('./server_components/labsProcessingFunctions');
 var filterFunctions = require('./server_components/filterFunctions');
 
 /* Airtable Query for Proposal Information Table */
@@ -294,6 +296,43 @@ const getVoteResults = () => {
   })
 }
 
+// Function to prepare data for Trust Protector Candidate List
+const getLabsData = () => {
+  return new Promise((resolve, reject) => {
+    // Read cache for this function
+    cache.get('SpecialLabsData', function (error, data) {
+      if (error) throw error
+
+      if (!!data) {   // If value was already retrieved recently, grab from cache
+        resolve(JSON.parse(data))
+      }
+      else {    // If cache is empty, retrieve from Airtable
+        
+        var walletDataPromise = Promise.resolve(labsAirtableFunctions.WalletDownloadPosts('Dash Wallets - Month'));
+        var posDataPromise = Promise.resolve(labsAirtableFunctions.PosMetricsPosts('POS Systems'));
+        
+        Promise.all([walletDataPromise, posDataPromise]).then(function (valArray) {
+          
+          labsWalletData = labsProcessingFunctions.processWalletData(valArray[0])
+          posSystemData = labsProcessingFunctions.processPosData(valArray[1])
+
+          const storeAirtablePosts = {
+            wallet_data: labsWalletData,
+            pos_system_data: posSystemData,
+          }
+
+          // Store results in Redis cache, cache expire time is defined in .env
+          cache.setex('SpecialLabsData', cacheExpirationTime, JSON.stringify(storeAirtablePosts))
+          resolve(storeAirtablePosts)
+        }).catch((error) => {
+          reject({ error })
+          console.log(error)
+        })
+      }
+    })
+  })
+}
+
 app.prepare()
   .then(() => {
     const server = express()
@@ -516,6 +555,22 @@ app.prepare()
       });
     })
 
+    // API call for trust protector election candidates table
+    server.get('/api/get/labsData', (req, res) => {
+      Promise.resolve(getLabsData()).then(function (valArray) {
+        res.writeHead(200, {
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': 'application/json'
+        })
+        return res.end(serialize(valArray))
+      }).catch((error) => {
+        console.log(error)
+        // Send empty JSON otherwise page load hangs indefinitely
+        res.writeHead(200, { 'Content-Type': 'application/json' })
+        return res.end(serialize({}))
+      });
+    })
+
     // Routing for reports
     server.get('/r/:month/:reportId', (req, res) => {
       const actualPage = `https://dashwatchbeta.org/reports/${req.params.month}/${req.params.reportId}.pdf`
@@ -578,7 +633,9 @@ app.prepare()
     server.get('/labs', (req, res) => {
       const actualPage = '/labs'
 
-      app.render(req, res, actualPage)
+      const queryParams_labs = req.query // Pass on queries      
+
+      app.render(req, res, actualPage, queryParams_labs)
     })  
 
     // Routing to the TP Elections page

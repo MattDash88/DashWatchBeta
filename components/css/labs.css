@@ -16,6 +16,18 @@
     font-weight: bold;
 }
 
+  /* Styling of text on top of page */
+  .labsText {
+    font-family: 'Titillium Web', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    color: black;
+    margin-left: 10px;
+    margin-bottom: 0;
+    padding-bottom: 5px;
+    padding-right: 0.3rem;
+}
+
 /* div to show and hide correct plotter */
 .plotWrapper[value="Inactive"] {
     display: none;
@@ -28,4 +40,102 @@
     width: 1000px;
     padding-top: 65px; /* Clearing from Navbar */
     margin: 0 auto;
+}
+
+
+
+i[id="dropdownMenu"] {
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    margin-left: auto; 
+    margin-right: 10px;
+    margin-bottom: 3px;
+    height: 10px;
+    width: 10px;  
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg); 
+}
+
+/* Styling for the dropdown div */
+.dropdown {
+    position: relative;
+    margin-right: auto;
+    margin-left: 0.2rem;
+    margin-bottom: 0.8rem;
+    min-width: 180px;
+    max-width: 250px;
+  }
+
+/* Styling for the button of the dropdown menu */
+.dropbtn {
+    background-color: #3498DB;
+    color: white;
+    padding: 16px;
+    font-size: 16px;  
+    border: none;
+    cursor: pointer;
+}
+  
+.dropbtn:hover, .dropbtn:focus {
+    background-color: #2980B9;
+}
+
+/* Styling for the dropdown menu as a whole */
+  .dropdownMenu {
+    display: show;
+    position: absolute; 
+  }
+
+/* Styling for the individual dropdown row items */
+  .dropdownItem {
+    display: block;
+    min-width: 180px;
+    font-size: 16px;
+    text-align: left; 
+    color: black;
+    background-color: #f1f1f1;
+    text-decoration: none;   
+    padding: 12px 16px;
+    overflow: auto;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    border: none;
+    z-index: 1;
+    cursor: pointer;
+  }
+  
+.dropdownItem:hover {background-color: #ddd;}
+
+/* Styling for the button of the dropdown menu */
+.databtn {
+  display: inline-block;
+  padding: 16px;
+  margin-left: 0.2rem;
+  margin-right: 1rem;
+  font-size: 16px;  
+  width: 150px;
+  border: none;
+  cursor: pointer;
+}
+
+.databtn[value="Active"][id="Anypay"] {
+  background-color: #3498DB;
+  color: white;
+}
+
+.databtn[value="Active"][id="Paylive"] {
+  background-color: darkgreen;
+  color: white;
+}
+
+.databtn[value="Inactive"] {
+  background-color: lightgrey;
+  color: black;
+}
+
+.chartSection[value="Inactive"] {
+  display: block;
+}
+
+.chartSection[value="Inactive"] {
+  display: none;
 }
