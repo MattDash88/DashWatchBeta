@@ -38,14 +38,13 @@ var processAllLabsData = function mainLabsDataFunction(projects, kpis, values) {
 
     Object.keys(projects).map((item) => { 
         // Declaring elements 
-        var kpi_entries = new Object
+        var kpi_entries = []
         
         // Iterate through all kpi entry IDs linked to project
         Object.values(projects[item].kpi_entries_ids).map((entry_item) => {
             // Retrieve the "KPI - Entry" objects linked to the project
             kpi_entry_index = kpiIDs.indexOf(entry_item)
-            var name = kpis[kpi_entry_index].kpi_name
-            kpi_entries[name]=kpis[kpi_entry_index]
+            kpi_entries.push(kpis[kpi_entry_index])
         })  // End of iteration through IDs of linked KPI entries
 
         // Add the kpi entries to the Project object

@@ -20,17 +20,17 @@ const trackEvent = (event) => { // Function to track user interaction with page
 class ProjectKpis extends React.Component {
     constructor(props) {
         super(props);
-        
+
         this.state = {
             labsData: props.labsData,
             activeProject: 0,
-            activeKpi: '',
+            activeKpi: 0,
             showProjectMenu: false,
             showKpiMenu: false,
             url: props.url,
             as: props.as,
         }
-        
+
         this.handleProjectDropdown = this.handleProjectDropdown.bind(this);
         this.handleKpiDropdown = this.handleKpiDropdown.bind(this);
         this.handleSelectProject = this.handleSelectProject.bind(this);
@@ -59,7 +59,7 @@ class ProjectKpis extends React.Component {
             activeProject: event.currentTarget.value,        // Change state to load different month
             showProjectMenu: false,
             showKpiMenu: false,
-            activeKpi: '',
+            activeKpi: 0,
             as: `/labs?project=${event.currentTarget.value}`,
         })
 
@@ -83,47 +83,90 @@ class ProjectKpis extends React.Component {
     render() {
         const { // Declare data arrays used in class
             labsData,
-            activeProject
-          } = this.state
+            activeProject,
+            activeKpi,
+        } = this.state
+
+        const activeData = labsData[activeProject].kpi_entries[activeKpi]
+
+        const data = {  // Data styling for the chart
+            datasets: [{
+                label: labsData[activeProject].project_name,
+                fill: false,
+                borderColor: 'blue',
+                data: activeData.kpi_values,
+            }]
+        };
+
+        const options = {
+            scales: {
+                xAxes: [{
+                    type: 'time',
+                    time: {
+                        unit: 'month'
+                    },
+                    distribution: "series",
+                }],
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Transaction Volume per Month (Dash)'
+                    },
+                }]
+            }
+        }
 
         return (
-        <main>
-            <h1 className="labsHeader">Kpi Explorer</h1>       
-        <div className="dropdown" id="dropdownmenu">
-        <div id="dropdownMenu" onClick={this.handleProjectDropdown} className="dropbtn">{labsData[activeProject].project_name}<i id="dropdownMenu"></i></div>
-        {
-            this.state.showProjectMenu ? (
-                <div className="dropdownMenu" id="dropdownMenu">
-                { 
-                    Object.keys(labsData).map((item) =>                     
-                        <div key={labsData[item].id}>                           
-                            <button id="dropdownMenu" value={item} className="dropdownItem" onClick={this.handleSelectProject}>{labsData[item].project_name}</button>
-                        </div>
-                    )}
+            <main>
+                <h1 className="labsHeader">Kpi Explorer</h1>
+                <div className="dropdown" id="dropdownmenu">
+                <p className="labsText">Select a project:</p>
+                    <div id="dropdownMenu" onClick={this.handleProjectDropdown} className="dropbtn"><i id="dropdownMenu"></i>{labsData[activeProject].project_name}</div>
+                    {
+                        this.state.showProjectMenu ? (
+                            <div className="dropdownMenu" id="dropdownMenu">
+                                {
+                                    Object.keys(labsData).map((item) =>
+                                        <div key={labsData[item].id}>
+                                            <button id="dropdownMenu" value={item} className="dropdownItem" onClick={this.handleSelectProject}>{labsData[item].project_name}</button>
+                                        </div>
+                                    )}
+                            </div>
+                        ) : (
+                                null
+                            )
+                    }
                 </div>
-            ) : (
-                    null
-                )
-        }
-        <div id="dropdownMenu" onClick={this.handleKpiDropdown} className="dropbtn">{this.state.activeKpi}<i id="dropdownMenu"></i></div>
-        {
-            this.state.showKpiMenu ? (
-                <div className="dropdownMenu" id="dropdownMenu">
-                { 
-                    Object.keys(labsData[activeProject].kpi_entries).map((item) => 
-                        <div key={labsData[activeProject].kpi_entries[item].id}>
-                            <button id="dropdownMenu" value={item} className="dropdownItem" onClick={this.handleSelectKpi}>{item}</button>
-                        </div>
-                    )}
+                <div className="dropdown" id="dropdownmenu">
+                <p className="labsText">Select a kpi:</p>
+                    <div id="dropdownMenu" onClick={this.handleKpiDropdown} className="dropbtn"><i id="dropdownMenu"></i>{labsData[activeProject].kpi_entries[activeKpi].kpi_name}</div>
+                    {
+                        this.state.showKpiMenu ? (
+                            <div className="dropdownMenu" id="dropdownMenu">
+                                {
+                                    Object.keys(labsData[activeProject].kpi_entries).map((item) =>
+                                        <div key={labsData[activeProject].kpi_entries[item].id}>
+                                            <button id="dropdownMenu" value={item} className="dropdownItem" onClick={this.handleSelectKpi}>{labsData[activeProject].kpi_entries[item].kpi_name}</button>
+                                        </div>
+                                    )}
+                            </div>
+                        ) : (
+                                null
+                            )
+                    }
                 </div>
-            ) : (
-                    null
-                )
-        }
-    </div>
-    </main>
+                <section className="chartSection">
+                    <Line
+                        data={data}
+                        options={options}
+                    />
+                </section>
+            </main>
         )
-    }    
+    }
 }
 
 export default ProjectKpis
