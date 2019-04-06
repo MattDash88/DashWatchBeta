@@ -36,7 +36,7 @@ class PosSystems extends React.Component {
         }
 
         // Binding functions in this class
-        this.handleDataSet = this.handleDatasetToggle.bind(this)
+        this.handleDatasetToggle = this.handleDatasetToggle.bind(this)
         this.handleSelectChart = this.handleSelectChart.bind(this)
         this.handleDropdown = this.handleDropdown.bind(this);
     }
@@ -259,8 +259,8 @@ class PosSystems extends React.Component {
                 </div>
                 <p className="labsText">Toggle datasets:</p>
                 <div>
-                    <div id="Anypay" onClick={this.handleDataSet} className="databtn" value={this.state.showAnypay ? "Active" : "Inactive"}>Anypay</div>
-                    <div id="Paylive" onClick={this.handleDataSet} className="databtn" value={this.state.showPaylive ? "Active" : "Inactive"}>Paylive</div>
+                    <div id="Anypay" onClick={this.handleDatasetToggle} className="databtn" value={this.state.showAnypay ? "Active" : "Inactive"}>Anypay</div>
+                    <div id="Paylive" onClick={this.handleDatasetToggle} className="databtn" value={this.state.showPaylive ? "Active" : "Inactive"}>Paylive</div>
                 </div>
                 <section className="chartSection" value={this.state.showChart == "Transactions" ? "Active" : "Inactive"}>
                     <Line

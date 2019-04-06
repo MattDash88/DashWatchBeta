@@ -4,14 +4,64 @@ function onlyUnique(value, index, self) {
     return self.indexOf(value) === index;
 }
 
-// Processing function for Main proposal data
+
+var processAllLabsData = function mainLabsDataFunction(projects, kpis, values) {
+    // Declaring elements 
+    var valueIDs = []
+    var kpiIDs = []
+    
+    // Get all record IDs of the KPI values
+    Object.values(values).map((item) => {        
+        valueIDs.push(item.id)
+    })
+
+    // Iterate through all Kpi entries
+    Object.keys(kpis).map((item) => {                
+        // Declaring elements 
+        var kpi_values = [] 
+        kpiIDs.push(kpis[item].id)  // Make an array of all record IDs of the KPI Entries
+        
+        // Iterate through all value IDs linked to Kpi entry
+        Object.values(kpis[item].kpi_value_ids).map((value_item) => {           
+            // Retrieve the values from the "KPI - Value" record and add them to an array
+            kpi_value_index = valueIDs.indexOf(value_item)  
+            kpi_values.push({
+                x: values[kpi_value_index].date,
+                y: values[kpi_value_index].value,
+            })
+            kpis[item].kpi_unit = values[kpi_value_index].unit
+        }) // End of iteration through IDs of linked KPI values
+        
+        // Add the kpi value to the Kpi entry object
+        kpis[item].kpi_values = (kpi_values)
+    }) // End of loop through all kpi entries
+
+    Object.keys(projects).map((item) => { 
+        // Declaring elements 
+        var kpi_entries = new Object
+        
+        // Iterate through all kpi entry IDs linked to project
+        Object.values(projects[item].kpi_entries_ids).map((entry_item) => {
+            // Retrieve the "KPI - Entry" objects linked to the project
+            kpi_entry_index = kpiIDs.indexOf(entry_item)
+            var name = kpis[kpi_entry_index].kpi_name
+            kpi_entries[name]=kpis[kpi_entry_index]
+        })  // End of iteration through IDs of linked KPI entries
+
+        // Add the kpi entries to the Project object
+        projects[item].kpi_entries = kpi_entries
+
+    })  // End of loop through all projects
+    return projects
+}
+
+// Processing wallet metrics over time data
 var processWalletData = function mainWalletFunction(walletData) {
     storeMainData = []
-
     var walletEntries = []
     var uniqueWalletTypes
-    Object.keys(walletData).map((item) => {
-        walletEntries.push(walletData[item].wallet_name)
+    Object.values(walletData).map((item) => {
+        walletEntries.push(item.wallet_name)
     })
     var uniqueWalletTypes = walletEntries.filter(onlyUnique);
 
@@ -20,10 +70,10 @@ var processWalletData = function mainWalletFunction(walletData) {
         var walletDataDesktop = []
         var walletDataMobile = []
         var walletDataTotal = []
-        //walletDataConst = []
+        var walletPO
 
         Object.keys(walletData).map((data_item) => {
-            if (walletData[item].wallet_name == uniqueWalletTypes[data_item]) {
+            if (walletData[data_item].wallet_name == uniqueWalletTypes[item]) {
                 walletDateArray.push(walletData[data_item].date)
                 walletDataDesktop.push({
                     x: walletData[data_item].date,
@@ -49,61 +99,107 @@ var processWalletData = function mainWalletFunction(walletData) {
             desktop_downloads: walletDataDesktop,
             mobile_downloads: walletDataMobile,
         }
-        storeMainData.push(walletDataConst)     // Push merchant KPI const to report KPI Array
-
-        //storeAirtablePosts.push(walletDataConst)        
+        storeMainData.push(walletDataConst)     // Push merchant KPI const to report KPI Array       
     })
     return storeMainData
 }
 
-// Processing function for Main proposal data
-var processPosData = function mainPosFunction(posSystemData) {
+// Processing wallet metrics per version data
+var processVersionData = function mainVersionFunction(walletData) {
     storeMainData = []
 
+    var walletEntries = []
+    var uniqueWalletTypes
+    Object.values(walletData).map((item) => {
+        walletEntries.push(item.wallet_name)
+    })
+    var uniqueWalletTypes = walletEntries.filter(onlyUnique);
+
+    Object.keys(uniqueWalletTypes).map((item) => {
+        var walletVersionArray = []
+        var walletVersionData = []
+        var walletPO
+
+        Object.keys(walletData).map((data_item) => {
+            if (walletData[item].wallet_name == uniqueWalletTypes[data_item]) {
+                walletVersionArray.push(walletData[data_item].wallet_version)
+                walletVersionData.push({
+                    wallet_version: walletData[data_item].wallet_version,
+                    last_updated: walletData[data_item].last_updated,
+                    release_updated: walletData[data_item].release_updated,
+                    successor_release: walletData[data_item].successor_releasen,
+                    total: walletData[data_item].total,
+                    desktop: walletData[data_item].desktop,
+                    mobile: walletData[data_item].mobile,
+                    id: walletData[data_item].id,
+                })
+                walletPO = walletData[data_item].proposal_owner
+            }
+        })       
+        
+        const walletDataConst = {
+            wallet_name: uniqueWalletTypes[item],
+            walletVersionArray: walletVersionArray,
+            wallet_proposal_owner: walletPO,
+            walletVersionData: walletVersionData,
+        }
+        storeMainData.push(walletDataConst)     // Push merchant KPI const to report KPI Array       
+    })
+    return storeMainData
+}
+
+// Processing function for POS system metrics
+var processPosData = function mainPosFunction(posSystemData) {
+    // Declaring elements 
+    storeMainData = []
     var posEntries = []
     var uniqueSystemTypes
-    Object.keys(posSystemData).map((item) => {
-        posEntries.push(posSystemData[item].system_name)
+
+    Object.values(posSystemData).map((item) => {  //Go through dataset to find all system types
+        posEntries.push(item.system_name)
     })
+    // Filter the array of system types on unique systems
     var uniqueSystemTypes = posEntries.filter(onlyUnique);
 
-    Object.keys(uniqueSystemTypes).map((item) => {
+    // Sort and prepare all the data per system type
+    Object.keys(uniqueSystemTypes).map((item) => {  //Iterate through all unique system types
+        // Declare elements used per iteration
         var systemDateArray = []
         var systemTransactions = []
         var systemVolume = []
         var systemPO
 
-        Object.keys(posSystemData).map((data_item) => {
+        // Sort the entries in the dataset to the unique system types
+        Object.keys(posSystemData).map((data_item) => {     // Iterate through the whole POS system dataset
             if (posSystemData[data_item].system_name == uniqueSystemTypes[item]) {
-                systemDateArray.push(posSystemData[data_item].date)
-                systemTransactions.push({
+                systemTransactions.push({   // Dataset for Transactions per month
                     x: posSystemData[data_item].date,
                     y: posSystemData[data_item].dash_transactions,
                 })
-                systemVolume.push({
+                systemVolume.push({         // Dataset for Volume in Dash per month
                     x: posSystemData[data_item].date,
                     y: posSystemData[data_item].dash_volume,
                 })
                 systemPO = posSystemData[data_item].proposal_owner
             }
-        })       
+        })     // End of iteration through all POS system data  
         
+        // Make an object for the system type
         const systemDataConst = {
             system_name: uniqueSystemTypes[item],
             system_proposal_owner: systemPO,
-            dates: systemDateArray,
             dash_transactions: systemTransactions,
             dash_volume: systemVolume,
         }
-        storeMainData.push(systemDataConst)     // Push merchant KPI const to report KPI Array
-
-        //storeAirtablePosts.push(walletDataConst)        
-    })
+        storeMainData.push(systemDataConst)     // Push the object with POS system metrics to POS data object       
+    })  // End of iteration loop through unique POS systems array
     return storeMainData
 }
 
 // Export the Airtable functions to be imported in server.js
 module.exports = {
+    processAllLabsData,
     processWalletData,
+    processVersionData,
     processPosData,
 }

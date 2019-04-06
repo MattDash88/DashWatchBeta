@@ -118,12 +118,27 @@ i[id="dropdownMenu"] {
 }
 
 .databtn[value="Active"][id="Anypay"] {
-  background-color: #3498DB;
+  background-color: blue;
   color: white;
 }
 
 .databtn[value="Active"][id="Paylive"] {
   background-color: darkgreen;
+  color: white;
+}
+
+.databtn[value="Active"][id="Dash Core"] {
+  background-color: blue;
+  color: white;
+}
+
+.databtn[value="Active"][id="DashElectrum"] {
+  background-color: purple;
+  color: white;
+}
+
+.databtn[value="Active"][id="Core Android"] {
+  background-color: green;
   color: white;
 }
 

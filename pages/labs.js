@@ -17,6 +17,8 @@ import Header from '../components/headers/LabsHeader';
 import NavBar from "../components/elements/NavBar";
 
 import PosSystems from "../components/labs_content/PosSystems";
+import Wallets from "../components/labs_content/Wallets";
+import ProjectKpis from "../components/labs_content/ProjectKpis";
 
 const trackPage = (page) => { // Function to track page views
   ReactGA.pageview(page);
@@ -30,10 +32,10 @@ const trackEvent = (event) => { // Function to track user interaction with page
 }
 
 // API query requesting Trust Protector Candidate List data
-const getLabsData = () => {
+const getLabsPreparedData = () => {
   return (
     new Promise((resolve) => {
-      fetch(`http://localhost:5000/api/get/labsData`)
+      fetch(`/api/get/labsPreparedData`)
         .then((res) => res.json()
           .then((res) => {
             resolve(res.data)
@@ -43,91 +45,19 @@ const getLabsData = () => {
   )
 }
 
-const dataTx = {
-  datasets: [
-    {
-      label: 'Dash.red (estimate)',
-      backgroundColor: '#f44336',
-      borderColor: '#f44336',
-      borderWidth: 1,
-      hoverBackgroundColor: '#f44336',
-      hoverBorderColor: '#f44336',
-    }, {
-      label: 'MyDashWallet',
-      backgroundColor: '#2196F3',
-      borderColor: '#2196F3',
-      borderWidth: 1,
-      hoverBackgroundColor: '#2196F3',
-      hoverBorderColor: '#2196F3',
-    }, {
-      label: 'Dash Text',
-      backgroundColor: '#13c645',
-      borderColor: '#13c645',
-      borderWidth: 1,
-      hoverBackgroundColor: '#13c645',
-      hoverBorderColor: '#13c645',
-    }, {
-      label: 'Anypay',
-      backgroundColor: '#3f51b5',
-      borderColor: '#3f51b5',
-      borderWidth: 1,
-      hoverBackgroundColor: '#3f51b5',
-      hoverBorderColor: '#3f51b5',
-    }
-  ],
-  labels: ['Nov 2018', 'Dec 2018', 'Jan 2019'],
-};
-
-const dataElectrum = {
-  datasets: [
-    {
-      label: 'Windows',
-      backgroundColor: '#f44336',
-      borderColor: '#f44336',
-      borderWidth: 1,
-      hoverBackgroundColor: '#f44336',
-      hoverBorderColor: '#f44336',
-    }, {
-      label: 'macOS',
-      backgroundColor: '#2196F3',
-      borderColor: '#2196F3',
-      borderWidth: 1,
-      hoverBackgroundColor: '#2196F3',
-      hoverBorderColor: '#2196F3',
-    }, {
-      label: 'Linux',
-      backgroundColor: '#3f51b5',
-      borderColor: '#3f51b5',
-      borderWidth: 1,
-      hoverBackgroundColor: '#3f51b5',
-      hoverBorderColor: '#3f51b5',
-    }, {
-      label: 'Android',
-      backgroundColor: '#13c645',
-      borderColor: '#13c645',
-      borderWidth: 1,
-      hoverBackgroundColor: '#13c645',
-      hoverBorderColor: '#13c645',
-    }
-  ],
-  labels: ['3.2.3.2 (Released: 2018-12-14)', '3.2.4 (Released: 2019-01-04)', '3.2.5 (Released: 2019-02-20)'],
-};
-
-const dataHelp = {
-  labels: ['Jul 2018', 'Aug 2018', 'Sep 2018', 'Oct 2018', 'Nov 2018', 'Dec 2018', 'Jan 2019'],
-  datasets: [
-    {
-      label: 'Dash Help Support Requests',
-      backgroundColor: '#2196F3',
-      borderColor: '#2196F3',
-      borderWidth: 1,
-      hoverBackgroundColor: '#2196F3',
-      hoverBorderColor: '#2196F3',
-    }
-  ],
-};
-
-
+// API query requesting Trust Protector Candidate List data
+const getLabsAllData = () => {
+  return (
+    new Promise((resolve) => {
+      fetch(`/api/get/labsAllData`)
+        .then((res) => res.json()
+          .then((res) => {
+            resolve(res.data)
+          })
+        )
+    })
+  )
+}
 
 class Labs extends React.Component {
   static async getInitialProps(ctx) {
@@ -143,6 +73,9 @@ class Labs extends React.Component {
 
     this.state = {
       posSystemData: '',
+      walletData: '',
+      versionData: '',
+      labsData: '',
       chartType: '',
       showMenu: false,
       url: '/labs',
@@ -198,11 +131,15 @@ class Labs extends React.Component {
       }
     }
 
-    var labsData = Promise.resolve(getLabsData());
+    var labsPreparedData = Promise.resolve(getLabsPreparedData());
+    var labsAllData = Promise.resolve(getLabsAllData());
 
-    Promise.all([labsData]).then(data => {
+    Promise.all([labsAllData, labsPreparedData]).then(data => {
       this.setState({
-        posSystemData: data[0].pos_system_data,
+        labsData: data[0],
+        posSystemData: data[1].pos_system_data,
+        walletData: data[1].wallet_data,
+        versionData: data[1].version_data,
       })
     }).then(history.replaceState(this.state, '', `${this.state.as}`))
 
@@ -212,6 +149,9 @@ class Labs extends React.Component {
   render() {
     const { // Declare data arrays used in class
       posSystemData,
+      walletData,
+      versionData,
+      labsData,
     } = this.state
 
     return (
@@ -223,23 +163,63 @@ class Labs extends React.Component {
         <section className="plotPageWrapper">
           <div className="monthTab" id='Plotly' value={this.state.dataId == 'Plotly' ? "Active" :
             "Inactive"} onClick={this.handleSelectTab}><p className="monthTabText">Merchants</p></div>
-          <div className="monthTab" id='PosSystems' value={this.state.dataId == 'Transactions' ? "Active" :
+          <div className="monthTab" id='PosSystems' value={this.state.dataId == 'PosSystems' ? "Active" :
             "Inactive"} onClick={this.handleSelectTab}><p className="monthTabText">POS Systems</p></div>
+          <div className="monthTab" id='wallets' value={this.state.dataId == 'wallets' ? "Active" :
+            "Inactive"} onClick={this.handleSelectTab}><p className="monthTabText">Wallets</p></div>
+          <div className="monthTab" id='other' value={this.state.dataId == 'other' ? "Active" :
+            "Inactive"} onClick={this.handleSelectTab}><p className="monthTabText">Other</p></div>
           <div className="monthPageWrapper">
-            <div className="plotWrapper" value="Active">              
+            <div  value="Active">    
+            <section className="plotWrapper" value={this.state.dataId == 'PosSystems' ? "Active" :
+            "Inactive"}>
               {
                   (posSystemData.length > 0) ? (
-              <section>
+              <div>
                 <PosSystems
                     posSystemData={posSystemData}
                     url={this.state.url}
                     as={this.state.as}
                 />
-              </section>
+              </div>
                   ) : (
                     null
                   )
               }
+              </section>
+              <section className="plotWrapper" value={this.state.dataId == 'wallets' ? "Active" :
+            "Inactive"}>
+              {
+                  (walletData.length > 0) ? (
+              <div>
+                <Wallets
+                    walletData={walletData}
+                    versionData={versionData}
+                    url={this.state.url}
+                    as={this.state.as}
+                />
+              </div>
+                  ) : (
+                    null
+                  )
+              }
+              </section>
+              <section className="plotWrapper" value={this.state.dataId == 'other' ? "Active" :
+            "Inactive"}>
+              {
+                  (labsData.length > 0) ? (
+              <div>
+                <ProjectKpis
+                    labsData={labsData}
+                    url={this.state.url}
+                    as={this.state.as}
+                />
+              </div>
+                  ) : (
+                    null
+                  )
+              }
+              </section>
             </div>
           </div>
         </section>

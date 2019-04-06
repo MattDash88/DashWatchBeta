@@ -37,7 +37,7 @@ const getAirtableData = () => {
       }
       else {    // If cache is empty, retrieve from Airtable
         var mainInfoPromise = Promise.resolve(airtableFunctions.MainProposalPosts('Proposals'));
-                var financialDataPromise = Promise.resolve(airtableFunctions.FinanceDataPosts('Funding and Expenses'));
+        var financialDataPromise = Promise.resolve(airtableFunctions.FinanceDataPosts('Funding and Expenses'));
         var merchantKpiPromise = Promise.resolve(airtableFunctions.MerchantKpiPosts('Merchant KPIs'));
         var eventKpiPromise = Promise.resolve(airtableFunctions.EventKpiPosts('Event KPIs'));
         var socialKpiPromise = Promise.resolve(airtableFunctions.SocialMediaKpiPosts('Social Media KPIs'));
@@ -296,11 +296,11 @@ const getVoteResults = () => {
   })
 }
 
-// Function to prepare data for Trust Protector Candidate List
-const getLabsData = () => {
+// Function to prepare data for the Prepared Datasets for Labs (Wallets and POS systems)
+const getLabsPreparedData = () => {
   return new Promise((resolve, reject) => {
     // Read cache for this function
-    cache.get('SpecialLabsData', function (error, data) {
+    cache.get('labsPreparedData', function (error, data) {
       if (error) throw error
 
       if (!!data) {   // If value was already retrieved recently, grab from cache
@@ -309,21 +309,58 @@ const getLabsData = () => {
       else {    // If cache is empty, retrieve from Airtable
         
         var walletDataPromise = Promise.resolve(labsAirtableFunctions.WalletDownloadPosts('Dash Wallets - Month'));
+        var WalletVersionPromise = Promise.resolve(labsAirtableFunctions.WalletVersionPosts('Dash Wallets - Version'))
         var posDataPromise = Promise.resolve(labsAirtableFunctions.PosMetricsPosts('POS Systems'));
         
-        Promise.all([walletDataPromise, posDataPromise]).then(function (valArray) {
+        Promise.all([walletDataPromise, WalletVersionPromise, posDataPromise]).then(function (valArray) {
           
           labsWalletData = labsProcessingFunctions.processWalletData(valArray[0])
-          posSystemData = labsProcessingFunctions.processPosData(valArray[1])
+          WalletVersionData = labsProcessingFunctions.processVersionData(valArray[1])
+          posSystemData = labsProcessingFunctions.processPosData(valArray[2])
 
           const storeAirtablePosts = {
             wallet_data: labsWalletData,
+            version_data: WalletVersionData,
             pos_system_data: posSystemData,
           }
 
           // Store results in Redis cache, cache expire time is defined in .env
-          cache.setex('SpecialLabsData', cacheExpirationTime, JSON.stringify(storeAirtablePosts))
+          cache.setex('labsPreparedData', cacheExpirationTime, JSON.stringify(storeAirtablePosts))
           resolve(storeAirtablePosts)
+        }).catch((error) => {
+          reject({ error })
+          console.log(error)
+        })
+      }
+    })
+  })
+}
+
+// Function to prepare data project data for labs 
+const getLabsAllData = () => {
+  return new Promise((resolve, reject) => {
+    // Read cache for this function
+    cache.get('AllLabsData', function (error, data) {
+      if (error) throw error
+
+      if (!!data) {   // If value was already retrieved recently, grab from cache
+        resolve(JSON.parse(data))
+      }
+      else {    // If cache is empty, retrieve from Airtable       
+        var labsProjectsPromise = Promise.resolve(labsAirtableFunctions.LabsKpiProjects('KPI - Dash Projects'));
+        var labsKpiPromise = Promise.resolve(labsAirtableFunctions.LabsKpiEntries('KPI - Entries'));
+        var labsValuesPromise = Promise.resolve(labsAirtableFunctions.LabsKpiValues('KPI - Values'));
+
+        Promise.all([labsProjectsPromise, labsKpiPromise, labsValuesPromise]).then(function (valArray) {
+          labsProjectData = valArray[0]
+          labsKpiData = valArray[1]
+          labsValuesData = valArray[2]
+
+          labsAllData = labsProcessingFunctions.processAllLabsData(labsProjectData, labsKpiData, labsValuesData)
+
+          // Store results in Redis cache, cache expire time is defined in .env
+          cache.setex('AllLabsData', cacheExpirationTime, JSON.stringify(labsAllData))
+          resolve(labsAllData)
         }).catch((error) => {
           reject({ error })
           console.log(error)
@@ -556,8 +593,24 @@ app.prepare()
     })
 
     // API call for trust protector election candidates table
-    server.get('/api/get/labsData', (req, res) => {
-      Promise.resolve(getLabsData()).then(function (valArray) {
+    server.get('/api/get/labsPreparedData', (req, res) => {
+      Promise.resolve(getLabsPreparedData()).then(function (valArray) {
+        res.writeHead(200, {
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': 'application/json'
+        })
+        return res.end(serialize(valArray))
+      }).catch((error) => {
+        console.log(error)
+        // Send empty JSON otherwise page load hangs indefinitely
+        res.writeHead(200, { 'Content-Type': 'application/json' })
+        return res.end(serialize({}))
+      });
+    })
+
+    // API call for trust protector election candidates table
+    server.get('/api/get/labsAllData', (req, res) => {
+      Promise.resolve(getLabsAllData()).then(function (valArray) {
         res.writeHead(200, {
           'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/json'
