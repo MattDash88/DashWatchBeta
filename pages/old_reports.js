@@ -38,7 +38,7 @@ const trackEvent = (event) => { // Function to track user interaction with page
 const getMonthList = () => {
     return (
         new Promise((resolve) => {
-            fetch(`${basepath}/api/get/old_monthlist`)
+            fetch(`/api/get/old_monthlist`)
                 .then((res) => res.json()
                     .then((res) => {
                         resolve(res.data)
@@ -221,10 +221,11 @@ class Month extends React.Component {
                         </div>
                         <p className="monthText">Select a month:</p> 
                         <div className="dropdown" id="dropdownmenu">
-                            <div id="dropdownMenu" onClick={this.handleDropdown} className="dropbtn">{monthId} {yearId}<i id="dropdownMenu"></i></div>
+                            <div id="dropdownMenu" onClick={this.handleDropdown} className="dropbtn"><i id="dropdownMenu"></i>{monthId} {yearId}</div>
                             {
                                 this.state.showMenu ? (
                                     <div className="dropdownMenu" id="dropdownMenu">
+                                        <button id="dropdownMenu" value="December" className="dropdownItem"  onClick={this.handleSelectMonth}>December 2018</button>
                                         <button id="dropdownMenu" value="November" className="dropdownItem"  onClick={this.handleSelectMonth}>November 2018</button>
                                         <button id="dropdownMenu" value="October" className="dropdownItem"  onClick={this.handleSelectMonth}>October 2018</button>
                                         <button id="dropdownMenu" value="September" className="dropdownItem"  onClick={this.handleSelectMonth}>September 2018</button>

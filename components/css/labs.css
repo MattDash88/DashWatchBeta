@@ -24,8 +24,19 @@
     color: black;
     margin-left: 10px;
     margin-bottom: 0;
+    margin-top:0;
     padding-bottom: 5px;
     padding-right: 0.3rem;
+}
+
+.labsText a {
+  font-family: 'Roboto', sans-serif;
+  color: #008de4;
+  font-weight: 200;
+  font-size: 1rem;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 /* div to show and hide correct plotter */
@@ -34,7 +45,7 @@
 }
 
 /* Month page wrapper */
-.plotPageWrapper {
+.labsPageWrapper {
     align-items: middle;
     width: 100%;
     width: 1000px;
@@ -59,7 +70,7 @@ i[id="dropdownMenu"] {
   display: inline-block;  
   margin-right: 1rem;
   margin-left: 0.2rem;
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.5rem;
   }
 
 /* Styling for the button of the dropdown menu */
@@ -67,7 +78,7 @@ i[id="dropdownMenu"] {
     min-width: 200px;
     background-color: #3498DB;
     color: white;
-    padding: 16px 0px 16px;
+    padding: 16px 10px 16px 10px;
     font-size: 16px;  
     margin-right: 1rem;
     border: none;
@@ -150,4 +161,49 @@ i[id="dropdownMenu"] {
 
 .chartSection[value="Inactive"] {
   display: none;
+}
+
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 300px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  top: 125%;
+  left: 50%;
+  margin-left: -150px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  right: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color:  transparent transparent #555 transparent ;
+}
+
+.tooltip:hover .tooltiptext[value="Active"] {
+  visibility: visible;
+  opacity: 1;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
 }

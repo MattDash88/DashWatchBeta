@@ -312,12 +312,13 @@ const getLabsPreparedData = () => {
         var WalletVersionPromise = Promise.resolve(labsAirtableFunctions.WalletVersionPosts('Dash Wallets - Version'))
         var posDataPromise = Promise.resolve(labsAirtableFunctions.PosMetricsPosts('POS Systems'));
         
-        Promise.all([walletDataPromise, WalletVersionPromise, posDataPromise]).then(function (valArray) {
-          
+        Promise.all([walletDataPromise, WalletVersionPromise, posDataPromise]).then(function (valArray) {          
+          // Sorting out all valArray items
           labsWalletData = labsProcessingFunctions.processWalletData(valArray[0])
           WalletVersionData = labsProcessingFunctions.processVersionData(valArray[1])
           posSystemData = labsProcessingFunctions.processPosData(valArray[2])
 
+          // Create the data construct
           const storeAirtablePosts = {
             wallet_data: labsWalletData,
             version_data: WalletVersionData,
@@ -326,6 +327,8 @@ const getLabsPreparedData = () => {
 
           // Store results in Redis cache, cache expire time is defined in .env
           cache.setex('labsPreparedData', cacheExpirationTime, JSON.stringify(storeAirtablePosts))
+          
+          // Finish
           resolve(storeAirtablePosts)
         }).catch((error) => {
           reject({ error })
@@ -352,14 +355,18 @@ const getLabsAllData = () => {
         var labsValuesPromise = Promise.resolve(labsAirtableFunctions.LabsKpiValues('KPI - Values'));
 
         Promise.all([labsProjectsPromise, labsKpiPromise, labsValuesPromise]).then(function (valArray) {
+          // Sorting out all valArray items
           labsProjectData = valArray[0]
           labsKpiData = valArray[1]
           labsValuesData = valArray[2]
 
+          // Put datasets through processing function to build the array
           labsAllData = labsProcessingFunctions.processAllLabsData(labsProjectData, labsKpiData, labsValuesData)
 
           // Store results in Redis cache, cache expire time is defined in .env
           cache.setex('AllLabsData', cacheExpirationTime, JSON.stringify(labsAllData))
+          
+          // Finish
           resolve(labsAllData)
         }).catch((error) => {
           reject({ error })

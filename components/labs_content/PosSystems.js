@@ -245,7 +245,7 @@ class PosSystems extends React.Component {
                 <h1 className="labsHeader">Point-Of-Sale Systems</h1>
                 <p className="labsText">Select a metric:</p>
                 <div className="dropdown" id="dropdownmenu">
-                    <div id="dropdownMenu" onClick={this.handleDropdown} className="dropbtn">{showChart}<i id="dropdownMenu"></i></div>
+                    <div id="dropdownMenu" onClick={this.handleDropdown} className="dropbtn"><i id="dropdownMenu"></i>{showChart}</div>
                     {
                         this.state.showMenu ? (
                             <div className="dropdownMenu" id="dropdownMenu">

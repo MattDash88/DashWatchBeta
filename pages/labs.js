@@ -18,7 +18,7 @@ import NavBar from "../components/elements/NavBar";
 
 import PosSystems from "../components/labs_content/PosSystems";
 import Wallets from "../components/labs_content/Wallets";
-import ProjectKpis from "../components/labs_content/ProjectKpis";
+import KpiExplorer from "../components/labs_content/KpiExplorer";
 
 const trackPage = (page) => { // Function to track page views
   ReactGA.pageview(page);
@@ -78,6 +78,7 @@ class Labs extends React.Component {
       labsData: '',
       chartType: '',
       showMenu: false,
+      dataId: 'explorer',
       url: '/labs',
       as: props.as,
     }
@@ -160,17 +161,16 @@ class Labs extends React.Component {
         <NavBar
           showPage="labs"
         />
-        <section className="plotPageWrapper">
+        <section className="pagewrapper">
+          <div className="monthTab" id='explorer' value={this.state.dataId == 'explorer' ? "Active" :
+            "Inactive"} onClick={this.handleSelectTab}><p className="monthTabText">Proposals</p></div>
           <div className="monthTab" id='Plotly' value={this.state.dataId == 'Plotly' ? "Active" :
             "Inactive"} onClick={this.handleSelectTab}><p className="monthTabText">Merchants</p></div>
           <div className="monthTab" id='PosSystems' value={this.state.dataId == 'PosSystems' ? "Active" :
             "Inactive"} onClick={this.handleSelectTab}><p className="monthTabText">POS Systems</p></div>
           <div className="monthTab" id='wallets' value={this.state.dataId == 'wallets' ? "Active" :
-            "Inactive"} onClick={this.handleSelectTab}><p className="monthTabText">Wallets</p></div>
-          <div className="monthTab" id='other' value={this.state.dataId == 'other' ? "Active" :
-            "Inactive"} onClick={this.handleSelectTab}><p className="monthTabText">Other</p></div>
-          <div className="monthPageWrapper">
-            <div  value="Active">    
+            "Inactive"} onClick={this.handleSelectTab}><p className="monthTabText">Wallets</p></div>          
+          <div className="monthPageWrapper">   
             <section className="plotWrapper" value={this.state.dataId == 'PosSystems' ? "Active" :
             "Inactive"}>
               {
@@ -204,12 +204,12 @@ class Labs extends React.Component {
                   )
               }
               </section>
-              <section className="plotWrapper" value={this.state.dataId == 'other' ? "Active" :
+              <section className="plotWrapper" value={this.state.dataId == 'explorer' ? "Active" :
             "Inactive"}>
               {
                   (labsData.length > 0) ? (
               <div>
-                <ProjectKpis
+                <KpiExplorer
                     labsData={labsData}
                     url={this.state.url}
                     as={this.state.as}
@@ -221,7 +221,6 @@ class Labs extends React.Component {
               }
               </section>
             </div>
-          </div>
         </section>
       </main>
     )

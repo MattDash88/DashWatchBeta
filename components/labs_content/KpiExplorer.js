@@ -17,14 +17,16 @@ const trackEvent = (event) => { // Function to track user interaction with page
     });
 }
 
-class ProjectKpis extends React.Component {
+class KpiExplorer extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
             labsData: props.labsData,
+            chartData: '',
             activeProject: 0,
             activeKpi: 0,
+            tooltipText: '',
             showProjectMenu: false,
             showKpiMenu: false,
             url: props.url,
@@ -73,6 +75,11 @@ class ProjectKpis extends React.Component {
             activeKpi: event.currentTarget.value,        // Change state to load different month
             showProjectMenu: false,
             showKpiMenu: false,
+            chartData: {
+                data: {  // Data styling for the chart
+                    datasets: []
+                },
+            },
             as: `/labs?project=${event.currentTarget.value}`,
         })
 
@@ -80,48 +87,84 @@ class ProjectKpis extends React.Component {
         trackEvent(`Changed Chart to ${event.currentTarget.value}`)                 // Track Event on Google Analytics    
     }
 
+    componentDidMount() {
+        var activeData = this.state.labsData[this.state.activeProject].kpi_entries[this.state.activeKpi] 
+        this.setState({
+            chartData: {
+                data: {  // Data styling for the chart
+                    datasets: [{
+                        label: this.state.labsData[this.state.activeProject].project_name,
+                        fill: false,
+                        borderColor: 'blue',
+                        data: activeData.kpi_values,
+                    }]
+                },
+                options: {  // Styling settings for the chart
+                    scales: {
+                        xAxes: [{
+                            type: 'time',
+                            distribution: 'linear',
+                            time: {
+                                unit: 'month'
+                            },
+                        }],
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true,
+                            },
+                            scaleLabel: {
+                                display: true,
+                                labelString: activeData.axis_title
+                            },
+                        }]
+                    }
+                }
+            },
+            tooltipText: activeData.kpi_description,
+        })
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.activeProject !== this.state.activeProject || prevState.activeKpi !== this.state.activeKpi) {
+            var activeData = this.state.labsData[this.state.activeProject].kpi_entries[this.state.activeKpi] 
+            this.setState({
+                chartData: {
+                    data: {  // Data styling for the chart
+                        datasets: [{
+                            label: this.state.labsData[this.state.activeProject].project_name,
+                            fill: false,
+                            borderColor: 'blue',
+                            data: activeData.kpi_values,
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: activeData.axis_title
+                                },
+                            }]
+                        }
+                    }
+                },
+                tooltipText: activeData.kpi_description,
+            })
+        }
+    }
+
     render() {
         const { // Declare data arrays used in class
             labsData,
+            chartData,
             activeProject,
             activeKpi,
+            tooltipText,
         } = this.state
-
-        const activeData = labsData[activeProject].kpi_entries[activeKpi]
-
-        const data = {  // Data styling for the chart
-            datasets: [{
-                label: labsData[activeProject].project_name,
-                fill: false,
-                borderColor: 'blue',
-                data: activeData.kpi_values,
-            }]
-        };
-
-        const options = {
-            scales: {
-                xAxes: [{
-                    type: 'time',
-                    time: {
-                        unit: 'month'
-                    },
-                    distribution: "series",
-                }],
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true,
-                    },
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'Transaction Volume per Month (Dash)'
-                    },
-                }]
-            }
-        }
 
         return (
             <main>
-                <h1 className="labsHeader">Kpi Explorer</h1>
+                <h1 className="labsHeader">Dash Watch KPI Explorer</h1>               
                 <div className="dropdown" id="dropdownmenu">
                 <p className="labsText">Select a project:</p>
                     <div id="dropdownMenu" onClick={this.handleProjectDropdown} className="dropbtn"><i id="dropdownMenu"></i>{labsData[activeProject].project_name}</div>
@@ -158,10 +201,14 @@ class ProjectKpis extends React.Component {
                             )
                     }
                 </div>
-                <section className="chartSection">
+                <div class="tooltip">{labsData[activeProject].kpi_entries[activeKpi].kpi_name}?
+                    <span class="tooltiptext" value="">{tooltipText}</span>
+                </div>
+                <section className="chartSection">                
+                <p className="labsText"><a id="Proposal Owner Link" href={`/proposals?search=${labsData[activeProject].proposal_owner}`} target="" onClick={this.callEvent}>Link to Proposal Owner {labsData[activeProject].proposal_owner}</a></p>
                     <Line
-                        data={data}
-                        options={options}
+                        data={chartData.data}
+                        options={chartData.options}
                     />
                 </section>
             </main>
@@ -169,4 +216,4 @@ class ProjectKpis extends React.Component {
     }
 }
 
-export default ProjectKpis
+export default KpiExplorer

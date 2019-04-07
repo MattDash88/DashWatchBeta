@@ -4,7 +4,6 @@ function onlyUnique(value, index, self) {
     return self.indexOf(value) === index;
 }
 
-
 var processAllLabsData = function mainLabsDataFunction(projects, kpis, values) {
     // Declaring elements 
     var valueIDs = []
@@ -56,70 +55,79 @@ var processAllLabsData = function mainLabsDataFunction(projects, kpis, values) {
 
 // Processing wallet metrics over time data
 var processWalletData = function mainWalletFunction(walletData) {
+    // Declaring elements 
     storeMainData = []
     var walletEntries = []
     var uniqueWalletTypes
-    Object.values(walletData).map((item) => {
+    
+    Object.values(walletData).map((item) => {   //Go through dataset to find all wallet types
         walletEntries.push(item.wallet_name)
     })
+    // Filter the array of wallet types on unique wallets
     var uniqueWalletTypes = walletEntries.filter(onlyUnique);
 
-    Object.keys(uniqueWalletTypes).map((item) => {
-        var walletDateArray = []
+    // Sort and prepare all the data per wallet type
+    Object.keys(uniqueWalletTypes).map((item) => {  // Iterate through all unique wallet types
+        // Declare elements used per iteration
         var walletDataDesktop = []
         var walletDataMobile = []
         var walletDataTotal = []
         var walletPO
 
-        Object.keys(walletData).map((data_item) => {
+        // Sort the entries in the dataset to the unique wallet types
+        Object.keys(walletData).map((data_item) => {        // Iterate through the whole wallet dataset
             if (walletData[data_item].wallet_name == uniqueWalletTypes[item]) {
-                walletDateArray.push(walletData[data_item].date)
-                walletDataDesktop.push({
+                walletDataDesktop.push({    // Dataset for Desktop wallets
                     x: walletData[data_item].date,
                     y: walletData[data_item].desktop,
                 })
-                walletDataMobile.push({
+                walletDataMobile.push({     // Dataset for Mobile wallets
                     x: walletData[data_item].date,
                     y: walletData[data_item].mobile,
                 })
-                walletDataTotal.push({
+                walletDataTotal.push({      // Dataset for All wallets
                     x: walletData[data_item].date,
                     y: walletData[data_item].total,
                 })
                 walletPO = walletData[data_item].proposal_owner
             }
-        })       
+        })      // End of iteration through all wallet data  
         
+        // Make an object for the wallet type
         const walletDataConst = {
             wallet_name: uniqueWalletTypes[item],
             wallet_proposal_owner: walletPO,
-            dates: walletDateArray,
             total_downloads: walletDataTotal,
             desktop_downloads: walletDataDesktop,
             mobile_downloads: walletDataMobile,
         }
-        storeMainData.push(walletDataConst)     // Push merchant KPI const to report KPI Array       
-    })
+        storeMainData.push(walletDataConst)     // Push the object with wallet metrics to wallet data object      
+    })  // End of iteration loop through unique wallet array
     return storeMainData
 }
 
 // Processing wallet metrics per version data
 var processVersionData = function mainVersionFunction(walletData) {
+    // Declaring elements 
     storeMainData = []
-
     var walletEntries = []
     var uniqueWalletTypes
-    Object.values(walletData).map((item) => {
+
+    Object.values(walletData).map((item) => {   // Go through dataset to find all system types
         walletEntries.push(item.wallet_name)
     })
+    // Filter the array of wallet types on unique wallets
     var uniqueWalletTypes = walletEntries.filter(onlyUnique);
 
-    Object.keys(uniqueWalletTypes).map((item) => {
+    // Sort and prepare all the data per wallet type
+    Object.keys(uniqueWalletTypes).map((item) => {  // Iterate through all unique wallet types
+        // Declare elements used per iteration
         var walletVersionArray = []
         var walletVersionData = []
         var walletPO
 
-        Object.keys(walletData).map((data_item) => {
+        // Sort the entries in the dataset to the unique wallet types
+        Object.keys(walletData).map((data_item) => {    // Iterate through the whole wallet dataset
             if (walletData[item].wallet_name == uniqueWalletTypes[data_item]) {
                 walletVersionArray.push(walletData[data_item].wallet_version)
                 walletVersionData.push({
@@ -134,15 +142,16 @@ var processVersionData = function mainVersionFunction(walletData) {
                 })
                 walletPO = walletData[data_item].proposal_owner
             }
-        })       
+        })      // End of iteration through all wallet data   
         
+        // Make an object for the wallet type
         const walletDataConst = {
             wallet_name: uniqueWalletTypes[item],
             walletVersionArray: walletVersionArray,
             wallet_proposal_owner: walletPO,
             walletVersionData: walletVersionData,
-        }
-        storeMainData.push(walletDataConst)     // Push merchant KPI const to report KPI Array       
+        }   // End of iteration loop through unique wallet array
+        storeMainData.push(walletDataConst)     // Push the object with wallet metrics to wallet data object     
     })
     return storeMainData
 }
@@ -154,7 +163,7 @@ var processPosData = function mainPosFunction(posSystemData) {
     var posEntries = []
     var uniqueSystemTypes
 
-    Object.values(posSystemData).map((item) => {  //Go through dataset to find all system types
+    Object.values(posSystemData).map((item) => {  // Go through dataset to find all system types
         posEntries.push(item.system_name)
     })
     // Filter the array of system types on unique systems
@@ -163,7 +172,6 @@ var processPosData = function mainPosFunction(posSystemData) {
     // Sort and prepare all the data per system type
     Object.keys(uniqueSystemTypes).map((item) => {  //Iterate through all unique system types
         // Declare elements used per iteration
-        var systemDateArray = []
         var systemTransactions = []
         var systemVolume = []
         var systemPO
