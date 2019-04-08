@@ -96,15 +96,11 @@ class Wallets extends React.Component {
     }
 
     componentDidMount() {
-        // To handle calls from popstate when the page is called from history
-        onpopstate = event => {
-            if (event.state) {
-                this.setState(event.state)
-            }
-        }
         var totalDownloads = []
         var desktopDownloads = []
         var mobileDownloads = []
+
+        console.log(this.state.walletData[0].total_downloads)
         {
             this.state.showDashCore ? (
                 totalDownloads.push({

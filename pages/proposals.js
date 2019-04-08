@@ -99,7 +99,7 @@ class Home extends React.Component {
     componentDidMount() {
         // To handle calls from history (forward and back buttons)
         onpopstate = event => {
-            if (event.state) {
+            if (event.state) {                
                 this.setState(event.state)
             }             
         }       

@@ -62,6 +62,9 @@ const getLabsAllData = () => {
 class Labs extends React.Component {
   static async getInitialProps(ctx) {
     const props = {
+      tab: typeof ctx.query.tab == "undefined" ? "explorer" : ctx.query.tab,   // Default no month to latest
+      project: typeof ctx.query.project == "undefined" ? 0 : ctx.query.project,
+      kpi: typeof ctx.query.kpi == "undefined" ? 0 : ctx.query.kpi,
       url: ctx.pathname,
       as: ctx.asPath,
     }
@@ -72,66 +75,55 @@ class Labs extends React.Component {
     super(props)
 
     this.state = {
-      posSystemData: '',
-      walletData: '',
-      versionData: '',
-      labsData: '',
-      chartType: '',
-      showMenu: false,
-      dataId: 'explorer',
+      posSystemData: '',  // Dataset for posystems tab
+      walletData: '',     // Dataset for wallet tab
+      versionData: '',    // Dataset for posystems tab
+      labsData: '',       // Dataset for proposals tab
+      tabQueries: {
+        project: props.project,
+        kpi: props.kpi,
+      },
+      labsTabId: props.tab,
       url: '/labs',
       as: props.as,
     }
 
     // Binding functions in this class
-    this.handleSelectChart = this.handleSelectChart.bind(this)
     this.handleSelectTab = this.handleSelectTab.bind(this);
-    this.handleDropdown = this.handleDropdown.bind(this);
+    this.handleQueries = this.handleQueries.bind(this);
   }
 
   handleSelectTab(event) {
     event.preventDefault();
     this.setState({
-      dataId: event.currentTarget.id,
+      labsTabId: event.currentTarget.id,
+      as: `/labs?tab=${event.currentTarget.id}`,
     })
-    if (event.currentTarget.id == 'Plotly') {
-      this.setState({
-        showPlotly: true,
-        plotlyData: (<iframe width="1000" height="800" frameBorder="0" scrolling="no" src="//plot.ly/~dashwatch/0.embed"></iframe>)
-      })
-    } else {
-      this.setState({
-        showPlotly: false,
-      })
-    }
+    history.pushState(this.state, '', `/labs?tab=${event.currentTarget.id}`)                    // Push State to history
     trackEvent(`Changed Tab to ${event.currentTarget.id}`)                 // Track Event on Google Analytics
   }
 
-  handleSelectChart(event) {
-    this.setState({
-      chartType: event.currentTarget.value,        // Change state to load different month
-      showMenu: false,
-      as: `/labs?chart=${event.currentTarget.value}`,
-    })
-
-    history.pushState(this.state, '', `/labs?chart=${event.currentTarget.value}`)   // Push State to history
-    trackEvent(`Changed Chart to ${event.currentTarget.value} ${this.state.yearId}`)                 // Track Event on Google Analytics    
-  }
-
-  handleDropdown(event) {
+  handleQueries(tabId, queries) {
     event.preventDefault();
-    this.setState({
-      showMenu: !this.state.showMenu,
-    })
+    if (tabId == 'explorer') {
+      this.setState({
+        tabQueries: {
+          project: queries.activeProject,
+          kpi: queries.activeKpi,
+        },
+        as: `/labs?tab=${this.state.labsTabId}&project=${queries.activeProject}&kpi=${queries.activeKpi}`,
+      })
+      history.pushState(this.state, '', `/labs?tab=explorer&project=${queries.activeProject}&kpi=${queries.activeKpi}`)
+    }    
   }
 
   componentDidMount() {
+    // To handle calls from history (forward and back buttons)
     onpopstate = event => {
       if (event.state) {
         this.setState(event.state)
       }
     }
-
     var labsPreparedData = Promise.resolve(getLabsPreparedData());
     var labsAllData = Promise.resolve(getLabsAllData());
 
@@ -142,9 +134,24 @@ class Labs extends React.Component {
         walletData: data[1].wallet_data,
         versionData: data[1].version_data,
       })
-    }).then(history.replaceState(this.state, '', `${this.state.as}`))
-
+    })
     trackPage(`/labs`)  // Track Pageview in Analytics
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.tabQueries !== this.state.tabQueries || prevState.labsTabId !== this.state.labsTabId) {         // Just a history state update because it doesn't always work as desired in functions
+    var labsPreparedData = Promise.resolve(getLabsPreparedData());
+    var labsAllData = Promise.resolve(getLabsAllData());
+
+    Promise.all([labsAllData, labsPreparedData]).then(data => {
+      this.setState({
+        labsData: data[0],
+        posSystemData: data[1].pos_system_data,
+        walletData: data[1].wallet_data,
+        versionData: data[1].version_data,
+      })
+    }).then(history.replaceState(this.state, '', `${this.state.as}`))      
+    }
   }
 
   render() {
@@ -153,6 +160,7 @@ class Labs extends React.Component {
       walletData,
       versionData,
       labsData,
+      tabQueries,
     } = this.state
 
     return (
@@ -162,65 +170,63 @@ class Labs extends React.Component {
           showPage="labs"
         />
         <section className="pagewrapper">
-          <div className="monthTab" id='explorer' value={this.state.dataId == 'explorer' ? "Active" :
+          <div className="monthTab" id='explorer' value={this.state.labsTabId == 'explorer' ? "Active" :
             "Inactive"} onClick={this.handleSelectTab}><p className="monthTabText">Proposals</p></div>
-          <div className="monthTab" id='Plotly' value={this.state.dataId == 'Plotly' ? "Active" :
+          <div className="monthTab" id='merchants' value={this.state.labsTabId == 'merchants' ? "Active" :
             "Inactive"} onClick={this.handleSelectTab}><p className="monthTabText">Merchants</p></div>
-          <div className="monthTab" id='PosSystems' value={this.state.dataId == 'PosSystems' ? "Active" :
+          <div className="monthTab" id='POSsystems' value={this.state.labsTabId == 'POSsystems' ? "Active" :
             "Inactive"} onClick={this.handleSelectTab}><p className="monthTabText">POS Systems</p></div>
-          <div className="monthTab" id='wallets' value={this.state.dataId == 'wallets' ? "Active" :
-            "Inactive"} onClick={this.handleSelectTab}><p className="monthTabText">Wallets</p></div>          
-          <div className="monthPageWrapper">   
-            <section className="plotWrapper" value={this.state.dataId == 'PosSystems' ? "Active" :
-            "Inactive"}>
+          <div className="monthTab" id='wallets' value={this.state.labsTabId == 'wallets' ? "Active" :
+            "Inactive"} onClick={this.handleSelectTab}><p className="monthTabText">Wallets</p></div>
+          <div className="monthPageWrapper">
+            <section className="plotWrapper" value={this.state.labsTabId == 'POSsystems' ? "Active" :
+              "Inactive"}>
               {
-                  (posSystemData.length > 0) ? (
-              <div>
-                <PosSystems
-                    posSystemData={posSystemData}
-                    url={this.state.url}
-                    as={this.state.as}
-                />
-              </div>
-                  ) : (
+                (posSystemData.length > 0) ? (
+                  <div>
+                    <PosSystems
+                      posSystemData={posSystemData}
+                    />
+                  </div>
+                ) : (
                     null
                   )
               }
-              </section>
-              <section className="plotWrapper" value={this.state.dataId == 'wallets' ? "Active" :
-            "Inactive"}>
+            </section>
+            <section className="plotWrapper" value={this.state.labsTabId == 'wallets' ? "Active" :
+              "Inactive"}>
               {
-                  (walletData.length > 0) ? (
-              <div>
-                <Wallets
-                    walletData={walletData}
-                    versionData={versionData}
-                    url={this.state.url}
-                    as={this.state.as}
-                />
-              </div>
-                  ) : (
+                (walletData.length > 0) ? (
+                  <div>
+                    <Wallets
+                      walletData={walletData}
+                      versionData={versionData}
+                    />
+                  </div>
+                ) : (
                     null
                   )
               }
-              </section>
-              <section className="plotWrapper" value={this.state.dataId == 'explorer' ? "Active" :
-            "Inactive"}>
+            </section>
+            <section className="plotWrapper" value={this.state.labsTabId == 'explorer' ? "Active" :
+              "Inactive"}>
               {
-                  (labsData.length > 0) ? (
-              <div>
-                <KpiExplorer
-                    labsData={labsData}
-                    url={this.state.url}
-                    as={this.state.as}
-                />
-              </div>
-                  ) : (
-                    null
+                (labsData.length > 0) ? (
+                  <div>
+                    <KpiExplorer
+                      labsData={labsData}
+                      queryFunction={this.handleQueries}
+                      tabQueries={tabQueries}
+                    />
+                  </div>
+                ) : (
+                  <section>
+                    Loading&hellip;
+                  </section>
                   )
               }
-              </section>
-            </div>
+            </section>
+          </div>
         </section>
       </main>
     )

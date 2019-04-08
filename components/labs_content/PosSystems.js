@@ -82,12 +82,6 @@ class PosSystems extends React.Component {
     }
 
     componentDidMount() {
-        // To handle calls from popstate when the page is called from history
-        onpopstate = event => {
-            if (event.state) {
-                this.setState(event.state)
-            }
-        }
         var transactionsData = []
         var volumeData = []
         {
