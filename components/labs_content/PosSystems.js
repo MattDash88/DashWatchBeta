@@ -3,194 +3,53 @@ import { Line } from 'react-chartjs-2';
 import ReactGA from 'react-ga';
 
 // Analytics
-import getGAKey from '../functions/analytics';
+import {getGAKey, trackEvent} from '../functions/analytics';
 ReactGA.initialize(getGAKey);
 
 // Import css
 import '../css/style.css';
 import '../css/labs.css';
 
-const trackEvent = (event) => { // Function to track user interaction with page
-    ReactGA.event({
-        category: 'Labs Page',
-        action: event,
-    });
-}
-
-class PosSystems extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            posSystemData: props.posSystemData,
-            chartData: {
-                transactions: [],
-                volume: [],
-            },
-            showChart: 'Transactions',
-            showMenu: false,
-            showAnypay: true,
-            showPaylive: true,
-            url: props.url,
-            as: props.as,
-        }
-
-        // Binding functions in this class
-        this.handleDatasetToggle = this.handleDatasetToggle.bind(this)
-        this.handleSelectChart = this.handleSelectChart.bind(this)
-        this.handleDropdown = this.handleDropdown.bind(this);
-    }
-
-    handleSelectChart(event) {
-        event.preventDefault();
-        this.setState({
-            showChart: event.currentTarget.value,        // Change state to load different month
-            showMenu: false,
-            as: `/labs?chart=${event.currentTarget.value}`,
-        })
-
-        //history.pushState(this.state, '', `/labs?tab=POS`)   // Push State to history
-        trackEvent(`Changed Chart to ${event.currentTarget.value}`)                 // Track Event on Google Analytics    
-    }
-
-    handleDropdown(event) {
-        event.preventDefault();
-        this.setState({
-            showMenu: !this.state.showMenu,
-        })
-    }
-
-    handleDatasetToggle(event) {
-        event.preventDefault();
-        if (event.currentTarget.id == 'Anypay') {
-            this.setState({
-                showAnypay: !this.state.showAnypay,
-                chartData: {
-                    transactions: [],
-                    volume: [],
-                },
-            })
-        } else if (event.currentTarget.id == 'Paylive') {
-            this.setState({
-                showPaylive: !this.state.showPaylive,
-                chartData: {
-                    transactions: [],
-                    volume: [],
-                },
-            })
-        }
-    }
-
-    componentDidMount() {
+const buildContent = (labsData, queries) => {
+    try {
         var transactionsData = []
         var volumeData = []
         {
-            this.state.showAnypay ? (
+            queries.showAnypay ? (
                 transactionsData.push({
-                    label: this.state.posSystemData[0].system_name,
+                    label: labsData[0].system_name,
                     fill: false,
                     borderColor: 'blue',
-                    data: this.state.posSystemData[0].dash_transactions,    // participation data points
+                    data: labsData[0].dash_transactions,    // participation data points
                 }),
                 volumeData.push({
-                    label: this.state.posSystemData[0].system_name,
+                    label: labsData[0].system_name,
                     fill: false,
                     borderColor: 'blue',
-                    data: this.state.posSystemData[0].dash_volume,    // participation data points
+                    data: labsData[0].dash_volume,    // participation data points
                 })
             ) : (
                     null
                 )
         }
         {
-            this.state.showPaylive ? (
+            queries.showPaylive ? (
                 transactionsData.push({
-                    label: this.state.posSystemData[1].system_name,
+                    label: labsData[1].system_name,
                     fill: false,
                     borderColor: 'green',
-                    data: this.state.posSystemData[1].dash_transactions,    // participation data points
+                    data: labsData[1].dash_transactions,    // participation data points
                 }),
                 volumeData.push({
-                    label: this.state.posSystemData[1].system_name,
+                    label: labsData[1].system_name,
                     fill: false,
                     borderColor: 'green',
-                    data: this.state.posSystemData[1].dash_volume,    // participation data points
+                    data: labsData[1].dash_volume,    // participation data points
                 })
             ) : (
                     null
                 )
         }
-        this.setState({
-            chartData: {
-                transactions: transactionsData,
-                volume: volumeData,
-            }
-        })
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-        if (prevState.showAnypay !== this.state.showAnypay || prevState.showPaylive !== this.state.showPaylive) {
-            var transactionsData = []
-            var volumeData = []
-            {
-                this.state.showAnypay ? (
-                    transactionsData.push({
-                        label: this.state.posSystemData[0].system_name,
-                        fill: false,
-                        borderColor: 'blue',
-                        data: this.state.posSystemData[0].dash_transactions,    // participation data points
-                    }),
-                    volumeData.push({
-                        label: this.state.posSystemData[0].system_name,
-                        fill: false,
-                        borderColor: 'blue',
-                        data: this.state.posSystemData[0].dash_volume,    // participation data points
-                    })
-                ) : (
-                        null
-                    )
-            }
-            {
-                this.state.showPaylive ? (
-                    transactionsData.push({
-                        label: this.state.posSystemData[1].system_name,
-                        fill: false,
-                        borderColor: 'green',
-                        data: this.state.posSystemData[1].dash_transactions,    // participation data points
-                    }),
-                    volumeData.push({
-                        label: this.state.posSystemData[1].system_name,
-                        fill: false,
-                        borderColor: 'green',
-                        data: this.state.posSystemData[1].dash_volume,    // participation data points
-                    })
-                ) : (
-                        null
-                    )
-            }
-            this.setState({
-                chartData: {
-                    transactions: transactionsData,
-                    volume: volumeData,
-                }
-            })
-        }
-    }
-
-
-    render() {
-        const {     // Elements passed down to the component
-            showChart,
-            chartData,
-        } = this.state
-
-        const transactionData = {  // Data styling for the chart
-            datasets: this.state.chartData.transactions
-        };
-
-        const volumeData = {  // Data styling for the chart
-            datasets: this.state.chartData.volume
-        };
 
         const optionsTransactions = {
             scales: {
@@ -233,13 +92,126 @@ class PosSystems extends React.Component {
                 }]
             }
         }
+        const pageContent = {   // Elements that are used in page rendering
+            proposalOwnerLink:
+                <div>
+                    <p className="labsText">
+                        <a id="Proposal Owner Link" href={`/proposals?search=${labsData[0].system_proposal_owner}`} target="" >Link to Proposal Owner {labsData[0].system_name}</a>
+                    </p><br></br>
+                    <p className="labsText">
+                        <a id="Proposal Owner Link" href={`/proposals?search=${labsData[1].system_proposal_owner}`} target="" >Link to Proposal Owner {labsData[1].system_name}</a>
+                    </p>
+                </div>
+        }
+
+        if (queries.showChart == 'Transactions') {
+            var chartData = { datasets: transactionsData }
+            var options = optionsTransactions
+        } else if (queries.showChart == 'Volume') {
+            var chartData = { datasets: volumeData }
+            var options = optionsVolume
+        } else {
+            chartData = { datasets: [] }
+            options = []
+        }
+        return {
+            chartData: chartData,
+            options: options,
+            pageContent: pageContent,
+        }
+    } catch (e) {
+        const pageContent = {   // Elements that are used in page rendering
+            proposalOwnerLink:
+                <div></div>
+        }
+        return {
+            chartData: { datasets: [] },
+            options: [],
+            pageContent: pageContent,
+        }
+    }
+}
+
+class PosSystems extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            showMenu: false,
+        }
+
+        // Binding functions in this class
+        this.handleDatasetToggle = this.handleDatasetToggle.bind(this)
+        this.handleSelectChart = this.handleSelectChart.bind(this)
+        this.handleDropdown = this.handleDropdown.bind(this);
+        this.handleQueries = this.handleQueries.bind(this);
+    }
+
+    handleSelectChart(event) {
+        event.preventDefault();
+        this.setState({
+            showMenu: false,
+        })
+
+        const queries = {
+            anypay: this.props.tabQueries.showAnypay,
+            paylive: this.props.tabQueries.showPaylive,
+            chart: event.currentTarget.value,
+        }
+
+        this.handleQueries(queries)
+        trackEvent('Labs Page', `Changed Chart to ${event.currentTarget.value}`)                 // Track Event on Google Analytics    
+    }
+
+    handleDropdown(event) {
+        event.preventDefault();
+        this.setState({
+            showMenu: !this.state.showMenu,
+        })
+    }
+
+    handleDatasetToggle(event) {
+        event.preventDefault();
+        const queries = {
+            anypay: event.currentTarget.id == 'Anypay' ? !this.props.tabQueries.showAnypay : this.props.tabQueries.showAnypay,
+            paylive: event.currentTarget.id == 'Paylive' ? !this.props.tabQueries.showPaylive : this.props.tabQueries.showPaylive,
+            chart: this.props.tabQueries.showChart,
+        }
+
+        this.handleQueries(queries)
+        trackEvent('Labs Page', `Toggled ${event.currentTarget.id}`)
+    }
+
+    // Function to push queries to main labs Class
+    handleQueries(queries) {
+        this.props.queryFunction('possystems', queries)
+    }  
+
+    render() {
+        const { // Declare data arrays used in class
+            posSystemData,
+        } = this.props
+
+        const tabQueries = {
+            showChart: typeof this.props.tabQueries.showChart == 'undefined' ? "Transactions" : this.props.tabQueries.showChart,
+            showAnypay: typeof this.props.tabQueries.showAnypay == 'undefined' ? true : this.props.tabQueries.showAnypay,
+            showPaylive: typeof this.props.tabQueries.showPaylive == 'undefined' ? true : this.props.tabQueries.showPaylive,
+        }
+
+        const content = buildContent(posSystemData, tabQueries)
+
+        const {
+            chartData,
+            options,
+            pageContent
+        } = content
 
         return (
             <main>
                 <h1 className="labsHeader">Point-Of-Sale Systems</h1>
                 <p className="labsText">Select a metric:</p>
                 <div className="dropdown" id="dropdownmenu">
-                    <div id="dropdownMenu" onClick={this.handleDropdown} className="dropbtn"><i id="dropdownMenu"></i>{showChart}</div>
+                    <div id="dropdownMenu" onClick={this.handleDropdown} className="dropbtn"><i id="dropdownMenu"></i>{tabQueries.showChart}</div>
                     {
                         this.state.showMenu ? (
                             <div className="dropdownMenu" id="dropdownMenu">
@@ -253,22 +225,16 @@ class PosSystems extends React.Component {
                 </div>
                 <p className="labsText">Toggle datasets:</p>
                 <div>
-                    <div id="Anypay" onClick={this.handleDatasetToggle} className="databtn" value={this.state.showAnypay ? "Active" : "Inactive"}>Anypay</div>
-                    <div id="Paylive" onClick={this.handleDatasetToggle} className="databtn" value={this.state.showPaylive ? "Active" : "Inactive"}>Paylive</div>
+                    <div id="Anypay" onClick={this.handleDatasetToggle} className="databtn" value={tabQueries.showAnypay ? "Active" : "Inactive"}>Anypay</div>
+                    <div id="Paylive" onClick={this.handleDatasetToggle} className="databtn" value={tabQueries.showPaylive ? "Active" : "Inactive"}>Paylive</div>
                 </div>
-                <section className="chartSection" value={this.state.showChart == "Transactions" ? "Active" : "Inactive"}>
+                <section className="chartSection" value="Active">
+                {pageContent.proposalOwnerLink}
                     <Line
-                        data={transactionData}
-                        options={optionsTransactions}
+                        data={chartData}
+                        options={options}
                     />
                 </section>
-                <section className="chartSection" value={this.state.showChart == "Volume" ? "Active" : "Inactive"}>
-                    <Line
-                        data={volumeData}
-                        options={optionsVolume}
-                    />
-                </section>
-
             </main>
         )
     }

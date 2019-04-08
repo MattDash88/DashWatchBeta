@@ -1,9 +1,8 @@
 import React from 'react';
-import { Line, Bar } from 'react-chartjs-2';
 import ReactGA from 'react-ga';
 
 // Analytics
-import getGAKey from '../components/functions/analytics';
+import {getGAKey, trackPage, trackEvent} from '../components/functions/analytics';
 ReactGA.initialize(getGAKey);
 
 // Import css
@@ -19,17 +18,6 @@ import NavBar from "../components/elements/NavBar";
 import PosSystems from "../components/labs_content/PosSystems";
 import Wallets from "../components/labs_content/Wallets";
 import KpiExplorer from "../components/labs_content/KpiExplorer";
-
-const trackPage = (page) => { // Function to track page views
-  ReactGA.pageview(page);
-}
-
-const trackEvent = (event) => { // Function to track user interaction with page
-  ReactGA.event({
-    category: 'Labs Page',
-    action: event,
-  });
-}
 
 // API query requesting Trust Protector Candidate List data
 const getLabsPreparedData = () => {
@@ -65,6 +53,7 @@ class Labs extends React.Component {
       tab: typeof ctx.query.tab == "undefined" ? "explorer" : ctx.query.tab,   // Default no month to latest
       project: typeof ctx.query.project == "undefined" ? 0 : ctx.query.project,
       kpi: typeof ctx.query.kpi == "undefined" ? 0 : ctx.query.kpi,
+      chart: ctx.query.chart,
       url: ctx.pathname,
       as: ctx.asPath,
     }
@@ -80,8 +69,19 @@ class Labs extends React.Component {
       versionData: '',    // Dataset for posystems tab
       labsData: '',       // Dataset for proposals tab
       tabQueries: {
+        // States that can be set by queries 
         project: props.project,
         kpi: props.kpi,
+        showChart: props.chart,
+
+        // Booleans for POS systems
+        showAnypay: true,
+        showPaylive: true,
+
+        // Booleans for Wallets
+        showDashCore: true,
+        showElectrum: true,
+        showCoreAndroid: true,
       },
       labsTabId: props.tab,
       url: '/labs',
@@ -96,24 +96,47 @@ class Labs extends React.Component {
   handleSelectTab(event) {
     event.preventDefault();
     this.setState({
-      labsTabId: event.currentTarget.id,
+      labsTabId: event.currentTarget.id, 
+      tabQueries: {},
       as: `/labs?tab=${event.currentTarget.id}`,
     })
     history.pushState(this.state, '', `/labs?tab=${event.currentTarget.id}`)                    // Push State to history
-    trackEvent(`Changed Tab to ${event.currentTarget.id}`)                 // Track Event on Google Analytics
+    trackEvent('Labs Page', `Changed Tab to ${event.currentTarget.id}`)                 // Track Event on Google Analytics
   }
 
   handleQueries(tabId, queries) {
-    event.preventDefault();
     if (tabId == 'explorer') {
       this.setState({
         tabQueries: {
           project: queries.activeProject,
           kpi: queries.activeKpi,
         },
-        as: `/labs?tab=${this.state.labsTabId}&project=${queries.activeProject}&kpi=${queries.activeKpi}`,
+        as: `/labs?tab=explorer&project=${queries.activeProject}&kpi=${queries.activeKpi}`,
       })
       history.pushState(this.state, '', `/labs?tab=explorer&project=${queries.activeProject}&kpi=${queries.activeKpi}`)
+    }
+    if (tabId == 'possystems') { 
+      this.setState({
+        tabQueries: {
+          showAnypay: queries.anypay,
+          showPaylive: queries.paylive,
+          showChart: queries.chart
+        },
+        as: `/labs?tab=POSsystems&chart=${queries.chart}`,
+      })
+      history.pushState(this.state, '', `/labs?tab=POSsystems&chart=${queries.chart}`)
+    } 
+    if (tabId == 'wallets') { 
+      this.setState({
+        tabQueries: {
+          showDashCore: queries.dashCore,
+          showElectrum: queries.electrum,
+          showCoreAndroid: queries.coreAndroid,
+          showChart: queries.chart
+        },
+        as: `/labs?tab=wallets&chart=${queries.chart}`,
+      })
+      history.pushState(this.state, '', `/labs?tab=wallets&chart=${queries.chart}`)
     }    
   }
 
@@ -186,6 +209,8 @@ class Labs extends React.Component {
                   <div>
                     <PosSystems
                       posSystemData={posSystemData}
+                      queryFunction={this.handleQueries}
+                      tabQueries={tabQueries}
                     />
                   </div>
                 ) : (
@@ -201,6 +226,8 @@ class Labs extends React.Component {
                     <Wallets
                       walletData={walletData}
                       versionData={versionData}
+                      queryFunction={this.handleQueries}
+                      tabQueries={tabQueries}
                     />
                   </div>
                 ) : (

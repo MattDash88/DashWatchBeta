@@ -2,7 +2,7 @@ import React from 'react';
 import ReactGA from 'react-ga';
 
 // Analytics
-import getGAKey from '../functions/analytics';
+import {getGAKey} from '../functions/analytics';
 ReactGA.initialize(getGAKey);
 
 // Import css

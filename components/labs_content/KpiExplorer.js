@@ -3,19 +3,12 @@ import { Line } from 'react-chartjs-2';
 import ReactGA from 'react-ga';
 
 // Analytics
-import getGAKey from '../functions/analytics';
+import {getGAKey, trackEvent} from '../functions/analytics';
 ReactGA.initialize(getGAKey);
 
 // Import css
 import '../css/style.css';
 import '../css/labs.css';
-
-const trackEvent = (event) => { // Function to track user interaction with page
-    ReactGA.event({
-        category: 'Labs Page',
-        action: event,
-    });
-}
 
 // Function to build output used on page
 const buildContent = (labsData, activeProject, activeKpi) => {
@@ -38,7 +31,7 @@ const buildContent = (labsData, activeProject, activeKpi) => {
                     data: kpiData.kpi_values,
                 }]
             },
-            options: {  // Axis Styling for chart
+            options: {  // Axis Styling for the chart
                 scales: {
                     xAxes: [{
                         type: 'time',
@@ -58,7 +51,7 @@ const buildContent = (labsData, activeProject, activeKpi) => {
                 }
             }
         }
-        const pageContent = {
+        const pageContent = {   // Elements that are used in page rendering
             projectName: projectData.project_name,
             kpiName: kpiData.kpi_name,
             tooltipTitle: kpiData.kpi_name,
@@ -82,12 +75,12 @@ const buildContent = (labsData, activeProject, activeKpi) => {
             options: {}
         }
 
-        const kpiList = [{
+        const kpiList = [{  // Empty kpi list
             kpi_name: 'Select a project first',
             id: '1',
         }]
 
-        const pageContent = {
+        const pageContent = {   // Error page elements
             projectName: 'Select a project',
             kpiName: 'Select a Kpi',
             tooltipTitle: 'Tooltip',
@@ -102,7 +95,6 @@ const buildContent = (labsData, activeProject, activeKpi) => {
         }
     }
 }
-
 
 class KpiExplorer extends React.Component {
     constructor(props) {
@@ -144,7 +136,6 @@ class KpiExplorer extends React.Component {
     handleSelectProject(event) {
         event.preventDefault();
         this.setState({
-            //activeProject: event.currentTarget.value,        // Change state to load different month
             showProjectMenu: false,
             showKpiMenu: false,
         })
@@ -153,7 +144,7 @@ class KpiExplorer extends React.Component {
             activeKpi: 0,
         }
         this.handleQueries(queries)
-        trackEvent(`Changed Chart to ${event.currentTarget.value}`)                 // Track Event on Google Analytics    
+        trackEvent('Labs Page', `Changed Chart to ${event.currentTarget.value}`)                 // Track Event on Google Analytics    
     }
 
     // Function to handle selection of item from the KPI dropdown menu
@@ -169,7 +160,7 @@ class KpiExplorer extends React.Component {
             activeKpi: event.currentTarget.value,
         }
         this.handleQueries(queries)
-        trackEvent(`Changed Chart to ${event.currentTarget.value}`)                 // Track Event on Google Analytics    
+        trackEvent('Labs Page', `Changed Chart to ${event.currentTarget.value}`)                 // Track Event on Google Analytics    
     }
 
     // Function to push queries to main labs Class
@@ -182,6 +173,7 @@ class KpiExplorer extends React.Component {
             labsData,
         } = this.props
 
+        // Elements taken from queries
         const tabQueries = {
             activeProject: typeof this.props.tabQueries.project == 'undefined' ? 0 : this.props.tabQueries.project,
             activeKpi: typeof this.props.tabQueries.kpi == 'undefined' ? 0 : this.props.tabQueries.kpi,
