@@ -19,13 +19,11 @@ import NavBar from "../components/elements/NavBar"
 import ModalFrame from '../components/modal/ModalFrame';
 import ModalContent from '../components/modal/SimplifiedModalContent';
 
-var basepath = 'https://dashwatchbeta.org'
-
 // API query requesting Report List data
 const getMonthList = () => {
     return (
         new Promise((resolve) => {
-            fetch(`${basepath}/api/get/monthlist`)
+            fetch(`/api/get/monthlist`)
                 .then((res) => res.json()
                     .then((res) => {
                         resolve(res.data)
@@ -39,7 +37,7 @@ const getMonthList = () => {
 const getOptOutList = () => {
     return (
         new Promise((resolve) => {
-            fetch(`${basepath}/api/get/optoutlist`)
+            fetch(`/api/get/optoutlist`)
                 .then((res) => res.json()
                     .then((res) => {
                         resolve(res.data)

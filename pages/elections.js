@@ -19,8 +19,6 @@ import Header from '../components/headers/ElectionsHeader';
 import ScrollButton from '../components/elements/ScrollButton';  // Scroll to top button
 import NavBar from "../components/elements/NavBar"
 
-var basepath = 'http://localhost:5000'
-
 // API query requesting Trust Protector Candidate List data
 const getElectionsData = () => {
     return (

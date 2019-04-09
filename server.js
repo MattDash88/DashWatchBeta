@@ -13,7 +13,6 @@ const app = next({ dev })
 const ReactGA = require('react-ga');
 ReactGA.initialize(gaKey);
 
-
 const serialize = data => JSON.stringify({ data })
 var cacheExpirationTime = process.env.CACHEEXPIRATION;  //Time until cache expires, can be adjusted for testing purposes
 

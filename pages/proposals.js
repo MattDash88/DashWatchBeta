@@ -16,13 +16,11 @@ import Header from '../components/headers/ProposalsHeader';
 import NavBar from "../components/elements/NavBar"
 import ScrollButton from '../components/elements/ScrollButton';  // Scroll to top button
 
-var basepath = 'https://dashwatchbeta.org'
-
 // Airtable query requesting Proposal List data
 const getPosts = () => {
     return (
         new Promise((resolve) => {
-            fetch(`${basepath}/api/get/posts`)
+            fetch(`/api/get/posts`)
                 .then((res) => res.json()
                     .then((res) => {
                         resolve(res.data)
@@ -35,7 +33,7 @@ const getPosts = () => {
 const filterPost = (query) => {
     return (
         new Promise((resolve) => {
-            fetch(`${basepath}/api/filter/${query}`)
+            fetch(`/api/filter/${query}`)
                 .then((res) => res.json()
                     .then((res) => {
                         resolve(res.data)
