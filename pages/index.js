@@ -1,10 +1,8 @@
 import fetch from 'isomorphic-unfetch';
 import React from 'react';
-import ReactGA from 'react-ga';
 
 // Analytics
-import getGAKey from '../components/functions/analytics';
-ReactGA.initialize(getGAKey);
+import {trackPage, trackEvent} from '../components/functions/analytics';
 
 // Import pages
 
@@ -51,17 +49,6 @@ const getOptOutList = () => {
     )
 }
 
-const trackPage = (page) => {   // Function to track page views
-    ReactGA.pageview(page);
-}
-
-const trackEvent = (event) => { // Function to track user interaction with page
-    ReactGA.event({
-        category: 'Reports Page',
-        action: event,
-    });
-}
-
 class Month extends React.Component {
     static async getInitialProps(ctx) {
         const props = {
@@ -97,13 +84,13 @@ class Month extends React.Component {
         })
 
         history.pushState(this.state, '', `/reportlist?month=${event.currentTarget.id}`)   // Push State to history
-        trackEvent('Changed Month')                 // Track Event on Google Analytics    
+        trackEvent('Reports Page', 'Changed Month')                 // Track Event on Google Analytics    
     }
 
     // Google Analytics function to track User interaction on page
     callEvent(event) {
         event.preventDefault();
-        trackEvent('clicked ' + event.currentTarget.className)
+        trackEvent('Reports Page','clicked ' + event.currentTarget.className)
     }
 
     componentDidMount() {
@@ -248,7 +235,7 @@ class MonthReportRow extends React.Component {
     // Function to show modal
     showModal = () => {
         this.setState({ show: true });
-        trackEvent('Opened Modal')
+        trackEvent('Reports Page','Opened Modal')
     };
 
     // Function to close modal
@@ -257,7 +244,7 @@ class MonthReportRow extends React.Component {
     };
 
     callEvent(event) {
-        trackEvent('clicked ' + event.currentTarget.className)
+        trackEvent('Reports Page','clicked ' + event.currentTarget.className)
     }
 
     render() {
@@ -354,7 +341,7 @@ class OptOutRow extends React.Component {
     // Function to show modal
     showModal = () => {
         this.setState({ show: true });
-        trackEvent('Opened Modal')
+        trackEvent('Reports Page','Opened Modal')
     };
 
     // Function to close modal
@@ -363,7 +350,7 @@ class OptOutRow extends React.Component {
     };
 
     callEvent(event) {
-        trackEvent('clicked ' + event.currentTarget.className)
+        trackEvent('Reports Page','clicked ' + event.currentTarget.className)
     }
 
     render() {

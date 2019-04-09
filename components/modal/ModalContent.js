@@ -1,9 +1,7 @@
 import React from 'react';
-import ReactGA from 'react-ga';
 
 // Analytics
-import getGAKey from '../functions/analytics';
-ReactGA.initialize(getGAKey);
+import {trackEvent} from '../functions/analytics';
 
 // Import other elements 
 import ModalTabMain from './ModalTabMain'
@@ -14,14 +12,6 @@ import ModalTabReports from './ModalTabReports'
 // Import css
 import '../css/style.css';
 import '../css/modal.css'
-
-// Track Event Google Analytics function
-const trackEvent = (event) => {
-  ReactGA.event({
-      category: 'Full Modal',
-      action: event,
-  });
-}
 
 class ModalContent extends React.Component {
     constructor(props) {
@@ -37,13 +27,13 @@ class ModalContent extends React.Component {
       handleTab(event) {
         event.preventDefault()
         this.setState({ displayTab: event.currentTarget.id })
-        trackEvent(`Changed Modal Tab to ${event.currentTarget.id}`)                 // Track Event on Google Analytics
+        trackEvent('Full Modal', `Changed Modal Tab to ${event.currentTarget.id}`)                 // Track Event on Google Analytics
       }
     
       // Function to close the modal
      handleClose() {
       this.props.handleClose();
-      trackEvent('Closed Modal Button')                 // Track Event on Google Analytics
+      trackEvent('Full Modal', 'Closed Modal Button')                 // Track Event on Google Analytics
     }
     
     // If user clicks outside modal area, run handleClose
@@ -54,14 +44,12 @@ class ModalContent extends React.Component {
       } 
     }
 
-    componentDidMount() {
-      // Event listener to check if user clicks outside of modal area
-      window.addEventListener('mousedown', this.handleClick);
+    componentDidMount() {      
+      window.addEventListener('mousedown', this.handleClick);       // Event listener to check if user clicks outside of modal area
     }
 
-    componentWillUnmount() {
-      // Stop event listener when modal is unloaded
-      window.removeEventListener('mousedown', this.handleClick);
+    componentWillUnmount() {    
+      window.removeEventListener('mousedown', this.handleClick);    // Stop event listener when modal is unloaded
     }
 
     render() {

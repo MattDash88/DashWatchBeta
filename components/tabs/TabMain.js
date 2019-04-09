@@ -1,9 +1,7 @@
 import React from 'react';
-import ReactGA from 'react-ga';
 
 // Analytics
-import getGAKey from '../functions/analytics';
-ReactGA.initialize(getGAKey);
+import {trackEvent} from '../functions/analytics';
 
 // Import css
 import '../css/style.css';

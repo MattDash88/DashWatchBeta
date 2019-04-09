@@ -1,9 +1,7 @@
 import React from 'react';
-import ReactGA from 'react-ga';
 
 // Analytics
-import getGAKey from './functions/analytics';
-ReactGA.initialize(getGAKey);
+import {trackEvent} from './functions/analytics';
 
 // Import tab elements
 import TabMain from './tabs/TabMain'
@@ -14,14 +12,6 @@ import TabReports from './tabs/TabReports'
 // Import css
 import './css/style.css';
 import './css/single.css';
-
-// Track Event Google Analytics function
-const trackEvent = (event) => {
-  ReactGA.event({
-    category: 'Single Page',
-    action: event,
-  });
-}
 
 class SinglePost extends React.Component {  
   constructor(props) {
@@ -38,14 +28,14 @@ class SinglePost extends React.Component {
   //Go back but don't reset querry
   backButton(event) {
     history.back();
-    trackEvent('Clicked ' + event.currentTarget.id)
+    trackEvent('Single Page', 'Clicked ' + event.currentTarget.id)
   }
 
   // Returns the corresponding Tab based on the selected button
   handleTab(event) {
     event.preventDefault()
     this.setState({ displayTab: event.currentTarget.id })
-    trackEvent(`Changed Single Page Tab to ${event.currentTarget.id}`)
+    trackEvent('Single Page', `Changed Single Page Tab to ${event.currentTarget.id}`)
   }
 
   render() {

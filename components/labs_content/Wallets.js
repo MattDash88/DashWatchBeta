@@ -1,10 +1,8 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
-import ReactGA from 'react-ga';
 
 // Analytics
-import {getGAKey, trackEvent} from '../functions/analytics';
-ReactGA.initialize(getGAKey);
+import {trackEvent} from '../functions/analytics';
 
 // Import css
 import '../css/style.css';
@@ -142,12 +140,36 @@ const buildContent = (labsData, queries) => {
     }
 }
 
+const chartFunction = (chartData, options, redrawState) => {
+    try {
+        var chartObject = 
+            <div>
+            <Line
+                data={chartData}
+                options={options}
+                redraw={redrawState}
+            />
+            </div>
+        
+        return chartObject
+    }
+    catch (error) {
+        var chartObject = 
+            <div>
+                Please select a valid dataset
+            </div>
+        
+        return chartObject
+    }
+}
+
 class Wallets extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
             showMenu: false,
+            shouldRedraw: false,
         }
 
         // Binding functions used in this Class
@@ -155,47 +177,76 @@ class Wallets extends React.Component {
         this.handleSelectChart = this.handleSelectChart.bind(this)
         this.handleDropdown = this.handleDropdown.bind(this);
         this.handleQueries = this.handleQueries.bind(this);
+        this.handleClick = this.handleClick.bind(this);
     }
 
-    handleSelectChart(event) {
-        event.preventDefault();
-        this.setState({
-            showMenu: false,
-        })
-
-        const queries = {
-            dashCore: this.props.tabQueries.showDashCore,
-            electrum: this.props.tabQueries.showElectrum,
-            coreAndroid: this.props.tabQueries.coreAndroid,
-            chart: event.currentTarget.value,
-        }
-
-        this.handleQueries(queries)
-        trackEvent('Labs Page', `Changed Chart to ${event.currentTarget.value}`)                 // Track Event on Google Analytics    
-    }
-
+    // Dropdown list for KPIs
     handleDropdown(event) {
         event.preventDefault();
         this.setState({
             showMenu: !this.state.showMenu,
+            shouldRedraw: false,
         })
+        trackEvent('Labs Page', `Clicked Wallets KPI dropdown`)
     }
 
-    handleDatasetToggle(event) {
-        event.preventDefault();
+    // Function to handle selection of item from the KPI dropdown menu
+    handleSelectChart(event) {
+        this.setState({
+            showMenu: false,
+            shouldRedraw: true,
+        })
+
         const queries = {
-            dashCore: event.currentTarget.id == 'Dash Core' ? !this.props.tabQueries.showDashCore : this.props.tabQueries.showDashCore,
-            electrum: event.currentTarget.id == 'DashElectrum' ? !this.props.tabQueries.showElectrum : this.props.tabQueries.showElectrum,
-            coreAndroid: event.currentTarget.id == 'Core Android' ? !this.props.tabQueries.showCoreAndroid : this.props.tabQueries.showCoreAndroid,
-            chart: this.props.tabQueries.showChart,
+            dashCore: this.props.showDashCore,
+            electrum: this.props.showElectrum,
+            coreAndroid: this.props.showCoreAndroid,
+            walletChart: event.currentTarget.value,
         }
 
-        this.handleQueries(queries)
+        this.handleQueries(queries)     // Send queries to main Labs file
+        trackEvent('Labs Page', `Changed Chart to ${event.currentTarget.value}`)                 // Track Event on Google Analytics    
+    }
+
+    // Function to toggle datasets on or off
+    handleDatasetToggle(event) {
+        this.setState({
+            shouldRedraw: true,
+        })
+
+        const queries = {
+            dashCore: event.currentTarget.id == 'Dash Core' ? !this.props.showDashCore : this.props.showDashCore,
+            electrum: event.currentTarget.id == 'DashElectrum' ? !this.props.showElectrum : this.props.showElectrum,
+            coreAndroid: event.currentTarget.id == 'Core Android' ? !this.props.showCoreAndroid : this.props.showCoreAndroid,
+            walletChart: this.props.showWalletChart,
+        }
+
+        this.handleQueries(queries)     // Send queries to main Labs file
         trackEvent('Labs Page', `Toggled ${event.currentTarget.id}`)                 // Track Event on Google Analytics 
     }
 
+    // Function to push queries to main labs Class
     handleQueries(queries) {
         this.props.queryFunction('wallets', queries)
+    }
+
+    // Function ran when the eventlistener is activated. Close dropdown menu if clicked outside of it
+    handleClick = (event) => {
+        if (event.target.id !== "dropdownMenu") {
+        this.setState({
+            showMenu: false,
+            shouldRedraw: false,
+        }) 
+        trackEvent('Labs Page', `Clicked on Labs Wallets page`) 
+        }
+      }
+
+    componentDidMount() {
+        window.addEventListener('mousedown', this.handleClick);     // Handles closing of dropdown menu
+    }
+
+    componentWillUnmount() {       
+        window.removeEventListener('mousedown', this.handleClick);  // Stop event listener when modal is unloaded
     }
 
     render() {
@@ -205,10 +256,10 @@ class Wallets extends React.Component {
         } = this.props
 
         const tabQueries = {
-            showChart: typeof this.props.tabQueries.showChart == 'undefined' ? "Total" : this.props.tabQueries.showChart,
-            showDashCore: typeof this.props.tabQueries.showDashCore == 'undefined' ? true : this.props.tabQueries.showDashCore,
-            showElectrum: typeof this.props.tabQueries.showElectrum == 'undefined' ? true : this.props.tabQueries.showElectrum,
-            showCoreAndroid: typeof this.props.tabQueries.showCoreAndroid == 'undefined' ? true : this.props.tabQueries.showCoreAndroid,
+            showChart: this.props.showWalletChart,
+            showDashCore: this.props.showDashCore,
+            showElectrum: this.props.showElectrum,
+            showCoreAndroid: this.props.showCoreAndroid,
         }
 
         const content = buildContent(walletData, tabQueries)
@@ -218,6 +269,8 @@ class Wallets extends React.Component {
             options,
             pageContent
         } = content
+
+        var chartObject = chartFunction(chartData, options, this.state.shouldRedraw)
 
         return (
             <main>
@@ -243,12 +296,9 @@ class Wallets extends React.Component {
                     <div id="DashElectrum" onClick={this.handleDatasetToggle} className="databtn" value={tabQueries.showElectrum ? "Active" : "Inactive"}>Dash Electrum</div>
                     <div id="Core Android" onClick={this.handleDatasetToggle} className="databtn" value={tabQueries.showCoreAndroid ? "Active" : "Inactive"}>Core Android</div>
                 </div>
-                <section className="chartSection" value="Active">
+                <section>
                     {pageContent.proposalOwnerLink}
-                    <Line
-                        data={chartData}
-                        options={options}
-                    />
+                    {chartObject}
                 </section>
             </main>
         )

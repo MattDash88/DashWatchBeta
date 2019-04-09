@@ -1,21 +1,12 @@
 import React from 'react';
-import ReactGA from 'react-ga';
 
 // Analytics
-import getGAKey from '../functions/analytics';
-ReactGA.initialize(getGAKey);
+import {trackEvent} from '../functions/analytics';
 
 // Import css
 import '../css/style.css';
 import '../css/single.css';
 import '../css/status_styling.css';
-
-const trackEvent = (event) => {
-  ReactGA.event({
-      category: 'Single Page',
-      action: event,
-  });
-}
 
 class TabFunding extends React.Component {
   constructor(props) {
@@ -32,7 +23,7 @@ class TabFunding extends React.Component {
   displayTab(event) {
     event.preventDefault();
     this.setState({ reportTab: event.currentTarget.title })
-    trackEvent('Changed Funding subtab')                 // Track Event on Google Analytics
+    trackEvent('Single Page', 'Changed Funding subtab')                 // Track Event on Google Analytics
   }  
 
   render() {

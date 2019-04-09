@@ -1,10 +1,8 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
-import ReactGA from 'react-ga';
 
 // Analytics
-import {getGAKey, trackEvent} from '../functions/analytics';
-ReactGA.initialize(getGAKey);
+import {trackEvent} from '../functions/analytics';
 
 // Import css
 import '../css/style.css';
@@ -132,53 +130,86 @@ const buildContent = (labsData, queries) => {
     }
 }
 
+const chartFunction = (chartData, options, redrawState) => {
+    try {
+        var chartObject = 
+            <div>
+            <Line
+                data={chartData}
+                options={options}
+                redraw={redrawState}
+            />
+            </div>
+        
+        return chartObject
+    }
+    catch (error) {
+        var chartObject = 
+            <div>
+                Please select a valid dataset
+            </div>
+        
+        return chartObject
+    }
+}
+
 class PosSystems extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            showMenu: false,
+            showMenu: false,        // Dropdown Menu Toggle
+            shouldRedraw: false,    // Toggle redraw of charts
         }
 
         // Binding functions in this class
         this.handleDatasetToggle = this.handleDatasetToggle.bind(this)
         this.handleSelectChart = this.handleSelectChart.bind(this)
         this.handleDropdown = this.handleDropdown.bind(this);
-        this.handleQueries = this.handleQueries.bind(this);
+        this.handleClick = this.handleClick.bind(this);                 // Function for event listener to close dropdown menus
+        this.handleQueries = this.handleQueries.bind(this);             // Send queries to main labs Class       
     }
 
-    handleSelectChart(event) {
-        event.preventDefault();
-        this.setState({
-            showMenu: false,
-        })
-
-        const queries = {
-            anypay: this.props.tabQueries.showAnypay,
-            paylive: this.props.tabQueries.showPaylive,
-            chart: event.currentTarget.value,
-        }
-
-        this.handleQueries(queries)
-        trackEvent('Labs Page', `Changed Chart to ${event.currentTarget.value}`)                 // Track Event on Google Analytics    
-    }
-
+    // Dropdown list for KPIs
     handleDropdown(event) {
         event.preventDefault();
         this.setState({
             showMenu: !this.state.showMenu,
+            shouldRedraw: false,
         })
+        trackEvent('Labs Page', `Clicked POS KPI dropdown`)
     }
 
-    handleDatasetToggle(event) {
-        event.preventDefault();
+    // Function to handle selection of item from the KPI dropdown menu
+    handleSelectChart(event) {
+        this.setState({
+            showMenu: false,
+            shouldRedraw: true,
+        })
+
         const queries = {
-            anypay: event.currentTarget.id == 'Anypay' ? !this.props.tabQueries.showAnypay : this.props.tabQueries.showAnypay,
-            paylive: event.currentTarget.id == 'Paylive' ? !this.props.tabQueries.showPaylive : this.props.tabQueries.showPaylive,
-            chart: this.props.tabQueries.showChart,
+            anypay: this.props.showAnypay,
+            paylive: this.props.showPaylive,
+            POSChart: event.currentTarget.value,
         }
 
-        this.handleQueries(queries)
+        this.handleQueries(queries)     // Send queries to main Labs file
+        trackEvent('Labs Page', `Changed Chart to ${event.currentTarget.value}`)                 // Track Event on Google Analytics    
+    }
+
+    // Function to toggle datasets on or off
+    handleDatasetToggle(event) {
+        this.setState({
+            shouldRedraw: true,
+        })
+
+        const queries = {
+            anypay: event.currentTarget.id == 'Anypay' ? !this.props.showAnypay : this.props.showAnypay,
+            paylive: event.currentTarget.id == 'Paylive' ? !this.props.showPaylive : this.props.showPaylive,
+            POSChart: this.props.showPosChart,
+        }
+
+        this.handleQueries(queries)     // Send queries to main Labs file
         trackEvent('Labs Page', `Toggled ${event.currentTarget.id}`)
     }
 
@@ -187,15 +218,34 @@ class PosSystems extends React.Component {
         this.props.queryFunction('possystems', queries)
     }  
 
+    // Function ran when the eventlistener is activated. Close dropdown menu if clicked outside of it
+    handleClick = (event) => {
+        if (event.target.id !== "dropdownMenu") {
+        this.setState({
+            showMenu: false,
+            shouldRedraw: false,
+        })
+        trackEvent('Labs Page', `Clicked on Labs POS Systems page`) 
+        }
+      }
+
+    componentDidMount() {
+        window.addEventListener('mousedown', this.handleClick);     // Handles closing of dropdown menu
+    }
+
+    componentWillUnmount() {       
+        window.removeEventListener('mousedown', this.handleClick);  // Stop event listener when modal is unloaded
+    }
+
     render() {
         const { // Declare data arrays used in class
             posSystemData,
         } = this.props
 
         const tabQueries = {
-            showChart: typeof this.props.tabQueries.showChart == 'undefined' ? "Transactions" : this.props.tabQueries.showChart,
-            showAnypay: typeof this.props.tabQueries.showAnypay == 'undefined' ? true : this.props.tabQueries.showAnypay,
-            showPaylive: typeof this.props.tabQueries.showPaylive == 'undefined' ? true : this.props.tabQueries.showPaylive,
+            showChart: this.props.showPosChart,
+            showAnypay: typeof this.props.showAnypay == 'undefined' ? true : this.props.showAnypay,
+            showPaylive: typeof this.props.showPaylive == 'undefined' ? true : this.props.showPaylive,
         }
 
         const content = buildContent(posSystemData, tabQueries)
@@ -205,6 +255,8 @@ class PosSystems extends React.Component {
             options,
             pageContent
         } = content
+
+        var chartObject = chartFunction(chartData, options, this.state.shouldRedraw)
 
         return (
             <main>
@@ -228,12 +280,9 @@ class PosSystems extends React.Component {
                     <div id="Anypay" onClick={this.handleDatasetToggle} className="databtn" value={tabQueries.showAnypay ? "Active" : "Inactive"}>Anypay</div>
                     <div id="Paylive" onClick={this.handleDatasetToggle} className="databtn" value={tabQueries.showPaylive ? "Active" : "Inactive"}>Paylive</div>
                 </div>
-                <section className="chartSection" value="Active">
+                <section>
                 {pageContent.proposalOwnerLink}
-                    <Line
-                        data={chartData}
-                        options={options}
-                    />
+                {chartObject}
                 </section>
             </main>
         )

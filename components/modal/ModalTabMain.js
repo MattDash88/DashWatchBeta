@@ -1,21 +1,12 @@
 import React from 'react';
-import ReactGA from 'react-ga';
 
 // Analytics
-import getGAKey from '../functions/analytics';
-ReactGA.initialize(getGAKey);
+import {trackEvent} from '../functions/analytics';
 
 // Import css
 import '../css/style.css';
 import '../css/modal.css';
 import '../css/status_styling.css';
-
-const trackEvent = (event) => {
-  ReactGA.event({
-      category: 'Full Modal',
-      action: event,
-  });
-}
 
 class ModalTabMain extends React.Component {
   constructor() {
@@ -26,7 +17,7 @@ class ModalTabMain extends React.Component {
 
   // Google Analytics function to track User interaction on page
   callEvent(event) {
-    trackEvent('clicked ' + event.currentTarget.id)
+    trackEvent('Full Modal', 'clicked ' + event.currentTarget.id)
   }
   
   render() {

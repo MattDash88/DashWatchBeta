@@ -1,20 +1,18 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
-import ReactGA from 'react-ga';
 
 // Analytics
-import {getGAKey, trackEvent} from '../functions/analytics';
-ReactGA.initialize(getGAKey);
+import {trackEvent} from '../functions/analytics';
 
 // Import css
 import '../css/style.css';
 import '../css/labs.css';
 
 // Function to build output used on page
-const buildContent = (labsData, activeProject, activeKpi) => {
+const buildContent = (labsData, prj, akp) => {
     try {
-        var projectData = labsData[activeProject]                                  // Proposal that is active
-        var kpiData = labsData[activeProject].kpi_entries[activeKpi]    // Kpi data that is active
+        var projectData = labsData[prj]                                  // Proposal that is active
+        var kpiData = labsData[prj].kpi_entries[akp]    // Kpi data that is active
 
         var kpiList = []
         // Make an array with KPIs for the active proposal
@@ -51,6 +49,7 @@ const buildContent = (labsData, activeProject, activeKpi) => {
                 }
             }
         }
+
         const pageContent = {   // Elements that are used in page rendering
             projectName: projectData.project_name,
             kpiName: kpiData.kpi_name,
@@ -96,6 +95,29 @@ const buildContent = (labsData, activeProject, activeKpi) => {
     }
 }
 
+const chartFunction = (chartData, options, redrawState) => {
+    try {
+        var chartObject = 
+            <div>
+            <Line
+                data={chartData}
+                options={options}
+                redraw={redrawState}
+            />
+            </div>
+        
+        return chartObject
+    }
+    catch (error) {
+        var chartObject = 
+            <div>
+                Please select a valid dataset
+            </div>
+        
+        return chartObject
+    }
+}
+
 class KpiExplorer extends React.Component {
     constructor(props) {
         super(props);
@@ -104,6 +126,8 @@ class KpiExplorer extends React.Component {
             // Dropdown menu toggles
             showProjectMenu: false,     // Project Menu Toggle
             showKpiMenu: false,         // Kpi Menu Toggle
+            showTooltip: false,         // Toggle show/hiding tooltip
+            shouldRedraw: false,        // Toggle redraw of charts
         }
 
         // Binding functions in this class
@@ -111,7 +135,9 @@ class KpiExplorer extends React.Component {
         this.handleKpiDropdown = this.handleKpiDropdown.bind(this);
         this.handleSelectProject = this.handleSelectProject.bind(this);
         this.handleSelectKpi = this.handleSelectKpi.bind(this);
-        this.handleQueries = this.handleQueries.bind(this);
+        this.handleClick = this.handleClick.bind(this);         // Function for event listener to close dropdown menus
+        this.handleTooltip = this.handleTooltip.bind(this);
+        this.handleQueries = this.handleQueries.bind(this);     // Send queries to main labs Class
     }
 
     // Dropdown list for Projects
@@ -120,7 +146,10 @@ class KpiExplorer extends React.Component {
         this.setState({
             showProjectMenu: !this.state.showProjectMenu,
             showKpiMenu: false,
+            showTooltip: false,
+            shouldRedraw: false,
         })
+        trackEvent('Labs Page', `Clicked Project dropdown`)
     }
 
     // Dropdown list for KPIs
@@ -129,7 +158,10 @@ class KpiExplorer extends React.Component {
         this.setState({
             showKpiMenu: !this.state.showKpiMenu,
             showProjectMenu: false,
+            showTooltip: false,
+            shouldRedraw: false,
         })
+        trackEvent('Labs Page', `Clicked KPI dropdown`)
     }
 
     // Function to handle selection of item from the Projects dropdown menu
@@ -138,13 +170,14 @@ class KpiExplorer extends React.Component {
         this.setState({
             showProjectMenu: false,
             showKpiMenu: false,
+            shouldRedraw: true,
         })
         const queries = {
             activeProject: event.currentTarget.value,
             activeKpi: 0,
         }
         this.handleQueries(queries)
-        trackEvent('Labs Page', `Changed Chart to ${event.currentTarget.value}`)                 // Track Event on Google Analytics    
+        trackEvent('Labs Page', `Changed KPI Explorer Chart to ${event.currentTarget.value}`)                 // Track Event on Google Analytics    
     }
 
     // Function to handle selection of item from the KPI dropdown menu
@@ -153,19 +186,53 @@ class KpiExplorer extends React.Component {
         this.setState({
             showProjectMenu: false,
             showKpiMenu: false,
+            shouldRedraw: true,
         })
 
         const queries = {
-            activeProject: this.props.tabQueries.project,
+            activeProject: this.props.project,
             activeKpi: event.currentTarget.value,
         }
         this.handleQueries(queries)
-        trackEvent('Labs Page', `Changed Chart to ${event.currentTarget.value}`)                 // Track Event on Google Analytics    
+        trackEvent('Labs Page', `Changed KPI Explorer Chart to ${event.currentTarget.value}`)                 // Track Event on Google Analytics    
     }
 
     // Function to push queries to main labs Class
     handleQueries(queries) {
         this.props.queryFunction('explorer', queries)
+    }
+
+    // Function to show and hide tooltip on click (for mobile users that can't hover)
+    handleTooltip(event) {
+        event.preventDefault();
+        this.setState({
+            showTooltip: !this.state.showTooltip,
+            showProjectMenu: false,
+            showKpiMenu: false,
+            shouldRedraw: false,
+        })
+        trackEvent('Labs Page', `Clicked Tooltip`)
+    }
+
+    // Function ran when the eventlistener is activated. Close dropdown menu and tooltip if clicked outside of it
+    handleClick = (event) => {
+        if (event.target.id !== "dropdownMenu" && event.target.id !== "tooltip") {
+        this.setState({
+            showProjectMenu: false,
+            showKpiMenu: false,
+            showTooltip: false,
+            shouldRedraw: false,
+        }) 
+        trackEvent('Labs Page', `Clicked on Labs KPI Explorer page`)
+        }
+      }
+
+    componentDidMount() {
+        window.addEventListener('mousedown', this.handleClick);     // Handles closing of dropdown menu
+    }
+
+    componentWillUnmount() {        
+        window.removeEventListener('mousedown', this.handleClick);  // Stop event listener when modal is unloaded
     }
 
     render() {
@@ -175,8 +242,8 @@ class KpiExplorer extends React.Component {
 
         // Elements taken from queries
         const tabQueries = {
-            activeProject: typeof this.props.tabQueries.project == 'undefined' ? 0 : this.props.tabQueries.project,
-            activeKpi: typeof this.props.tabQueries.kpi == 'undefined' ? 0 : this.props.tabQueries.kpi,
+            activeProject: typeof this.props.project == 'undefined' ? 0 : this.props.project,
+            activeKpi: typeof this.props.kpi == 'undefined' ? 0 : this.props.kpi,
         }
 
         const content = buildContent(labsData, tabQueries.activeProject, tabQueries.activeKpi)
@@ -187,22 +254,7 @@ class KpiExplorer extends React.Component {
             pageContent,
         } = content
 
-        // Catch error with Chart plotting
-        try {
-            var chartObject = (
-                <Line
-                    data={chartData.data}
-                    options={chartData.options}
-                />
-            )
-        }
-        catch (error) {
-            var chartObject = (
-                <div>
-                    Please select a valid dataset
-                </div>
-            )
-        }
+        var chartObject = chartFunction(chartData.data, chartData.options, this.state.shouldRedraw)
 
         return (
             <main>
@@ -243,10 +295,11 @@ class KpiExplorer extends React.Component {
                             )
                     }
                 </div>
-                <div className="tooltip">{pageContent.tooltipTitle}?
-                    <span className="tooltiptext" value="">{pageContent.tooltipText}</span>
+                <div id="tooltip" className="tooltip" onClick={this.handleTooltip}>{pageContent.tooltipTitle}?
+                    <span className="tooltipBlock" value={this.state.showTooltip ? "Active" :
+                        "Inactive"}>{pageContent.tooltipText}</span>
                 </div>
-                <section className="chartSection">
+                <section>
                     {pageContent.proposalOwnerLink}
                     {chartObject}
                 </section>

@@ -29,6 +29,7 @@
     padding-right: 0.3rem;
 }
 
+/* Styling of labtext links */
 .labsText a {
   font-family: 'Roboto', sans-serif;
   color: #008de4;
@@ -53,6 +54,7 @@
     margin: 0 auto;
 }
 
+/* Downpointing chevron on dropdown menus */
 i[id="dropdownMenu"] {
     border: solid white;
     border-width: 0 2px 2px 0;
@@ -113,7 +115,7 @@ i[id="dropdownMenu"] {
   
 .dropdownItem:hover {background-color: #ddd;}
 
-/* Styling for the button of the dropdown menu */
+/* Styling for the buttons to toggle datasets */
 .databtn {
   display: inline-block;
   padding: 16px;
@@ -155,21 +157,20 @@ i[id="dropdownMenu"] {
   color: black;
 }
 
-.chartSection[value="Inactive"] {
-  display: block;
-}
+/*
+Tooltip styling
+*/
 
-.chartSection[value="Inactive"] {
-  display: none;
-}
-
+/* Styling of the tooltip element */
 .tooltip {
   position: relative;
   display: inline-block;
   border-bottom: 1px dotted black;
+  cursor: pointer;
 }
 
-.tooltip .tooltiptext {
+/* Styling of Tooltip block, part that shows and hides */
+.tooltip .tooltipBlock {
   visibility: hidden;
   width: 300px;
   background-color: #555;
@@ -186,7 +187,7 @@ i[id="dropdownMenu"] {
   transition: opacity 0.3s;
 }
 
-.tooltip .tooltiptext::after {
+.tooltip .tooltipBlock::after {
   content: "";
   position: absolute;
   bottom: 100%;
@@ -197,12 +198,15 @@ i[id="dropdownMenu"] {
   border-color:  transparent transparent #555 transparent ;
 }
 
-.tooltip:hover .tooltiptext[value="Active"] {
+/* Show tooltipBlock on hover*/
+.tooltip:hover .tooltipBlock {
   visibility: visible;
   opacity: 1;
 }
 
-.tooltip:hover .tooltiptext {
+/* Show tooltipBlock on click for mobile users*/
+.tooltip .tooltipBlock[value="Active"] {
   visibility: visible;
   opacity: 1;
 }
+

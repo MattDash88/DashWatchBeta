@@ -1,22 +1,13 @@
 // This is a temporary simplified for the January 2019 test page
 import React from 'react';
-import ReactGA from 'react-ga';
 
 // Analytics
-import getGAKey from '../functions/analytics';
-ReactGA.initialize(getGAKey);
+import {trackEvent} from '../functions/analytics';
 
 // Import css
 import '../css/style.css';
 import '../css/simplified_modal.css';
 import '../css/status_styling.css';
-
-const trackEvent = (event) => {
-  ReactGA.event({
-    category: 'Simple Modal',
-    action: event,
-  });
-}
 
 class ModalContent extends React.Component {
   constructor(props) {
@@ -30,7 +21,7 @@ class ModalContent extends React.Component {
   // Function to close the modal
   handleClose() {
     this.props.handleClose();
-    trackEvent('Closed Modal Button')                 // Track Event on Google Analytics
+    trackEvent('Simple Modal', 'Closed Modal Button')                 // Track Event on Google Analytics
   }
 
   // If user clicks outside modal area, run handleClose
@@ -38,22 +29,19 @@ class ModalContent extends React.Component {
     if (e.target.id == "outside") {
       this.props.handleClose()
     }
-    console.log('hit')
   }
 
   // Google Analytics function to track User interaction on page
   callEvent(event) {
-    trackEvent('clicked ' + event.currentTarget.id)
+    trackEvent('Simple Modal', 'clicked ' + event.currentTarget.id)
   }
 
-  componentDidMount() {
-    // Event listener to check if user clicks outside of modal area
-    window.addEventListener('mousedown', this.handleClick);
+  componentDidMount() { 
+    window.addEventListener('mousedown', this.handleClick);       // Event listener to check if user clicks outside of modal area
   }
 
-  componentWillUnmount() {
-    // Stop event listener when modal is unloaded
-    window.removeEventListener('mousedown', this.handleClick);
+  componentWillUnmount() {   
+    window.removeEventListener('mousedown', this.handleClick);    // Stop event listener when modal is unloaded
   }
 
   render() {

@@ -1,9 +1,7 @@
 import React from 'react';
-import ReactGA from 'react-ga';
 
 // Analytics
-import getGAKey from './functions/analytics';
-ReactGA.initialize(getGAKey);
+import {trackEvent} from './functions/analytics';
 
 // Import other elements 
 import ModalFrame from './modal/ModalFrame';
@@ -12,14 +10,6 @@ import ModalContent from './modal/ModalContent';
 // Import css
 import './css/style.css';
 import './css/status_styling.css';
-
-// Track Event Google Analytics function
-const trackEvent = (event) => {
-  ReactGA.event({
-      category: 'Proposals Page',
-      action: event,
-  });
-}
 
 class Post extends React.Component {
   constructor(props) {
@@ -35,7 +25,7 @@ class Post extends React.Component {
   // Function to show modal
   showModal(event) {
     this.setState({ show: true });
-    trackEvent('Opened Modal: ' + event.target.className)
+    trackEvent('Proposals Page', 'Opened Modal: ' + event.target.className)
   };
 
   // Function to close Modal
@@ -44,7 +34,7 @@ class Post extends React.Component {
   };
 
   callEvent(event) {
-    trackEvent('clicked ' + event.currentTarget.id)
+    trackEvent('Proposals Page', 'clicked ' + event.currentTarget.id)
 }
 
   render() {    

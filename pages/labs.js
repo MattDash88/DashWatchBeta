@@ -1,9 +1,7 @@
 import React from 'react';
-import ReactGA from 'react-ga';
 
 // Analytics
-import {getGAKey, trackPage, trackEvent} from '../components/functions/analytics';
-ReactGA.initialize(getGAKey);
+import { trackPage, trackEvent } from '../components/functions/analytics';
 
 // Import css
 import '../components/css/style.css';
@@ -53,7 +51,6 @@ class Labs extends React.Component {
       tab: typeof ctx.query.tab == "undefined" ? "explorer" : ctx.query.tab,   // Default no month to latest
       project: typeof ctx.query.project == "undefined" ? 0 : ctx.query.project,
       kpi: typeof ctx.query.kpi == "undefined" ? 0 : ctx.query.kpi,
-      chart: ctx.query.chart,
       url: ctx.pathname,
       as: ctx.asPath,
     }
@@ -68,21 +65,22 @@ class Labs extends React.Component {
       walletData: '',     // Dataset for wallet tab
       versionData: '',    // Dataset for posystems tab
       labsData: '',       // Dataset for proposals tab
-      tabQueries: {
-        // States that can be set by queries 
-        project: props.project,
-        kpi: props.kpi,
-        showChart: props.chart,
 
-        // Booleans for POS systems
-        showAnypay: true,
-        showPaylive: true,
+      // States that can be set by queries 
+      project: props.project,
+      kpi: props.kpi,
+      showPosChart: 'Transactions',
+      showWalletChart: 'Total',
 
-        // Booleans for Wallets
-        showDashCore: true,
-        showElectrum: true,
-        showCoreAndroid: true,
-      },
+      // Booleans for POS systems
+      showAnypay: true,
+      showPaylive: true,
+
+      // Booleans for Wallets
+      showDashCore: true,
+      showElectrum: true,
+      showCoreAndroid: true,
+
       labsTabId: props.tab,
       url: '/labs',
       as: props.as,
@@ -96,8 +94,7 @@ class Labs extends React.Component {
   handleSelectTab(event) {
     event.preventDefault();
     this.setState({
-      labsTabId: event.currentTarget.id, 
-      tabQueries: {},
+      labsTabId: event.currentTarget.id,
       as: `/labs?tab=${event.currentTarget.id}`,
     })
     history.pushState(this.state, '', `/labs?tab=${event.currentTarget.id}`)                    // Push State to history
@@ -107,37 +104,31 @@ class Labs extends React.Component {
   handleQueries(tabId, queries) {
     if (tabId == 'explorer') {
       this.setState({
-        tabQueries: {
-          project: queries.activeProject,
-          kpi: queries.activeKpi,
-        },
+        project: queries.activeProject,
+        kpi: queries.activeKpi,
         as: `/labs?tab=explorer&project=${queries.activeProject}&kpi=${queries.activeKpi}`,
       })
       history.pushState(this.state, '', `/labs?tab=explorer&project=${queries.activeProject}&kpi=${queries.activeKpi}`)
     }
-    if (tabId == 'possystems') { 
+    if (tabId == 'possystems') {
       this.setState({
-        tabQueries: {
-          showAnypay: queries.anypay,
-          showPaylive: queries.paylive,
-          showChart: queries.chart
-        },
-        as: `/labs?tab=POSsystems&chart=${queries.chart}`,
+        showAnypay: queries.anypay,
+        showPaylive: queries.paylive,
+        showPosChart: queries.POSChart,
+        as: `/labs?tab=POSsystems`,
       })
-      history.pushState(this.state, '', `/labs?tab=POSsystems&chart=${queries.chart}`)
-    } 
-    if (tabId == 'wallets') { 
+      history.pushState(this.state, '', `/labs?tab=POSsystems`)
+    }
+    if (tabId == 'wallets') {
       this.setState({
-        tabQueries: {
-          showDashCore: queries.dashCore,
-          showElectrum: queries.electrum,
-          showCoreAndroid: queries.coreAndroid,
-          showChart: queries.chart
-        },
-        as: `/labs?tab=wallets&chart=${queries.chart}`,
+        showDashCore: queries.dashCore,
+        showElectrum: queries.electrum,
+        showCoreAndroid: queries.coreAndroid,
+        showWalletChart: queries.walletChart,
+        as: `/labs?tab=wallets`,
       })
-      history.pushState(this.state, '', `/labs?tab=wallets&chart=${queries.chart}`)
-    }    
+      history.pushState(this.state, '', `/labs?tab=wallets`)
+    }
   }
 
   componentDidMount() {
@@ -161,21 +152,7 @@ class Labs extends React.Component {
     trackPage(`/labs`)  // Track Pageview in Analytics
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.tabQueries !== this.state.tabQueries || prevState.labsTabId !== this.state.labsTabId) {         // Just a history state update because it doesn't always work as desired in functions
-    var labsPreparedData = Promise.resolve(getLabsPreparedData());
-    var labsAllData = Promise.resolve(getLabsAllData());
 
-    Promise.all([labsAllData, labsPreparedData]).then(data => {
-      this.setState({
-        labsData: data[0],
-        posSystemData: data[1].pos_system_data,
-        walletData: data[1].wallet_data,
-        versionData: data[1].version_data,
-      })
-    }).then(history.replaceState(this.state, '', `${this.state.as}`))      
-    }
-  }
 
   render() {
     const { // Declare data arrays used in class
@@ -183,7 +160,6 @@ class Labs extends React.Component {
       walletData,
       versionData,
       labsData,
-      tabQueries,
     } = this.state
 
     return (
@@ -210,7 +186,9 @@ class Labs extends React.Component {
                     <PosSystems
                       posSystemData={posSystemData}
                       queryFunction={this.handleQueries}
-                      tabQueries={tabQueries}
+                      showAnypay={this.state.showAnypay}
+                      showPaylive={this.state.showPaylive}
+                      showPosChart={this.state.showPosChart}
                     />
                   </div>
                 ) : (
@@ -227,7 +205,10 @@ class Labs extends React.Component {
                       walletData={walletData}
                       versionData={versionData}
                       queryFunction={this.handleQueries}
-                      tabQueries={tabQueries}
+                      showDashCore={this.state.showDashCore}
+                      showElectrum={this.state.showElectrum}
+                      showCoreAndroid={this.state.showCoreAndroid}
+                      showWalletChart={this.state.showWalletChart}
                     />
                   </div>
                 ) : (
@@ -243,12 +224,13 @@ class Labs extends React.Component {
                     <KpiExplorer
                       labsData={labsData}
                       queryFunction={this.handleQueries}
-                      tabQueries={tabQueries}
+                      project={this.state.project}
+                      kpi={this.state.kpi}
                     />
                   </div>
                 ) : (
-                  <section>
-                    Loading&hellip;
+                    <section>
+                      Loading&hellip;
                   </section>
                   )
               }

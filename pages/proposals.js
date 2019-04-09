@@ -1,10 +1,8 @@
 import fetch from 'isomorphic-unfetch';
 import React from 'react';
-import ReactGA from 'react-ga';
 
 // Analytics
-import getGAKey from '../components/functions/analytics';
-ReactGA.initialize(getGAKey);
+import {trackPage, trackEvent} from '../components/functions/analytics';
 
 // Import pages
 import Post from '../components/Post';
@@ -46,17 +44,6 @@ const filterPost = (query) => {
     )
 }
 
-const trackPage = (page) => {   // Function to track user actions on page
-    ReactGA.pageview(page);
-}
-
-const trackEvent = (event) => { // Function to track user interaction with page
-    ReactGA.event({
-        category: 'Proposals Page',
-        action: event,
-    });
-}
-
 class Home extends React.Component {
     static async getInitialProps(ctx) {
         const props = {
@@ -93,7 +80,7 @@ class Home extends React.Component {
         
         // Pushing created State to history because state updates in React are too slow              
         // history.pushState(this.state, '', this.state.as)   // Push State to history
-        trackEvent('Toggled Active Filter')                 // Track Event on Google Analytics
+        trackEvent('Proposals Page', 'Toggled Active Filter')                 // Track Event on Google Analytics
     }
 
     componentDidMount() {

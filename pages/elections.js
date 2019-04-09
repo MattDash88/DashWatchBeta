@@ -1,10 +1,8 @@
 import fetch from 'isomorphic-unfetch';
 import React from 'react';
-import ReactGA from 'react-ga';
 
 // Analytics
-import getGAKey from '../components/functions/analytics';
-ReactGA.initialize(getGAKey);
+import {trackPage, trackEvent} from '../components/functions/analytics';
 
 // Import pages
 import HowTo from '../components/elections_content/HowTo';
@@ -66,17 +64,6 @@ const getVoteResults = () => {
     )
 }
 
-const trackPage = (page) => {   // Function to track user actions on page
-    ReactGA.pageview(page);
-}
-
-const trackEvent = (event) => { // Function to track user interaction with page
-    ReactGA.event({
-        category: 'Elections',
-        action: event,
-    });
-}
-
 class TrustElections extends React.Component {
     static async getInitialProps(ctx) {
         const props = {           
@@ -115,12 +102,12 @@ class TrustElections extends React.Component {
         })
 
         history.pushState(this.state, '', `/elections?tab=${event.currentTarget.id}`)   // Push State to history
-        trackEvent(`Changed Tab to ${event.currentTarget.id}`)                 // Track Event on Google Analytics                                                     
+        trackEvent(Elections, `Changed Tab to ${event.currentTarget.id}`)                 // Track Event on Google Analytics                                                     
     }
 
     // Google Analytics function to track User interaction on page
     callEvent(event) {
-        trackEvent('clicked ' + event.currentTarget.id)
+        trackEvent(Elections, 'clicked ' + event.currentTarget.id)
     }
 
     componentDidMount() {
@@ -293,7 +280,7 @@ class CandidateListRow extends React.Component {
     }
 
     callEvent(event) {
-        trackEvent('clicked: ' + event.currentTarget.id)
+        trackEvent(Elections, 'clicked: ' + event.currentTarget.id)
     }
 
     

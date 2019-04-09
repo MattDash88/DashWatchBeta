@@ -1,9 +1,7 @@
 import React from 'react';
-import ReactGA from 'react-ga';
 
 // Analytics
-import getGAKey from '../components/functions/analytics';
-ReactGA.initialize(getGAKey);
+import {trackPage} from '../components/functions/analytics';
 
 // Import css
 import "../components/css/style.css";
@@ -13,10 +11,6 @@ import "../components/css/about.css";
 // Import other elements 
 import Header from '../components/headers/AboutHeader';
 import NavBar from "../components/elements/NavBar"
-
-const trackPage = (page) => { // Function to track user actions on page
-  ReactGA.pageview(page);
-}
 
 class About extends React.Component {
   constructor(props) {
@@ -54,7 +48,7 @@ class About extends React.Component {
             <div><a type="link" href="http://dashwatchbeta.org/api/p/Dash-Help-Support-Center_201808">Dash-Help-Support-Center_201808</a></div>
             <div><a type="link" href="http://dashwatchbeta.org/api/p/Dash-Help-Support-Center_201811">Dash-Help-Support-Center_201811</a></div>
             <br></br>
-            <div>Dash Watch website revisited v0.10.3 by Matt available on GitHub <a type="link" href="https://github.com/MattDash88/DashWatchBeta">HERE</a><br></br></div>
+            <div>Dash Watch website revisited v0.10.5 by Matt available on GitHub <a type="link" href="https://github.com/MattDash88/DashWatchBeta">HERE</a><br></br></div>
           </div>
         </section>
       </main>

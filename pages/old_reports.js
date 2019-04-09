@@ -1,10 +1,8 @@
 import fetch from 'isomorphic-unfetch';
 import React from 'react';
-import ReactGA from 'react-ga';
 
 // Analytics
-import getGAKey from '../components/functions/analytics';
-ReactGA.initialize(getGAKey);
+import {trackPage, trackEvent} from '../components/functions/analytics';
 
 // Import pages
 
@@ -22,17 +20,6 @@ import ModalFrame from '../components/modal/ModalFrame';
 import ModalContent from '../components/modal/SimplifiedModalContent';
 
 var basepath = 'https://dashwatchbeta.org'
-
-const trackPage = (page) => {   // Function to track page views
-    ReactGA.pageview(page);
-}
-
-const trackEvent = (event) => { // Function to track user interaction with page
-    ReactGA.event({
-        category: 'Old Reports Page',
-        action: event,
-    });
-}
 
 // API query requesting Report List data
 const getMonthList = () => {
@@ -102,7 +89,7 @@ class Month extends React.Component {
             tabId: event.currentTarget.id,        // Change state to load different month
             as: `/oldreports?month=${event.currentTarget.id}`,
         })
-        trackEvent('Changed Year')                 // Track Event on Google Analytics    
+        trackEvent('Old Reports Page', 'Changed Year')                 // Track Event on Google Analytics    
     }
 
     // Function to activate dropdown menu with months
@@ -122,12 +109,11 @@ class Month extends React.Component {
         })
 
         history.pushState(this.state, '', `/oldreports?month=${event.currentTarget.value}&year=${this.state.yearId}`)   // Push State to history
-        trackEvent(`Changed Month to ${event.currentTarget.value} ${this.state.yearId}`)                 // Track Event on Google Analytics    
+        trackEvent('Old Reports Page', `Changed Month to ${event.currentTarget.value} ${this.state.yearId}`)                 // Track Event on Google Analytics    
     }
 
     // Function ran when the eventlistener is activated. Close dropdown menu if clicked outside of it
     handleClick = (event) => {
-        //console.log(event.target)
         if (event.target.id !== "dropdownMenu") {
         this.setState({
             showMenu: false,
@@ -138,7 +124,7 @@ class Month extends React.Component {
     // Google Analytics function to track User interaction on page
     callEvent(event) {
         event.preventDefault();
-        trackEvent('clicked ' + event.currentTarget.className)
+        trackEvent('Old Reports Page', 'clicked ' + event.currentTarget.className)
     }
 
     componentDidMount() {
@@ -272,7 +258,7 @@ class MonthReportRow extends React.Component {
     // Function to show modal
     showModal = () => {
         this.setState({ show: true });
-        trackEvent('Opened Modal')
+        trackEvent('Old Reports Page', 'Opened Modal')
     };
 
     // Function to close modal
@@ -281,7 +267,7 @@ class MonthReportRow extends React.Component {
     };
 
     callEvent(event) {
-        trackEvent('clicked ' + event.currentTarget.className)
+        trackEvent('Old Reports Page', 'clicked ' + event.currentTarget.className)
     }
 
     render() {
@@ -378,7 +364,7 @@ class OptOutRow extends React.Component {
     // Function to show modal
     showModal = () => {
         this.setState({ show: true });
-        trackEvent('Opened Modal')
+        trackEvent('Old Reports Page', 'Opened Modal')
     };
 
     // Function to close modal
@@ -387,7 +373,7 @@ class OptOutRow extends React.Component {
     };
 
     callEvent(event) {
-        trackEvent('clicked ' + event.currentTarget.className)
+        trackEvent('Old Reports Page', 'clicked ' + event.currentTarget.className)
     }
 
     render() {

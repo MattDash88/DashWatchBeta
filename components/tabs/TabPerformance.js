@@ -1,10 +1,8 @@
 import React from 'react';
 import shortid from 'shortid';
-import ReactGA from 'react-ga';
 
 // Analytics
-import getGAKey from '../functions/analytics';
-ReactGA.initialize(getGAKey);
+import {trackEvent} from '../functions/analytics';
 
 // Import classes for KPI types
 import MerchantKpiContent from './kpi_subtab/MerchantKpiContent'
@@ -16,13 +14,6 @@ import PublicRelationsKpiContent from './kpi_subtab/PublicRelationsKpiContent'
 import '../css/style.css';
 import '../css/single.css';
 import '../css/status_styling.css';
-
-const trackEvent = (event) => {
-  ReactGA.event({
-      category: 'Single Page',
-      action: event,
-  });
-}
 
 class TabPerformance extends React.Component {
   constructor(props) {
@@ -38,7 +29,7 @@ class TabPerformance extends React.Component {
   displayTab(event) {
     event.preventDefault();
     this.setState({ reportTab: event.currentTarget.title })
-    trackEvent('Changed Performance subtab')                 // Track Event on Google Analytics
+    trackEvent('Single Page', 'Changed Performance subtab')                 // Track Event on Google Analytics
   }
 
   render() {

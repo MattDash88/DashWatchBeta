@@ -1,16 +1,23 @@
 import ReactGA from 'react-ga';
-const getGAKey =  'UA-132694074-1'
+const getGAKey = 'UA-132694074-1'
 ReactGA.initialize(getGAKey);
 
 const trackPage = function page(page) { // Function to track page views
-    ReactGA.pageview(page);
-  }
-  
-  const trackEvent = function event(category, event) { // Function to track user interaction with page
-    ReactGA.event({
-      category: category,
-      action: event,
-    });
-  }
+  ReactGA.pageview(page);
+}
 
-export { getGAKey,  trackPage, trackEvent }
+const trackEvent = function event(category, event) { // Function to track user interaction with page
+  ReactGA.event({
+    category: category,
+    action: event,
+  });
+}
+
+const trackSearch = (event) => {
+  ReactGA.event({
+    category: 'Search',
+    action: event,
+  });
+}
+
+export { getGAKey, trackPage, trackEvent, trackSearch}

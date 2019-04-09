@@ -1,10 +1,8 @@
 import fetch from 'isomorphic-unfetch'
 import React from 'react';
-import ReactGA from 'react-ga';
 
 // Analytics
-import getGAKey from '../components/functions/analytics';
-ReactGA.initialize(getGAKey);
+import {trackPage} from '../components/functions/analytics';
 
 // Import pages
 import SinglePost from '../components/Single'
@@ -31,10 +29,6 @@ const getProposal = (slug) => {
           }))
     })
   )
-}
-
-const trackPage = (page) => {
-  ReactGA.pageview(page);
 }
 
 class Single extends React.Component {
