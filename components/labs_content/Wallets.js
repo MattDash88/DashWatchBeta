@@ -276,14 +276,14 @@ class Wallets extends React.Component {
             <main>
                 <h1 className="labsHeader">Wallet Downloads</h1>
                 <p className="labsText">Select a metric:</p>
-                <div className="dropdown" id="dropdownmenu">
-                    <div id="dropdownMenu" onClick={this.handleDropdown} className="dropbtn"><i id="dropdownMenu"></i>{tabQueries.showChart}</div>
+                <div className="labsDropdown" id="dropdownmenu">
+                    <div id="dropdownMenu" onClick={this.handleDropdown} className="labsDropbtn"><i id="dropdownMenu"></i>{tabQueries.showChart}</div>
                     {
                         this.state.showMenu ? (
-                            <div className="dropdownMenu" id="dropdownMenu">
-                                <button id="dropdownMenu" value="Total" className="dropdownItem" onClick={this.handleSelectChart}>Total</button>
-                                <button id="dropdownMenu" value="Desktop" className="dropdownItem" onClick={this.handleSelectChart}>Desktop</button>
-                                <button id="dropdownMenu" value="Mobile" className="dropdownItem" onClick={this.handleSelectChart}>Mobile</button>
+                            <div className="labsDropdownMenu" id="dropdownMenu">
+                                <button id="dropdownMenu" value="Total" className="labsDropdownItem" onClick={this.handleSelectChart}>Total</button>
+                                <button id="dropdownMenu" value="Desktop" className="labsDropdownItem" onClick={this.handleSelectChart}>Desktop</button>
+                                <button id="dropdownMenu" value="Mobile" className="labsDropdownItem" onClick={this.handleSelectChart}>Mobile</button>
                             </div>
                         ) : (
                                 null
@@ -292,9 +292,9 @@ class Wallets extends React.Component {
                 </div>
                 <p className="labsText">Toggle datasets:</p>
                 <div>
-                    <div id="Dash Core" onClick={this.handleDatasetToggle} className="databtn" value={tabQueries.showDashCore ? "Active" : "Inactive"}>Dash Core</div>
-                    <div id="DashElectrum" onClick={this.handleDatasetToggle} className="databtn" value={tabQueries.showElectrum ? "Active" : "Inactive"}>Dash Electrum</div>
-                    <div id="Core Android" onClick={this.handleDatasetToggle} className="databtn" value={tabQueries.showCoreAndroid ? "Active" : "Inactive"}>Core Android</div>
+                    <div id="Dash Core" onClick={this.handleDatasetToggle} className="labsDatabtn" value={tabQueries.showDashCore ? "Active" : "Inactive"}>Dash Core</div>
+                    <div id="DashElectrum" onClick={this.handleDatasetToggle} className="labsDatabtn" value={tabQueries.showElectrum ? "Active" : "Inactive"}>Dash Electrum</div>
+                    <div id="Core Android" onClick={this.handleDatasetToggle} className="labsDatabtn" value={tabQueries.showCoreAndroid ? "Active" : "Inactive"}>Core Android</div>
                 </div>
                 <section>
                     {pageContent.proposalOwnerLink}

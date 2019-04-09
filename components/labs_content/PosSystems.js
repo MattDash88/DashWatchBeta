@@ -93,12 +93,12 @@ const buildContent = (labsData, queries) => {
         const pageContent = {   // Elements that are used in page rendering
             proposalOwnerLink:
                 <div>
-                    <p className="labsText">
+                    <span className="labsText">
                         <a id="Proposal Owner Link" href={`/proposals?search=${labsData[0].system_proposal_owner}`} target="" >Link to Proposal Owner {labsData[0].system_name}</a>
-                    </p><br></br>
-                    <p className="labsText">
+                    </span><br></br>
+                    <span className="labsText">
                         <a id="Proposal Owner Link" href={`/proposals?search=${labsData[1].system_proposal_owner}`} target="" >Link to Proposal Owner {labsData[1].system_name}</a>
-                    </p>
+                    </span>
                 </div>
         }
 
@@ -262,13 +262,13 @@ class PosSystems extends React.Component {
             <main>
                 <h1 className="labsHeader">Point-Of-Sale Systems</h1>
                 <p className="labsText">Select a metric:</p>
-                <div className="dropdown" id="dropdownmenu">
-                    <div id="dropdownMenu" onClick={this.handleDropdown} className="dropbtn"><i id="dropdownMenu"></i>{tabQueries.showChart}</div>
+                <div className="labsDropdown" id="dropdownmenu">
+                    <div id="dropdownMenu" onClick={this.handleDropdown} className="labsDropbtn"><i id="dropdownMenu"></i>{tabQueries.showChart}</div>
                     {
                         this.state.showMenu ? (
-                            <div className="dropdownMenu" id="dropdownMenu">
-                                <button id="dropdownMenu" value="Transactions" className="dropdownItem" onClick={this.handleSelectChart}>Transactions</button>
-                                <button id="dropdownMenu" value="Volume" className="dropdownItem" onClick={this.handleSelectChart}>Volume</button>
+                            <div className="labsDropdownMenu" id="dropdownMenu">
+                                <button id="dropdownMenu" value="Transactions" className="labsDropdownItem" onClick={this.handleSelectChart}>Transactions</button>
+                                <button id="dropdownMenu" value="Volume" className="labsDropdownItem" onClick={this.handleSelectChart}>Volume</button>
                             </div>
                         ) : (
                                 null
@@ -277,8 +277,8 @@ class PosSystems extends React.Component {
                 </div>
                 <p className="labsText">Toggle datasets:</p>
                 <div>
-                    <div id="Anypay" onClick={this.handleDatasetToggle} className="databtn" value={tabQueries.showAnypay ? "Active" : "Inactive"}>Anypay</div>
-                    <div id="Paylive" onClick={this.handleDatasetToggle} className="databtn" value={tabQueries.showPaylive ? "Active" : "Inactive"}>Paylive</div>
+                    <div id="Anypay" onClick={this.handleDatasetToggle} className="labsDatabtn" value={tabQueries.showAnypay ? "Active" : "Inactive"}>Anypay</div>
+                    <div id="Paylive" onClick={this.handleDatasetToggle} className="labsDatabtn" value={tabQueries.showPaylive ? "Active" : "Inactive"}>Paylive</div>
                 </div>
                 <section>
                 {pageContent.proposalOwnerLink}

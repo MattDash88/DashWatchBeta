@@ -23,6 +23,7 @@ var labsAirtableFunctions = require('./server_components/labsAirtableFunctions')
 var processingFunctions = require('./server_components/dataProcessingFunctions');
 var labsProcessingFunctions = require('./server_components/labsProcessingFunctions');
 var filterFunctions = require('./server_components/filterFunctions');
+var cachingFunctions = require('./server_components/cachingFunctions');
 
 /* Airtable Query for Proposal Information Table */
 const getAirtableData = () => {
@@ -203,90 +204,58 @@ const getMerchantKpiData = () => {
   })
 }
 
-// Function to prepare data for Trust Protector Candidate List
-const getTrustProtectorData = () => {
+// Function to prepare data project data for labs 
+const getElectionsData = () => {
   return new Promise((resolve, reject) => {
     // Read cache for this function
-    cache.get('trustProtectorData', function (error, data) {
+    cache.get('ElectionsData', function (error, data) {
       if (error) throw error
 
       if (!!data) {   // If value was already retrieved recently, grab from cache
         resolve(JSON.parse(data))
       }
-      else {    // If cache is empty, retrieve from Airtable
-        Promise.resolve(airtableFunctions.TrustProtectorList('Candidate List')).then(function (valArray) {
-          const storeAirtablePosts = []   // Create const to push all proposal data in
-          Object.keys(valArray).map((item) => {            
-            if (typeof valArray[item].candidate_name !== 'undefined') {    //Check if record exists
-              storeAirtablePosts.push(valArray[item])
+      else {    // If cache is empty, retrieve from Airtable       
+        var electionsCandidatePromise = Promise.resolve(airtableFunctions.TrustProtectorList('Candidate List'));
+        var electionsVoteDataPromise = Promise.resolve(airtableFunctions.VoteData('Vote Data'));
+        var electionsVoteResultsPromise = Promise.resolve(airtableFunctions.VoteResults('Vote Results'));
+
+        Promise.all([electionsCandidatePromise, electionsVoteDataPromise, electionsVoteResultsPromise]).then(function (valArray) {
+          electionsCandidateData = []
+          electionsVoteData = []
+          electionsVoteResultsData = []
+
+          // Check if candidate name exists
+          Object.values(valArray[0]).map((item) => {            
+            if (typeof item.candidate_name !== 'undefined') {    //Check if record exists
+              electionsCandidateData.push(item)
             }
           })
 
-          // Store results in Redis cache, cache expire time is defined in .env
-          cache.setex('trustProtectorData', cacheExpirationTime, JSON.stringify(storeAirtablePosts))
-          resolve(storeAirtablePosts)
-        }).catch((error) => {
-          reject({ error })
-          console.log(error)
-        })
-      }
-    })
-  })
-}
-
-// Function to prepare data for Vote Data of the Trust Protector Elections
-const getVoteData = () => {
-  return new Promise((resolve, reject) => {
-    // Read cache for this function
-    cache.get('voteData', function (error, data) {
-      if (error) throw error
-
-      if (!!data) {   // If value was already retrieved recently, grab from cache
-        resolve(JSON.parse(data))
-      }
-      else {    // If cache is empty, retrieve from Airtable
-        Promise.resolve(airtableFunctions.VoteData('Vote Data')).then(function (valArray) {
-          const storeAirtablePosts = []   // Create const to push all proposal data in
-          Object.keys(valArray).map((item) => {            
-            if (typeof valArray[item].date !== 'undefined' && typeof valArray[item].vote_participation !== 'undefined') {    //Check if record exists
-              storeAirtablePosts.push(valArray[item])
+          // Check if participation data and values were entered correctly
+          Object.values(valArray[1]).map((item) => {            
+            if (typeof item.date !== 'undefined' && typeof item.vote_participation !== 'undefined') {    //Check if record exists
+              electionsVoteData.push(item)
+            }
+          })
+          
+          // Check if candidate results were entered correctly
+          Object.values(valArray[2]).map((item) => {            
+            if (typeof item.candidate_name !== 'undefined' && typeof item.votes !== 'undefined') {    //Check if record exists
+              electionsVoteResultsData.push(item)
             }
           })
 
+          // Create the data construct
+          const electionsAllData = {
+            candidate_data: electionsCandidateData,
+            vote_metrics: electionsVoteData,
+            vote_results: electionsVoteResultsData,
+          }
           // Store results in Redis cache, cache expire time is defined in .env
-          cache.setex('voteData', cacheExpirationTime, JSON.stringify(storeAirtablePosts))
-          resolve(storeAirtablePosts)
-        }).catch((error) => {
-          reject({ error })
-          console.log(error)
-        })
-      }
-    })
-  })
-}
-
-// Function to prepare data for Trust Protector Candidate List
-const getVoteResults = () => {
-  return new Promise((resolve, reject) => {
-    // Read cache for this function
-    cache.get('voteResultsData', function (error, data) {
-      if (error) throw error
-
-      if (!!data) {   // If value was already retrieved recently, grab from cache
-        resolve(JSON.parse(data))
-      }
-      else {    // If cache is empty, retrieve from Airtable
-        Promise.resolve(airtableFunctions.VoteResults('Vote Results')).then(function (valArray) {
-          const storeAirtablePosts = []   // Create const to push all proposal data in
-          Object.keys(valArray).map((item) => {            
-            if (typeof valArray[item].candidate_name !== 'undefined') {    //Check if record exists
-              storeAirtablePosts.push(valArray[item])
-            }
-          })
-
-          // Store results in Redis cache, cache expire time is defined in .env
-          cache.setex('voteResultsData', cacheExpirationTime, JSON.stringify(storeAirtablePosts))
-          resolve(storeAirtablePosts)
+          cache.setex('ElectionsData', cacheExpirationTime, JSON.stringify(electionsAllData))
+          
+          // Finish
+          resolve(electionsAllData)
         }).catch((error) => {
           reject({ error })
           console.log(error)
@@ -552,40 +521,8 @@ app.prepare()
     })
 
     // API call for trust protector election candidates table
-    server.get('/api/get/tpCandidates', (req, res) => {
-      Promise.resolve(getTrustProtectorData()).then(function (valArray) {
-        res.writeHead(200, {
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json'
-        })
-        return res.end(serialize(valArray))
-      }).catch((error) => {
-        console.log(error)
-        // Send empty JSON otherwise page load hangs indefinitely
-        res.writeHead(200, { 'Content-Type': 'application/json' })
-        return res.end(serialize({}))
-      });
-    })
-
-    // API call for trust protector election candidates table
-    server.get('/api/get/tpVoteData', (req, res) => {
-      Promise.resolve(getVoteData()).then(function (valArray) {
-        res.writeHead(200, {
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json'
-        })
-        return res.end(serialize(valArray))
-      }).catch((error) => {
-        console.log(error)
-        // Send empty JSON otherwise page load hangs indefinitely
-        res.writeHead(200, { 'Content-Type': 'application/json' })
-        return res.end(serialize({}))
-      });
-    })
-
-    // API call for trust protector election candidates table
-    server.get('/api/get/voteResults', (req, res) => {
-      Promise.resolve(getVoteResults()).then(function (valArray) {
+    server.get('/api/get/electionsData', (req, res) => {
+      Promise.resolve(getElectionsData()).then(function (valArray) {
         res.writeHead(200, {
           'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/json'
@@ -618,6 +555,29 @@ app.prepare()
     // API call for trust protector election candidates table
     server.get('/api/get/labsAllData', (req, res) => {
       Promise.resolve(getLabsAllData()).then(function (valArray) {
+        res.writeHead(200, {
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': 'application/json'
+        })
+        return res.end(serialize(valArray))
+      }).catch((error) => {
+        console.log(error)
+        // Send empty JSON otherwise page load hangs indefinitely
+        res.writeHead(200, { 'Content-Type': 'application/json' })
+        return res.end(serialize({}))
+      });
+    })
+
+    // Internal API call to get Airtable data
+    server.get('/api/get/cacheRefresh', (req, res) => {
+      var airtablePromise = Promise.resolve(cachingFunctions.getAirtableCache());
+      var monthListPromise = Promise.resolve(cachingFunctions.getMonthListCache());
+      var oldListPromise = Promise.resolve(cachingFunctions.getOldListCache());
+      var electionsPromise = Promise.resolve(cachingFunctions.getElectionsCache());
+      var labsPreparedPromise = Promise.resolve(cachingFunctions.getLabsPreparedCache());
+      var labsAllPromise = Promise.resolve(cachingFunctions.getLabsAllCache());
+
+      Promise.all([airtablePromise, monthListPromise, oldListPromise, electionsPromise, labsPreparedPromise, labsAllPromise]).then(function (valArray) {
         res.writeHead(200, {
           'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/json'

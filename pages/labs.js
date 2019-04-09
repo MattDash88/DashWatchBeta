@@ -178,6 +178,37 @@ class Labs extends React.Component {
           <div className="monthTab" id='wallets' value={this.state.labsTabId == 'wallets' ? "Active" :
             "Inactive"} onClick={this.handleSelectTab}><p className="monthTabText">Wallets</p></div>
           <div className="monthPageWrapper">
+            <section className="plotWrapper" value={this.state.labsTabId == 'explorer' ? "Active" :
+              "Inactive"}>
+              {
+                (labsData.length > 0) ? (
+                  <div>
+                    <KpiExplorer
+                      labsData={labsData}
+                      queryFunction={this.handleQueries}
+                      project={this.state.project}
+                      kpi={this.state.kpi}
+                    />
+                  </div>
+                ) : (
+                    <section>
+                      Loading&hellip;
+                  </section>
+                  )
+              }
+            </section>
+            <section className="plotWrapper" value={this.state.labsTabId == 'merchants' ? "Active" :
+              "Inactive"}>
+              {
+                (this.state.labsTabId == 'merchants') ? (
+                  <div>
+                    <iframe width="1000" height="800" frameBorder="0" scrolling="no" src="//plot.ly/~dashwatch/0.embed"></iframe>
+                  </div>
+                ) : (
+                    null
+                  )
+              }
+            </section>
             <section className="plotWrapper" value={this.state.labsTabId == 'POSsystems' ? "Active" :
               "Inactive"}>
               {
@@ -213,25 +244,6 @@ class Labs extends React.Component {
                   </div>
                 ) : (
                     null
-                  )
-              }
-            </section>
-            <section className="plotWrapper" value={this.state.labsTabId == 'explorer' ? "Active" :
-              "Inactive"}>
-              {
-                (labsData.length > 0) ? (
-                  <div>
-                    <KpiExplorer
-                      labsData={labsData}
-                      queryFunction={this.handleQueries}
-                      project={this.state.project}
-                      kpi={this.state.kpi}
-                    />
-                  </div>
-                ) : (
-                    <section>
-                      Loading&hellip;
-                  </section>
                   )
               }
             </section>

@@ -8,7 +8,6 @@ import {trackPage, trackEvent} from '../components/functions/analytics';
 import HowTo from '../components/elections_content/HowTo';
 import VoteCharts from '../components/elections_content/VoteCharts';
 import VoteResults from '../components/elections_content/VoteResults';
-import Validation from '../components/elections_content/Validation';
 
 // Import css
 import "../components/css/style.css";
@@ -23,38 +22,10 @@ import NavBar from "../components/elements/NavBar"
 var basepath = 'http://localhost:5000'
 
 // API query requesting Trust Protector Candidate List data
-const getCandidateList = () => {
+const getElectionsData = () => {
     return (
         new Promise((resolve) => {
-            fetch(`${basepath}/api/get/tpCandidates`)
-                .then((res) => res.json()
-                    .then((res) => {
-                        resolve(res.data)
-                    })
-                )
-        })
-    )
-}
-
-// API query requesting Trust Protector Candidate List data
-const getVoteData = () => {
-    return (
-        new Promise((resolve) => {
-            fetch(`${basepath}/api/get/tpVoteData`)
-                .then((res) => res.json()
-                    .then((res) => {
-                        resolve(res.data)
-                    })
-                )
-        })
-    )
-}
-
-// API query requesting Trust Protector Candidate List data
-const getVoteResults = () => {
-    return (
-        new Promise((resolve) => {
-            fetch(`${basepath}/api/get/voteResults`)
+            fetch(`/api/get/electionsData`)
                 .then((res) => res.json()
                     .then((res) => {
                         resolve(res.data)
@@ -102,12 +73,12 @@ class TrustElections extends React.Component {
         })
 
         history.pushState(this.state, '', `/elections?tab=${event.currentTarget.id}`)   // Push State to history
-        trackEvent(Elections, `Changed Tab to ${event.currentTarget.id}`)                 // Track Event on Google Analytics                                                     
+        trackEvent('Elections', `Changed Tab to ${event.currentTarget.id}`)                 // Track Event on Google Analytics                                                     
     }
 
     // Google Analytics function to track User interaction on page
     callEvent(event) {
-        trackEvent(Elections, 'clicked ' + event.currentTarget.id)
+        trackEvent('Elections', 'clicked ' + event.currentTarget.id)
     }
 
     componentDidMount() {
@@ -120,30 +91,25 @@ class TrustElections extends React.Component {
         
         trackPage(`/elections`) // Track Pageview in Analytics
 
-        var candidateListPromise = Promise.resolve(getCandidateList());
-        var votingDataPromise = Promise.resolve(getVoteData());
-        var voteResultsPromise = Promise.resolve(getVoteResults());
-
         // Promise to get the initial "month list" records 
-        Promise.all([candidateListPromise, votingDataPromise, voteResultsPromise]).then(data => {
+        Promise.resolve(getElectionsData()).then(data => {
             var dateArray = []
             var participationArray = []
-            Object.keys(data[1]).map((item) => {
-                dateArray.push(data[1][item].date)
-                participationArray.push(data[1][item].vote_participation)
+            Object.values(data.vote_metrics).map((item) => {
+                dateArray.push(item.date)
+                participationArray.push(item.vote_participation)
             })
             
             this.setState({
-                candidateListData: data[0],
-                voteData: data[1],
-                voteResults: data[2],
+                candidateListData: data.candidate_data,
+                voteData: data.vote_metrics,
+                voteResults: data.vote_results,
                 chartDates: dateArray,
                 chartData_participation: participationArray
             })
         }).then(history.replaceState(this.state, '', `${this.state.as}`))
     }
-
-    
+   
     componentDidUpdate(prevProps, prevState) {
         if (prevState.tabId !== this.state.tabId) {         // Just a history state update because it doesn't always work as desired in functions
             history.replaceState(this.state, '', `${this.state.as}`)
@@ -195,8 +161,6 @@ class TrustElections extends React.Component {
                         "Inactive"} onClick={this.handleSelectTab}><p className="tpTabText">How to Vote</p></div>
                         <div className="tpTab" id="participation" value={this.state.tabId == "participation" ? "Active" :
                         "Inactive"} onClick={this.handleSelectTab}><p className="tpTabText">Participation</p></div>
-                        <div className="tpTab" id="validation" value={this.state.tabId == "validation" ? "Active" :
-                        "Inactive"} onClick={this.handleSelectTab}><p className="tpTabText">Validation</p></div>
                         <div className="tpTab" id="results" value={this.state.tabId == "results" ? "Active" :
                         "Inactive"} onClick={this.handleSelectTab}><p className="tpTabText">Results</p></div>
                     <div className="tpPageWrapper">
@@ -232,7 +196,7 @@ class TrustElections extends React.Component {
                     <section className="tpPageTopSection" value={this.state.tabId == 'participation' ? "Active" :
                         "Inactive"}>
                         <h1 className="tpHeader">Masternode Voting Participation</h1>
-                        <div className="tpText">The chart is updated once a day until the end of the elections.</div>
+                        <div className="tpText">The chart was updated once a day during the elections.</div>
                         {
                                 voteData.length == 0 ? (
                                     <div>
@@ -247,11 +211,6 @@ class TrustElections extends React.Component {
                                 )
                         }
                     </section>
-
-                    <section className="tpPageTopSection" value={this.state.tabId == 'validation' ? "Active" :
-                        "Inactive"}>
-                        <Validation></Validation>
-                    </section>   
                     <section className="tpPageTopSection" value={this.state.tabId == "results" ? "Active" :
                         "Inactive"}>
                         <VoteResults
@@ -280,7 +239,7 @@ class CandidateListRow extends React.Component {
     }
 
     callEvent(event) {
-        trackEvent(Elections, 'clicked: ' + event.currentTarget.id)
+        trackEvent('Elections', 'clicked: ' + event.currentTarget.id)
     }
 
     

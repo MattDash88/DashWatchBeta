@@ -8,13 +8,6 @@ import '../css/style.css';
 import '../css/single.css';
 import '../css/status_styling.css';
 
-const trackEvent = (event) => {
-  ReactGA.event({
-      category: 'Single Page',
-      action: event,
-  });
-}
-
 class TabMain extends React.Component { 
   constructor() {
     super();
@@ -24,7 +17,7 @@ class TabMain extends React.Component {
 
   // Google Analytics function to track User interaction on page
   callEvent(event) {
-    trackEvent('Clicked ' + event.currentTarget.id)
+    trackEvent('Single Page', 'Clicked ' + event.currentTarget.id)
   }
 
   render() {

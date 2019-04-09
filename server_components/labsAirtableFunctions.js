@@ -1,10 +1,7 @@
 // All server code uses ES5 because of Airtable plugin
 require('dotenv').config()
 const Airtable = require('airtable')
-const cache = require('../cache')
 Airtable.configure({ apiKey: process.env.APIKEY });
-
-var cacheExpirationTime = process.env.CACHEEXPIRATION;  //Time until cache expires, can be shortened for testing purposes
 
 // Airtable Query for Proposal Information Table
 const WalletDownloadPosts = function getWalletDownloadPosts(tableId) {
@@ -44,7 +41,6 @@ const WalletDownloadPosts = function getWalletDownloadPosts(tableId) {
             fetchNextPage()
         }, function done(error) {
             if (error) reject({ error })
-
             // Finish
             resolve(storeAirtablePosts)
         })
@@ -92,7 +88,6 @@ const WalletVersionPosts = function getWalletVersionPosts(tableId) {
             fetchNextPage()
         }, function done(error) {
             if (error) reject({ error })
-
             // Finish
             resolve(storeAirtablePosts)
         })
@@ -136,7 +131,6 @@ const PosMetricsPosts = function getPosMetricsPosts(tableId) {
             fetchNextPage()
         }, function done(error) {
             if (error) reject({ error })
-
             // Finish
             resolve(storeAirtablePosts)
         })
@@ -178,7 +172,6 @@ const LabsKpiProjects = function getLabsKpiProjects(tableId) {
             fetchNextPage()
         }, function done(error) {
             if (error) reject({ error })
-
             // Finish
             resolve(storeAirtablePosts)
         })
@@ -220,7 +213,6 @@ const LabsKpiEntries = function getLabsKpiEntries(tableId) {
             fetchNextPage()
         }, function done(error) {
             if (error) reject({ error })
-
             // Finish
             resolve(storeAirtablePosts)
         })
@@ -261,35 +253,9 @@ const LabsKpiValues = function getLabsKpiValues(tableId) {
             fetchNextPage()
         }, function done(error) {
             if (error) reject({ error })
-
             // Finish
             resolve(storeAirtablePosts)
         })
-    })
-}
-
-// Unused Airtable function to retrieve a single proposal, kept for future use
-const getKpiEntries = (recordId) => {
-    const base = new Airtable.base('apprp0FchTP02vzul')
-
-    return new Promise((resolve, reject) => {
-        base('KPI - Entries').find(recordId, function (err, record) {
-            if (err) {
-                console.error(err)
-                reject({ err })
-            }
-
-            const airtablePost = {
-                kpi_name: record.get('KPI Name'),
-                kpi_value_ids: record.get('KPI - Values'),
-                kpi_description: record.get('KPI Description'),
-                axis_title: record.get('Axis Title'),
-                id: record.id,
-            }
-
-            resolve(airtablePost)
-        })
-
     })
 }
 

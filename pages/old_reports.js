@@ -53,7 +53,7 @@ class Month extends React.Component {
     static async getInitialProps(ctx) {
         const props = {
             year: typeof ctx.query.year == "undefined" ? "2018" : ctx.query.year,   // Default no month to latest
-            month: typeof ctx.query.month == "undefined" ? "November" : ctx.query.month,   // Default no month to latest
+            month: typeof ctx.query.month == "undefined" ? "December" : ctx.query.month,   // Default no month to latest
             url: ctx.pathname,
             as: ctx.asPath,
         }

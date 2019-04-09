@@ -259,16 +259,16 @@ class KpiExplorer extends React.Component {
         return (
             <main>
                 <h1 className="labsHeader">Dash Watch KPI Explorer</h1>
-                <div className="dropdown" id="dropdownmenu">
+                <div className="labsDropdown" id="dropdownmenu">
                     <p className="labsText">Select a project:</p>
-                    <div id="dropdownMenu" onClick={this.handleProjectDropdown} className="dropbtn"><i id="dropdownMenu"></i>{pageContent.projectName}</div>
+                    <div id="dropdownMenu" onClick={this.handleProjectDropdown} className="labsDropbtn"><i id="dropdownMenu"></i>{pageContent.projectName}</div>
                     {
                         this.state.showProjectMenu ? (
-                            <div className="dropdownMenu" id="dropdownMenu">
+                            <div className="labsDropdownMenu" id="dropdownMenu">
                                 {
                                     Object.keys(labsData).map((item) =>
                                         <div key={labsData[item].id}>
-                                            <button id="dropdownMenu" value={item} className="dropdownItem" onClick={this.handleSelectProject}>{labsData[item].project_name}</button>
+                                            <button id="dropdownMenu" value={item} className="labsDropdownItem" onClick={this.handleSelectProject}>{labsData[item].project_name}</button>
                                         </div>
                                     )}
                             </div>
@@ -277,16 +277,16 @@ class KpiExplorer extends React.Component {
                             )
                     }
                 </div>
-                <div className="dropdown" id="dropdownmenu">
+                <div className="labsDropdown" id="dropdownmenu">
                     <p className="labsText">Select a kpi:</p>
-                    <div id="dropdownMenu" onClick={this.handleKpiDropdown} className="dropbtn"><i id="dropdownMenu"></i>{pageContent.kpiName}</div>
+                    <div id="dropdownMenu" onClick={this.handleKpiDropdown} className="labsDropbtn"><i id="dropdownMenu"></i>{pageContent.kpiName}</div>
                     {
                         this.state.showKpiMenu ? (
-                            <div className="dropdownMenu" id="dropdownMenu">
+                            <div className="labsDropdownMenu" id="dropdownMenu">
                                 {
                                     Object.keys(kpiList).map((item) =>
                                         <div key={kpiList[item].id}>
-                                            <button id="dropdownMenu" value={item} className="dropdownItem" onClick={this.handleSelectKpi}>{kpiList[item].kpi_name}</button>
+                                            <button id="dropdownMenu" value={item} className="labsDropdownItem" onClick={this.handleSelectKpi}>{kpiList[item].kpi_name}</button>
                                         </div>
                                     )}
                             </div>
@@ -295,8 +295,8 @@ class KpiExplorer extends React.Component {
                             )
                     }
                 </div>
-                <div id="tooltip" className="tooltip" onClick={this.handleTooltip}>{pageContent.tooltipTitle}?
-                    <span className="tooltipBlock" value={this.state.showTooltip ? "Active" :
+                <div id="tooltip" className="labsTooltip" onClick={this.handleTooltip}>{pageContent.tooltipTitle}?
+                    <span className="labsTooltipBlock" value={this.state.showTooltip ? "Active" :
                         "Inactive"}>{pageContent.tooltipText}</span>
                 </div>
                 <section>

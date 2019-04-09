@@ -1,9 +1,7 @@
 import React from 'react';
-import ReactGA from 'react-ga';
 
 // Analytics
-import {getGAKey, trackEvent, trackSearch} from '../functions/analytics';
-ReactGA.initialize(getGAKey);
+import {trackEvent, trackSearch} from '../functions/analytics';
 
 // Import css
 import "../css/style.css";
@@ -24,7 +22,7 @@ class NavBar extends React.Component {
     }
 
     callEvent(event) {
-        trackEvent(NavBar, 'Clicked ' + event.currentTarget.id)
+        trackEvent('NavBar', 'Clicked ' + event.currentTarget.id)
     }
    
     render() {

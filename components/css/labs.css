@@ -35,6 +35,8 @@
   color: #008de4;
   font-weight: 200;
   font-size: 1rem;
+  padding-top: 5px;
+  padding-bottom: 5px;
   text-transform: uppercase;
   text-decoration: none;
   cursor: pointer;
@@ -68,7 +70,7 @@ i[id="dropdownMenu"] {
 }
 
 /* Styling for the dropdown div */
-.dropdown {
+.labsDropdown {
   display: inline-block;  
   margin-right: 1rem;
   margin-left: 0.2rem;
@@ -76,7 +78,7 @@ i[id="dropdownMenu"] {
   }
 
 /* Styling for the button of the dropdown menu */
-.dropbtn {
+.labsDropbtn {
     min-width: 200px;
     background-color: #3498DB;
     color: white;
@@ -87,18 +89,19 @@ i[id="dropdownMenu"] {
     cursor: pointer;
 }
   
-.dropbtn:hover, .dropbtn:focus {
+.labsDropbtn:hover, .labsDropbtn:focus {
     background-color: #2980B9;
 }
 
 /* Styling for the dropdown menu as a whole */
-  .dropdownMenu {
+  .labsDropdownMenu {
     display: show;
     position: absolute; 
   }
 
 /* Styling for the individual dropdown row items */
-  .dropdownItem {
+  .labsDropdownItem {
+    display: block;
     min-width: 200px;
     padding: 16px 10px 16px 10px;
     font-size: 16px;
@@ -113,10 +116,10 @@ i[id="dropdownMenu"] {
     cursor: pointer;
   }
   
-.dropdownItem:hover {background-color: #ddd;}
+.labsDropdownItem:hover {background-color: #ddd;}
 
 /* Styling for the buttons to toggle datasets */
-.databtn {
+.labsDatabtn {
   display: inline-block;
   padding: 16px;
   margin-left: 0.2rem;
@@ -127,32 +130,32 @@ i[id="dropdownMenu"] {
   cursor: pointer;
 }
 
-.databtn[value="Active"][id="Anypay"] {
+.labsDatabtn[value="Active"][id="Anypay"] {
   background-color: blue;
   color: white;
 }
 
-.databtn[value="Active"][id="Paylive"] {
+.labsDatabtn[value="Active"][id="Paylive"] {
   background-color: darkgreen;
   color: white;
 }
 
-.databtn[value="Active"][id="Dash Core"] {
+.labsDatabtn[value="Active"][id="Dash Core"] {
   background-color: blue;
   color: white;
 }
 
-.databtn[value="Active"][id="DashElectrum"] {
+.labsDatabtn[value="Active"][id="DashElectrum"] {
   background-color: purple;
   color: white;
 }
 
-.databtn[value="Active"][id="Core Android"] {
+.labsDatabtn[value="Active"][id="Core Android"] {
   background-color: green;
   color: white;
 }
 
-.databtn[value="Inactive"] {
+.labsDatabtn[value="Inactive"] {
   background-color: lightgrey;
   color: black;
 }
@@ -162,7 +165,7 @@ Tooltip styling
 */
 
 /* Styling of the tooltip element */
-.tooltip {
+.labsTooltip {
   position: relative;
   display: inline-block;
   border-bottom: 1px dotted black;
@@ -170,7 +173,7 @@ Tooltip styling
 }
 
 /* Styling of Tooltip block, part that shows and hides */
-.tooltip .tooltipBlock {
+.labsTooltip .labsTooltipBlock {
   visibility: hidden;
   width: 300px;
   background-color: #555;
@@ -187,7 +190,7 @@ Tooltip styling
   transition: opacity 0.3s;
 }
 
-.tooltip .tooltipBlock::after {
+.labsTooltip .labsTooltipBlock::after {
   content: "";
   position: absolute;
   bottom: 100%;
@@ -199,13 +202,13 @@ Tooltip styling
 }
 
 /* Show tooltipBlock on hover*/
-.tooltip:hover .tooltipBlock {
+.labsTooltip:hover .labsTooltipBlock {
   visibility: visible;
   opacity: 1;
 }
 
 /* Show tooltipBlock on click for mobile users*/
-.tooltip .tooltipBlock[value="Active"] {
+.labsTooltip .labsTooltipBlock[value="Active"] {
   visibility: visible;
   opacity: 1;
 }
