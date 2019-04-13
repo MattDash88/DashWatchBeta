@@ -270,7 +270,7 @@ class MonthReportRow extends React.Component {
             } else if (list_data.report_type == "Podcast") {
                 reportLink = (
                     <div className="monthItem" id="monthReportLink"><div><a className="monthReportLink" href={list_data.report_link} target="_blank" title={list_data.report_link} onClick={this.callEvent}>
-                        <img className="reportIcon" id="YouTube" src="https://dashwatchbeta.org/images/Podcast.png" height="30"></img> Podcast</a></div></div>
+                        <img className="reportIcon" id="Podcast" src="https://dashwatchbeta.org/images/Podcast.png" height="30"></img> Podcast</a></div></div>
                 )
             } else {
                 reportLink = (

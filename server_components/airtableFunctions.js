@@ -23,11 +23,12 @@ const MainProposalPosts = function getMainProposalPosts(tableId) {
             // Create a const with the required fields
             records.forEach(function (record) {
                 const post = {
+                    // Main Tab Elements
                     title: record.get('Proposal Name'),
-                    slug: record.get('Proposal ID'),  //This is the ending of the Dash Central url, it is used as an proposal identifier
+                    slug: record.get('Proposal ID'),    //This is the ending of the Dash Central url, it is used as an proposal identifier
                     last_updated: record.get('Date Updated'),
                     status: record.get('Status'),
-                    payment_date: record.get('Date of First Payment'),
+                    first_payment_date: record.get('Date of First Payment'),
                     proposal_owner: record.get('Proposal Owner Name'),
                     comm_status: record.get('Communication Status'),
                     budget_status: record.get('Budget Status'),
@@ -35,12 +36,16 @@ const MainProposalPosts = function getMainProposalPosts(tableId) {
                     estimated_completion_date: record.get('Estimated Completion Date'),
                     actual_completion_date: record.get('Actual Completion'),
                     proposal_description: record.get('Proposal Description'),
+                    id: record.id,                      // Used as unique record identifier
+
+                    // Financial Tab elements
+                    payments_requested: record.get('Payments Requested'),
                     payments_received: record.get('Number of Payments Received'),
                     funding_per_payment: record.get('Funding per Payment'),
                     funding_received_dash: record.get('Funding Received (Dash)'),
                     funding_received_usd: record.get('Funding Received (USD)'),
-                    escrow_agent: record.get('Ecrow Agent'),
-                    id: record.id,                    // Used as unique record identifier
+                    payment_address: record.get('Payment Address'),
+                    escrow_agent: record.get('Ecrow Agent'),                                    
                 }
 
                 // Handling for proposals that received zero payments, because Airtable gives an object as output
@@ -88,12 +93,12 @@ const MonthReportPosts = function getMonthReportPosts(tableId) {
                     voting_status: record.get('Voting Status'),
                     voting_dc_link: record.get('Voting DC Link'),
                     response_status: record.get('Response Status'),
-                    report_status: record.get('Report Status'),             // This variable is used to handle pending reports 
-                    published_month: record.get('Published Month'),  // Variable used to determine in which list it should be published
+                    report_status: record.get('Report Status'),         // This variable is used to handle pending reports 
+                    published_month: record.get('Published Month'),     // Variable used to determine in which list it should be published
                     report_link: record.get('Report URL'),
-                    report_type: record.get('Report Type'),          // Written report or Video
+                    entry_type: record.get('Entry Type'),               // Written report or Video
                     report_ref: record.get('Report ID'),
-                    id: record.id,                                   // Used as unique record identifier
+                    id: record.id,                                      // Used as unique record identifier
 
                     // Elements for Modal
                     proposal_name: record.get('Proposal Title'),
@@ -422,7 +427,8 @@ const ReportPosts = function getReportPosts(tableId) {
                     report_name: record.get('Report Name'),
                     report_date: record.get('Report Date'),
                     report_link: record.get('Report Link'),
-                    report_type: record.get('Report Type'),
+                    entry_type: record.get('Entry Type'),
+                    entry_name: record.get('Entry Name'),
                     proposal_ref: record.get('Proposal ID'),    // Used to determine which proposal this record is for
                     id: record.id,                              // Used as unique record identifier
                 }

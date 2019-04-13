@@ -101,6 +101,7 @@ class Labs extends React.Component {
     trackEvent('Labs Page', `Changed Tab to ${event.currentTarget.id}`)                 // Track Event on Google Analytics
   }
 
+  // Function to handle queries pushed by the sub Classes/tabs
   handleQueries(tabId, queries) {
     if (tabId == 'explorer') {
       this.setState({

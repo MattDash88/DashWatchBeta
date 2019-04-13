@@ -135,11 +135,11 @@ var processKpiData = function kpiDataFunction(proposalReportData, merchantKpiDat
         // Construct report KPI const
         const reportKpiData = {
             report_date: proposalReportData[report_item].report_date,       // Date of the report KPI data was in
-            report_type: proposalReportData[report_item].report_type,       // Report type, video interviews currently have no kpi data
+            report_type: proposalReportData[report_item].entry_type,        // Entry type, video interviews currently have no kpi data
+            entry_name: proposalReportData[report_item].entry_name,
             report_ref: proposalReportData[report_item].report_ref, 
             kpi_metrics: kpiDataArray,                                      // Const containing all kpi data of the report
         }
-
         storeKpiData.push(reportKpiData)   // Push report KPI data to proposal Array
     })
     return storeKpiData
@@ -188,13 +188,41 @@ var processReportData = function reportDataFunction(proposalData, proposalReport
     storeReportData = []        // Create Array to store report data in
 
     // Iterate through all report records
+    Object.values(proposalReportData).map((item) => {
+        if (proposalData.id == item.proposal_ref) {
+            const reportArray = {
+                report_name: item.report_name,
+                report_date: item.report_date,
+                report_link: item.report_link,
+                entry_type: item.entry_type,
+                entry_name: item.entry_name,
+                proposal_ref: item.proposal_ref,
+                id: item.id,
+            }
+            storeReportData.push(reportArray)
+        }
+    })
+
+    // Entry if no reports or videos are found
+    if (storeReportData.length == 0) {
+        storeReportData = 'No reports available'
+    }
+    return storeReportData
+}
+
+// Processing function for report data for proposal page, will be be replaced in near future
+var oldProcessReportData = function oldReportDataFunction(proposalData, proposalReportData) {
+    storeReportData = []        // Create Array to store report data in
+
+    // Iterate through all report records
     Object.keys(proposalReportData).map((item) => {
         if (proposalData.id == proposalReportData[item].proposal_ref) {
             const reportArray = {
                 report_name: proposalReportData[item].report_name,
                 report_date: proposalReportData[item].report_date,
                 report_link: proposalReportData[item].report_link,
-                report_type: proposalReportData[item].report_type[0],
+                entry_type: proposalReportData[item].entry_type,
+                entry_name: proposalReportData[item].entry_name,
                 report_ref: proposalReportData[item].id
             }
             storeReportData.push(reportArray)
@@ -242,7 +270,8 @@ var processMonthListData = function monthDataFunction(monthReportData) {
             voting_dc_link: monthReportData.voting_dc_link,
             response_status: monthReportData.response_status,
             report_status: monthReportData.report_status,
-            report_type: monthReportData.report_type,
+            entry_type: monthReportData.entry_type,
+            entry_name: monthReportData.entry_name,
             report_link: monthReportData.report_link,
             published_month: monthReportData.published_month,
             id: monthReportData.id,
@@ -328,6 +357,7 @@ module.exports = {
     processKpiData,
     processFinancialData,
     processReportData,
+    oldProcessReportData,
     processMonthListData,
     singleProposalQuery,
     processMerchantKpiData,     // Function for Peyton's project
