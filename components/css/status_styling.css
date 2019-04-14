@@ -2,13 +2,7 @@
 @import url('https://fonts.googleapis.com/css?family=Titillium+Web');
 
 /* Colour styling for Card and main Tabs elements */
-.statusPropertyValue {
-    font-family: 'Titillium Web', sans-serif;
-    font-weight: bold;
-    color: black;
-    font-size: 14px;
-    text-align: left; 
-}
+
 
 /*Colour coding for Status elements */
 .statusPropertyValue[value="Completed"] {
@@ -195,5 +189,101 @@ Temporary Tests
 }
 
 .simple_modalPropertyDiv[value="Unknown"] {
+    background: #dac4da;
+}
+
+/*
+Styling for CardPropertyDiv
+*/
+
+/* Status */
+.cardPropertyDiv[value="Completed"] {
+    background: #c4f0c4;
+}
+
+.cardPropertyDiv[value="Obstructed"] {
+    background: #ffefe0;
+}
+
+.cardPropertyDiv[value="Funding Discontinued"] {
+    background: lightyellow;
+}
+
+.cardPropertyDiv[value="Abandoned"] {
+    background: #eebcbc;
+}
+
+/* Communication Status */
+.cardPropertyDiv[value="In communication with Dash Watch"] {
+    background: #c4f0c4;
+}
+
+.cardPropertyDiv[value="Opted out of Dash Watch Reporting"] {
+    background: #cae6f8;
+}
+
+.cardPropertyDiv[value="In communication but did not provide a new update"] {
+    background: #eebcbc;
+}
+
+.cardPropertyDiv[value="Not in communication with Dash Watch"] {
+    background: #eebcbc;
+}
+
+/* Budget Status */
+.cardPropertyDiv[value="On Budget"] {
+    background: #c4f0c4;
+}
+
+.cardPropertyDiv[value="Over Budget and Underfunded"] {
+    background: #ffefe0;
+}
+
+.cardPropertyDiv[value="On Budget but underfunded due to Dash depreciation"] {
+    background: lightyellow;
+}
+
+.cardPropertyDiv[value="Under Budget and underfunded"] {
+    background: lightyellow;
+}
+
+.cardPropertyDiv[value="On Budget and overfunded due to Dash appreciation"] {
+    background: lightyellow;
+}
+
+.cardPropertyDiv[value="Unfunded"] {
+    background: lightyellow;
+}
+
+.cardPropertyDiv[value="Over Budget due to extenuating circumstances"] {
+    background: #ffefe0;
+}
+
+.cardPropertyDiv[value="Over Budget"] {
+    background: #ffefe0;
+}
+
+.cardPropertyDiv[value="Out of funds"] {
+    background: #ffefe0;
+}
+
+.cardPropertyDiv[value="Opted out of financial reporting"] {
+    background: #bbd2e6;
+}
+
+/*Schedule Status */
+.cardPropertyDiv[value="On Schedule"] {
+    background: #c4f0c4;
+}
+
+.cardPropertyDiv[value="Ahead of Schedule"] {
+    background: #c4f0c4;
+}
+
+.cardPropertyDiv[value="Behind Schedule"] {
+    background: #ffefe0;
+}
+
+.cardPropertyDiv[value="Unknown"] {
     background: #dac4da;
 }

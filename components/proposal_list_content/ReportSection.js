@@ -1,7 +1,7 @@
 import React from 'react';
 
 // Analytics
-import { trackEvent } from '../functions/analytics';
+import {trackEvent} from '../functions/analytics';
 
 // Import other elements 
 
@@ -27,7 +27,7 @@ function getReportTypeArrays(report_data) {
   }
 }
 
-class ReportsSection extends React.Component {
+class ReportSection extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -39,7 +39,8 @@ class ReportsSection extends React.Component {
     this.handleDocumentDropdown = this.handleDocumentDropdown.bind(this);
     this.handleMediaDropdown = this.handleMediaDropdown.bind(this);
     this.getImageUrl = this.getImageUrl.bind(this);
-    this.handleClose = this.handleClose.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+    this.callEvent = this.callEvent.bind(this);
   }
 
   // Dropdown list for KPIs
@@ -70,11 +71,34 @@ class ReportsSection extends React.Component {
     }   
   }
 
-  handleClose() {
-    this.setState({
-      showDocumentMenu: false,
-      showMediaMenu: false,
-    })
+  // Function ran when the eventlistener is activated. Close dropdown menus if clicking outside of them
+  handleClick = (event) => {
+    if (event.target.id !== "reportsMenu" && event.target.id !== "cardDropdownMenu") {
+      this.setState({
+        showDocumentMenu: false,
+        showMediaMenu: false,
+      })
+    }
+    trackEvent('Proposals Page', `Closed Dropdowns by clicking outside`)
+  }
+
+  // Google Analytics function to track User interaction on page
+  callEvent(event) {
+    trackEvent('Proposals Page', 'clicked ' + event.currentTarget.id)
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.showDocumentMenu !== this.state.showDocumentMenu || prevState.showMediaMenu !== this.state.showMediaMenu) {
+      if (this.state.showDocumentMenu || this.state.showMediaMenu) {
+        window.addEventListener('mousedown', this.handleClick);         // Handles closing of dropdown menu
+      } else if (!this.state.showDocumentMenu && !this.state.showMediaMenu) {
+        window.removeEventListener('mousedown', this.handleClick);      // Stop event listener when menu is closed
+      }
+    }   
+  }
+
+  componentWillUnmount() {    
+    window.removeEventListener('mousedown', this.handleClick);    // Stop event listener when menu is closed
   }
 
   render() {
@@ -93,30 +117,29 @@ class ReportsSection extends React.Component {
       <main>        
           {
             documentsArray.length == 0 ? (
-              <section className="reportLeftDiv">
-                <div className="reportItem" >No reports available</div>
+              <section className="cardReportLeftDiv">
+                <div className="cardReportItem"><span className="cardNoReportText">No reports available</span></div>
               </section>
             ) : (
                 documentsArray.length == 1 ? (
-                  <section className="reportLeftDiv">
-                  <div className="reportItem" ><a className="reportLink" href={report_data[documentsArray[0]].report_link} target="_blank" title={report_data[documentsArray[0]].report_link} onClick={this.callEvent}>{this.getImageUrl(report_data[documentsArray[0]].entry_type)} {report_data[documentsArray[0]].entry_name} [{report_data[documentsArray[0]].report_date}]</a></div>
+                  <section className="cardReportLeftDiv">
+                  <div className="cardReportItem" ><a className="cardReportLink" href={report_data[documentsArray[0]].report_link} target="_blank" title={report_data[documentsArray[0]].report_link} onClick={this.callEvent}>{this.getImageUrl(report_data[documentsArray[0]].entry_type)} {report_data[documentsArray[0]].entry_name} [{report_data[documentsArray[0]].report_date}]</a></div>
                   </section>
                 ) : (
-                  <section className="reportLeftDiv">
-                    <div className="proposalsDropdown" id="dropdownmenu">
-                      <div className="reportItem" value={this.state.showDocumentMenu ? "Active" : "Inactive"}><i id="reportsMenu" onClick={this.handleDocumentDropdown}></i><a className="reportLink" href={report_data[documentsArray[0]].report_link} target="_blank" title={report_data[documentsArray[0]].report_link} onClick={this.callEvent}>{this.getImageUrl(report_data[documentsArray[0]].entry_type)} {report_data[documentsArray[0]].entry_name} [{report_data[documentsArray[0]].report_date}]</a></div>
+                  <section className="cardReportLeftDiv">                    
+                    <div className="cardDropdown" id="dropdownmenu">
+                    <div id="cardDropdownMenu" className="cardDropdownButton" value={this.state.showDocumentMenu ? "Active" : "Inactive"}><div id="cardDropdownMenu" className="cardGlyphDiv" onClick={this.handleDocumentDropdown}><i id="reportsMenu" ></i></div><a id="cardDocumentLink" className="cardReportLink" href={report_data[documentsArray[0]].report_link} target="_blank" title={report_data[documentsArray[0]].report_link} onClick={this.callEvent}>{this.getImageUrl(report_data[documentsArray[0]].entry_type)} {report_data[documentsArray[0]].entry_name} [{report_data[documentsArray[0]].report_date}]</a></div>
                       {
                         this.state.showDocumentMenu ? (
                           <DocumentMenu
                             key={`${id}_docs`}
-                            closeDropdown={this.handleClose}
                             report_data={report_data}
                             documentsArray={documentsArray}
                           />
                         ) : (
-                            null
+                          null
                           )
-                      }
+                      }                      
                     </div>
                     </section>
                   )
@@ -124,19 +147,19 @@ class ReportsSection extends React.Component {
           }    
           {
             mediaArray.length == 0 ? (
-              <section className="reportRightDiv">
+              <section className="cardReportRightDiv">
 
               </section>
             ) : (
               mediaArray.length == 1 ? (
-                  <section className="reportRightDiv">
-                  <div className="reportItem" ><a className="reportLink" href={report_data[mediaArray[0]].report_link} target="_blank" title={report_data[mediaArray[0]].report_link} onClick={this.callEvent}>{this.getImageUrl(report_data[mediaArray[0]].entry_type)} {report_data[mediaArray[0]].entry_name} [{report_data[mediaArray[0]].report_date}]</a></div>
+                  <section className="cardReportRightDiv">
+                  <div className="cardReportItem" ><a className="cardReportLink" href={report_data[mediaArray[0]].report_link} target="_blank" title={report_data[mediaArray[0]].report_link} onClick={this.callEvent}>{this.getImageUrl(report_data[mediaArray[0]].entry_type)} {report_data[mediaArray[0]].entry_name} [{report_data[mediaArray[0]].report_date}]</a></div>
                   </section>
                 ) : (
-                  <section className="reportRightDiv">
-                  <div className="proposalsDropdown" id="dropdownmenu">
-                      <div className="reportItem" value={this.state.showMediaMenu ? "Active" : "Inactive"}><i id="reportsMenu" onClick={this.handleMediaDropdown}></i><a className="reportLink" href={report_data[mediaArray[0]].report_link} target="_blank" title={report_data[mediaArray[0]].report_link} onClick={this.callEvent}>{this.getImageUrl(report_data[mediaArray[0]].entry_type)} {report_data[mediaArray[0]].entry_name} [{report_data[documentsArray[0]].report_date}]</a></div>
-                      {
+                  <section className="cardReportRightDiv">
+                  <div className="cardDropdown" id="dropdownmenu">
+                  <div id="cardDropdownMenu" className="cardDropdownButton" value={this.state.showMediaMenu ? "Active" : "Inactive"}><div id="cardDropdownMenu" className="cardGlyphDiv" onClick={this.handleMediaDropdown}><i id="reportsMenu"></i></div><a id="cardMediaLink" className="cardReportLink" href={report_data[mediaArray[0]].report_link} target="_blank" title={report_data[mediaArray[0]].report_link} onClick={this.callEvent}>{this.getImageUrl(report_data[mediaArray[0]].entry_type)} {report_data[mediaArray[0]].entry_name} [{report_data[mediaArray[0]].report_date}]</a></div>
+                     {
                         this.state.showMediaMenu ? (
                           <MediaMenu
                             key={`${id}_media`}
@@ -160,13 +183,10 @@ class ReportsSection extends React.Component {
 class DocumentMenu extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-
-    };
 
     // Binding functions in this class
     this.getImageUrl = this.getImageUrl.bind(this);
-    this.handleClick = this.handleClick.bind(this);
+    this.callEvent = this.callEvent.bind(this);
   }
 
   // Function that returns what image to show for the report
@@ -178,18 +198,9 @@ class DocumentMenu extends React.Component {
     }   
   }
 
-  handleClick = (event) => {
-    if (event.target.id !== "proposalsDropdownMenu") {
-      this.props.closeDropdown()
-    }
-  }
-
-  componentDidMount() {
-    window.addEventListener('mousedown', this.handleClick);     // Handles closing of dropdown menu
-  }
-
-  componentWillUnmount() {        
-    window.removeEventListener('mousedown', this.handleClick);  // Stop event listener when modal is unloaded
+  // Google Analytics function to track User interaction on page
+  callEvent(event) {
+    trackEvent('Proposals Page', 'clicked ' + event.currentTarget.id)
   }
 
   render() {
@@ -199,15 +210,15 @@ class DocumentMenu extends React.Component {
     } = this.props
     return (
       <main>
-        <div id="proposalsDropdownMenu" className="proposalsDropdownMenu">
+        <div id="cardDropdownMenu" className="cardDropdownMenu">       
           {
             Object.values(documentsArray).slice(1).map((item) =>
               <div key={report_data[item].id}>
-                <div className="reportItem" value="Active"><a className="reportLink" href={report_data[item].report_link} target="_blank" title={report_data[item].report_link} onClick={this.callEvent}>{this.getImageUrl(report_data[item].entry_type)} {report_data[item].entry_name} [{report_data[item].report_date}]</a></div>
+                <div className="cardDropdownItem" value="Active"><a className="cardReportLink" href={report_data[item].report_link} target="_blank" title={report_data[item].report_link} onClick={this.callEvent}>{this.getImageUrl(report_data[item].entry_type)} {report_data[item].entry_name} [{report_data[item].report_date}]</a></div>
               </div>
             )
           }
-        </div>
+          </div> 
       </main>
     )
   }
@@ -216,12 +227,10 @@ class DocumentMenu extends React.Component {
 class MediaMenu extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-
-    };
 
     // Binding functions in this class
     this.getImageUrl = this.getImageUrl.bind(this);
+    this.callEvent = this.callEvent.bind(this);
   }
 
   // Function that returns what image to show for the media
@@ -235,7 +244,10 @@ class MediaMenu extends React.Component {
     }   
   }
 
-  // Dropdown list for KPIs
+  // Google Analytics function to track User interaction on page
+  callEvent(event) {
+    trackEvent('Proposals Page', 'clicked ' + event.currentTarget.id)
+  }
 
   render() {
     const { // Declare grouped elements to pass on to modal      
@@ -244,11 +256,11 @@ class MediaMenu extends React.Component {
     } = this.props
     return (
       <main>
-        <div className="proposalsDropdownMenu">
+        <div id="cardDropdownMenu" className="cardDropdownMenu">
           {
             Object.values(mediaArray).slice(1).map((item) =>
               <div key={report_data[item].id}>
-                <div className="reportItem" value="Active"><a className="reportLink" href={report_data[item].report_link} target="_blank" title={report_data[item].report_link} onClick={this.callEvent}>{this.getImageUrl(report_data[item].entry_type)} {report_data[item].entry_name} [{report_data[item].report_date}]</a></div>
+                <div className="cardDropdownItem" value="Active"><a id="cardMediaLink" className="cardReportLink" href={report_data[item].report_link} target="_blank" title={report_data[item].report_link} onClick={this.callEvent}>{this.getImageUrl(report_data[item].entry_type)} {report_data[item].entry_name} [{report_data[item].report_date}]</a></div>
               </div>
             )
           }
@@ -258,4 +270,4 @@ class MediaMenu extends React.Component {
   }
 }
 
-export default ReportsSection
+export default ReportSection

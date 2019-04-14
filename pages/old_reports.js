@@ -90,7 +90,7 @@ class Month extends React.Component {
         trackEvent('Old Reports Page', 'Changed Year')                 // Track Event on Google Analytics    
     }
 
-    // Function to activate dropdown menu with months
+    // Function to activate month dropdown menu
     handleDropdown(event) {
         event.preventDefault();
         this.setState({

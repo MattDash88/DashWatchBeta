@@ -6,7 +6,7 @@ import { trackEvent } from './functions/analytics';
 // Import other elements 
 import ModalFrame from './modal/ModalFrame';
 import ModalContent from './modal/ModalContent';
-import ReportsSection from './proposal_list_content/ReportsSection';
+import ReportSection from './proposal_list_content/ReportSection';
 
 // Import css
 import './css/style.css';
@@ -34,6 +34,7 @@ class Post extends React.Component {
     this.setState({ show: false });
   };
 
+  // Google Analytics function to track User interaction on page
   callEvent(event) {
     trackEvent('Proposals Page', 'clicked ' + event.currentTarget.id)
   }
@@ -48,16 +49,16 @@ class Post extends React.Component {
       title,
       budget_status,
       comm_status,
-      completion_elem,      // Date or status of completion element
-      completion_elem_type, // Type of the completion element, anticipated or actual completion
+      completion_elem,        // Date or status of completion element
+      completion_elem_type,   // Type of the completion element, anticipated or actual completion
       funding_received_usd,
       last_updated,
-      payment_date,
+      first_payment_date,
       proposal_owner,
       schedule_status,
       slug,
       status,
-      id,
+      id,                     // Unique id of the proposal's Airtable record
     } = this.props.main_data
 
     const { // Declare report_data elements to use in render()
@@ -98,131 +99,169 @@ class Post extends React.Component {
         <div></div>
       )
     }
-
     // Output for the card
     return (
       <div className="cardDiv">
-        <div className="cardTitle" onClick={this.showModal}>
+        <section className="cardTitle" onClick={this.showModal}>
           <div className="proposalName">{title}</div>
-          <div className="ownerName">proposed by <a id="owner link" target="" href={`/proposals?search=${proposal_owner}`} onClick={this.callEvent}>{proposal_owner}</a></div>
-        </div>
-
+          <div className="ownerName">proposed by <a id="owner link" target="" href={`/proposals?search=${proposal_owner}`} onClick={this.callEvent} title={`Search ${proposal_owner}`}>{proposal_owner}</a></div>
+        </section>
         <div className="cardContentWrapper">
-
-          <div className="cardPropertyDiv">
-            <div className="cardPropertyTitle">
-              First Date Paid:
-            </div>
-            <div className="cardPropertyItem" title={payment_date}>
-              <span className="statusPropertyValue">{payment_date}</span>
-            </div>
-          </div>
-
-          <div className="cardPropertyDiv">
-            <div className="cardPropertyTitle">
-              Status:
-            </div>
-            <div className="cardPropertyItem" title={status}>
-              <span className="statusPropertyValue" value={status}>{status}</span>
-            </div>
-          </div>
-
-          <div className="cardPropertyDiv">
-            <div className="cardPropertyTitle">
-              Budget Status:
-            </div>
-            <div className="cardPropertyItem" title={budget_status}>
-              <span className="statusPropertyValue" value={budget_status}>{budget_status}</span>
-            </div>
-          </div>
-
-          <div className="cardPropertyDiv">
-            <div className="cardPropertyTitle">
-              Schedule Status:
-            </div>
-            <div className="cardPropertyItem" title={schedule_status}>
-              <span className="statusPropertyValue" value={schedule_status}>{schedule_status}</span>
-            </div>
-          </div>
-
-          <div className="cardPropertyDiv">
-            <div className="cardPropertyTitle">
-              {completion_elem_type}
-            </div>
-            <div className="cardPropertyItem" title={completion_elem}>
-              <span className="statusPropertyValue">{completion_elem}</span>
-            </div>
-          </div>
-
-          <div className="cardPropertyDiv">
-            <div className="cardPropertyTitle">
-              Communication Status:
-            </div>
-            <div className="cardPropertyItem" title={comm_status}>
-              <span className="statusPropertyValue" value={comm_status}>{comm_status}</span>
-            </div>
-          </div>
-
-          <div className="cardPropertyDiv">
-            <div className="cardPropertyTitle">
-              Total funding received:
-            </div>
-            <div className="cardPropertyItem" title={funding_received_usd}>
-              <span className="statusPropertyValue">&#36;{funding_received_usd}</span>
-            </div>
-          </div>
-
-          <div className="cardPropertyDiv">
-            <div className="cardPropertyTitle">
-              Last updated:
-            </div>
-            <div className="cardPropertyItem" title={last_updated}>
-              <span className="statusPropertyValue">{last_updated}</span>
-            </div>
-          </div>
           {
-            typeof report_data=='undefined' ? (
-              <div>
-              <section className="reportLeftDiv">
-                <div className="reportItem" >Something went wrong with the report data</div>
-              </section>
-              <section className="reportRightDiv">
-              </section>
-              </div>
-              ) : (
-                report_data == "No reports available" ? (
-                  <div>
-                  <section className="reportLeftDiv">
-                    <div className="reportItem" >No reports available</div>
-                  </section>
-                  <section className="reportRightDiv">
-                  </section>
+            comm_status == "Opted out of Dash Watch Reporting" || comm_status == "Not reported by Dash Watch" ? (
+              <section className="cardPropertyGrid">
+                <div className="cardPropertyDiv">
+                  <div className="cardPropertyTitle">
+                    <div id="tooltip" className="cardTooltip">First Date Paid:
+                  <span className="cardTooltiptext">The date the proposal received its first payment from a superblock (UTC).</span>
+                    </div>
                   </div>
-                ) : (
-                  <ReportsSection
-                    key={`${id}_dropdown`}
-                    report_data = {report_data}
-                    id={id}
-                  />
-                 )
+                  <div className="cardPropertyItem" title={first_payment_date}>
+                    <span>{first_payment_date}</span>
+                  </div>
+                </div>
+
+                <div className="cardPropertyDiv" value={comm_status}>
+                  <div id="tooltip" className="cardTooltip">Communication status:
+                  <span className="cardTooltiptext">The communication status of the proposal team with Dash Watch.</span>
+                  </div>
+                  <div className="cardPropertyItem" title={comm_status}>
+                    <span>{comm_status}</span>
+                  </div>
+                </div>
+
+                <div className="cardPropertyDiv">
+                  <div id="tooltip" className="cardTooltip">Total funding received:
+                  <span className="cardTooltiptext">Combined USD value of treasury payments received by this proposal at the time they were paid out by their respective superblocks.</span>
+                  </div>
+                  <div className="cardPropertyItem" title={funding_received_usd}>
+                    <span>&#36;{funding_received_usd}</span>
+                  </div>
+                </div>
+
+                <div className="cardPropertyDiv">
+                  <div id="tooltip" className="cardTooltip">Last updated:
+                  <span className="cardTooltiptext">Last time the metrics for this proposal were updated by Dash Watch.</span>
+                  </div>
+                  <div className="cardPropertyItem" title={last_updated}>
+                    <span>{last_updated}</span>
+                  </div>
+                </div>
+              </section>
+            ) : (
+                <section className="cardPropertyGrid">
+                  <div className="cardPropertyDiv" value={status}>
+                    <div className="cardPropertyTitle">
+                      Status:
+          </div>
+                    <div className="cardPropertyItem" title={status}>
+                      <span>{status}</span>
+                    </div>
+                  </div>
+
+                  <div className="cardPropertyDiv" value={comm_status}>
+                    <div id="tooltip" className="cardTooltip">Communication status:
+                  <span className="cardTooltiptext">The communication status of the proposal team with Dash Watch.</span>
+                    </div>
+                    <div className="cardPropertyItem" title={comm_status}>
+                      <span>{comm_status}</span>
+                    </div>
+                  </div>
+
+                  <div className="cardPropertyDiv" value={budget_status}>
+                    <div className="cardPropertyTitle">
+                      Budget Status:
+          </div>
+                    <div className="cardPropertyItem" title={budget_status}>
+                      <span>{budget_status}</span>
+                    </div>
+                  </div>
+
+                  <div className="cardPropertyDiv" value={schedule_status}>
+                    <div className="cardPropertyTitle">
+                      Schedule Status:
+          </div>
+                    <div className="cardPropertyItem" title={schedule_status}>
+                      <span>{schedule_status}</span>
+                    </div>
+                  </div>
+
+                  <div className="cardPropertyDiv">
+                  <div id="tooltip" className="cardTooltip">First Date Paid:
+                  <span className="cardTooltiptext">The date the proposal received its first payment from a superblock (UTC).</span>
+                    </div>
+                    <div className="cardPropertyItem" title={first_payment_date}>
+                      <span>{first_payment_date}</span>
+                    </div>
+                  </div>
+
+                  <div className="cardPropertyDiv">
+                  <div id="tooltip" className="cardTooltip">Total funding received:
+                  <span className="cardTooltiptext">Combined USD value of treasury payments received by this proposal at the time they were paid out by their respective superblocks.</span>
+                    </div>
+                    <div className="cardPropertyItem" title={funding_received_usd}>
+                      <span>&#36;{funding_received_usd}</span>
+                    </div>
+                  </div>
+
+                  <div className="cardPropertyDiv">
+                    <div className="cardPropertyTitle">
+                      {completion_elem_type}
+                    </div>
+                    <div className="cardPropertyItem" title={completion_elem}>
+                      <span>{completion_elem}</span>
+                    </div>
+                  </div>
+
+                  <div className="cardPropertyDiv">
+                    <div id="tooltip" className="cardTooltip">Last updated:
+                  <span className="cardTooltiptext">Last time the metrics for this proposal were updated by Dash Watch.</span>
+                    </div>
+                    <div className="cardPropertyItem" title={last_updated}>
+                      <span>{last_updated}</span>
+                    </div>
+                  </div>
+                </section>
               )
           }
-
-
-          <div className="linkItem" text-align="left">
-            <a className="link" id="Dash Central Link" href={dclink} target="_blank" onClick={this.callEvent}>DASHCENTRAL LINK</a>
-          </div>
-
-          <div className="linkItem">
-            <a className="link" id="Dash Watch Link" href={`/p/${slug}`} target="" onClick={this.callEvent}>DASH WATCH PAGE</a>
-          </div>
-
-          <div className="linkItem" text-align="right">
-            <div className="link" type="button" onClick={this.showModal}>
-              +show more
+          <section>
+            {
+              typeof report_data == 'undefined' ? (
+                <div>
+                  <section className="cardReportLeftDiv">
+                    <div className="cardReportItem"><span className="cardNoReportText">Something went wrong with the report data</span></div>
+                  </section>
+                  <section className="cardReportRightDiv">
+                  </section>
+                </div>
+              ) : (
+                  report_data == "No reports available" ? (
+                    null
+                  ) : (
+                      <ReportSection
+                        key={`${id}_dropdown`}
+                        report_data={report_data}
+                        id={id}
+                      />
+                    )
+                )
+            }
+          </section>
+          <section>
+            <div className="cardLinkItem">
+              <a className="cardLink" id="Dash Central Link" href={dclink} target="_blank" onClick={this.callEvent}>DASHCENTRAL LINK</a>
             </div>
-          </div>
 
+            <div className="cardLinkItem">
+              <a className="cardLink" id="Dash Watch Link" href={`/p/${slug}`} target="" onClick={this.callEvent}>DASH WATCH PAGE</a>
+            </div>
+
+            <div className="cardLinkItem">
+              <div className="cardLink" type="button" onClick={this.showModal}>
+                +show more
+            </div>
+            </div>
+          </section>
         </div>
         {modal}
       </div>
