@@ -336,7 +336,7 @@ Style elements used in Post.js
     margin-top: 0.3rem;
     margin-left: 0.2rem;
     margin-right: 0.2rem;
-  }
+}
 
 /* Div containing both the Property Title and Property Item */
 .cardPropertyDiv {
@@ -394,20 +394,19 @@ Style elements used in Post.js
 Styling for the card report section
 */
 
-/* Div wrapping the report element of the card*/
-.cardReportLeftDiv {
-    display: inline-block;
-    width: 40%;
-    margin-left: 0.2rem;
-    margin-right: 0.2rem;
+/* 2x4 grid with proposal properties in it */
+.cardReportGrid {
+    display: flex;                       /* establish flex container */
+    flex-wrap: wrap;                     /* enable flex items to wrap */
+    justify-content: space-around;    
+    margin-top: 0.3rem;
+    margin-bottom: 0.3rem;    
 }
 
-/* Div wrapping the report element of the card*/
-.cardReportRightDiv {
-    display: inline-block;
-    width: 45%;
-    margin-left: 0.2rem;
-    margin-right: 0.2rem;
+/* Div containing both the Property Title and Property Item */
+.cardReportDiv {
+    flex: 0 0 40%;                       /* don't grow, don't shrink, width */
+    align-items: center;      
 }
 
 /* Styling of the text of the bottom links*/
@@ -420,8 +419,7 @@ Styling for the card report section
 /* Styling of the report link at the bottom of the proposal cards */
 .cardReportItem {
     display: inline-block;
-    padding: 16px 10px 16px 10px;
-    margin-bottom: 0.2rem;
+    padding: 20px 10px 20px 10px;
     margin-left: 2rem;
     background-color: white;  
     white-space: nowrap;
@@ -436,7 +434,6 @@ Styling for the card report section
     color: #008de4;
     font-weight: 200;
     font-size: 1rem;
-    vertical-align: middle;
     text-transform: uppercase;
     text-decoration: none;
     cursor: pointer;
@@ -449,7 +446,6 @@ Styling for the card report section
 /* Styling for the dropdown div */
 .cardDropdown {
     display: inline-block;  
-    margin-bottom: 0.2rem;
     margin-left: 2rem;
 }
 
@@ -532,6 +528,8 @@ Tooltip styling
 
 /* Styling of the tooltip element */
 .cardTooltip {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
     position: relative;
     display: inline-block;
     border-bottom: 1px dotted lightgrey;
@@ -540,13 +538,15 @@ Tooltip styling
 
 /* Styling of the Tooltip block */
 .cardTooltip .cardTooltiptext {
+    font-family: sans-serif;
+    font-size: 14px;
     visibility: hidden;
     width: 300px;
-    background-color: black;
+    background-color: #555;
     color: #fff;
-    text-align: center;
+    text-align: left;
     border-radius: 6px;
-    padding: 5px 0;
+    padding: 5px 5px;
     
     /* Position the tooltip */
     position: absolute;

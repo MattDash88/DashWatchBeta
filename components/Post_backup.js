@@ -109,7 +109,6 @@ class Post extends React.Component {
         <div className="cardContentWrapper">
           {
             comm_status == "Opted out of Dash Watch Reporting" || comm_status == "Not reported by Dash Watch" ? (
-              // If a proposal is not reported on show a shorter card without reporting metrics
               <section className="cardPropertyGrid">
                 <div className="cardPropertyDiv">
                   <div className="cardPropertyTitle">
@@ -150,7 +149,6 @@ class Post extends React.Component {
                 </div>
               </section>
             ) : (
-              // Else show full card
                 <section className="cardPropertyGrid">
                   <div className="cardPropertyDiv" value={status}>
                     <div className="cardPropertyTitle">
@@ -189,7 +187,7 @@ class Post extends React.Component {
                   </div>
 
                   <div className="cardPropertyDiv">
-                    <div id="tooltip" className="cardTooltip">First Date Paid:
+                  <div id="tooltip" className="cardTooltip">First Date Paid:
                   <span className="cardTooltiptext">The date the proposal received its first payment from a superblock (UTC).</span>
                     </div>
                     <div className="cardPropertyItem" title={first_payment_date}>
@@ -198,7 +196,7 @@ class Post extends React.Component {
                   </div>
 
                   <div className="cardPropertyDiv">
-                    <div id="tooltip" className="cardTooltip">Total funding received:
+                  <div id="tooltip" className="cardTooltip">Total funding received:
                   <span className="cardTooltiptext">Total USD value of the treasury payments received by this proposal. The amount is calculated by using the USD value of Dash on the days when the superblocks is mined.</span>
                     </div>
                     <div className="cardPropertyItem" title={funding_received_usd}>
@@ -224,43 +222,31 @@ class Post extends React.Component {
                     </div>
                   </div>
                 </section>
-              ) // End of comm_status if
+              )
           }
-          {
-            typeof report_data == 'undefined' ? (
-              // Throw error if there are errors in the Data
-              <section className="cardReportGrid">
-                <div className="cardReportDiv">
-                  <div className="cardReportItem"><span className="cardNoReportText">Something went wrong with the report data</span></div>
-                </div>
-                <div className="cardReportDiv">
-                </div>
-              </section>
-            ) : (
-                report_data == "No reports available" ? (
-                  //  For proposals that are not reported on, show nothing unless there is a report or media item
-                    comm_status == "Opted out of Dash Watch Reporting" || comm_status == "Not reported by Dash Watch" ? ( 
-                      null
-                    ) : (
-                  //  Show "no reports found" if there are none
-                  <section className="cardReportGrid">
-                    <div className="cardReportDiv">
-                      <div className="cardReportItem"><span className="cardNoReportText">No reports available</span></div>
-                    </div>
-                    <div className="cardReportDiv">
-                    </div>
+          <section>
+            {
+              typeof report_data == 'undefined' ? (
+                <div>
+                  <section className="cardReportLeftDiv">
+                    <div className="cardReportItem"><span className="cardNoReportText">Something went wrong with the report data</span></div>
                   </section>
-                    ) // End of comm_status if
+                  <section className="cardReportRightDiv">
+                  </section>
+                </div>
+              ) : (
+                  report_data == "No reports available" ? (
+                    null
                   ) : (
-                    // If there are reports generate links from ReportSection class
-                    <ReportSection
-                      key={`${id}_dropdown`}
-                      report_data={report_data}
-                      id={id}
-                    />
-                  ) // End of reports available or not if
-              ) // End of report if
-          }
+                      <ReportSection
+                        key={`${id}_dropdown`}
+                        report_data={report_data}
+                        id={id}
+                      />
+                    )
+                )
+            }
+          </section>
           <section>
             <div className="cardLinkItem">
               <a className="cardLink" id="Dash Central Link" href={dclink} target="_blank" onClick={this.callEvent}>DASHCENTRAL LINK</a>

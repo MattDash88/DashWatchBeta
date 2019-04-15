@@ -7,8 +7,7 @@ import '../css/modal.css'
 const ModalFrame = ({ show, children }) => {
 
     
-    const showHideClassName = show ? "modal display-block" : "modal display-none";
-  
+    const showHideClassName = show ? "modal display-block" : "modal display-none"; 
   
     return (
       <div className={showHideClassName} id="outside">

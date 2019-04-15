@@ -1,7 +1,7 @@
 import React from 'react';
 
 // Analytics
-import { trackEvent } from '../functions/analytics';
+import {trackEvent} from '../functions/analytics';
 
 // Import other elements 
 
@@ -62,19 +62,19 @@ class ReportSection extends React.Component {
   getImageUrl(type) {
     if (type == "Report") {
       return (<img id="PDF" src="https://dashwatchbeta.org/images/PDF.png" height="25"></img>)
-    } else if (type == "Video") {
+    } else if (type == "Video"){
       return (<img id="Video" src="https://dashwatchbeta.org/images/Video.png" height="25"></img>)
-    } else if (type == "Podcast") {
+    } else if (type == "Podcast"){
       return (<img id="Podcast" src="https://dashwatchbeta.org/images/Podcast.png" height="25"></img>)
     } else {
       return (<img id="PDF" src="https://dashwatchbeta.org/images/PDF.png" height="25"></img>)
-    }
+    }   
   }
 
   // Function ran when the eventlistener is activated. Close dropdown menus if clicking outside of them
   handleClick = (event) => {
     console.log(event.target)
-    if (event.target.id !== "reportsMenu" && event.target.id !== "cardDropdownMenu" && event.target.id !== "cardDocumentLink" && event.target.id !== "cardMediaLink") {
+    if (event.target.id !== "reportsMenu" && event.target.id !== "cardDropdownMenu" && event.target.id !== "cardDocumentLink" && event.target.id !== "cardMediaLink") {     
       this.setState({
         showDocumentMenu: false,
         showMediaMenu: false,
@@ -95,10 +95,10 @@ class ReportSection extends React.Component {
       } else if (!this.state.showDocumentMenu && !this.state.showMediaMenu) {
         window.removeEventListener('mousedown', this.handleClick);      // Stop event listener when menu is closed
       }
-    }
+    }   
   }
 
-  componentWillUnmount() {
+  componentWillUnmount() {    
     window.removeEventListener('mousedown', this.handleClick);    // Stop event listener when menu is closed
   }
 
@@ -115,60 +115,53 @@ class ReportSection extends React.Component {
 
 
     return (
-      <section className="cardReportGrid">
-        {
-          documentsArray.length == 0 ? (
-            // If there are no report document show "No reports available"
-            <div className="cardReportDiv">
-              <div className="cardReportItem"><span className="cardNoReportText">No reports available</span></div>
-            </div>
-          ) : (
-            // If there is one just show a report link
-              documentsArray.length == 1 ? (
-                <div className="cardReportDiv">
+      <main>        
+          {
+            documentsArray.length == 0 ? (
+              <section className="cardReportLeftDiv">
+                <div className="cardReportItem"><span className="cardNoReportText">No reports available</span></div>
+              </section>
+            ) : (
+                documentsArray.length == 1 ? (
+                  <section className="cardReportLeftDiv">
                   <div className="cardReportItem" ><a className="cardReportLink" href={report_data[documentsArray[0]].report_link} target="_blank" title={report_data[documentsArray[0]].report_link} onClick={this.callEvent}>{this.getImageUrl(report_data[documentsArray[0]].entry_type)} {report_data[documentsArray[0]].entry_name} [{report_data[documentsArray[0]].report_date}]</a></div>
-                </div>
-              ) : (
-                // If there are more generate a report document Menu
-                  <div className="cardReportDiv">
+                  </section>
+                ) : (
+                  <section className="cardReportLeftDiv">                    
                     <div className="cardDropdown" id="dropdownmenu">
-                      <div id="cardDropdownMenu" className="cardDropdownButton" value={this.state.showDocumentMenu ? "Active" : "Inactive"}><div id="cardDropdownMenu" className="cardGlyphDiv" onClick={this.handleDocumentDropdown}><i id="reportsMenu" ></i></div><a id="cardDocumentLink" className="cardReportLink" href={report_data[documentsArray[0]].report_link} target="_blank" title={report_data[documentsArray[0]].report_link} onClick={this.callEvent}>{this.getImageUrl(report_data[documentsArray[0]].entry_type)} {report_data[documentsArray[0]].entry_name} [{report_data[documentsArray[0]].report_date}]</a></div>
+                    <div id="cardDropdownMenu" className="cardDropdownButton" value={this.state.showDocumentMenu ? "Active" : "Inactive"}><div id="cardDropdownMenu" className="cardGlyphDiv" onClick={this.handleDocumentDropdown}><i id="reportsMenu" ></i></div><a id="cardDocumentLink" className="cardReportLink" href={report_data[documentsArray[0]].report_link} target="_blank" title={report_data[documentsArray[0]].report_link} onClick={this.callEvent}>{this.getImageUrl(report_data[documentsArray[0]].entry_type)} {report_data[documentsArray[0]].entry_name} [{report_data[documentsArray[0]].report_date}]</a></div>
                       {
                         this.state.showDocumentMenu ? (
-                          // Show or hide report document dropdown menu based on state
                           <DocumentMenu
                             key={`${id}_docs`}
                             report_data={report_data}
                             documentsArray={documentsArray}
                           />
                         ) : (
-                            null
-                          ) // End of show/hide dropdown if
-                      }
+                          null
+                          )
+                      }                      
                     </div>
-                  </div>
-                ) // End of 1 or more reports if
-            ) // End of Report Document items if 
-        }
-        {
-          mediaArray.length == 0 ? (
-            // If there are no media items show nothing"
-            <div className="cardReportDiv">
-            </div>
-          ) : (
+                    </section>
+                  )
+              )
+          }    
+          {
+            mediaArray.length == 0 ? (
+              <section className="cardReportRightDiv">
+
+              </section>
+            ) : (
               mediaArray.length == 1 ? (
-                // If there is one just show a media item link
-                <div className="cardReportDiv">
+                  <section className="cardReportRightDiv">
                   <div className="cardReportItem" ><a className="cardReportLink" href={report_data[mediaArray[0]].report_link} target="_blank" title={report_data[mediaArray[0]].report_link} onClick={this.callEvent}>{this.getImageUrl(report_data[mediaArray[0]].entry_type)} {report_data[mediaArray[0]].entry_name} [{report_data[mediaArray[0]].report_date}]</a></div>
-                </div>
-              ) : (
-                 // If there are more generate a media item Menu
-                  <div className="cardReportDiv">
-                    <div className="cardDropdown" id="dropdownmenu">
-                      <div id="cardDropdownMenu" className="cardDropdownButton" value={this.state.showMediaMenu ? "Active" : "Inactive"}><div id="cardDropdownMenu" className="cardGlyphDiv" onClick={this.handleMediaDropdown}><i id="reportsMenu"></i></div><a id="cardMediaLink" className="cardReportLink" href={report_data[mediaArray[0]].report_link} target="_blank" title={report_data[mediaArray[0]].report_link} onClick={this.callEvent}>{this.getImageUrl(report_data[mediaArray[0]].entry_type)} {report_data[mediaArray[0]].entry_name} [{report_data[mediaArray[0]].report_date}]</a></div>
-                      {
+                  </section>
+                ) : (
+                  <section className="cardReportRightDiv">
+                  <div className="cardDropdown" id="dropdownmenu">
+                  <div id="cardDropdownMenu" className="cardDropdownButton" value={this.state.showMediaMenu ? "Active" : "Inactive"}><div id="cardDropdownMenu" className="cardGlyphDiv" onClick={this.handleMediaDropdown}><i id="reportsMenu"></i></div><a id="cardMediaLink" className="cardReportLink" href={report_data[mediaArray[0]].report_link} target="_blank" title={report_data[mediaArray[0]].report_link} onClick={this.callEvent}>{this.getImageUrl(report_data[mediaArray[0]].entry_type)} {report_data[mediaArray[0]].entry_name} [{report_data[mediaArray[0]].report_date}]</a></div>
+                     {
                         this.state.showMediaMenu ? (
-                          // Show or hide media item dropdown menu based on state
                           <MediaMenu
                             key={`${id}_media`}
                             report_data={report_data}
@@ -176,14 +169,14 @@ class ReportSection extends React.Component {
                           />
                         ) : (
                             null
-                          ) // End of show/hide dropdown if
+                          )
                       }
-                    </div>
-                  </div>
-                ) // End of 1 or more reports if
-            ) // End of Report Document items if 
-        }
-      </section>
+                      </div>
+                    </section>
+                  )
+              )
+          }     
+      </main>
     )
   }
 }
@@ -203,7 +196,7 @@ class DocumentMenu extends React.Component {
       return (<img id="cardDocumentLink" src="https://dashwatchbeta.org/images/PDF.png" height="25"></img>)
     } else {
       return (<img id="cardDocumentLink" src="https://dashwatchbeta.org/images/PDF.png" height="25"></img>)
-    }
+    }   
   }
 
   // Google Analytics function to track User interaction on page
@@ -218,7 +211,7 @@ class DocumentMenu extends React.Component {
     } = this.props
     return (
       <main>
-        <div id="cardDropdownMenu" className="cardDropdownMenu">
+        <div id="cardDropdownMenu" className="cardDropdownMenu">       
           {
             Object.values(documentsArray).slice(1).map((item) =>
               <div key={report_data[item].id}>
@@ -226,7 +219,7 @@ class DocumentMenu extends React.Component {
               </div>
             )
           }
-        </div>
+          </div> 
       </main>
     )
   }
@@ -243,13 +236,13 @@ class MediaMenu extends React.Component {
 
   // Function that returns what image to show for the media
   getImageUrl(type) {
-    if (type == "Video") {
+    if (type == "Video"){
       return (<img id="cardMediaLink" src="https://dashwatchbeta.org/images/Video.png" height="25"></img>)
-    } else if (type == "Podcast") {
+    } else if (type == "Podcast"){
       return (<img id="cardMediaLink" src="https://dashwatchbeta.org/images/Podcast.png" height="25"></img>)
     } else {
       return (<img id="cardMediaLink" src="https://dashwatchbeta.org/images/Video.png" height="25"></img>)
-    }
+    }   
   }
 
   // Google Analytics function to track User interaction on page
