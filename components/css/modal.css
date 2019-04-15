@@ -9,6 +9,7 @@ Styles used in ModalFrame.js
     width:100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.6);
+    z-index: 2;
 }
   
 /* The modal itself */
@@ -41,10 +42,14 @@ Styling used in ModalContent.js
 
 /* Outer border of the modal */
 .modalWrapper {
-    min-width: 500px;
+    object-fit: cover;
+    position: relative;
+    min-width: 100%;
     max-width: 800px;
-    min-height: 500px;
-    border: 2px solid black;
+    overflow: auto;
+    min-height: max-content;
+    max-height: 80vh;
+    box-shadow: 2px 2px 1px grey;
     border-radius:5px 5px 5px 5px;
     background: #ffffff;
 }
@@ -52,56 +57,71 @@ Styling used in ModalContent.js
 /* Blue title area of the modal proposal card */
 .modalCardTitle { 
     font-family: 'Montserrat', sans-serif;
-    color: white;
-    background-color: #012060;
-    min-width: 450px;
+    min-width: 600px;
     max-width: 100%;
-    height: 45px;
-    padding: 5px;
+    background: #008de4;
+    border-radius: 5px 5px 0px 0px;
+    height: 75px;
 }
 
-/* Span to allow Close button placement in Title area */
+/* Styling for titles */
 .modalHeader {
-    display: inline-block;
-    min-width: 450px;
-    width: 100%;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    text-align: left; 
+    text-transform: uppercase;
+    color: black;
+    margin-top: 0.4rem;
+    margin-left: 0.4rem;
 }
 
 /* Styling of the proposal name, special in modal because of width requirements */
 .modalProposalName { 
-    display: inline-block;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 20px;
-    width: 80%;
-    min-width: 350px;
+    display: block;
     color: white;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.5rem;
+    text-align: center;
+    width: 100%;
+    min-width: 350px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* Styling of the proposal owner name also used in modal */
 .modalOwnerName { 
-    font-family: 'Titillium Web', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-size: 16px;
     font-weight: normal;
-    width: 80%;
+    text-align: center;
+    width: 100%;
     min-width: 350px;
+    color: white;
+}
+
+.modalOwnerName a {
+    font-family: 'Roboto', sans-serif;
+    text-transform: uppercase;
     color: white;
 }
 
 /* Styling for modal close button */ 
 .modalCloseButton {
-    display: inline-block;
-    position: fixed;
+    display: block;
+    position: relative;
     color: white;
     top:0;
     right:0;
     font-family: 'Roboto', sans-serif;
-    padding-top: 5px;
+    padding-top: 3px;
     padding-right: 10px;
+    padding-bottom: 0;
     font-size: 20px;
     font-weight: normal;
     height: 20px;
     min-width: 50px;
-    width: 15%;
     text-transform: uppercase;
     text-align: right;
     cursor: pointer;
@@ -109,44 +129,58 @@ Styling used in ModalContent.js
 
 /* Area surrounding the tabs, also used for report sub tabs */
 .modalTabWrapper {
-    overflow: hidden;
-    min-width: 600px;
-    max-width: 800px;
-    border: 1px solid #ccc;
+    display: flex;                       /* establish flex container */
+    justify-content: space-around;  
+    align-items: center;  
+    padding: auto;
+    border-top: 1px solid #ccc;
     background-color: #f1f1f1;
 }
 
 /* Styling of the modal tab buttons */
 .modalTabButton {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 600;
-    font-size: 14px;
-    min-width: 150px;
-    height: 50px;
-    width: 24%;
-    float: left;
-    border: 1px solid rgb(190, 189, 189);
-    outline: none;
-    padding: 5px 5px;
-    border-radius:3px 3px 0px 0px;
+    display: inline-flex;    
+    line-height: 1 rem;
+    vertical-align: middle; 
+    text-align: center;  
+    height: 40px;
+    width: 31%;
     transition: 0.15s;
 }
 
 /* Styling when the tab is active */
-.modalTabButton[value="active"] {
-    color: white;
-    background-color:  #111921;
+.modalTabButton[value="Active"] {
+    background-color:  white;
 }
 
 /* Styling when the tab is inactive */
-.modalTabButton[value="inactive"] {
-    color: black;
+.modalTabButton[value="Inactive"] {
     background-color:  #ccc;
+    cursor: pointer;
 }
 
 /* Change background color of buttons on hover */
-.modalTabButton[value="inactive"]:hover {
+.modalTabButton[value="Inactive"]:hover {
     background-color: #ddd;
+}
+
+.modalTabButton p {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-align: center;
+    color: black;
+    margin: auto;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+.modalTabButton[value="Active"] p {
+    border-bottom: 2px solid #e90056;
+}
+
+.modalTabButton[value="Inactive"] {
+    border-bottom: none;
 }
 
 /*
@@ -156,110 +190,64 @@ Styling used in the modal tab files (ModalTabMain, ModalTabPerformance, ModalTab
 /* Styling to make tab content visible or not */
 .modalTabContent[value="active"] {
     display: block;
+    height: 100%;
 }
 
 .modalTabContent[value="inactive"] {
     display: none;
 }
 
-/* Styling of the headers on modal tabs */
-.modalHeader { 
-    font-family: 'Montserrat', sans-serif;
-    font-size: 16px;
-    font-weight: bold;
-    text-align: left; 
-    color: black;
-    margin-left: 10px;
-    margin-top: 5px;
-}
-
-/* Styling of smaller subheaders on modal tabs */
-.modalSubHeader {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 16px;
-    font-weight: bold;
-    text-align: left; 
-    color: black;
-    margin-top: 5px;
-    margin-left: 10px;
-}
+/* 3x3 grid with proposal properties in it */
+.modalPropertyGrid {
+    display: flex;                       /* establish flex container */
+    flex-wrap: wrap;                     /* enable flex items to wrap */
+    justify-content: space-between;    
+    padding: 0.3rem 0.4rem 0rem;
+  }
 
 /* Div containing both the Property Title and Property Item */
 .modalPropertyDiv {
-    display: inline-block;
-    text-align: left; 
-    align-items: top;
-    width: 21%;
+    flex: 0 0 30%;                       /* don't grow, don't shrink, width */
     height: 60px;
-    min-width: 200px;
-    margin-left: 10px;
-    margin-top: 5px;
+    width: 30%;
+    text-align: left; 
+    font-size: 0.8rem;
+    border: 1px solid lightgrey;    
+    padding: 5px;
+    margin-bottom: 5px;
 }
 
 /* Element name styling, Status, Budget Status, etc. */
 .modalPropertyTitle {  
     font-family: 'Montserrat', sans-serif;
     font-weight: 'bold';
-    text-align: left; 
     color: black;
-    height: 20px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    height: 20px;    
 }
 
 /* Div containg the value, Completed, On Schedule, etc. Text itself is styled in status_styling.css */
 .modalPropertyItem {
-    font-family: 'Titillium Web', sans-serif;
+    font-family: sans-serif;
     font-weight: bold;
-    font-size: 14px;
-    color: black; /* Temporary styling to fix */
     height: 40px;
-    overflow: hidden;
-    text-overflow: ellipsis;
+}
 
+.modalAddressText {
+    word-wrap: break-word;
 }
 
 /* Styling of text on tabs in modal*/
 .modalProposalText {
     font-family: 'Titillium Web', sans-serif;
-    font-size: 14px;
+    font-size: 0.8rem;
     color: black;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin-left: 10px;
+    margin-left: 0.4rem;
     padding-top: 0.3rem;
-    padding-bottom: 5px;
-    padding-right: 3rem;
+    padding-bottom: 0.2rem;
+    padding-right: 0.4rem;
 
-}
-
-/* Block containing the links on tabs of modal (permalink and DC link) */
-.modalLinkDiv {
-    display: block;
-    margin-top: 10px;
-    margin-left: 10px;
-    width: 95%;
-}
-
-/* Title of report on modal Report Tab*/
-.modalLinkTitle {
-    display: inline-block;
-    font-family: 'Montserrat', sans-serif;
-    text-align: left;
-    color: black;
-    height: 20px;
-    width: 100px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-/* Sub div containing the links */
-.modalLinkItem {
-    display: inline-block;
-    text-align: left;
-    height: 25px;
 }
 
 /* Styling of links on Funding and Performance modal Tabs */
@@ -267,21 +255,127 @@ Styling used in the modal tab files (ModalTabMain, ModalTabPerformance, ModalTab
     display: block;
     text-align: center;
     padding-top: 1rem;
-    height: 1rem;
+    margin-bottom: 1rem;
 }
 
-/* Styling of report link on modal Report Tab*/
-.modalReportLink {
-    display: inline-block;
+.modalTabLink a {
     font-family: 'Roboto', sans-serif;
-    text-transform: uppercase;
-    text-align: left;
+    font-size: 1rem;
     color: #008de4;
-    height: 20px;
-    vertical-align: center;
-    text-decoration: none;
+    font-weight: 400;
     text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* 2x4 grid with proposal properties in it */
+.modalReportGrid {
+    display: flex;                       /* establish flex container */
+    flex-wrap: wrap;                     /* enable flex items to wrap */
+    justify-content: space-around; 
+    min-height: 5rem;   
+    margin: 0.3rem 1rem;   
+}
+
+/* Div containing both the Property Title and Property Item */
+.modalReportDiv {
+    flex: 0 0 40%;                       /* don't grow, don't shrink, width */
+    align-items: center;      
+}
+
+/* Styling of the text of the bottom links*/
+.modalNoReportText {
+    font-family: sans-serif;
+    font-weight: 200;
+    font-size: 1rem;
+    margin-left: 2rem;
+    padding: 2rem 0;
+}
+
+/* Styling of the report link at the bottom of the proposal cards */
+.modalReportItem {
+    display: block;
+    padding: 10px 10px;
+    margin-left: 0.4rem;
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    overflow: hidden; 
+    text-overflow: ellipsis;  
+}
+
+/* Styling of the text of the bottom links*/
+.modalReportLink {
+    font-family: 'Roboto', sans-serif;
+    color: #008de4;
+    font-weight: 200;
+    font-size: 1rem;
+    text-transform: uppercase;
+    text-decoration: none;   
+    cursor: pointer;
+}
+
+.modalReportLink img {
+    vertical-align: middle;
+}
+
+/* Styling for links in general */
+.link {
+    font-family: 'Roboto', sans-serif;
+    color: #008de4;
+    font-weight: 400;
+    height: 20px;
+    text-align: center;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modalLinkDiv {
+    margin: 0.5rem 0.4rem;
+}
+
+/* Separator for image links */
+.modalLinkSeparator {
+    display: inline-flex;
+    border-left: 1px solid lightgrey;
+    height: 35px;
+    margin-left: 10px;
+    padding-right: 10px;
+}
+
+/*
+Tooltip styling
+*/
+
+/* Styling of the tooltip element */
+.modalTooltip {
+    font-family: 'Montserrat', sans-serif;
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted lightgrey;
+    cursor: pointer;
+}
+
+/* Styling of the Tooltip block */
+.modalTooltip .modalTooltiptext {
+    font-family: sans-serif;
+    font-size: 0.8rem;
+    visibility: hidden;
+    width: 300px;
+    background-color: #555;
+    color: #fff;
+    text-align: left;
+    border-radius: 6px;
+    padding: 5px 5px;
+    
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+    top: 100%;
+    left: 50%;
+    margin-left: -150px;
+}
+
+/* Show tooltip upon hover */
+.modalTooltip:hover .modalTooltiptext {
+    visibility: visible;
 }

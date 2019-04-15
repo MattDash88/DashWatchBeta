@@ -5,7 +5,6 @@ import {trackEvent} from '../functions/analytics';
 
 // Import other elements 
 import ModalTabMain from './ModalTabMain'
-import ModalTabPerformance from './ModalTabPerformance'
 import ModalTabFunding from './ModalTabFunding'
 import ModalTabReports from './ModalTabReports'
 
@@ -59,37 +58,29 @@ class ModalContent extends React.Component {
         } = this.props  
         
         const { // Declare main_data elements that are used in the modal header
+          title,
+          proposal_name,
           proposal_owner,
-          slug,
         } = this.props.main_data
        
         return (   
           <div className="modalWrapper" id="Modal">
               <div className="modalCardTitle">
-              <span className="modalTitleWrapper">
-                <span className="modalProposalName">{slug}</span><span className="modalCloseButton" onClick={this.handleClose}>[ close ]</span>
-                <div className="modalOwnerName">by {proposal_owner}</div>
-              </span>
-              
-                
-              </div>
+              <div className="modalCloseButton" onClick={this.handleClose}>[ close ]</div>
+              <div className="modalProposalName">{title}</div>
+              <div className="modalOwnerName">proposed by <a id="owner link" target="" href={`/proposals?search=${proposal_owner}`} onClick={this.callEvent}>{proposal_owner}</a></div>
+          </div>
               <div className="modalTabWrapper">
-              <button className="modalTabButton" title="Proposal Details" id="TabMain" value={this.state.displayTab == "TabMain" ? "active" : 
-          "inactive"} onClick={this.handleTab}>Proposal Details</button>
-            <button className="modalTabButton" title="Key Performance Indicators" id="TabPerformance" value={this.state.displayTab == "TabPerformance" ? "active" : 
-          "inactive"} onClick={this.handleTab}>Key Performance Indicators</button>
-            <button className="modalTabButton" title="Funding and Expenses" id="TabFunding" value={this.state.displayTab == "TabFunding" ? "active" : 
-          "inactive"} onClick={this.handleTab}>Funding and Expenses</button>
-            <button className="modalTabButton" title="Reports" id="TabReports" value={this.state.displayTab == "TabReports" ? "active" : 
-          "inactive"} onClick={this.handleTab}>Reports</button>
+              <div className="modalTabButton" title="Proposal Details" id="TabMain" value={this.state.displayTab == "TabMain" ? "Active" : 
+          "Inactive"} onClick={this.handleTab}><p>Proposal Details</p></div>
+            <div className="modalTabButton" title="Funding and Expenses" id="TabFunding" value={this.state.displayTab == "TabFunding" ? "Active" : 
+          "Inactive"} onClick={this.handleTab}><p>Funding and Expenses</p></div>
+            <div className="modalTabButton" title="Reports" id="TabReports" value={this.state.displayTab == "TabReports" ? "Active" : 
+          "Inactive"} onClick={this.handleTab}><p>Reports</p></div>
             <br></br>
               </div>
               <ModalTabMain
                 main_data={main_data}
-                openTab={this.state.displayTab}     // Determines tab content visibility  
-              />
-              <ModalTabPerformance
-                slug={slug}
                 openTab={this.state.displayTab}     // Determines tab content visibility  
               />
               <ModalTabFunding
@@ -98,7 +89,8 @@ class ModalContent extends React.Component {
               />
               <ModalTabReports
                 report_data={report_data}
-                openTab={this.state.displayTab}     // Determines tab content visibility        
+                openTab={this.state.displayTab}     // Determines tab content visibility
+                id={main_data.id}        
             />
           </div>
     

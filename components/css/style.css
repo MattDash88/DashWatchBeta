@@ -352,7 +352,7 @@ Style elements used in Post.js
 .cardPropertyTitle {  
     font-family: 'Montserrat', sans-serif;
     font-weight: 'bold';
-    font-size: 14px;
+    font-size: 0.9rem;
     color: black;
     height: 20px;
 }
@@ -360,7 +360,7 @@ Style elements used in Post.js
 /* Element value styling, Completed, On Schedule, etc. */
 .cardPropertyItem {
     font-family: sans-serif;
-    font-size: 14px;
+    font-size: 0.9rem;
     font-weight: 600;
     height: 40px;
     overflow: hidden;
@@ -466,7 +466,6 @@ Styling for the card report section
     position: absolute;  
     background: white;     
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
 }
 
 /* Change styling of top item of the dropdown list when the menu is open */
@@ -488,7 +487,6 @@ Styling for the card report section
     text-align: right;    
     border: none;
     padding: 16px 10px 16px 64px;  
-    z-index: 1;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -506,12 +504,13 @@ Styling for the card report section
     padding-left: 10px;
     padding-right: 10px;
     border: solid lightgrey 1px;
-    border-radius:4px 4px 4px 4px; 
+    border-radius: 4px 4px 4px 4px; 
     cursor: pointer;
 }
 
 /* Downpointing chevron on dropdown menus */
 i[id="reportsMenu"] {   
+    display: inline-block;
     border: solid #012060;
     border-width: 0 2px 2px 0;
     text-align: right;    
@@ -529,8 +528,8 @@ Tooltip styling
 /* Styling of the tooltip element */
 .cardTooltip {
     font-family: 'Montserrat', sans-serif;
-    font-size: 14px;
     position: relative;
+    font-size: 14px;
     display: inline-block;
     border-bottom: 1px dotted lightgrey;
     cursor: pointer;
