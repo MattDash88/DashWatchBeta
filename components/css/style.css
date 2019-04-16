@@ -17,6 +17,7 @@ Styles used in index.js
 /* General page wrapper */
 .pagewrapper {
     position: relative;
+    align-items: center;
     min-width: 800px;
     max-width: 1000px;
     margin: 55px auto;
@@ -218,7 +219,7 @@ input[type=submit] {
 /* Proposal list div containing header */
 .headerLeftDiv {
     display: inline-block;
-    padding-left: 1rem;
+    padding-left: 3.5rem;
     align-self: left;
     vertical-align: top;
     width: 60%;
@@ -229,13 +230,14 @@ input[type=submit] {
     display: inline-block;
     align-self: right;
     vertical-align: top;
-    width: 35%;
+    width: 30%;
 }
 
 /* Styling of normal text in header */
 .headerText {
     font-family: 'Titillium Web', sans-serif;
-    font-size: 14px;
+    text-align: right;
+    font-size: 0.8rem;
     color: black;
 }
 
@@ -272,7 +274,9 @@ input[type=submit] {
 Style elements used in Post.js 
 */
 .cardDiv { 
-    width: 900px;
+    width: 900px; 
+    margin-left: auto;
+    margin-right: auto;
     box-shadow: 2px 2px 1px grey;
     border-radius:5px 5px 5px 5px;      
     margin-bottom: 20px;

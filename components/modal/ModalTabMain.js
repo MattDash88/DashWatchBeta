@@ -1,7 +1,7 @@
 import React from 'react';
 
 // Analytics
-import { trackEvent } from '../functions/analytics';
+import {trackEvent} from '../functions/analytics';
 
 // Import css
 import '../css/style.css';
@@ -12,6 +12,7 @@ class ModalTabMain extends React.Component {
   constructor() {
     super();
 
+    // Binding functions in this class
     this.callEvent = this.callEvent.bind(this);
   }
 
@@ -194,10 +195,10 @@ class ModalTabMain extends React.Component {
         <section>
           <div className="modalHeader">Links:</div>
           <div className="modalLinkDiv">
-            <a className="link" id="modalDcLink" href={dclink} target="_blank" onClick={this.callEvent}><img id="DcLogo" src="https://dashwatchbeta.org/images/DashCentral.png" height="40"></img></a>
-            <div className="linkSeparator"></div>
-            <a className="link" id="modalDwLink" href={`/p/${slug}`} target="" onClick={this.callEvent}><img id="Logo" src="https://dashwatchbeta.org/images/DashWatch.png" height="40"></img></a>
-            <div className="linkSeparator"></div>
+            <a id="modalDcLink" href={dclink} target="_blank" onClick={this.callEvent}><img id="DcLogo" src="https://dashwatchbeta.org/images/DashCentral.png" height="40"></img></a>
+            <div className="modalLinkSeparator"></div>
+            <a id="modalDwLink" href={`/p/${slug}`} target="" onClick={this.callEvent}><img id="Logo" src="https://dashwatchbeta.org/images/DashWatch.png" height="40"></img></a>
+            <div className="modalLinkSeparator"></div>
           </div>
         </section>
       </div>

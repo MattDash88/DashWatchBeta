@@ -143,7 +143,7 @@ Styling used in ModalContent.js
     line-height: 1 rem;
     vertical-align: middle; 
     text-align: center;  
-    height: 40px;
+    height: 50px;
     width: 31%;
     transition: 0.15s;
 }
@@ -167,7 +167,7 @@ Styling used in ModalContent.js
 .modalTabButton p {
     font-family: 'Montserrat', sans-serif;
     font-weight: 600;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     text-align: center;
     color: black;
     margin: auto;
@@ -211,7 +211,7 @@ Styling used in the modal tab files (ModalTabMain, ModalTabPerformance, ModalTab
     height: 60px;
     width: 30%;
     text-align: left; 
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     border: 1px solid lightgrey;    
     padding: 5px;
     margin-bottom: 5px;
@@ -317,20 +317,13 @@ Styling used in the modal tab files (ModalTabMain, ModalTabPerformance, ModalTab
     vertical-align: middle;
 }
 
-/* Styling for links in general */
-.link {
-    font-family: 'Roboto', sans-serif;
-    color: #008de4;
-    font-weight: 400;
-    height: 20px;
-    text-align: center;
-    text-transform: uppercase;
-    text-decoration: none;
-    cursor: pointer;
+.modalLinkDiv {
+    display: flex;
+    margin: 0.5rem 0.4rem;
 }
 
-.modalLinkDiv {
-    margin: 0.5rem 0.4rem;
+.modalLinkDiv a {
+    display: inline-flex;
 }
 
 /* Separator for image links */

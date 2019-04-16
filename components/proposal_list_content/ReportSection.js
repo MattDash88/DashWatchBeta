@@ -1,7 +1,7 @@
 import React from 'react';
 
 // Analytics
-import { trackEvent } from '../functions/analytics';
+import {trackEvent} from '../functions/analytics';
 
 // Import other elements 
 
@@ -189,8 +189,8 @@ class ReportSection extends React.Component {
 }
 
 class DocumentMenu extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
 
     // Binding functions in this class
     this.getImageUrl = this.getImageUrl.bind(this);
@@ -233,8 +233,8 @@ class DocumentMenu extends React.Component {
 }
 
 class MediaMenu extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
 
     // Binding functions in this class
     this.getImageUrl = this.getImageUrl.bind(this);
