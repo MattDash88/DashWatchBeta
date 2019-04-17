@@ -13,13 +13,19 @@ import './css/style.css';
 import './css/status_styling.css';
 
 class Post extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { show: false };
+  constructor() {
+    super();
+    this.state = { 
+      show: false,
+      showTooltip: '',
+      eventListener: false,
+    };
 
     // Binding functions in this class
     this.hideModal = this.hideModal.bind(this);
     this.showModal = this.showModal.bind(this);
+    this.handleTooltip = this.handleTooltip.bind(this);
+    this.handleClick = this.handleClick.bind(this);
     this.callEvent = this.callEvent.bind(this);
   }
 
@@ -34,9 +40,47 @@ class Post extends React.Component {
     this.setState({ show: false });
   };
 
+  // Function to close Modal
+  handleTooltip(event) {
+    if (this.state.showTooltip == event.currentTarget.id) {
+      this.setState({ 
+        showTooltip: '',
+        eventListener: false,
+      });
+      trackEvent('Proposals Page', `Opened Tooltip by clicking`)
+    } else {
+      this.setState({ 
+        showTooltip: event.currentTarget.id,
+        eventListener: true,
+      });
+      trackEvent('Proposals Page', `Closed Tooltip by clicking on it`)
+    }
+  };
+
+  // Function when the eventlistener is activated. Closes tooltips when clicking outside of them
+  handleClick() {
+    this.setState({
+      showTooltip: '',
+      eventListener: false,
+    })
+    trackEvent('Proposals Page', `Closed Tooltip by clicking outside`)
+  }
+
   // Google Analytics function to track User interaction on page
   callEvent(event) {
     trackEvent('Proposals Page', 'clicked ' + event.currentTarget.id)
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.eventListener !== this.state.eventListener) {
+      { 
+        this.state.eventListener ? window.addEventListener('mousedown', this.handleClick) : window.removeEventListener('mousedown', this.handleClick);        // Handles closing of dropdown menu
+      }   // Start or stop event listener that handles closing of tooltip
+    }
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('mousedown', this.handleClick);    // Stop event listener post is unloaded
   }
 
   render() {
@@ -60,11 +104,6 @@ class Post extends React.Component {
       status,
       id,                     // Unique id of the proposal's Airtable record
     } = this.props.main_data
-
-    const { // Declare report_data elements to use in render()
-      report_date,
-      report_link,
-    } = this.props.report_data[0]
 
     // Code to generate Dashcentral link
     let dclink = null;
@@ -113,8 +152,9 @@ class Post extends React.Component {
               <section className="cardPropertyGrid">
                 <div className="cardPropertyDiv">
                   <div className="cardPropertyTitle">
-                    <div id="tooltip" className="cardTooltip">First Date Paid:
-                  <span className="cardTooltiptext">The date the proposal received its first payment from a superblock (UTC).</span>
+                    <div id="first_date_paid" className="cardTooltip" onClick={this.handleTooltip}>First Date Paid:
+                  <span className="cardTooltiptext" value={this.state.showTooltip == "first_date_paid" ? "Active" :
+                        "Inactive"}>The date the proposal received its first payment from a superblock (UTC).</span>
                     </div>
                   </div>
                   <div className="cardPropertyItem" title={first_payment_date}>
@@ -123,8 +163,9 @@ class Post extends React.Component {
                 </div>
 
                 <div className="cardPropertyDiv" value={comm_status}>
-                  <div id="tooltip" className="cardTooltip">Communication status:
-                  <span className="cardTooltiptext">The communication status of the proposal team with Dash Watch.</span>
+                  <div id="comm_status" className="cardTooltip" onClick={this.handleTooltip}>Communication status:
+                  <span className="cardTooltiptext" value={this.state.showTooltip == "comm_status" ? "Active" :
+                        "Inactive"}>The communication status of the proposal team with Dash Watch.</span>
                   </div>
                   <div className="cardPropertyItem" title={comm_status}>
                     <span>{comm_status}</span>
@@ -132,8 +173,9 @@ class Post extends React.Component {
                 </div>
 
                 <div className="cardPropertyDiv">
-                  <div id="tooltip" className="cardTooltip">Total funding received:
-                  <span className="cardTooltiptext">Total USD value of the treasury payments received by this proposal. The amount is calculated by using the USD value of Dash on the days when the superblocks is mined.</span>
+                  <div id="total_funding_received" className="cardTooltip" onClick={this.handleTooltip}>Total funding received:
+                  <span className="cardTooltiptext" value={this.state.showTooltip == "total_funding_received" ? "Active" :
+                        "Inactive"}>Total USD value of the treasury payments received by this proposal. The amount is calculated by using the USD value of Dash on the days when the superblocks is mined.</span>
                   </div>
                   <div className="cardPropertyItem" title={funding_received_usd}>
                     <span>&#36;{funding_received_usd}</span>
@@ -141,8 +183,9 @@ class Post extends React.Component {
                 </div>
 
                 <div className="cardPropertyDiv">
-                  <div id="tooltip" className="cardTooltip">Last updated:
-                  <span className="cardTooltiptext">Last time the metrics for this proposal were updated by Dash Watch.</span>
+                  <div id="last_updated" className="cardTooltip" onClick={this.handleTooltip}>Last updated:
+                  <span className="cardTooltiptext" value={this.state.showTooltip == "last_updated" ? "Active" :
+                        "Inactive"}>Last time the metrics for this proposal were updated by Dash Watch.</span>
                   </div>
                   <div className="cardPropertyItem" title={last_updated}>
                     <span>{last_updated}</span>
@@ -162,10 +205,11 @@ class Post extends React.Component {
                   </div>
 
                   <div className="cardPropertyDiv" value={comm_status}>
-                    <div id="tooltip" className="cardTooltip">Communication status:
-                  <span className="cardTooltiptext">The communication status of the proposal team with Dash Watch.</span>
+                    <div id="comm_status" className="cardTooltip" onClick={this.handleTooltip}>Communication status:
+                  <span className="cardTooltiptext" value={this.state.showTooltip == "comm_status" ? "Active" :
+                        "Inactive"}>The communication status of the proposal team with Dash Watch.</span>
                     </div>
-                    <div className="cardPropertyItem" title={comm_status}>
+                    <div id="comm_status" className="cardPropertyItem" title={comm_status}>
                       <span>{comm_status}</span>
                     </div>
                   </div>
@@ -189,8 +233,9 @@ class Post extends React.Component {
                   </div>
 
                   <div className="cardPropertyDiv">
-                    <div id="tooltip" className="cardTooltip">First Date Paid:
-                  <span className="cardTooltiptext">The date the proposal received its first payment from a superblock (UTC).</span>
+                    <div id="first_date_paid" className="cardTooltip" onClick={this.handleTooltip}>First Date Paid:
+                  <span className="cardTooltiptext" value={this.state.showTooltip == "first_date_paid" ? "Active" :
+                        "Inactive"}>The date the proposal received its first payment from a superblock (UTC).</span>
                     </div>
                     <div className="cardPropertyItem" title={first_payment_date}>
                       <span>{first_payment_date}</span>
@@ -198,8 +243,9 @@ class Post extends React.Component {
                   </div>
 
                   <div className="cardPropertyDiv">
-                    <div id="tooltip" className="cardTooltip">Total funding received:
-                  <span className="cardTooltiptext">Total USD value of the treasury payments received by this proposal. The amount is calculated by using the USD value of Dash on the days when the superblocks is mined.</span>
+                    <div id="total_funding_received" className="cardTooltip" onClick={this.handleTooltip}>Total funding received:
+                  <span className="cardTooltiptext" value={this.state.showTooltip == "total_funding_received" ? "Active" :
+                        "Inactive"}>Total USD value of the treasury payments received by this proposal. The amount is calculated by using the USD value of Dash on the days when the superblocks is mined.</span>
                     </div>
                     <div className="cardPropertyItem" title={funding_received_usd}>
                       <span>&#36;{funding_received_usd}</span>
@@ -216,8 +262,9 @@ class Post extends React.Component {
                   </div>
 
                   <div className="cardPropertyDiv">
-                    <div id="tooltip" className="cardTooltip">Last updated:
-                  <span className="cardTooltiptext">Last time the metrics for this proposal were updated by Dash Watch.</span>
+                    <div id="last_updated" className="cardTooltip" onClick={this.handleTooltip}>Last updated:
+                  <span className="cardTooltiptext" value={this.state.showTooltip == "last_updated" ? "Active" :
+                        "Inactive"}>Last time the metrics for this proposal were updated by Dash Watch.</span>
                     </div>
                     <div className="cardPropertyItem" title={last_updated}>
                       <span>{last_updated}</span>

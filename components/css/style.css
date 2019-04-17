@@ -563,4 +563,9 @@ Tooltip styling
 .cardTooltip:hover .cardTooltiptext {
     visibility: visible;
 }
+
+/* Show tooltip upon hover */
+.cardTooltip .cardTooltiptext[value="Active"] {
+    visibility: visible;
+}
   

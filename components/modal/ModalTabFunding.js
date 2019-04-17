@@ -12,13 +12,58 @@ class ModalTabFunding extends React.Component {
   constructor() {
     super();
 
+    this.state = { 
+      showTooltip: '',
+      eventListener: false,
+    };
+
     // Binding functions in this class
+    this.handleTooltip = this.handleTooltip.bind(this);
+    this.handleClick = this.handleClick.bind(this);
     this.callEvent = this.callEvent.bind(this);
+  }
+
+  // Function to close Modal
+  handleTooltip(event) {
+    if (this.state.showTooltip == event.currentTarget.id) {
+      this.setState({ 
+        showTooltip: '',
+        eventListener: false,
+      });
+      trackEvent('Full Modal', `Opened Tooltip by clicking`)
+    } else {
+      this.setState({ 
+        showTooltip: event.currentTarget.id,
+        eventListener: true,
+      });
+      trackEvent('Full Modal', `Closed Tooltip by clicking on it`)
+    }
+  };
+
+  // Function when the eventlistener is activated. Closes tooltips when clicking outside of them
+  handleClick() {
+    this.setState({
+      showTooltip: '',
+      eventListener: false,
+    })
+    trackEvent('Full Modal', `Closed Tooltip by clicking outside`)
   }
 
   // Google Analytics function to track User interaction on page
   callEvent(event) {
     trackEvent('Full Modal', 'clicked ' + event.currentTarget.id)
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.eventListener !== this.state.eventListener) {
+      { // Start or stop event listener that handles closing of tooltip
+        this.state.eventListener ? window.addEventListener('mousedown', this.handleClick) : window.removeEventListener('mousedown', this.handleClick);        // Handles closing of dropdown menu
+      }   
+    }
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('mousedown', this.handleClick);    // Stop event listener post is unloaded
   }
 
   render() {
@@ -43,8 +88,9 @@ class ModalTabFunding extends React.Component {
         <div className="modalHeader">Proposal Funding Details:</div>
         <section className="modalPropertyGrid">
           <div className="modalPropertyDiv">
-            <div id="tooltip" className="modalTooltip">First Date Paid:
-                  <span className="modalTooltiptext">The date the proposal received its first payment from a superblock (UTC).</span>
+            <div id="first_date_paid" className="modalTooltip" onClick={this.handleTooltip}>First Date Paid:
+                  <span className="modalTooltiptext" value={this.state.showTooltip == "first_date_paid" ? "Active" :
+                        "Inactive"}>The date the proposal received its first payment from a superblock (UTC).</span>
             </div>
             <div className="modalPropertyItem" title={first_payment_date}>
               <span>{first_payment_date}</span>
@@ -88,8 +134,9 @@ class ModalTabFunding extends React.Component {
           </div>
 
           <div className="modalPropertyDiv">
-            <div id="tooltip" className="modalTooltip">Total funding received:
-                  <span className="modalTooltiptext">Total USD value of the treasury payments received by this proposal. The amount is calculated by using the USD value of Dash on the days when the superblocks is mined.</span>
+            <div id="total_funding_received" className="modalTooltip" onClick={this.handleTooltip}>Total funding received:
+                  <span className="modalTooltiptext" value={this.state.showTooltip == "total_funding_received" ? "Active" :
+                        "Inactive"}>Total USD value of the treasury payments received by this proposal. The amount is calculated by using the USD value of Dash on the days when the superblocks is mined.</span>
             </div>
             <div className="modalPropertyItem" title={funding_received_usd}>
               <span>&#36;{funding_received_usd}</span>

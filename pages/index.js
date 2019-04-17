@@ -33,20 +33,6 @@ const getMonthList = () => {
     )
 }
 
-// API query requesting Opt-out List data
-const getOptOutList = () => {
-    return (
-        new Promise((resolve) => {
-            fetch(`/api/get/optoutlist`)
-                .then((res) => res.json()
-                    .then((res) => {
-                        resolve(res.data)
-                    })
-                )
-        })
-    )
-}
-
 class Month extends React.Component {
     static async getInitialProps(ctx) {
         const props = {
@@ -101,14 +87,11 @@ class Month extends React.Component {
        
         trackPage(`/reports`)   // Track Pageview in Analytics
 
-        var monthListPromise = Promise.resolve(getMonthList());
-        var optOutListPromise = Promise.resolve(getOptOutList());
-
         // Promise to get the initial "month list" records 
-        Promise.all([monthListPromise, optOutListPromise]).then(data => {
+        Promise.resolve(getMonthList()).then(data => {
             this.setState({
-                monthListData: data[0],
-                optOutListData: data[1],
+                monthListData: data.report_list,
+                optOutListData: data.opted_out_list,
             })
         }).then(history.replaceState(this.state, '', `${this.state.as}`))
     }

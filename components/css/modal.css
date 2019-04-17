@@ -47,7 +47,8 @@ Styling used in ModalContent.js
     min-width: 100%;
     max-width: 800px;
     overflow: auto;
-    min-height: max-content;
+    min-height: 30vh;
+    height: max-content;
     max-height: 80vh;
     box-shadow: 2px 2px 1px grey;
     border-radius:5px 5px 5px 5px;
@@ -370,5 +371,10 @@ Tooltip styling
 
 /* Show tooltip upon hover */
 .modalTooltip:hover .modalTooltiptext {
+    visibility: visible;
+}
+
+/* Show tooltip upon hover */
+.modalTooltip .modalTooltiptext[value="Active"] {
     visibility: visible;
 }

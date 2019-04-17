@@ -295,12 +295,12 @@ class Wallets extends React.Component {
                     <div id="Dash Core" onClick={this.handleDatasetToggle} className="labsDatabtn" value={tabQueries.showDashCore ? "Active" : "Inactive"}>Dash Core</div>
                     <div id="DashElectrum" onClick={this.handleDatasetToggle} className="labsDatabtn" value={tabQueries.showElectrum ? "Active" : "Inactive"}>Dash Electrum</div>
                     <div id="Core Android" onClick={this.handleDatasetToggle} className="labsDatabtn" value={tabQueries.showCoreAndroid ? "Active" : "Inactive"}>Core Android</div>
-                </div>
+                    </div>
                 <section>  
-                    {pageContent.proposalOwnerLink}                
+                    {pageContent.proposalOwnerLink} 
+                    <p className="labsNoteText">Note [Dash Core and Electrum]: The numbers for the Dash Electrum and Dash Core wallets only include direct downloads from GitHub. It does not include downloads of the binaries from other sources or when the user compiled the wallet themself using the source code.</p>
+                    <p className="labsNoteText">Note [Android]: The numbers for the Dash Android wallet only include direct downloads from the Google Play Store. It does not account for installations using an APK (Android application package) obtained from another source. Sharing APKs locally with one another, via Bluetooth or other technologies, is common practice in some countries to save on bandwidth costs.</p>               
                     {chartObject}                    
-                    <p className="labsNoteText">Dash Core and Dash Electrum note: The download numbers for the Dash Electrum and Dash Core wallets only include direct downloads from GitHub. It does not include downloads of the binaries from other sources or when the user compiled the wallet from the source code.</p>
-                    <p className="labsNoteText">Dash Android note: The download numbers for the Dash Android wallet only include direct downloads from the Google Play Store. It does not account for for installations where the APK (Android application package) was obtained from other sources. Sharing APK files locally with one another to save bandwidth is a common practice in some countries.</p>              
                     <h2 className="labsHeader">Wallet Downloads per version</h2>
                     {
                         Object.values(versionData).map((item) =>

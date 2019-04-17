@@ -104,20 +104,32 @@ const getMonthListData = (refreshCache) => {
       // If cache is empty or a cache refresh is requested, retrieve from Airtable
       else { 
         Promise.resolve(airtableFunctions.MonthReportPosts('Month List Reports')).then(function (valArray) {
-          const storeAirtablePosts = []   // Create const to push all proposal data in
+          // Create const to push proposal data in
+          const reportPosts = []
+          const optedOutPosts = []
 
           // Sorting out all valArray items
           monthReportData = valArray
 
           Object.keys(monthReportData).map((item) => {
-            if (typeof monthReportData[item].proposal_ref !== 'undefined') {     //Check if record exists
+            if (typeof monthReportData[item].proposal_ref !== 'undefined' && typeof monthReportData[item].report_status !== 'undefined') {     //Check if record exists
               monthData = processingFunctions.processMonthListData(monthReportData[item])
-              storeAirtablePosts.push(monthData)
+              if (monthData.list_data.report_status[0] == "Opted Out") {
+                optedOutPosts.push(monthData)
+              } else {
+                reportPosts.push(monthData)
+              }
             }
           })
+
+          const reportListPosts = {     // Create const with both lists
+            report_list: reportPosts,
+            opted_out_list: optedOutPosts,
+          }
+
           // Store results in Redis cache, cache expire time is defined in .env
-          cache.setex('monthListData', cacheExpirationTime, JSON.stringify(storeAirtablePosts))
-          resolve(storeAirtablePosts)
+          cache.setex('monthListData', cacheExpirationTime, JSON.stringify(reportListPosts))
+          resolve(reportListPosts)
         }).catch((error) => {
           reject({ error })
           console.log(error)
@@ -142,20 +154,32 @@ const getOldListData = (refreshCache) => {
       // If cache is empty or a cache refresh is requested, retrieve from Airtable
       else {  
         Promise.resolve(airtableFunctions.OldReportPosts('Old Reports')).then(function (valArray) {
-          const storeAirtablePosts = []   // Create const to push all proposal data in
+          // Create const to push proposal data in
+          const reportPosts = []
+          const optedOutPosts = []
 
           // Sorting out all valArray items
           monthReportData = valArray
 
           Object.keys(monthReportData).map((item) => {
-            if (typeof monthReportData[item].proposal_ref !== 'undefined') {     //Check if record exists
+            if (typeof monthReportData[item].proposal_ref !== 'undefined' && typeof monthReportData[item].report_status !== 'undefined') {     //Check if record exists
               monthData = processingFunctions.processMonthListData(monthReportData[item])
-              storeAirtablePosts.push(monthData)
+              if (monthData.list_data.report_status[0] == "Opted Out") {
+                optedOutPosts.push(monthData)
+              } else {
+                reportPosts.push(monthData)
+              }
             }
           })
+
+          const reportListPosts = {     // Create const with both lists
+            report_list: reportPosts,
+            opted_out_list: optedOutPosts,
+          }
+
           // Store results in Redis cache, cache expire time is defined in .env
-          cache.setex('oldListData', cacheExpirationTime, JSON.stringify(storeAirtablePosts))
-          resolve(storeAirtablePosts)
+          cache.setex('oldListData', cacheExpirationTime, JSON.stringify(reportListPosts))
+          resolve(reportListPosts)
         }).catch((error) => {
           reject({ error })
           console.log(error)
@@ -439,43 +463,11 @@ app.prepare()
       monthSelection = []
       var refreshCache = false    // Load from cache if available
       Promise.resolve(getMonthListData(refreshCache)).then(function (valArray) {
-        Object.keys(valArray).map((list_item) => {
-          if (typeof valArray[list_item].list_data.report_status === 'undefined') {
-            // Do nothing, skip entry
-          } else if (valArray[list_item].list_data.report_status[0] !== "Opted Out") {
-            monthSelection.push(valArray[list_item])
-          }
-        })
         res.writeHead(200, {
           'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/json'
         })
-        return res.end(serialize(monthSelection))
-      }).catch((error) => {
-        console.log(error)
-        // Send empty JSON otherwise page load hangs indefinitely
-        res.writeHead(200, { 'Content-Type': 'application/json' })
-        return res.end(serialize({}))
-      });
-    })
-
-    // Internal API call for Reports Page Opt-out table
-    server.get('/api/get/optoutlist', (req, res) => {
-      optOutSelection = []
-      var refreshCache = false    // Load from cache if available
-      Promise.resolve(getMonthListData(refreshCache)).then(function (valArray) {
-        Object.keys(valArray).map((list_item) => {
-          if (typeof valArray[list_item].list_data.report_status === 'undefined') {
-            // Do nothing, skip entry
-          } else if (valArray[list_item].list_data.report_status[0] == "Opted Out") {
-            optOutSelection.push(valArray[list_item])
-            }
-        })
-        res.writeHead(200, {
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json'
-        })
-        return res.end(serialize(optOutSelection))
+        return res.end(serialize(valArray))
       }).catch((error) => {
         console.log(error)
         // Send empty JSON otherwise page load hangs indefinitely
@@ -489,43 +481,11 @@ app.prepare()
       monthSelection = []
       var refreshCache = false    // Load from cache if available
       Promise.resolve(getOldListData(refreshCache)).then(function (valArray) {
-        Object.keys(valArray).map((list_item) => {
-          if (typeof valArray[list_item].list_data.report_status === 'undefined') {
-            // Do nothing, skip entry
-          } else if (valArray[list_item].list_data.report_status[0] !== "Opted Out") {
-            monthSelection.push(valArray[list_item])
-          }
-        })
         res.writeHead(200, {
           'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/json'
         })
-        return res.end(serialize(monthSelection))
-      }).catch((error) => {
-        console.log(error)
-        // Send empty JSON otherwise page load hangs indefinitely
-        res.writeHead(200, { 'Content-Type': 'application/json' })
-        return res.end(serialize({}))
-      });
-    })
-
-    // Internal API call for Reports Page Opt-out table
-    server.get('/api/get/old_optoutlist', (req, res) => {
-      optOutSelection = []
-      var refreshCache = false    // Load from cache if available
-      Promise.resolve(getOldListData(refreshCache)).then(function (valArray) {
-        Object.keys(valArray).map((list_item) => {
-          if (typeof valArray[list_item].list_data.report_status === 'undefined') {
-            // Do nothing, skip entry
-          } else if (valArray[list_item].list_data.report_status[0] == "Opted Out") {
-            optOutSelection.push(valArray[list_item])
-            }
-        })
-        res.writeHead(200, {
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json'
-        })
-        return res.end(serialize(optOutSelection))
+        return res.end(serialize(valArray))
       }).catch((error) => {
         console.log(error)
         // Send empty JSON otherwise page load hangs indefinitely
@@ -678,7 +638,7 @@ app.prepare()
           'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/json'
         })
-        return res.end(serialize(valArray))
+        return res.end(serialize('caches reloaded'))
       }).catch((error) => {
         console.log(error)
         // Send empty JSON otherwise page load hangs indefinitely

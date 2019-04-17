@@ -44,14 +44,14 @@ class ReportSection extends React.Component {
   }
 
   // Dropdown list for KPIs
-  handleDocumentDropdown(event) {
+  handleDocumentDropdown() {
     this.setState({
       showDocumentMenu: !this.state.showDocumentMenu,
     })
     trackEvent('Proposals Page', `Clicked Document dropdown`)
   }
 
-  handleMediaDropdown(event) {
+  handleMediaDropdown() {
     this.setState({
       showMediaMenu: !this.state.showMediaMenu,
     })
@@ -73,7 +73,6 @@ class ReportSection extends React.Component {
 
   // Function ran when the eventlistener is activated. Close dropdown menus if clicking outside of them
   handleClick = (event) => {
-    console.log(event.target)
     if (event.target.id !== "reportsMenu" && event.target.id !== "cardDropdownMenu" && event.target.id !== "cardDocumentLink" && event.target.id !== "cardMediaLink") {
       this.setState({
         showDocumentMenu: false,

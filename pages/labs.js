@@ -51,6 +51,7 @@ class Labs extends React.Component {
       tab: typeof ctx.query.tab == "undefined" ? "explorer" : ctx.query.tab,   // Default no month to latest
       project: typeof ctx.query.project == "undefined" ? 0 : ctx.query.project,
       kpi: typeof ctx.query.kpi == "undefined" ? 0 : ctx.query.kpi,
+      chart: ctx.query.chart,
       url: ctx.pathname,
       as: ctx.asPath,
     }
@@ -69,8 +70,8 @@ class Labs extends React.Component {
       // States that can be set by queries 
       project: props.project,
       kpi: props.kpi,
-      showPosChart: 'Transactions',
-      showWalletChart: 'Total',
+      showPosChart: typeof props.chart == "undefined" ? 'Transactions' : props.chart,
+      showWalletChart: typeof props.chart == "undefined" ? 'Total' : props.chart,
 
       // Booleans for POS systems
       showAnypay: true,
@@ -116,9 +117,9 @@ class Labs extends React.Component {
         showAnypay: queries.anypay,
         showPaylive: queries.paylive,
         showPosChart: queries.POSChart,
-        as: `/labs?tab=POSsystems`,
+        as: `/labs?tab=POSsystems&chart=${queries.POSChart}`,
       })
-      history.pushState(this.state, '', `/labs?tab=POSsystems`)
+      history.pushState(this.state, '', `/labs?tab=POSsystems&chart=${queries.POSChart}`)
     }
     if (tabId == 'wallets') {
       this.setState({
@@ -126,9 +127,9 @@ class Labs extends React.Component {
         showElectrum: queries.electrum,
         showCoreAndroid: queries.coreAndroid,
         showWalletChart: queries.walletChart,
-        as: `/labs?tab=wallets`,
+        as: `/labs?tab=wallets&chart=${queries.walletChart}`,
       })
-      history.pushState(this.state, '', `/labs?tab=wallets`)
+      history.pushState(this.state, '', `/labs?tab=wallets&chart=${queries.walletChart}`)
     }
   }
 
