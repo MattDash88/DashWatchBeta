@@ -16,13 +16,25 @@
     font-weight: bold;
 }
 
+/* Header of the labs tabs */
+.labsH2 {
+  display: block;
+  color: #003347;
+  position: relative;
+  font-family: 'Montserrat', sans-serif;
+  text-align: left;
+  font-size: 1.2rem;
+  margin-bottom: 0.3rem;
+  font-weight: bold;
+}
+
   /* Styling of text on top of page */
   .labsText {
     font-family: 'Titillium Web', sans-serif;
     font-size: 1rem;
     font-weight: 500;
     color: black;
-    margin-left: 10px;
+    margin-left: 0.3rem;
     margin-bottom: 0;
     margin-top:0;
     padding-bottom: 5px;
@@ -40,6 +52,18 @@
   text-transform: uppercase;
   text-decoration: none;
   cursor: pointer;
+}
+
+/* Styling of note that accompanies funding or performance information */
+.labsNoteText {
+  font-family: 'Titillium Web', sans-serif;
+  font-size: 0.8rem;
+  font-style: italic;
+  color: #3f51b5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-left: 0.3rem;
+  padding-right: 1rem;
 }
 
 /* div to show and hide correct plotter */
@@ -158,6 +182,86 @@ i[id="dropdownMenu"] {
 .labsDatabtn[value="Inactive"] {
   background-color: lightgrey;
   color: black;
+}
+
+/* Wrapper of the month list index row */
+.labsTableWrapper {
+  display: flex;
+  height: 3rem;
+  border-bottom: 0.1rem solid rgb(216, 220, 227);
+  background: white;
+  min-width: 500px;
+  max-width: 80%;
+}
+
+/* Wrapper of the month list index row */
+.labsTableWrapper:hover {
+  background: #f3f3f3;
+}
+
+/* Div for the cells of the index */
+.labsIndexItemFirst {
+  display: flex;
+  text-align: left;
+  flex-direction: column;
+  -webkit-box-pack: center;
+  line-height: 1rem;
+  justify-content: center;
+  margin-right: auto;
+  min-width: 0px;
+  width: 75%;
+}
+
+.labsIndexItem {
+  display: flex;
+  text-align: left;
+  flex-direction: column;
+  -webkit-box-pack: center;
+  line-height: 1rem;
+  justify-content: center;
+  margin-right: auto;
+  min-width: 0px;
+  width: 75%;
+}
+
+/* Text styling of the index */
+.labsColumnTitle {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  overflow: hidden;
+  margin: 2px;
+}
+
+/* Div of the other cells of the month list table*/
+.labsTableItemFirst {
+  display: flex;
+  text-align: left;
+  flex-direction: column;
+  -webkit-box-pack: center;
+  line-height: 1rem;
+  justify-content: center;
+  margin-right: auto;
+  min-width: 0px;
+  width: 75%;
+  border: 1px;
+}
+
+/* Div of the other cells of the month list table*/
+.labsTableItem {
+  display: flex;
+  text-align: left;
+  flex-direction: column;
+  -webkit-box-pack: center;
+  line-height: 1rem;
+  justify-content: center;
+  margin-right: auto;
+  min-width: 0px;
+  width: 75%;
+  border: 1px;
 }
 
 /*

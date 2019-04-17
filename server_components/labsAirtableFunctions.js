@@ -67,10 +67,10 @@ const WalletVersionPosts = function getWalletVersionPosts(tableId) {
 
             // Create a const with the required fields
             records.forEach(function (record) {
-                const post = {
-                    last_updated: record.get('Last Date'),
+                const post = {                  
                     wallet_name: record.get('Wallet'),  //This is the ending of the Dash Central url, it is used as an proposal identifier
-                    release_updated: record.get('Release Date'),
+                    release_date: record.get('Release Date'),
+                    last_updated: record.get('Last Updated'),
                     successor_release: record.get('Successor Date'),
                     wallet_version: record.get('Wallet Version'),
                     total: record.get('Total'),

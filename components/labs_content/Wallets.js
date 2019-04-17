@@ -296,10 +296,41 @@ class Wallets extends React.Component {
                     <div id="DashElectrum" onClick={this.handleDatasetToggle} className="labsDatabtn" value={tabQueries.showElectrum ? "Active" : "Inactive"}>Dash Electrum</div>
                     <div id="Core Android" onClick={this.handleDatasetToggle} className="labsDatabtn" value={tabQueries.showCoreAndroid ? "Active" : "Inactive"}>Core Android</div>
                 </div>
-                <section>
-                    {pageContent.proposalOwnerLink}
-                    {chartObject}
+                <section>  
+                    {pageContent.proposalOwnerLink}                
+                    {chartObject}                    
+                    <p className="labsNoteText">Dash Core and Dash Electrum note: The download numbers for the Dash Electrum and Dash Core wallets only include direct downloads from GitHub. It does not include downloads of the binaries from other sources or when the user compiled the wallet from the source code.</p>
+                    <p className="labsNoteText">Dash Android note: The download numbers for the Dash Android wallet only include direct downloads from the Google Play Store. It does not account for for installations where the APK (Android application package) was obtained from other sources. Sharing APK files locally with one another to save bandwidth is a common practice in some countries.</p>              
+                    <h2 className="labsHeader">Wallet Downloads per version</h2>
+                    {
+                        Object.values(versionData).map((item) =>
+                        <section>
+                        <p className="labsH2">{item.wallet_name} (last updated: {item.last_updated})</p>
+                        <div className="labsTableWrapper" key={item.wallet_name}>
+                            <div className="labsIndexItemFirst"><p className="labsColumnTitle">Wallet Version</p></div>
+                            <div className="labsIndexItem"><p className="labsColumnTitle">Date Released</p></div>
+                            <div className="labsIndexItem"><p className="labsColumnTitle">Desktop</p></div>
+                            <div className="labsIndexItem"><p className="labsColumnTitle">Mobile</p></div>
+                            <div className="labsIndexItem"><p className="labsColumnTitle">Total</p></div>
+                        </div>
+                        {
+                            Object.values(item.walletVersionData).map((version) =>
+                            <div className="labsTableWrapper" key={version.id}>
+                                <div className="labsTableItemFirst">{version.wallet_version}</div>         
+                                <div className="labsTableItem">{version.release_date}</div>
+                                <div className="labsTableItem">{version.desktop}</div>
+                                <div className="labsTableItem">{version.mobile}</div>
+                                <div className="labsTableItem">{version.total}</div>
+                            </div>
+                            )
+                        }
+                        </section>
+                        )
+                    }
                 </section>
+                
+
+                
             </main>
         )
     }

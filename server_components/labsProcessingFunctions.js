@@ -122,18 +122,16 @@ var processVersionData = function mainVersionFunction(walletData) {
     // Sort and prepare all the data per wallet type
     Object.keys(uniqueWalletTypes).map((item) => {  // Iterate through all unique wallet types
         // Declare elements used per iteration
-        var walletVersionArray = []
         var walletVersionData = []
         var walletPO
+        var last_updated
 
         // Sort the entries in the dataset to the unique wallet types
         Object.keys(walletData).map((data_item) => {    // Iterate through the whole wallet dataset
-            if (walletData[item].wallet_name == uniqueWalletTypes[data_item]) {
-                walletVersionArray.push(walletData[data_item].wallet_version)
+            if (walletData[data_item].wallet_name == uniqueWalletTypes[item]) {
                 walletVersionData.push({
                     wallet_version: walletData[data_item].wallet_version,
-                    last_updated: walletData[data_item].last_updated,
-                    release_updated: walletData[data_item].release_updated,
+                    release_date: walletData[data_item].release_date,
                     successor_release: walletData[data_item].successor_releasen,
                     total: walletData[data_item].total,
                     desktop: walletData[data_item].desktop,
@@ -141,16 +139,18 @@ var processVersionData = function mainVersionFunction(walletData) {
                     id: walletData[data_item].id,
                 })
                 walletPO = walletData[data_item].proposal_owner
+                last_updated = walletData[data_item].last_updated
             }
         })      // End of iteration through all wallet data   
         
         // Make an object for the wallet type
-        const walletDataConst = {
+        const walletDataConst = { 
             wallet_name: uniqueWalletTypes[item],
-            walletVersionArray: walletVersionArray,
             wallet_proposal_owner: walletPO,
+            last_updated: last_updated,
             walletVersionData: walletVersionData,
         }   // End of iteration loop through unique wallet array
+        
         storeMainData.push(walletDataConst)     // Push the object with wallet metrics to wallet data object     
     })
     return storeMainData

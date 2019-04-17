@@ -291,7 +291,6 @@ Style elements used in Post.js
     padding-top: 5px;
     padding-bottom: 5px;
     border-radius:5px 5px 0px 0px;
-    cursor: pointer;
 }
 
 /* Div of area that is clickable to activate the Modal */
@@ -314,6 +313,7 @@ Style elements used in Post.js
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    cursor: pointer;
 }
 
 /* Styling of the proposal owner name also used in Single.js */

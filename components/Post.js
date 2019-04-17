@@ -102,8 +102,8 @@ class Post extends React.Component {
     // Output for the card
     return (
       <div className="cardDiv">
-        <section className="cardTitle" onClick={this.showModal}>
-          <div className="proposalName">{title}</div>
+        <section className="cardTitle">
+          <div className="proposalName" onClick={this.showModal}>{title}</div>
           <div className="ownerName">proposed by <a id="owner link" target="" href={`/proposals?search=${proposal_owner}`} onClick={this.callEvent} title={`Search ${proposal_owner}`}>{proposal_owner}</a></div>
         </section>
         <div className="cardContentWrapper">

@@ -9,12 +9,15 @@ export default class Header extends React.Component {
             <div>
                 <Head>
                     <title>Dash Watch Charts and Visualizations</title>
-                    <meta name="twitter:card" content="summary_large_image" />
-                    <meta name="twitter:site" content="dashwatchbeta.org" />
+                    <meta property="og:title" content="Dash Watch - Charts and Visualizations" />
+                    <meta property="og:type" content="website" />
+                    <meta property="og:description" content="Explore performance metrics of Dash and Dash related projects." />
+                    <meta property="og:url" content="https://dashwatchbeta.org/labs" />
+                    <meta name="twitter:card" content="summary"/>
+                    <meta name="twitter:url" content="https://dashwatchbeta.org/labs" />
                     <meta name="twitter:creator" content="@DashWatchTeam" />
-                    <meta name="twitter:title" content="Dash Watch Labs" />
-                    <meta name="twitter:description" content="Dash Watch Charts and Visualization." />
-                    <meta name="twitter:image" content="https://dashwatchbeta.org/images/PreviewLabs.png" />
+                    <meta name="twitter:title" content="Dash Watch - Charts and Visualizations" />
+                    <meta name="twitter:description" content="Explore performance metrics of Dash and Dash related projects." />
                 </Head>
             </div>
         )
