@@ -40,14 +40,16 @@ class ModalTabFunding extends React.Component {
     }
   };
 
-  // Function when the eventlistener is activated. Closes tooltips when clicking outside of them
-  handleClick() {
+// Function when the eventlistener is activated. Closes tooltips when clicking outside of them
+handleClick(event) {
+  if (event.target.className !== "cardTooltip") {
     this.setState({
       showTooltip: '',
       eventListener: false,
     })
     trackEvent('Full Modal', `Closed Tooltip by clicking outside`)
   }
+}
 
   // Google Analytics function to track User interaction on page
   callEvent(event) {
@@ -157,7 +159,7 @@ class ModalTabFunding extends React.Component {
               Payment Address:
             </div>
             <div className="modalPropertyItem" title={payment_address}>
-              <span className="modalAddressText">{payment_address}</span>
+              <span>{payment_address}</span>
             </div>
           </div>
         </section>

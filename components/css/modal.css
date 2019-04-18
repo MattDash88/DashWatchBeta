@@ -23,7 +23,6 @@ Styles used in ModalFrame.js
     left:50%;
     border-radius:5px 5px 5px 5px;
     transform: translate(-50%,-50%);
-    align-items: left;
 }
 
 /* Display modal */
@@ -43,14 +42,11 @@ Styling used in ModalContent.js
 /* Outer border of the modal */
 .modalWrapper {
     object-fit: cover;
-    position: relative;
     min-width: 100%;
     max-width: 800px;
-    overflow: auto;
     min-height: 30vh;
     height: max-content;
     max-height: 80vh;
-    box-shadow: 2px 2px 1px grey;
     border-radius:5px 5px 5px 5px;
     background: #ffffff;
 }
@@ -58,7 +54,7 @@ Styling used in ModalContent.js
 /* Blue title area of the modal proposal card */
 .modalCardTitle { 
     font-family: 'Montserrat', sans-serif;
-    min-width: 600px;
+    min-width: 100%;
     max-width: 100%;
     background: #008de4;
     border-radius: 5px 5px 0px 0px;
@@ -191,6 +187,7 @@ Styling used in the modal tab files (ModalTabMain, ModalTabPerformance, ModalTab
 /* Styling to make tab content visible or not */
 .modalTabContent[value="active"] {
     display: block;
+    align-items: center;
     height: 100%;
 }
 
@@ -201,21 +198,23 @@ Styling used in the modal tab files (ModalTabMain, ModalTabPerformance, ModalTab
 /* 3x3 grid with proposal properties in it */
 .modalPropertyGrid {
     display: flex;                       /* establish flex container */
-    flex-wrap: wrap;                     /* enable flex items to wrap */
-    justify-content: space-between;    
-    padding: 0.3rem 0.4rem 0rem;
-  }
+    flex-wrap: wrap;                    /* enable flex items to wrap */
+    align-content: space-evenly;    
+    margin-left: 0.3rem;
+    margin-right: 0.3rem;
+}
 
 /* Div containing both the Property Title and Property Item */
 .modalPropertyDiv {
-    flex: 0 0 30%;                       /* don't grow, don't shrink, width */
+    flex: 0 0 31%;                       /* don't grow, don't shrink, width */
     height: 60px;
-    width: 30%;
+    width: 31%;
     text-align: left; 
     font-size: 0.9rem;
     border: 1px solid lightgrey;    
     padding: 5px;
-    margin-bottom: 5px;
+    margin-bottom: 0.4rem;
+    margin-right: 0.3rem;
 }
 
 /* Element name styling, Status, Budget Status, etc. */
@@ -230,11 +229,9 @@ Styling used in the modal tab files (ModalTabMain, ModalTabPerformance, ModalTab
 .modalPropertyItem {
     font-family: sans-serif;
     font-weight: bold;
-    height: 40px;
-}
-
-.modalAddressText {
+    word-break:break-all;
     word-wrap: break-word;
+    height: 40px;
 }
 
 /* Styling of text on tabs in modal*/

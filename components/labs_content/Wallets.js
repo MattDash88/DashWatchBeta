@@ -2,7 +2,7 @@ import React from 'react';
 import { Line } from 'react-chartjs-2';
 
 // Analytics
-import {trackEvent} from '../functions/analytics';
+import { trackEvent } from '../functions/analytics';
 
 // Import css
 import '../css/style.css';
@@ -19,19 +19,19 @@ const buildContent = (labsData, queries) => {
                     label: labsData[0].wallet_name,
                     fill: false,
                     borderColor: 'blue',
-                    data: labsData[0].total_downloads,    // participation data points
+                    data: labsData[0].total_downloads,
                 }),
                 desktopDownloads.push({
                     label: labsData[0].wallet_name,
                     fill: false,
                     borderColor: 'blue',
-                    data: labsData[0].desktop_downloads,    // participation data points
+                    data: labsData[0].desktop_downloads,
                 }),
                 mobileDownloads.push({
                     label: labsData[0].wallet_name,
                     fill: false,
                     borderColor: 'blue',
-                    data: labsData[0].mobile_downloads,    // participation data points
+                    data: labsData[0].mobile_downloads,
                 })
             ) : (
                     null
@@ -43,41 +43,67 @@ const buildContent = (labsData, queries) => {
                     label: labsData[1].wallet_name,
                     fill: false,
                     borderColor: 'purple',
-                    data: labsData[1].total_downloads,    // participation data points
+                    data: labsData[1].total_downloads,
                 }),
                 desktopDownloads.push({
                     label: labsData[1].wallet_name,
                     fill: false,
                     borderColor: 'purple',
-                    data: labsData[1].desktop_downloads,    // participation data points
+                    data: labsData[1].desktop_downloads,
                 }),
                 mobileDownloads.push({
                     label: labsData[1].wallet_name,
                     fill: false,
                     borderColor: 'purple',
-                    data: labsData[1].mobile_downloads,    // participation data points
+                    data: labsData[1].mobile_downloads,
                 })
             ) : (
                     null
                 )
+        }
+        {
             queries.showCoreAndroid ? (
                 totalDownloads.push({
                     label: 'Core Android',
                     fill: false,
                     borderColor: 'green',
-                    data: [],    // participation data points
+                    data: labsData[2].mobile_downloads,
                 }),
                 desktopDownloads.push({
                     label: 'Core Android',
                     fill: false,
                     borderColor: 'green',
-                    data: [],    // participation data points
+                    data: labsData[2].mobile_downloads,
                 }),
                 mobileDownloads.push({
                     label: 'Core Android',
                     fill: false,
                     borderColor: 'green',
-                    data: [],    // participation data points
+                    data: labsData[2].mobile_downloads,
+                })
+            ) : (
+                    null
+                )
+        }
+        {
+            queries.showCoreiOS ? (
+                totalDownloads.push({
+                    label: 'Core iOS',
+                    fill: false,
+                    borderColor: '#FF3824',
+                    data: labsData[3].mobile_downloads,
+                }),
+                desktopDownloads.push({
+                    label: 'Core iOS',
+                    fill: false,
+                    borderColor: '#FF3824',
+                    data: labsData[3].mobile_downloads,
+                }),
+                mobileDownloads.push({
+                    label: 'Core iOS',
+                    fill: false,
+                    borderColor: '#FF3824',
+                    data: labsData[3].mobile_downloads,
                 })
             ) : (
                     null
@@ -121,7 +147,7 @@ const buildContent = (labsData, queries) => {
         } else if (queries.showChart == 'Mobile') {
             var chartData = { datasets: mobileDownloads }
         } else {
-            chartData = { datasets: [] }
+            var chartData = { datasets: totalDownloads }
         }
         return {
             chartData: chartData,
@@ -134,7 +160,7 @@ const buildContent = (labsData, queries) => {
         }
         return {
             chartData: { datasets: [] },
-            options: [],
+            options: {},
             pageContent: pageContent,
         }
     }
@@ -142,23 +168,23 @@ const buildContent = (labsData, queries) => {
 
 const chartFunction = (chartData, options, redrawState) => {
     try {
-        var chartObject = 
+        var chartObject =
             <div>
-            <Line
-                data={chartData}
-                options={options}
-                redraw={redrawState}
-            />
+                <Line
+                    data={chartData}
+                    options={options}
+                    redraw={redrawState}
+                />
             </div>
-        
+
         return chartObject
     }
     catch (error) {
-        var chartObject = 
+        var chartObject =
             <div>
                 Please select a valid dataset
             </div>
-        
+
         return chartObject
     }
 }
@@ -201,11 +227,12 @@ class Wallets extends React.Component {
             dashCore: this.props.showDashCore,
             electrum: this.props.showElectrum,
             coreAndroid: this.props.showCoreAndroid,
+            coreiOS: this.props.showCoreiOS,
             walletChart: event.currentTarget.value,
         }
 
         this.handleQueries(queries)     // Send queries to main Labs file
-        trackEvent('Labs Page', `Changed Chart to ${event.currentTarget.value}`)                 // Track Event on Google Analytics    
+        trackEvent('Labs Page', `Changed Chart to Wallet ${event.currentTarget.value}`)                 // Track Event on Google Analytics    
     }
 
     // Function to toggle datasets on or off
@@ -218,6 +245,7 @@ class Wallets extends React.Component {
             dashCore: event.currentTarget.id == 'Dash Core' ? !this.props.showDashCore : this.props.showDashCore,
             electrum: event.currentTarget.id == 'DashElectrum' ? !this.props.showElectrum : this.props.showElectrum,
             coreAndroid: event.currentTarget.id == 'Core Android' ? !this.props.showCoreAndroid : this.props.showCoreAndroid,
+            coreiOS: event.currentTarget.id == 'Core iOS' ? !this.props.showCoreiOS : this.props.showCoreiOS,
             walletChart: this.props.showWalletChart,
         }
 
@@ -233,19 +261,19 @@ class Wallets extends React.Component {
     // Function ran when the eventlistener is activated. Close dropdown menu if clicked outside of it
     handleClick = (event) => {
         if (event.target.id !== "dropdownMenu") {
-        this.setState({
-            showMenu: false,
-            shouldRedraw: false,
-        }) 
-        trackEvent('Labs Page', `Clicked on Labs Wallets page`) 
+            this.setState({
+                showMenu: false,
+                shouldRedraw: false,
+            })
+            trackEvent('Labs Page', `Clicked on Labs Wallets page`)
         }
-      }
+    }
 
     componentDidMount() {
         window.addEventListener('mousedown', this.handleClick);     // Handles closing of dropdown menu
     }
 
-    componentWillUnmount() {       
+    componentWillUnmount() {
         window.removeEventListener('mousedown', this.handleClick);  // Stop event listener when modal is unloaded
     }
 
@@ -260,6 +288,7 @@ class Wallets extends React.Component {
             showDashCore: this.props.showDashCore,
             showElectrum: this.props.showElectrum,
             showCoreAndroid: this.props.showCoreAndroid,
+            showCoreiOS: this.props.showCoreiOS,
         }
 
         const content = buildContent(walletData, tabQueries)
@@ -284,53 +313,60 @@ class Wallets extends React.Component {
                                 <button id="dropdownMenu" value="Total" className="labsDropdownItem" onClick={this.handleSelectChart}>Total</button>
                                 <button id="dropdownMenu" value="Desktop" className="labsDropdownItem" onClick={this.handleSelectChart}>Desktop</button>
                                 <button id="dropdownMenu" value="Mobile" className="labsDropdownItem" onClick={this.handleSelectChart}>Mobile</button>
+                                <button id="dropdownMenu" value="Version" className="labsDropdownItem" onClick={this.handleSelectChart}>Downloads per Version</button>
                             </div>
                         ) : (
                                 null
                             )
                     }
                 </div>
-                <p className="labsText">Toggle datasets:</p>
-                <div>
-                    <div id="Dash Core" onClick={this.handleDatasetToggle} className="labsDatabtn" value={tabQueries.showDashCore ? "Active" : "Inactive"}>Dash Core</div>
-                    <div id="DashElectrum" onClick={this.handleDatasetToggle} className="labsDatabtn" value={tabQueries.showElectrum ? "Active" : "Inactive"}>Dash Electrum</div>
-                    <div id="Core Android" onClick={this.handleDatasetToggle} className="labsDatabtn" value={tabQueries.showCoreAndroid ? "Active" : "Inactive"}>Core Android</div>
-                    </div>
-                <section>  
-                    {pageContent.proposalOwnerLink} 
-                    <p className="labsNoteText">Note [Dash Core and Electrum]: The numbers for the Dash Electrum and Dash Core wallets only include direct downloads from GitHub. It does not include downloads of the binaries from other sources or when the user compiled the wallet themself using the source code.</p>
-                    <p className="labsNoteText">Note [Android]: The numbers for the Dash Android wallet only include direct downloads from the Google Play Store. It does not account for installations using an APK (Android application package) obtained from another source. Sharing APKs locally with one another, via Bluetooth or other technologies, is common practice in some countries to save on bandwidth costs.</p>               
-                    {chartObject}                    
-                    <h2 className="labsHeader">Wallet Downloads per version</h2>
-                    {
-                        Object.values(versionData).map((item) =>
+                {
+                    this.props.showWalletChart == "Version" ? (
                         <section>
-                        <p className="labsH2">{item.wallet_name} (last updated: {item.last_updated})</p>
-                        <div className="labsTableWrapper" key={item.wallet_name}>
-                            <div className="labsIndexItemFirst"><p className="labsColumnTitle">Wallet Version</p></div>
-                            <div className="labsIndexItem"><p className="labsColumnTitle">Date Released</p></div>
-                            <div className="labsIndexItem"><p className="labsColumnTitle">Desktop</p></div>
-                            <div className="labsIndexItem"><p className="labsColumnTitle">Mobile</p></div>
-                            <div className="labsIndexItem"><p className="labsColumnTitle">Total</p></div>
-                        </div>
-                        {
-                            Object.values(item.walletVersionData).map((version) =>
-                            <div className="labsTableWrapper" key={version.id}>
-                                <div className="labsTableItemFirst">{version.wallet_version}</div>         
-                                <div className="labsTableItem">{version.release_date}</div>
-                                <div className="labsTableItem">{version.desktop}</div>
-                                <div className="labsTableItem">{version.mobile}</div>
-                                <div className="labsTableItem">{version.total}</div>
-                            </div>
-                            )
-                        }
+                            <h2 className="labsHeader">Wallet Downloads per version</h2>
+                            {
+                                Object.values(versionData).map((item) =>
+                                    <section key={`${item.wallet_name}`}>
+                                        <p className="labsH2">{item.wallet_name} (last updated: {item.last_updated})</p>
+                                        <div className="labsTableWrapper">
+                                            <div className="labsIndexItemFirst"><p className="labsColumnTitle">Wallet Version</p></div>
+                                            <div className="labsIndexItem"><p className="labsColumnTitle">Date Released</p></div>
+                                            <div className="labsIndexItem"><p className="labsColumnTitle">Desktop</p></div>
+                                            <div className="labsIndexItem"><p className="labsColumnTitle">Mobile</p></div>
+                                            <div className="labsIndexItem"><p className="labsColumnTitle">Total</p></div>
+                                        </div>
+                                        {
+                                            Object.values(item.walletVersionData).map((version) =>
+                                                <div className="labsTableWrapper" key={version.id}>
+                                                    <div className="labsTableItemFirst">{version.wallet_version}</div>
+                                                    <div className="labsTableItem">{version.release_date}</div>
+                                                    <div className="labsTableItem">{version.desktop}</div>
+                                                    <div className="labsTableItem">{version.mobile}</div>
+                                                    <div className="labsTableItem">{version.total}</div>
+                                                </div>
+                                            )
+                                        }
+                                    </section>
+                                )
+                            }
                         </section>
+                    ) : (
+                            <section>
+                                <p className="labsText">Toggle datasets:</p>
+                                <div>
+                                    <div id="Dash Core" onClick={this.handleDatasetToggle} className="labsDatabtn" value={tabQueries.showDashCore ? "Active" : "Inactive"}><span>Dash Core</span><span className="labsDatabtnText">{tabQueries.showDashCore ? "ON" : "OFF"}</span></div>
+                                    <div id="DashElectrum" onClick={this.handleDatasetToggle} className="labsDatabtn" value={tabQueries.showElectrum ? "Active" : "Inactive"}><span>Dash Electrum</span><span className="labsDatabtnText">{tabQueries.showElectrum ? "ON" : "OFF"}</span></div>
+                                    <div id="Core Android" onClick={this.handleDatasetToggle} className="labsDatabtn" value={tabQueries.showCoreAndroid ? "Active" : "Inactive"}><span>Core Android</span><span className="labsDatabtnText">{tabQueries.showCoreAndroid ? "ON" : "OFF"}</span></div>
+                                    <div id="Core iOS" onClick={this.handleDatasetToggle} className="labsDatabtn" value={tabQueries.showCoreiOS ? "Active" : "Inactive"}><span>Core iOS</span><span className="labsDatabtnText">{tabQueries.showCoreiOS ? "ON" : "OFF"}</span></div>
+                                </div>
+                                {pageContent.proposalOwnerLink}
+                                {chartObject}
+                                <p className="labsNoteText">Note [Dash Core and Electrum]: The Dash Electrum and Dash Core wallets download metrics only include direct downloads from GitHub. They do not include downloads of binaries from other sources or when the user compiled the wallet from the source code.</p>
+                                <p className="labsNoteText">Note [Android]: The Dash Android wallet metrics only measure direct downloads from the Google Play Store. They do not account for installations using an APK (Android application package) obtained from other sources. Sharing APKs locally with one another, via Bluetooth or other technologies, is a common practice in some countries to save on bandwidth costs.</p>
+                                <p className="labsNoteText">Note [iOS]: Apple uses an opt-in system for tracking app metrics. because of this the measured download account for a subset of the total wallet app from the App store.</p>
+                            </section>
                         )
-                    }
-                </section>
-                
-
-                
+                }
             </main>
         )
     }

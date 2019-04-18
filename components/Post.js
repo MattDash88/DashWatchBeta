@@ -42,11 +42,11 @@ class Post extends React.Component {
 
   // Function to close Modal
   handleTooltip(event) {
-    if (this.state.showTooltip == event.currentTarget.id) {
+    if (this.state.showTooltip == event.currentTarget.id) {      
       this.setState({ 
         showTooltip: '',
         eventListener: false,
-      });
+      });      
       trackEvent('Proposals Page', `Opened Tooltip by clicking`)
     } else {
       this.setState({ 
@@ -57,14 +57,16 @@ class Post extends React.Component {
     }
   };
 
-  // Function when the eventlistener is activated. Closes tooltips when clicking outside of them
-  handleClick() {
+// Function when the eventlistener is activated. Closes tooltips when clicking outside of them
+handleClick(event) {
+  if (event.target.className !== "cardTooltip") {
     this.setState({
       showTooltip: '',
       eventListener: false,
     })
     trackEvent('Proposals Page', `Closed Tooltip by clicking outside`)
   }
+}
 
   // Google Analytics function to track User interaction on page
   callEvent(event) {

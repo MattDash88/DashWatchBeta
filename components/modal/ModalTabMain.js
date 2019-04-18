@@ -41,13 +41,15 @@ class ModalTabMain extends React.Component {
   };
 
   // Function when the eventlistener is activated. Closes tooltips when clicking outside of them
-  handleClick() {
+  handleClick(event) {
+    if (event.target.className !== "modalTooltip") {
     this.setState({
       showTooltip: '',
       eventListener: false,
     })
     trackEvent('Full Modal', `Closed Tooltip by clicking outside`)
   }
+}
 
   // Google Analytics function to track User interaction on page
   callEvent(event) {

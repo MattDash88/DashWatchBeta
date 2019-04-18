@@ -5,7 +5,6 @@ import React from 'react';
 import {trackPage, trackEvent} from '../components/functions/analytics';
 
 // Import pages
-import HowTo from '../components/elections_content/HowTo';
 import VoteCharts from '../components/elections_content/VoteCharts';
 import VoteResults from '../components/elections_content/VoteResults';
 
@@ -155,8 +154,6 @@ class TrustElections extends React.Component {
                 <section className="pagewrapper">
                     <div className="tpTab" id="candidates" value={this.state.tabId == "candidates" ? "Active" :
                         "Inactive"} onClick={this.handleSelectTab}><p className="tpTabText">2019 Candidates</p></div>                    
-                        <div className="tpTab" id="howTo" value={this.state.tabId == "howTo" ? "Active" :
-                        "Inactive"} onClick={this.handleSelectTab}><p className="tpTabText">How to Vote</p></div>
                         <div className="tpTab" id="participation" value={this.state.tabId == "participation" ? "Active" :
                         "Inactive"} onClick={this.handleSelectTab}><p className="tpTabText">Participation</p></div>
                         <div className="tpTab" id="results" value={this.state.tabId == "results" ? "Active" :
@@ -166,8 +163,7 @@ class TrustElections extends React.Component {
                     <section className="tpPageTopSection" value={this.state.tabId == "candidates" ? "Active" :
                         "Inactive"}>
                         <h1 className="tpHeader">2019 Dash Trust Protector Elections Candidates</h1>
-                        <p className="tpText">Want to vote? The voting tool for Dash MNOs is available at: <a id="Trustvote Link" href="https://trustvote.dash.org/" target="" onClick={this.callEvent}>trustvote.dash.org/</a><br></br>
-                        To help you along Dash Watch has made a <span className="tpHowToLink" id="howTo" onClick={this.handleSelectTab}>How to Vote Guide</span></p>
+                        <p className="tpText">Voting for the Trust Protectors Elections 2019 ended on March 31, 2019. The results are available <span className="tpHowToLink" id="results" onClick={this.handleSelectTab}>Here</span>.</p>
                         <div className="tpIndexWrapper">
                             <div className="tpIndexItemFirst"><p className="tpColumnTitle">Candidate</p></div>
                             <div className="tpIndexItem"><p className="tpColumnTitle">Contact</p></div>
@@ -185,12 +181,6 @@ class TrustElections extends React.Component {
                             Twitter: <a href="https://twitter.com/DashWatch" target="_blank">@DashWatch</a>
                         </div>
                     </section>
-
-                    <section className="tpPageTopSection" value={this.state.tabId == 'howTo' ? "Active" :
-                        "Inactive"}>
-                        <HowTo></HowTo>
-                    </section>
-
                     <section className="tpPageTopSection" value={this.state.tabId == 'participation' ? "Active" :
                         "Inactive"}>
                         <h1 className="tpHeader">Masternode Voting Participation</h1>

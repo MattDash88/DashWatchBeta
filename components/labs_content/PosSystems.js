@@ -109,8 +109,8 @@ const buildContent = (labsData, queries) => {
             var chartData = { datasets: volumeData }
             var options = optionsVolume
         } else {
-            chartData = { datasets: [] }
-            options = []
+            var chartData = { datasets: [] }
+            var options = {}
         }
         return {
             chartData: chartData,
@@ -124,7 +124,7 @@ const buildContent = (labsData, queries) => {
         }
         return {
             chartData: { datasets: [] },
-            options: [],
+            options: {},
             pageContent: pageContent,
         }
     }
@@ -194,7 +194,7 @@ class PosSystems extends React.Component {
         }
 
         this.handleQueries(queries)     // Send queries to main Labs file
-        trackEvent('Labs Page', `Changed Chart to ${event.currentTarget.value}`)                 // Track Event on Google Analytics    
+        trackEvent('Labs Page', `Changed Chart to POS ${event.currentTarget.value}`)                 // Track Event on Google Analytics    
     }
 
     // Function to toggle datasets on or off
@@ -277,8 +277,8 @@ class PosSystems extends React.Component {
                 </div>
                 <p className="labsText">Toggle datasets:</p>
                 <div>
-                    <div id="Anypay" onClick={this.handleDatasetToggle} className="labsDatabtn" value={tabQueries.showAnypay ? "Active" : "Inactive"}>Anypay</div>
-                    <div id="Paylive" onClick={this.handleDatasetToggle} className="labsDatabtn" value={tabQueries.showPaylive ? "Active" : "Inactive"}>Paylive</div>
+                    <div id="Anypay" onClick={this.handleDatasetToggle} className="labsDatabtn" value={tabQueries.showAnypay ? "Active" : "Inactive"}><span>Anypay</span><span className="labsDatabtnText">{tabQueries.showAnypay ? "ON" : "OFF"}</span></div>
+                    <div id="Paylive" onClick={this.handleDatasetToggle} className="labsDatabtn" value={tabQueries.showPaylive ? "Active" : "Inactive"}><span>Paylive</span><span className="labsDatabtnText">{tabQueries.showPaylive ? "ON" : "OFF"}</span></div>
                 </div>
                 <section>
                 {pageContent.proposalOwnerLink}

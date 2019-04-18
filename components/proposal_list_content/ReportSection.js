@@ -125,7 +125,7 @@ class ReportSection extends React.Component {
             // If there is one just show a report link
               documentsArray.length == 1 ? (
                 <div className="cardReportDiv">
-                  <div className="cardReportItem" ><a className="cardReportLink" href={report_data[documentsArray[0]].report_link} target="_blank" title={report_data[documentsArray[0]].report_link} onClick={this.callEvent}>{this.getImageUrl(report_data[documentsArray[0]].entry_type)} {report_data[documentsArray[0]].entry_name} [{report_data[documentsArray[0]].report_date}]</a></div>
+                  <div className="cardReportItem" ><a id="cardReportLink" className="cardReportLink" href={report_data[documentsArray[0]].report_link} target="_blank" title={report_data[documentsArray[0]].report_link} onClick={this.callEvent}>{this.getImageUrl(report_data[documentsArray[0]].entry_type)} {report_data[documentsArray[0]].entry_name} [{report_data[documentsArray[0]].report_date}]</a></div>
                 </div>
               ) : (
                 // If there are more generate a report document Menu
@@ -158,7 +158,7 @@ class ReportSection extends React.Component {
               mediaArray.length == 1 ? (
                 // If there is one just show a media item link
                 <div className="cardReportDiv">
-                  <div className="cardReportItem" ><a className="cardReportLink" href={report_data[mediaArray[0]].report_link} target="_blank" title={report_data[mediaArray[0]].report_link} onClick={this.callEvent}>{this.getImageUrl(report_data[mediaArray[0]].entry_type)} {report_data[mediaArray[0]].entry_name} [{report_data[mediaArray[0]].report_date}]</a></div>
+                  <div className="cardReportItem" ><a id="cardMediaLink" className="cardReportLink" href={report_data[mediaArray[0]].report_link} target="_blank" title={report_data[mediaArray[0]].report_link} onClick={this.callEvent}>{this.getImageUrl(report_data[mediaArray[0]].entry_type)} {report_data[mediaArray[0]].entry_name} [{report_data[mediaArray[0]].report_date}]</a></div>
                 </div>
               ) : (
                  // If there are more generate a media item Menu

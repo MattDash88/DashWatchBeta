@@ -190,7 +190,7 @@ i[id="dropdownMenu"] {
 .monthProposalWrapper {
     display: flex;
     height: 4rem;
-    border-bottom: 0.1rem solid rgb(216, 220, 227);
+    border-bottom: 0.1rem solid #d8dce3;
     background: white;
     min-width: 750px;
     max-width: 1000px;
@@ -292,7 +292,7 @@ the one containing the proposal name and proposal owner*/
 }
 
 .monthProposalType[value="Marketing"] { 
-    color: rgb(234, 64, 181);
+    color: #ea40b5;
 }
 
 .monthProposalType[value="Other"] { 
@@ -351,7 +351,7 @@ Styling for Opt-out Table
 .optOutWrapper {
     display: flex;
     height: 3rem;
-    border-bottom: 0.1rem solid rgb(216, 220, 227);
+    border-bottom: 0.1rem solid #d8dce3;
     background: white;
     min-width: 300px;
     max-width: 500px;
@@ -359,7 +359,7 @@ Styling for Opt-out Table
 
 /* Wrapper for the month list rows  */
 .optOutWrapper[id="firstRow"] {
-    border-top: 0.1rem solid rgb(216, 220, 227);
+    border-top: 0.1rem solid #d8dce3;
 }
 
 /* Wrapper for the month list rows  */
@@ -439,7 +439,7 @@ Styling for old reports
     text-decoration: none;   
     padding: 12px 16px;
     overflow: auto;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    box-shadow: 0px 8px 16px 0px black;
     border: none;
     z-index: 1;
     cursor: pointer;

@@ -81,6 +81,7 @@ class Labs extends React.Component {
       showDashCore: true,
       showElectrum: true,
       showCoreAndroid: true,
+      showCoreiOS: true,
 
       labsTabId: props.tab,
       url: '/labs',
@@ -126,6 +127,7 @@ class Labs extends React.Component {
         showDashCore: queries.dashCore,
         showElectrum: queries.electrum,
         showCoreAndroid: queries.coreAndroid,
+        showCoreiOS: queries.coreiOS,
         showWalletChart: queries.walletChart,
         as: `/labs?tab=wallets&chart=${queries.walletChart}`,
       })
@@ -150,11 +152,15 @@ class Labs extends React.Component {
         walletData: data[1].wallet_data,
         versionData: data[1].version_data,
       })
-    })
+    }).then(history.replaceState(this.state, '', `${this.state.as}`))
     trackPage(`/labs`)  // Track Pageview in Analytics
   }
 
-
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.labsTabId !== this.state.labsTabId || prevState.showPosChart !== this.state.showPosChart || prevState.showWalletChart !== this.state.showWalletChart) {// Just a history state update because it doesn't always work as desired in functions
+        history.replaceState(this.state, '', `${this.state.as}`)
+    }
+}
 
   render() {
     const { // Declare data arrays used in class
@@ -241,6 +247,7 @@ class Labs extends React.Component {
                       showDashCore={this.state.showDashCore}
                       showElectrum={this.state.showElectrum}
                       showCoreAndroid={this.state.showCoreAndroid}
+                      showCoreiOS={this.state.showCoreiOS}
                       showWalletChart={this.state.showWalletChart}
                     />
                   </div>

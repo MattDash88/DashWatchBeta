@@ -266,7 +266,7 @@ Styling of elements in TabPerformance and TabFunding
     height: 35px;
     width: 15%;
     float: left;
-    border: 1px solid rgb(190, 189, 189);
+    border: 1px solid #bebdbd;
     outline: none;
     padding: 5px 5px;
     cursor: pointer;
