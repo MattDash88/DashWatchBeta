@@ -125,14 +125,13 @@ i[id="dropdownMenu"] {
 /* Styling for the individual dropdown row items */
   .labsDropdownItem {
     display: block;
-    min-width: 200px;
+    min-width: 220px;
     padding: 16px 10px 16px 10px;
     font-size: 16px;
     text-align: left; 
     color: black;
     background-color: #f1f1f1;
     text-decoration: none;   
-    margin-right: 1rem;
     box-shadow: 0px 8px 16px 0px black;
     border: none;
     z-index: 1;
