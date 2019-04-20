@@ -47,13 +47,13 @@ class Post extends React.Component {
         showTooltip: '',
         eventListener: false,
       });      
-      trackEvent('Proposals Page', `Opened Tooltip by clicking`)
+      trackEvent('Proposals Page', 'Opened Tooltip by clicking')
     } else {
       this.setState({ 
         showTooltip: event.currentTarget.id,
         eventListener: true,
       });
-      trackEvent('Proposals Page', `Closed Tooltip by clicking on it`)
+      trackEvent('Proposals Page', 'Closed Tooltip by clicking on it')
     }
   };
 
@@ -64,7 +64,7 @@ handleClick(event) {
       showTooltip: '',
       eventListener: false,
     })
-    trackEvent('Proposals Page', `Closed Tooltip by clicking outside`)
+    trackEvent('Proposals Page', 'Closed Tooltip by clicking outside')
   }
 }
 
@@ -177,7 +177,7 @@ handleClick(event) {
                 <div className="cardPropertyDiv">
                   <div id="total_funding_received" className="cardTooltip" onClick={this.handleTooltip}>Total funding received:
                   <span className="cardTooltiptext" value={this.state.showTooltip == "total_funding_received" ? "Active" :
-                        "Inactive"}>Total USD value of the treasury payments received by this proposal. The amount is calculated by using the USD value of Dash on the days when the superblocks is mined.</span>
+                        "Inactive"}>An indication of the USD value of the treasury payments received by this proposal. The amount is calculated using the price of Dash rounded to full US Dollars on the days each superblock is mined.</span>
                   </div>
                   <div className="cardPropertyItem" title={funding_received_usd}>
                     <span>&#36;{funding_received_usd}</span>
@@ -247,7 +247,7 @@ handleClick(event) {
                   <div className="cardPropertyDiv">
                     <div id="total_funding_received" className="cardTooltip" onClick={this.handleTooltip}>Total funding received:
                   <span className="cardTooltiptext" value={this.state.showTooltip == "total_funding_received" ? "Active" :
-                        "Inactive"}>Total USD value of the treasury payments received by this proposal. The amount is calculated by using the USD value of Dash on the days when the superblocks is mined.</span>
+                        "Inactive"}>An indication of the USD value of the treasury payments received by this proposal. The amount is calculated using the price of Dash rounded to full US Dollars on the days each superblock is mined.</span>
                     </div>
                     <div className="cardPropertyItem" title={funding_received_usd}>
                       <span>&#36;{funding_received_usd}</span>
@@ -266,7 +266,7 @@ handleClick(event) {
                   <div className="cardPropertyDiv">
                     <div id="last_updated" className="cardTooltip" onClick={this.handleTooltip}>Last updated:
                   <span className="cardTooltiptext" value={this.state.showTooltip == "last_updated" ? "Active" :
-                        "Inactive"}>Last time the metrics for this proposal were updated by Dash Watch.</span>
+                        "Inactive"}>Most recent date the metrics for this proposal were updated by Dash Watch.</span>
                     </div>
                     <div className="cardPropertyItem" title={last_updated}>
                       <span>{last_updated}</span>

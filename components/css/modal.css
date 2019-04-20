@@ -56,7 +56,7 @@ Styling used in ModalContent.js
     font-family: 'Montserrat', sans-serif;
     min-width: 100%;
     max-width: 100%;
-    background: #008de4;
+    background: #012060;
     border-radius: 5px 5px 0px 0px;
     height: 75px;
 }
@@ -79,6 +79,7 @@ Styling used in ModalContent.js
     color: white;
     font-family: 'Montserrat', sans-serif;
     font-size: 1.5rem;
+    font-weight: bold;
     text-align: center;
     width: 100%;
     min-width: 350px;
@@ -211,6 +212,7 @@ Styling used in the modal tab files (ModalTabMain, ModalTabPerformance, ModalTab
     width: 31%;
     text-align: left; 
     font-size: 0.9rem;
+    font-weight: bold;
     border: 1px solid lightgrey;    
     padding: 5px;
     margin-bottom: 0.4rem;
@@ -220,7 +222,7 @@ Styling used in the modal tab files (ModalTabMain, ModalTabPerformance, ModalTab
 /* Element name styling, Status, Budget Status, etc. */
 .modalPropertyTitle {  
     font-family: 'Montserrat', sans-serif;
-    font-weight: 'bold';
+    font-weight: bold;
     color: black;
     height: 20px;    
 }

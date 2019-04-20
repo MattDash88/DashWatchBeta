@@ -125,7 +125,7 @@ class ModalTabMain extends React.Component {
                 <div className="modalPropertyDiv">
                   <div id="total_funding_received" className="modalTooltip" onClick={this.handleTooltip}>Total funding received:
                   <span className="modalTooltiptext" value={this.state.showTooltip == "total_funding_received" ? "Active" :
-                        "Inactive"}>Total USD value of the treasury payments received by this proposal. The amount is calculated by using the USD value of Dash on the days when the superblocks is mined.</span>
+                        "Inactive"}>An indication of the USD value of the treasury payments received by this proposal. The amount is calculated using the price of Dash rounded to full US Dollars on the days each superblock is mined.</span>
                   </div>
                   <div className="modalPropertyItem" title={funding_received_usd}>
                     <span>&#36;{funding_received_usd}</span>
@@ -145,7 +145,7 @@ class ModalTabMain extends React.Component {
                 <div className="modalPropertyDiv">
                   <div id="last_updated" className="modalTooltip" onClick={this.handleTooltip}>Last updated:
                   <span className="modalTooltiptext" value={this.state.showTooltip == "last_updated" ? "Active" :
-                        "Inactive"}>Last time the metrics for this proposal were updated by Dash Watch.</span>
+                        "Inactive"}>Most recent date the metrics for this proposal were updated by Dash Watch.</span>
                   </div>
                   <div className="modalPropertyItem" title={last_updated}>
                     <span>{last_updated}</span>
@@ -209,7 +209,7 @@ class ModalTabMain extends React.Component {
                   <div className="modalPropertyDiv">
                     <div id="total_funding_received" className="modalTooltip" onClick={this.handleTooltip}>Total funding received:
                   <span className="modalTooltiptext" value={this.state.showTooltip == "total_funding_received" ? "Active" :
-                        "Inactive"}>Total USD value of the treasury payments received by this proposal. The amount is calculated by using the USD value of Dash on the days when the superblocks is mined.</span>
+                        "Inactive"}>An indication of the USD value of the treasury payments received by this proposal. The amount is calculated using the price of Dash rounded to full US Dollars on the days each superblock is mined.</span>
                     </div>
                     <div className="modalPropertyItem" title={funding_received_usd}>
                       <span>&#36;{funding_received_usd}</span>
@@ -238,7 +238,7 @@ class ModalTabMain extends React.Component {
                   <div className="modalPropertyDiv">
                     <div id="last_updated" className="modalTooltip" onClick={this.handleTooltip}>Last updated:
                   <span className="modalTooltiptext" value={this.state.showTooltip == "last_updated" ? "Active" :
-                        "Inactive"}>Last time the metrics for this proposal were updated by Dash Watch.</span>
+                        "Inactive"}>Most recent date the metrics for this proposal were updated by Dash Watch.</span>
                     </div>
                     <div className="modalPropertyItem" title={last_updated}>
                       <span>{last_updated}</span>
