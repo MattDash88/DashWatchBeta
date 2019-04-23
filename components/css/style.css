@@ -349,7 +349,6 @@ Style elements used in Post.js
     height: 60px;
     text-align: left; 
     font-size: 0.9rem;
-    font-weight: bold;
     border: 1px solid lightgrey;    
     padding: 0.3rem;
     margin-bottom: 0.3rem;
@@ -365,12 +364,9 @@ Style elements used in Post.js
 /* Element value styling, Completed, On Schedule, etc. */
 .cardPropertyItem {
     font-family: sans-serif;
+    font-weight: bold;
     height: 40px;
-    word-break:break-all;
-    word-wrap: break-word;
 }
-
-
 
 /* Styling of the text of the bottom links*/
 .cardLinkItem {

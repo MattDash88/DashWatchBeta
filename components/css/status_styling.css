@@ -80,6 +80,10 @@ Styling for cardPropertyDiv
     background: #cae6f8;
 }
 
+.cardPropertyDiv[value="Did not provided financial information to Dash Watch"] {
+    background: #eebcbc;
+}
+
 /*Schedule Status */
 .cardPropertyDiv[value="On Schedule"] {
     background: #c4f0c4;
@@ -174,6 +178,10 @@ Styling for modalPropertyDiv
 
 .modalPropertyDiv[value="Opted out of financial reporting"] {
     background: #cae6f8;
+}
+
+.modalPropertyDiv[value="Did not provided financial information"] {
+    background: #eebcbc;
 }
 
 /*Schedule Status */
@@ -370,6 +378,10 @@ Colour coding for simplified modal
 
 .simple_modalPropertyDiv[value="Opted out of financial reporting"] {
     background: #dac4da;
+}
+
+.simple_modalPropertyDiv[value="Did not provided financial information to Dash Watch"] {
+    background: #eebcbc;
 }
 
 /*Schedule Status */

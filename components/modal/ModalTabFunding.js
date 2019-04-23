@@ -159,7 +159,7 @@ handleClick(event) {
               Payment Address:
             </div>
             <div className="modalPropertyItem" title={payment_address}>
-              <span>{payment_address}</span>
+              <span className="modalLongText">{payment_address}</span>
             </div>
           </div>
         </section>

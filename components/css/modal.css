@@ -212,7 +212,6 @@ Styling used in the modal tab files (ModalTabMain, ModalTabPerformance, ModalTab
     width: 31%;
     text-align: left; 
     font-size: 0.9rem;
-    font-weight: bold;
     border: 1px solid lightgrey;    
     padding: 5px;
     margin-bottom: 0.4rem;
@@ -222,7 +221,6 @@ Styling used in the modal tab files (ModalTabMain, ModalTabPerformance, ModalTab
 /* Element name styling, Status, Budget Status, etc. */
 .modalPropertyTitle {  
     font-family: 'Montserrat', sans-serif;
-    font-weight: bold;
     color: black;
     height: 20px;    
 }
@@ -230,10 +228,13 @@ Styling used in the modal tab files (ModalTabMain, ModalTabPerformance, ModalTab
 /* Div containg the value, Completed, On Schedule, etc. Text itself is styled in status_styling.css */
 .modalPropertyItem {
     font-family: sans-serif;
-    font-weight: bold;
+    font-weight: bold;   
+    height: 40px;
+}
+
+.modalLongText {
     word-break:break-all;
     word-wrap: break-word;
-    height: 40px;
 }
 
 /* Styling of text on tabs in modal*/

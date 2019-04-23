@@ -231,7 +231,7 @@ class ModalTabMain extends React.Component {
                         "Inactive"}>Unique proposal identifier. With a few exceptions it is the last, proposal unique part of the url of the Dash Central proposal page.</span>
                     </div>
                     <div className="modalPropertyItem" title={slug}>
-                      <span>{slug}</span>
+                      <span className="modalLongText">{slug}</span>
                     </div>
                   </div>
 
