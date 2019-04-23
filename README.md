@@ -1,10 +1,5 @@
-Dash Watch Beta Website v0.10.3
-<li>Added a tab for the TPE2019 voting results.</li>
-Dash Watch Beta Website v0.10.2
-<li>Added a page for older report lists, a participation tab in the Election section and a few other small improvements.</li>
-Dash Watch Beta Website v0.10.1
-<li>Added section for 2019 Dash Trust protector elections and a few minor other tweaks.</li>
-Dash Watch Beta Website v0.10.0 by MattDash featuring
-<li>A rebuilt "reports" page with some styling changes and integrated all elements from the temporary pages added in v0.9.3</li>
-<li>Added query handling and direct linking to most site elements</li>
-<li>Create history entries after most state changes providing full back and forward browser functional</li>
+Dash Watch Beta Website v0.11a
+First part of v0.11 to be rolled out in April
+<li>Revised labs section. Now build on a database, added many more charts and UI elements.</li>
+<li>Revised Proposal List section and Modal. The cards and modal now have a similar style to the simplified modal, also added tooltips and a menu for easier access to reports and media items.</li>
+<li>New caching mechanism and structure. The cache is refreshed before it expires or when there are changes to the database. Cache refresh can now also be triggered manually</li>

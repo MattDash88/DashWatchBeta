@@ -7,7 +7,6 @@
 .labsHeader {
     display: block;
     color: #003347;
-    position: relative;
     font-family: 'Montserrat', sans-serif;
     margin-left: auto;
     margin-right: auto;
@@ -16,16 +15,317 @@
     font-weight: bold;
 }
 
+/* Header of the labs tabs */
+.labsH2 {
+  display: block;
+  color: #003347;
+  font-family: 'Montserrat', sans-serif;
+  text-align: left;
+  font-size: 1.2rem;
+  margin-bottom: 0.3rem;
+  font-weight: bold;
+  z-index: 0;
+}
+
+  /* Styling of text on top of page */
+  .labsText {
+    font-family: 'Titillium Web', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    color: black;
+    margin-left: 0.3rem;
+    margin-bottom: 0;
+    margin-top:0;
+    padding-bottom: 5px;
+    padding-right: 0.3rem;
+}
+
+/* Styling of labtext links */
+.labsText a {
+  font-family: 'Roboto', sans-serif;
+  color: #008de4;
+  font-weight: 200;
+  font-size: 1rem;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Styling of note that accompanies funding or performance information */
+.labsNoteText {
+  font-family: 'Titillium Web', sans-serif;
+  font-size: 0.8rem;
+  font-style: italic;
+  color: #3f51b5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-left: 0.3rem;
+  padding-right: 1rem;
+}
+
 /* div to show and hide correct plotter */
 .plotWrapper[value="Inactive"] {
     display: none;
 }
 
 /* Month page wrapper */
-.plotPageWrapper {
+.labsPageWrapper {
     align-items: middle;
     width: 100%;
     width: 1000px;
     padding-top: 65px; /* Clearing from Navbar */
     margin: 0 auto;
+}
+
+/* Downpointing chevron on dropdown menus */
+i[id="dropdownMenu"] {
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    margin-left: 10px; 
+    margin-right: 10px;
+    margin-bottom: 3px;
+    height: 10px;
+    width: 10px;  
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg); 
+}
+
+/* Styling for the dropdown div */
+.labsDropdown {
+  display: inline-block;  
+  margin-right: 1rem;
+  margin-left: 0.2rem;
+  margin-bottom: 0.5rem;
+  }
+
+/* Styling for the button of the dropdown menu */
+.labsDropbtn {
+    min-width: 200px;
+    background-color: #3498DB;
+    color: white;
+    padding: 16px 10px 16px 10px;
+    font-size: 16px;  
+    margin-right: 1rem;
+    border: none;
+    cursor: pointer;
+}
+  
+.labsDropbtn:hover, .labsDropbtn:focus {
+    background-color: #2980B9;
+}
+
+/* Styling for the dropdown menu as a whole */
+  .labsDropdownMenu {
+    display: show;
+    position: absolute; 
+  }
+
+/* Styling for the individual dropdown row items */
+  .labsDropdownItem {
+    display: block;
+    min-width: 220px;
+    padding: 16px 10px 16px 10px;
+    font-size: 16px;
+    text-align: left; 
+    color: black;
+    background-color: #f1f1f1;
+    text-decoration: none;   
+    box-shadow: 0px 8px 16px 0px black;
+    border: none;
+    z-index: 1;
+    cursor: pointer;
+  }
+  
+.labsDropdownItem:hover {background-color: #ddd;}
+
+/* Styling for the buttons to toggle datasets */
+.labsDatabtn {
+  display: inline-flex;
+  padding: 16px;
+  margin-left: 0.2rem;
+  margin-right: 1rem;
+  justify-content: space-between;
+  font-size: 0.8rem;  
+  width: 150px;
+  border: none;
+  cursor: pointer;
+}
+
+.labsDatabtn[value="Active"][id="Anypay"] {
+  background-color: blue;
+  color: white;
+}
+
+.labsDatabtn[value="Active"][id="Paylive"] {
+  background-color: darkgreen;
+  color: white;
+}
+
+.labsDatabtn[value="Active"][id="Dash Core"] {
+  background-color: blue;
+  color: white;
+}
+
+.labsDatabtn[value="Active"][id="DashElectrum"] {
+  background-color: purple;
+  color: white;
+}
+
+.labsDatabtn[value="Active"][id="Core Android"] {
+  background-color: green;
+  color: white;
+}
+
+.labsDatabtn[value="Active"][id="Core iOS"] {
+  background-color: #FF3824;
+  color: white;
+}
+
+.labsDatabtn[value="Inactive"] {
+  background-color: lightgrey;
+  color: black;
+}
+
+.labsDatabtnText {
+  font-size: 0.6rem;
+}
+
+/* Wrapper of the month list index row */
+.labsTableWrapper {
+  display: flex;
+  height: 3rem;
+  border-bottom: 0.1rem solid #d8dce3;
+  background: white;
+  min-width: 500px;
+  max-width: 80%;
+  z-index: 0;
+}
+
+/* Wrapper of the month list index row */
+.labsTableWrapper:hover {
+  background: #f3f3f3;
+}
+
+/* Div for the cells of the index */
+.labsIndexItemFirst {
+  display: flex;
+  text-align: left;
+  flex-direction: column;
+  -webkit-box-pack: center;
+  line-height: 1rem;
+  justify-content: center;
+  margin-right: auto;
+  min-width: 0px;
+  width: 75%;
+}
+
+.labsIndexItem {
+  display: flex;
+  text-align: left;
+  flex-direction: column;
+  -webkit-box-pack: center;
+  line-height: 1rem;
+  justify-content: center;
+  margin-right: auto;
+  min-width: 0px;
+  width: 75%;
+}
+
+/* Text styling of the index */
+.labsColumnTitle {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  overflow: hidden;
+  margin: 2px;
+}
+
+/* Div of the other cells of the month list table*/
+.labsTableItemFirst {
+  display: flex;
+  text-align: left;
+  flex-direction: column;
+  -webkit-box-pack: center;
+  line-height: 1rem;
+  justify-content: center;
+  margin-right: auto;
+  min-width: 0px;
+  width: 75%;
+  border: 1px;
+}
+
+/* Div of the other cells of the month list table*/
+.labsTableItem {
+  display: flex;
+  text-align: left;
+  flex-direction: column;
+  -webkit-box-pack: center;
+  line-height: 1rem;
+  justify-content: center;
+  margin-right: auto;
+  min-width: 0px;
+  width: 75%;
+  border: 1px;
+}
+
+/*
+Tooltip styling
+*/
+
+/* Styling of the tooltip element */
+.labsTooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+  cursor: pointer;
+}
+
+/* Styling of Tooltip block, part that shows and hides */
+.labsTooltip .labsTooltipBlock {
+  visibility: hidden;
+  width: 300px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  top: 125%;
+  left: 50%;
+  margin-left: -150px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.labsTooltip .labsTooltipBlock::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  right: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color:  transparent transparent #555 transparent ;
+}
+
+/* Show tooltipBlock on hover*/
+.labsTooltip:hover .labsTooltipBlock {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Show tooltipBlock on click for mobile users*/
+.labsTooltip .labsTooltipBlock[value="Active"] {
+  visibility: visible;
+  opacity: 1;
+}
+
+.labsSpacer {
+  justify-content: space-around;
 }

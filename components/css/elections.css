@@ -343,16 +343,6 @@
     font-weight: bold;
 }
 
-/* Wrapper of the month list index row */
-.tpResultsWrapper {
-    display: flex;
-    height: 3rem;
-    border-bottom: 0.5rem solid black;
-    background: white;
-    min-width: 375px;
-    max-width: 500px;
-}
-
 /* Wrapper for the month list rows  */
 .tpResultsWrapper {
     display: flex;

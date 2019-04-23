@@ -1,10 +1,8 @@
 import fetch from 'isomorphic-unfetch';
 import React from 'react';
-import ReactGA from 'react-ga';
 
 // Analytics
-import getGAKey from '../components/functions/analytics';
-ReactGA.initialize(getGAKey);
+import { trackPage, trackEvent } from '../components/functions/analytics';
 
 // Import pages
 import Post from '../components/Post';
@@ -18,13 +16,11 @@ import Header from '../components/headers/ProposalsHeader';
 import NavBar from "../components/elements/NavBar"
 import ScrollButton from '../components/elements/ScrollButton';  // Scroll to top button
 
-var basepath = 'https://dashwatchbeta.org'
-
 // Airtable query requesting Proposal List data
-const getPosts = () => {
+const getProposals = () => {
     return (
         new Promise((resolve) => {
-            fetch(`${basepath}/api/get/posts`)
+            fetch(`/api/get/proposalList`)
                 .then((res) => res.json()
                     .then((res) => {
                         resolve(res.data)
@@ -37,24 +33,13 @@ const getPosts = () => {
 const filterPost = (query) => {
     return (
         new Promise((resolve) => {
-            fetch(`${basepath}/api/filter/${query}`)
+            fetch(`/api/filter/${query}`)
                 .then((res) => res.json()
                     .then((res) => {
                         resolve(res.data)
                     }))
         })
     )
-}
-
-const trackPage = (page) => {   // Function to track user actions on page
-    ReactGA.pageview(page);
-}
-
-const trackEvent = (event) => { // Function to track user interaction with page
-    ReactGA.event({
-        category: 'Proposals Page',
-        action: event,
-    });
 }
 
 class Home extends React.Component {
@@ -86,14 +71,14 @@ class Home extends React.Component {
     // Function that initiates the "single proposal page" if selected
     handleFilter(event) {
         event.preventDefault();
-        this.setState({ 
+        this.setState({
             showInactivePosts: !this.state.showInactivePosts,
             as: `/proposals?search=${this.state.search}&toggleInactive=${!this.state.showInactivePosts}`,
         })
-        
+
         // Pushing created State to history because state updates in React are too slow              
         // history.pushState(this.state, '', this.state.as)   // Push State to history
-        trackEvent('Toggled Active Filter')                 // Track Event on Google Analytics
+        trackEvent('Proposals Page', 'Toggled Active Filter')                 // Track Event on Google Analytics
     }
 
     componentDidMount() {
@@ -101,22 +86,22 @@ class Home extends React.Component {
         onpopstate = event => {
             if (event.state) {
                 this.setState(event.state)
-            }             
-        }       
+            }
+        }
 
         trackPage(`/proposals`) // Track Pageview in Analytics
 
         // Set Promises for Promise.all
         const query = `search=${this.state.search.toLowerCase()}&show_inactive=${this.state.showInactivePosts}`
-        var getPostsPromise = Promise.resolve(getPosts());
+        var getProposalsPromise = Promise.resolve(getProposals());
         var filterPostsPromise = Promise.resolve(filterPost(query));
-            
+
         // Promise to get the initial "airtableData" and filtered records  
-        Promise.all([getPostsPromise, filterPostsPromise]).then(data => {
+        Promise.all([getProposalsPromise, filterPostsPromise]).then(data => {
             this.setState({
                 airtableData: data[0],
                 displayData: data[1],
-            })        
+            })
         }).then(history.replaceState(this.state, '', this.state.as))
     }
 
@@ -126,10 +111,10 @@ class Home extends React.Component {
 
             // Set Promises for Promise.all
             const query = `search=${this.state.search.toLowerCase()}&show_inactive=${this.state.showInactivePosts}`
-            var getPostsPromise = Promise.resolve(getPosts());
+            var getProposalsPromise = Promise.resolve(getProposals());
             var filterPostsPromise = Promise.resolve(filterPost(query));
 
-            Promise.all([getPostsPromise, filterPostsPromise]).then(data => {
+            Promise.all([getProposalsPromise, filterPostsPromise]).then(data => {
                 this.setState({
                     airtableData: data[0],
                     displayData: data[1],
@@ -138,7 +123,7 @@ class Home extends React.Component {
         }
     }
 
-    
+
 
     render() {
         const { // Declare data arrays used in class
@@ -153,7 +138,7 @@ class Home extends React.Component {
                     <p className="headerText">Results for search: <b>{this.state.search}</b><br></br>
                         Currently showing <b>{displayData.length}</b> of <b>{airtableData.length}</b> proposals
                     </p>
-                </div> 
+                </div>
             )
         } else {
             var searchFilterMessage = (
@@ -161,18 +146,18 @@ class Home extends React.Component {
                     <p className="headerText">
                         Currently showing <b>{displayData.length}</b> of <b>{airtableData.length}</b> proposals
                     </p>
-                </div> 
+                </div>
             )
         }
 
         return (
             <main>
+                <section className="pagewrapper">
                 <Header></Header>
                 <NavBar
                     showPage="proposals"
                     searchQuery={this.state.search}
-                />
-                <section className="pagewrapper">
+                />                
                     <h1 className="listHeader">List of Dash funded proposals</h1>
                     <div className="headerLeftDiv">
                         <label className="container">
@@ -181,9 +166,9 @@ class Home extends React.Component {
                         </label>
                     </div>
                     <div className="headerRightDiv">
-                        {searchFilterMessage}                   
+                        {searchFilterMessage}
                     </div>
-                    
+                
                     <ProposalList
                         // Arrays containing the data
                         airtableData={airtableData}      // All data, currently only used to check if data retrieval has been successful
@@ -205,33 +190,33 @@ class Home extends React.Component {
 
 class ProposalList extends React.Component {
     constructor(props) {
-      super(props);
-  
-      // Binding functions used in this class
-      this.handleProposalPage = this.handleProposalPage.bind(this); // Pass on single proposal click to Home
-      this.handleBack = this.handleBack.bind(this);                 // Pass on back button click to Home 
+        super(props);
+
+        // Binding functions used in this class
+        this.handleProposalPage = this.handleProposalPage.bind(this); // Pass on single proposal click to Home
+        this.handleBack = this.handleBack.bind(this);                 // Pass on back button click to Home 
     }
-  
+
     // Pass on single proposal click to Home
     handleProposalPage(slug, openTab) {
-      this.props.setSinglePage(slug, openTab)
+        this.props.setSinglePage(slug, openTab)
     }
-  
+
     // Pass on back button click to Home 
     handleBack() {
-      this.props.goBack()
+        this.props.goBack()
     }
 
     render() {
-      const {
-        // Arrays with data
-        airtableData,   // All proposal data
-        displayData,    // Data for the "Proposal List" page, dataset after filters
-  
-        // Elements for functions
-        showTab,        // Element for initial tab to show on "single proposal page"
-        search,         // Used to display query at top
-  
+        const {
+            // Arrays with data
+            airtableData,   // All proposal data
+            displayData,    // Data for the "Proposal List" page, dataset after filters
+
+            // Elements for functions
+            showTab,        // Element for initial tab to show on "single proposal page"
+            search,         // Used to display query at top
+
             // Elements for Analytics
             singleProposalId,
         } = this.props
@@ -269,6 +254,6 @@ class ProposalList extends React.Component {
             )
         }
     }
-  }
-  
-  export default Home
+}
+
+export default Home

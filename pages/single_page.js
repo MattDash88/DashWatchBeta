@@ -1,10 +1,8 @@
 import fetch from 'isomorphic-unfetch'
 import React from 'react';
-import ReactGA from 'react-ga';
 
 // Analytics
-import getGAKey from '../components/functions/analytics';
-ReactGA.initialize(getGAKey);
+import {trackPage} from '../components/functions/analytics';
 
 // Import pages
 import SinglePost from '../components/Single'
@@ -18,23 +16,17 @@ import '../components/css/status_styling.css';
 import Header from '../components/headers/SingleHeader';
 import NavBar from "../components/elements/NavBar"
 
-var basepath = 'https://dashwatchbeta.org'
-
 // Airtable query requesting Proposal List data
 const getProposal = (slug) => {
   return (
     new Promise((resolve) => {
-      fetch(`${basepath}/api/p/${slug}`)
+      fetch(`/api/p/${slug}`)
         .then((res) => res.json()
           .then((res) => {
             resolve(res.data)
           }))
     })
   )
-}
-
-const trackPage = (page) => {
-  ReactGA.pageview(page);
 }
 
 class Single extends React.Component {

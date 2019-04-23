@@ -13,29 +13,33 @@ const app = next({ dev })
 const ReactGA = require('react-ga');
 ReactGA.initialize(gaKey);
 
-
 const serialize = data => JSON.stringify({ data })
 var cacheExpirationTime = process.env.CACHEEXPIRATION;  //Time until cache expires, can be adjusted for testing purposes
 
 // Get data processing functions from another file
 var airtableFunctions = require('./server_components/airtableFunctions');
+var labsAirtableFunctions = require('./server_components/labsAirtableFunctions');
 var processingFunctions = require('./server_components/dataProcessingFunctions');
+var labsProcessingFunctions = require('./server_components/labsProcessingFunctions');
 var filterFunctions = require('./server_components/filterFunctions');
 
 /* Airtable Query for Proposal Information Table */
-const getAirtableData = () => {
+const getAirtableData = (refreshCache) => {
   return new Promise((resolve, reject) => {
     // Read cache for this function
     cache.get('airtableData', function (error, data) {
       if (error) throw error
 
-      if (!!data) { // If value was already retrieved recently, grab from cache
+      // If data is available in cache and a cache refresh is not requested, load from cache
+      if (!!data && refreshCache==false) { 
         // Stored value, grab from cache
         resolve(JSON.parse(data))
       }
-      else {    // If cache is empty, retrieve from Airtable
+
+      // If cache is empty or a cache refresh is requested, retrieve from Airtable
+      else {  
         var mainInfoPromise = Promise.resolve(airtableFunctions.MainProposalPosts('Proposals'));
-                var financialDataPromise = Promise.resolve(airtableFunctions.FinanceDataPosts('Funding and Expenses'));
+        var financialDataPromise = Promise.resolve(airtableFunctions.FinanceDataPosts('Funding and Expenses'));
         var merchantKpiPromise = Promise.resolve(airtableFunctions.MerchantKpiPosts('Merchant KPIs'));
         var eventKpiPromise = Promise.resolve(airtableFunctions.EventKpiPosts('Event KPIs'));
         var socialKpiPromise = Promise.resolve(airtableFunctions.SocialMediaKpiPosts('Social Media KPIs'));
@@ -57,7 +61,7 @@ const getAirtableData = () => {
           Object.keys(mainData).map((item) => {
             if (typeof mainData[item].id !== 'undefined') {    //Check if record exists
               proposalMainData = processingFunctions.processMainData(mainData[item])
-              proposalReportData = processingFunctions.processReportData(mainData[item], reportData)
+              proposalReportData = processingFunctions.oldProcessReportData(mainData[item], reportData)
               proposalKpiData = processingFunctions.processKpiData(proposalReportData, merchantKpiData, eventKpiData, socialMediaKpiData, publicRelationsKpiData)
               proposalFinancialData = processingFunctions.processFinancialData(mainData[item], financialData)
 
@@ -86,31 +90,46 @@ const getAirtableData = () => {
 }
 
 // Function to get data for the Month list
-const getMonthList = () => {
+const getMonthListData = (refreshCache) => {
   return new Promise((resolve, reject) => {
     // Read cache for this function
     cache.get('monthListData', function (error, data) {
       if (error) throw error
 
-      if (!!data) {   // If value was already retrieved recently, grab from cache
+      // If data is available in cache and a cache refresh is not requested, load from cache
+      if (!!data && refreshCache==false) { 
         resolve(JSON.parse(data))
       }
-      else {    // If cache is empty, retrieve from Airtable
+
+      // If cache is empty or a cache refresh is requested, retrieve from Airtable
+      else { 
         Promise.resolve(airtableFunctions.MonthReportPosts('Month List Reports')).then(function (valArray) {
-          const storeAirtablePosts = []   // Create const to push all proposal data in
+          // Create const to push proposal data in
+          const reportPosts = []
+          const optedOutPosts = []
 
           // Sorting out all valArray items
           monthReportData = valArray
 
           Object.keys(monthReportData).map((item) => {
-            if (typeof monthReportData[item].proposal_ref !== 'undefined') {     //Check if record exists
+            if (typeof monthReportData[item].proposal_ref !== 'undefined' && typeof monthReportData[item].report_status !== 'undefined') {     //Check if record exists
               monthData = processingFunctions.processMonthListData(monthReportData[item])
-              storeAirtablePosts.push(monthData)
+              if (monthData.list_data.report_status[0] == "Opted Out") {
+                optedOutPosts.push(monthData)
+              } else {
+                reportPosts.push(monthData)
+              }
             }
           })
+
+          const reportListPosts = {     // Create const with both lists
+            report_list: reportPosts,
+            opted_out_list: optedOutPosts,
+          }
+
           // Store results in Redis cache, cache expire time is defined in .env
-          cache.setex('monthListData', cacheExpirationTime, JSON.stringify(storeAirtablePosts))
-          resolve(storeAirtablePosts)
+          cache.setex('monthListData', cacheExpirationTime, JSON.stringify(reportListPosts))
+          resolve(reportListPosts)
         }).catch((error) => {
           reject({ error })
           console.log(error)
@@ -121,30 +140,97 @@ const getMonthList = () => {
 }
 
 // Function to get data for the Month list
-const getOldList = () => {
+const getOldListData = (refreshCache) => {
   return new Promise((resolve, reject) => {
     // Read cache for this function
     cache.get('oldListData', function (error, data) {
       if (error) throw error
 
-      if (!!data) {   // If value was already retrieved recently, grab from cache
+      // If data is available in cache and a cache refresh is not requested, load from cache
+      if (!!data && refreshCache==false) { 
         resolve(JSON.parse(data))
       }
-      else {    // If cache is empty, retrieve from Airtable
+
+      // If cache is empty or a cache refresh is requested, retrieve from Airtable
+      else {  
         Promise.resolve(airtableFunctions.OldReportPosts('Old Reports')).then(function (valArray) {
-          const storeAirtablePosts = []   // Create const to push all proposal data in
+          // Create const to push proposal data in
+          const reportPosts = []
+          const optedOutPosts = []
 
           // Sorting out all valArray items
           monthReportData = valArray
 
           Object.keys(monthReportData).map((item) => {
-            if (typeof monthReportData[item].proposal_ref !== 'undefined') {     //Check if record exists
+            if (typeof monthReportData[item].proposal_ref !== 'undefined' && typeof monthReportData[item].report_status !== 'undefined') {     //Check if record exists
               monthData = processingFunctions.processMonthListData(monthReportData[item])
-              storeAirtablePosts.push(monthData)
+              if (monthData.list_data.report_status[0] == "Opted Out") {
+                optedOutPosts.push(monthData)
+              } else {
+                reportPosts.push(monthData)
+              }
             }
           })
+
+          const reportListPosts = {     // Create const with both lists
+            report_list: reportPosts,
+            opted_out_list: optedOutPosts,
+          }
+
           // Store results in Redis cache, cache expire time is defined in .env
-          cache.setex('oldListData', cacheExpirationTime, JSON.stringify(storeAirtablePosts))
+          cache.setex('oldListData', cacheExpirationTime, JSON.stringify(reportListPosts))
+          resolve(reportListPosts)
+        }).catch((error) => {
+          reject({ error })
+          console.log(error)
+        })
+      }
+    })
+  })
+}
+
+/* Airtable Query for Proposal List Page */
+const getProposalListData = (refreshCache) => {
+  return new Promise((resolve, reject) => {
+    // Read cache for this function
+    cache.get('proposalListData', function (error, data) {
+      if (error) throw error
+      
+      // If data is available in cache and a cache refresh is not requested, load from cache
+      if (!!data && refreshCache==false) { 
+        // Stored value, grab from cache
+        resolve(JSON.parse(data))
+      } 
+      
+      // If cache is empty or a cache refresh is requested, retrieve from Airtable
+      else {    
+        var mainInfoPromise = Promise.resolve(airtableFunctions.MainProposalPosts('Proposals'));
+        var reportDataPromise = Promise.resolve(airtableFunctions.ReportPosts('Reports'));
+
+        Promise.all([mainInfoPromise, reportDataPromise]).then(function (valArray) {
+          const storeAirtablePosts = []   // Create const to push all proposal data in
+
+          // Sorting out all valArray items
+          mainData = valArray[0]
+          reportData = valArray[1]
+
+          Object.keys(mainData).map((item) => {
+            if (typeof mainData[item].id !== 'undefined') {    //Check if record exists
+              proposalMainData = processingFunctions.processMainData(mainData[item])
+              proposalReportData = processingFunctions.processReportData(mainData[item], reportData)
+
+              const proposalData = {     // Create const for data of single proposal
+                main_data: proposalMainData,
+                report_data: proposalReportData,
+              }
+              storeAirtablePosts.push(proposalData)
+            }
+          }) // End of loop through all proposals
+
+          // Store results in Redis cache, cache expire time is defined in .env
+          cache.setex('proposalListData', cacheExpirationTime, JSON.stringify(storeAirtablePosts))
+
+          // Finish
           resolve(storeAirtablePosts)
         }).catch((error) => {
           reject({ error })
@@ -201,27 +287,105 @@ const getMerchantKpiData = () => {
   })
 }
 
-// Function to prepare data for Trust Protector Candidate List
-const getTrustProtectorData = () => {
+// Function to prepare data project data for labs 
+const getElectionsData = (refreshCache) => {
   return new Promise((resolve, reject) => {
     // Read cache for this function
-    cache.get('trustProtectorData', function (error, data) {
+    cache.get('ElectionsData', function (error, data) {
       if (error) throw error
 
-      if (!!data) {   // If value was already retrieved recently, grab from cache
+      // If data is available in cache and a cache refresh is not requested, load from cache
+      if (!!data && refreshCache==false) {
         resolve(JSON.parse(data))
       }
-      else {    // If cache is empty, retrieve from Airtable
-        Promise.resolve(airtableFunctions.TrustProtectorList('Candidate List')).then(function (valArray) {
-          const storeAirtablePosts = []   // Create const to push all proposal data in
-          Object.keys(valArray).map((item) => {            
-            if (typeof valArray[item].candidate_name !== 'undefined') {    //Check if record exists
-              storeAirtablePosts.push(valArray[item])
+
+      // If cache is empty or a cache refresh is requested, retrieve from Airtable
+      else {    
+        var electionsCandidatePromise = Promise.resolve(airtableFunctions.TrustProtectorList('Candidate List'));
+        var electionsVoteDataPromise = Promise.resolve(airtableFunctions.VoteData('Vote Data'));
+        var electionsVoteResultsPromise = Promise.resolve(airtableFunctions.VoteResults('Vote Results'));
+
+        Promise.all([electionsCandidatePromise, electionsVoteDataPromise, electionsVoteResultsPromise]).then(function (valArray) {
+          electionsCandidateData = []
+          electionsVoteData = []
+          electionsVoteResultsData = []
+
+          // Check if candidate name exists
+          Object.values(valArray[0]).map((item) => {            
+            if (typeof item.candidate_name !== 'undefined') {    //Check if record exists
+              electionsCandidateData.push(item)
             }
           })
 
+          // Check if participation data and values were entered correctly
+          Object.values(valArray[1]).map((item) => {            
+            if (typeof item.date !== 'undefined' && typeof item.vote_participation !== 'undefined') {    //Check if record exists
+              electionsVoteData.push(item)
+            }
+          })
+          
+          // Check if candidate results were entered correctly
+          Object.values(valArray[2]).map((item) => {            
+            if (typeof item.candidate_name !== 'undefined' && typeof item.votes !== 'undefined') {    //Check if record exists
+              electionsVoteResultsData.push(item)
+            }
+          })
+
+          // Create the data construct
+          const electionsAllData = {
+            candidate_data: electionsCandidateData,
+            vote_metrics: electionsVoteData,
+            vote_results: electionsVoteResultsData,
+          }
           // Store results in Redis cache, cache expire time is defined in .env
-          cache.setex('trustProtectorData', cacheExpirationTime, JSON.stringify(storeAirtablePosts))
+          cache.setex('ElectionsData', cacheExpirationTime, JSON.stringify(electionsAllData))
+          
+          // Finish
+          resolve(electionsAllData)
+        }).catch((error) => {
+          reject({ error })
+          console.log(error)
+        })
+      }
+    })
+  })
+}
+
+// Function to prepare data for the Prepared Datasets for Labs (Wallets and POS systems)
+const getLabsPreparedData = (refreshCache) => {
+  return new Promise((resolve, reject) => {
+    // Read cache for this function
+    cache.get('labsPreparedData', function (error, data) {
+      if (error) throw error
+
+      // If data is available in cache and a cache refresh is not requested, load from cache
+      if (!!data && refreshCache==false) { 
+        resolve(JSON.parse(data))
+      }
+
+      // If cache is empty or a cache refresh is requested, retrieve from Airtable
+      else {        
+        var walletDataPromise = Promise.resolve(labsAirtableFunctions.WalletDownloadPosts('Dash Wallets - Month'));
+        var WalletVersionPromise = Promise.resolve(labsAirtableFunctions.WalletVersionPosts('Dash Wallets - Version'))
+        var posDataPromise = Promise.resolve(labsAirtableFunctions.PosMetricsPosts('POS Systems'));
+        
+        Promise.all([walletDataPromise, WalletVersionPromise, posDataPromise]).then(function (valArray) {          
+          // Sorting out all valArray items
+          labsWalletData = labsProcessingFunctions.processWalletData(valArray[0])
+          WalletVersionData = labsProcessingFunctions.processVersionData(valArray[1])
+          posSystemData = labsProcessingFunctions.processPosData(valArray[2])
+
+          // Create the data construct
+          const storeAirtablePosts = {
+            wallet_data: labsWalletData,
+            version_data: WalletVersionData,
+            pos_system_data: posSystemData,
+          }
+
+          // Store results in Redis cache, cache expire time is defined in .env
+          cache.setex('labsPreparedData', cacheExpirationTime, JSON.stringify(storeAirtablePosts))
+          
+          // Finish
           resolve(storeAirtablePosts)
         }).catch((error) => {
           reject({ error })
@@ -232,59 +396,38 @@ const getTrustProtectorData = () => {
   })
 }
 
-// Function to prepare data for Vote Data of the Trust Protector Elections
-const getVoteData = () => {
+// Function to prepare data project data for labs 
+const getLabsAllData = (refreshCache) => {
   return new Promise((resolve, reject) => {
     // Read cache for this function
-    cache.get('voteData', function (error, data) {
+    cache.get('AllLabsData', function (error, data) {
       if (error) throw error
 
-      if (!!data) {   // If value was already retrieved recently, grab from cache
+      // If data is available in cache and a cache refresh is not requested, load from cache
+      if (!!data && refreshCache==false) {
         resolve(JSON.parse(data))
       }
-      else {    // If cache is empty, retrieve from Airtable
-        Promise.resolve(airtableFunctions.VoteData('Vote Data')).then(function (valArray) {
-          const storeAirtablePosts = []   // Create const to push all proposal data in
-          Object.keys(valArray).map((item) => {            
-            if (typeof valArray[item].date !== 'undefined' && typeof valArray[item].vote_participation !== 'undefined') {    //Check if record exists
-              storeAirtablePosts.push(valArray[item])
-            }
-          })
+      
+      // If cache is empty or a cache refresh is requested, retrieve from Airtable
+      else {   
+        var labsProjectsPromise = Promise.resolve(labsAirtableFunctions.LabsKpiProjects('KPI - Dash Projects'));
+        var labsKpiPromise = Promise.resolve(labsAirtableFunctions.LabsKpiEntries('KPI - Entries'));
+        var labsValuesPromise = Promise.resolve(labsAirtableFunctions.LabsKpiValues('KPI - Values'));
+
+        Promise.all([labsProjectsPromise, labsKpiPromise, labsValuesPromise]).then(function (valArray) {
+          // Sorting out all valArray items
+          labsProjectData = valArray[0]
+          labsKpiData = valArray[1]
+          labsValuesData = valArray[2]
+
+          // Put datasets through processing function to build the array
+          labsAllData = labsProcessingFunctions.processAllLabsData(labsProjectData, labsKpiData, labsValuesData)
 
           // Store results in Redis cache, cache expire time is defined in .env
-          cache.setex('voteData', cacheExpirationTime, JSON.stringify(storeAirtablePosts))
-          resolve(storeAirtablePosts)
-        }).catch((error) => {
-          reject({ error })
-          console.log(error)
-        })
-      }
-    })
-  })
-}
-
-// Function to prepare data for Trust Protector Candidate List
-const getVoteResults = () => {
-  return new Promise((resolve, reject) => {
-    // Read cache for this function
-    cache.get('voteResultsData', function (error, data) {
-      if (error) throw error
-
-      if (!!data) {   // If value was already retrieved recently, grab from cache
-        resolve(JSON.parse(data))
-      }
-      else {    // If cache is empty, retrieve from Airtable
-        Promise.resolve(airtableFunctions.VoteResults('Vote Results')).then(function (valArray) {
-          const storeAirtablePosts = []   // Create const to push all proposal data in
-          Object.keys(valArray).map((item) => {            
-            if (typeof valArray[item].candidate_name !== 'undefined') {    //Check if record exists
-              storeAirtablePosts.push(valArray[item])
-            }
-          })
-
-          // Store results in Redis cache, cache expire time is defined in .env
-          cache.setex('voteResultsData', cacheExpirationTime, JSON.stringify(storeAirtablePosts))
-          resolve(storeAirtablePosts)
+          cache.setex('AllLabsData', cacheExpirationTime, JSON.stringify(labsAllData))
+          
+          // Finish
+          resolve(labsAllData)
         }).catch((error) => {
           reject({ error })
           console.log(error)
@@ -300,7 +443,8 @@ app.prepare()
 
     // Internal API call to get Airtable data
     server.get('/api/get/posts', (req, res) => {
-      Promise.resolve(getAirtableData()).then(function (valArray) {
+      var refreshCache = false    // Load from cache if available
+      Promise.resolve(getAirtableData(refreshCache)).then(function (valArray) {
         res.writeHead(200, {
           'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/json'
@@ -317,43 +461,13 @@ app.prepare()
     // Internal API call to create Reports page
     server.get('/api/get/monthlist', (req, res) => {
       monthSelection = []
-      Promise.resolve(getMonthList()).then(function (valArray) {
-        Object.keys(valArray).map((list_item) => {
-          if (typeof valArray[list_item].list_data.report_status === 'undefined') {
-            // Do nothing, skip entry
-          } else if (valArray[list_item].list_data.report_status[0] !== "Opted Out") {
-            monthSelection.push(valArray[list_item])
-          }
-        })
+      var refreshCache = false    // Load from cache if available
+      Promise.resolve(getMonthListData(refreshCache)).then(function (valArray) {
         res.writeHead(200, {
           'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/json'
         })
-        return res.end(serialize(monthSelection))
-      }).catch((error) => {
-        console.log(error)
-        // Send empty JSON otherwise page load hangs indefinitely
-        res.writeHead(200, { 'Content-Type': 'application/json' })
-        return res.end(serialize({}))
-      });
-    })
-
-    // Internal API call for Reports Page Opt-out table
-    server.get('/api/get/optoutlist', (req, res) => {
-      optOutSelection = []
-      Promise.resolve(getMonthList()).then(function (valArray) {
-        Object.keys(valArray).map((list_item) => {
-          if (typeof valArray[list_item].list_data.report_status === 'undefined') {
-            // Do nothing, skip entry
-          } else if (valArray[list_item].list_data.report_status[0] == "Opted Out") {
-            optOutSelection.push(valArray[list_item])
-            }
-        })
-        res.writeHead(200, {
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json'
-        })
-        return res.end(serialize(optOutSelection))
+        return res.end(serialize(valArray))
       }).catch((error) => {
         console.log(error)
         // Send empty JSON otherwise page load hangs indefinitely
@@ -365,19 +479,13 @@ app.prepare()
     // Internal API call to create Reports page
     server.get('/api/get/old_monthlist', (req, res) => {
       monthSelection = []
-      Promise.resolve(getOldList()).then(function (valArray) {
-        Object.keys(valArray).map((list_item) => {
-          if (typeof valArray[list_item].list_data.report_status === 'undefined') {
-            // Do nothing, skip entry
-          } else if (valArray[list_item].list_data.report_status[0] !== "Opted Out") {
-            monthSelection.push(valArray[list_item])
-          }
-        })
+      var refreshCache = false    // Load from cache if available
+      Promise.resolve(getOldListData(refreshCache)).then(function (valArray) {
         res.writeHead(200, {
           'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/json'
         })
-        return res.end(serialize(monthSelection))
+        return res.end(serialize(valArray))
       }).catch((error) => {
         console.log(error)
         // Send empty JSON otherwise page load hangs indefinitely
@@ -386,22 +494,15 @@ app.prepare()
       });
     })
 
-    // Internal API call for Reports Page Opt-out table
-    server.get('/api/get/old_optoutlist', (req, res) => {
-      optOutSelection = []
-      Promise.resolve(getOldList()).then(function (valArray) {
-        Object.keys(valArray).map((list_item) => {
-          if (typeof valArray[list_item].list_data.report_status === 'undefined') {
-            // Do nothing, skip entry
-          } else if (valArray[list_item].list_data.report_status[0] == "Opted Out") {
-            optOutSelection.push(valArray[list_item])
-            }
-        })
+    // Internal API call to get data for the Proposal List page
+    server.get('/api/get/proposalList', (req, res) => {
+      var refreshCache = false    // Load from cache if available
+      Promise.resolve(getProposalListData(refreshCache)).then(function (valArray) {
         res.writeHead(200, {
           'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/json'
         })
-        return res.end(serialize(optOutSelection))
+        return res.end(serialize(valArray))
       }).catch((error) => {
         console.log(error)
         // Send empty JSON otherwise page load hangs indefinitely
@@ -413,7 +514,8 @@ app.prepare()
     // Internal API call to support search
     server.get('/api/filter/:query', (req, res) => {
       query = qs.parse(req.params.query)
-      Promise.resolve(getAirtableData()).then(function (valArray) {
+      var refreshCache = false    // Load from cache if available
+      Promise.resolve(getProposalListData(refreshCache)).then(function (valArray) {
         processedData = valArray    // Put proposal data in processedData
         if (query.search !== '') {  // Filter on search is there is a search item
           processedData = filterFunctions.searchQuery(processedData, query.search)
@@ -435,8 +537,9 @@ app.prepare()
 
     // API call to get individual Proposal data
     server.get('/api/p/:slug', (req, res) => {
+      var refreshCache = false    // Load from cache if available
       query = req.params.slug
-      Promise.resolve(getAirtableData()).then(function (valArray) {
+      Promise.resolve(getAirtableData(refreshCache)).then(function (valArray) {
         proposalData = processingFunctions.singleProposalQuery(valArray, query)
         res.writeHead(200, {
           'Access-Control-Allow-Origin': '*',
@@ -469,8 +572,9 @@ app.prepare()
     })
 
     // API call for trust protector election candidates table
-    server.get('/api/get/tpCandidates', (req, res) => {
-      Promise.resolve(getTrustProtectorData()).then(function (valArray) {
+    server.get('/api/get/electionsData', (req, res) => {
+      var refreshCache = false    // Load from cache if available
+      Promise.resolve(getElectionsData(refreshCache)).then(function (valArray) {
         res.writeHead(200, {
           'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/json'
@@ -485,8 +589,9 @@ app.prepare()
     })
 
     // API call for trust protector election candidates table
-    server.get('/api/get/tpVoteData', (req, res) => {
-      Promise.resolve(getVoteData()).then(function (valArray) {
+    server.get('/api/get/labsPreparedData', (req, res) => {
+      var refreshCache = false    // Load from cache if available
+      Promise.resolve(getLabsPreparedData(refreshCache)).then(function (valArray) {
         res.writeHead(200, {
           'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/json'
@@ -501,13 +606,39 @@ app.prepare()
     })
 
     // API call for trust protector election candidates table
-    server.get('/api/get/voteResults', (req, res) => {
-      Promise.resolve(getVoteResults()).then(function (valArray) {
+    server.get('/api/get/labsAllData', (req, res) => {
+      var refreshCache = false    // Load from cache if available
+      Promise.resolve(getLabsAllData(refreshCache)).then(function (valArray) {
         res.writeHead(200, {
           'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/json'
         })
         return res.end(serialize(valArray))
+      }).catch((error) => {
+        console.log(error)
+        // Send empty JSON otherwise page load hangs indefinitely
+        res.writeHead(200, { 'Content-Type': 'application/json' })
+        return res.end(serialize({}))
+      });
+    })
+
+    // Internal API call to refresh cache
+    server.get('/api/cache/refresh', (req, res) => {
+      var refreshCache = true   // Request cache refresh
+      var airtablePromise = Promise.resolve(getAirtableData(refreshCache));
+      var monthListPromise = Promise.resolve(getMonthListData(refreshCache));
+      var oldListPromise = Promise.resolve(getOldListData(refreshCache));
+      var proposalListPromise = Promise.resolve(getProposalListData(refreshCache))
+      var electionsPromise = Promise.resolve(getElectionsData(refreshCache));
+      var labsPreparedPromise = Promise.resolve(getLabsPreparedData(refreshCache));
+      var labsAllPromise = Promise.resolve(getLabsAllData(refreshCache));
+
+      Promise.all([airtablePromise, monthListPromise, oldListPromise, proposalListPromise, electionsPromise, labsPreparedPromise, labsAllPromise]).then(function (valArray) {
+        res.writeHead(200, {
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': 'application/json'
+        })
+        return res.end(serialize('caches reloaded'))
       }).catch((error) => {
         console.log(error)
         // Send empty JSON otherwise page load hangs indefinitely
@@ -578,7 +709,9 @@ app.prepare()
     server.get('/labs', (req, res) => {
       const actualPage = '/labs'
 
-      app.render(req, res, actualPage)
+      const queryParams_labs = req.query // Pass on queries      
+
+      app.render(req, res, actualPage, queryParams_labs)
     })  
 
     // Routing to the TP Elections page

@@ -1,10 +1,8 @@
 import fetch from 'isomorphic-unfetch';
 import React from 'react';
-import ReactGA from 'react-ga';
 
 // Analytics
-import getGAKey from '../components/functions/analytics';
-ReactGA.initialize(getGAKey);
+import {trackPage, trackEvent} from '../components/functions/analytics';
 
 // Import pages
 
@@ -21,38 +19,11 @@ import NavBar from "../components/elements/NavBar"
 import ModalFrame from '../components/modal/ModalFrame';
 import ModalContent from '../components/modal/SimplifiedModalContent';
 
-var basepath = 'https://dashwatchbeta.org'
-
-const trackPage = (page) => {   // Function to track page views
-    ReactGA.pageview(page);
-}
-
-const trackEvent = (event) => { // Function to track user interaction with page
-    ReactGA.event({
-        category: 'Old Reports Page',
-        action: event,
-    });
-}
-
 // API query requesting Report List data
 const getMonthList = () => {
     return (
         new Promise((resolve) => {
-            fetch(`${basepath}/api/get/old_monthlist`)
-                .then((res) => res.json()
-                    .then((res) => {
-                        resolve(res.data)
-                    })
-                )
-        })
-    )
-}
-
-// API query requesting Opt-out List data
-const getOptOutList = () => {
-    return (
-        new Promise((resolve) => {
-            fetch(`${basepath}/api/get/old_optoutlist`)
+            fetch(`/api/get/old_monthlist`)
                 .then((res) => res.json()
                     .then((res) => {
                         resolve(res.data)
@@ -66,7 +37,7 @@ class Month extends React.Component {
     static async getInitialProps(ctx) {
         const props = {
             year: typeof ctx.query.year == "undefined" ? "2018" : ctx.query.year,   // Default no month to latest
-            month: typeof ctx.query.month == "undefined" ? "November" : ctx.query.month,   // Default no month to latest
+            month: typeof ctx.query.month == "undefined" ? "December" : ctx.query.month,   // Default no month to latest
             url: ctx.pathname,
             as: ctx.asPath,
         }
@@ -102,10 +73,10 @@ class Month extends React.Component {
             tabId: event.currentTarget.id,        // Change state to load different month
             as: `/oldreports?month=${event.currentTarget.id}`,
         })
-        trackEvent('Changed Year')                 // Track Event on Google Analytics    
+        trackEvent('Old Reports Page', 'Changed Year')                 // Track Event on Google Analytics    
     }
 
-    // Function to activate dropdown menu with months
+    // Function to activate month dropdown menu
     handleDropdown(event) {
         event.preventDefault();
         this.setState({
@@ -122,12 +93,11 @@ class Month extends React.Component {
         })
 
         history.pushState(this.state, '', `/oldreports?month=${event.currentTarget.value}&year=${this.state.yearId}`)   // Push State to history
-        trackEvent(`Changed Month to ${event.currentTarget.value} ${this.state.yearId}`)                 // Track Event on Google Analytics    
+        trackEvent('Old Reports Page', `Changed Month to ${event.currentTarget.value} ${this.state.yearId}`)                 // Track Event on Google Analytics    
     }
 
     // Function ran when the eventlistener is activated. Close dropdown menu if clicked outside of it
     handleClick = (event) => {
-        //console.log(event.target)
         if (event.target.id !== "dropdownMenu") {
         this.setState({
             showMenu: false,
@@ -138,7 +108,7 @@ class Month extends React.Component {
     // Google Analytics function to track User interaction on page
     callEvent(event) {
         event.preventDefault();
-        trackEvent('clicked ' + event.currentTarget.className)
+        trackEvent('Old Reports Page', 'clicked ' + event.currentTarget.className)
     }
 
     componentDidMount() {
@@ -152,14 +122,11 @@ class Month extends React.Component {
         trackPage(`/old_reports`) // Track Pageview in Analytics
         window.addEventListener('mousedown', this.handleClick);     // Handles closing of dropdown menu
 
-        var monthListPromise = Promise.resolve(getMonthList());
-        var optOutListPromise = Promise.resolve(getOptOutList());
-
         // Promise to get the initial "month list" records 
-        Promise.all([monthListPromise, optOutListPromise]).then(data => {
+        Promise.resolve(getMonthList()).then(data => {
             this.setState({
-                monthListData: data[0],
-                optOutListData: data[1],
+                monthListData: data.report_list,
+                optOutListData: data.opted_out_list,
             })
         }).then(history.replaceState(this.state, '', `${this.state.as}`))
     }
@@ -221,10 +188,11 @@ class Month extends React.Component {
                         </div>
                         <p className="monthText">Select a month:</p> 
                         <div className="dropdown" id="dropdownmenu">
-                            <div id="dropdownMenu" onClick={this.handleDropdown} className="dropbtn">{monthId} {yearId}<i id="dropdownMenu"></i></div>
+                            <div id="dropdownMenu" onClick={this.handleDropdown} className="dropbtn"><i id="dropdownMenu"></i>{monthId} {yearId}</div>
                             {
                                 this.state.showMenu ? (
                                     <div className="dropdownMenu" id="dropdownMenu">
+                                        <button id="dropdownMenu" value="December" className="dropdownItem"  onClick={this.handleSelectMonth}>December 2018</button>
                                         <button id="dropdownMenu" value="November" className="dropdownItem"  onClick={this.handleSelectMonth}>November 2018</button>
                                         <button id="dropdownMenu" value="October" className="dropdownItem"  onClick={this.handleSelectMonth}>October 2018</button>
                                         <button id="dropdownMenu" value="September" className="dropdownItem"  onClick={this.handleSelectMonth}>September 2018</button>
@@ -271,7 +239,7 @@ class MonthReportRow extends React.Component {
     // Function to show modal
     showModal = () => {
         this.setState({ show: true });
-        trackEvent('Opened Modal')
+        trackEvent('Old Reports Page', 'Opened Modal')
     };
 
     // Function to close modal
@@ -280,7 +248,7 @@ class MonthReportRow extends React.Component {
     };
 
     callEvent(event) {
-        trackEvent('clicked ' + event.currentTarget.className)
+        trackEvent('Old Reports Page', 'clicked ' + event.currentTarget.className)
     }
 
     render() {
@@ -377,7 +345,7 @@ class OptOutRow extends React.Component {
     // Function to show modal
     showModal = () => {
         this.setState({ show: true });
-        trackEvent('Opened Modal')
+        trackEvent('Old Reports Page', 'Opened Modal')
     };
 
     // Function to close modal
@@ -386,7 +354,7 @@ class OptOutRow extends React.Component {
     };
 
     callEvent(event) {
-        trackEvent('clicked ' + event.currentTarget.className)
+        trackEvent('Old Reports Page', 'clicked ' + event.currentTarget.className)
     }
 
     render() {

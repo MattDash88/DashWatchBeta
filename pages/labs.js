@@ -1,10 +1,7 @@
 import React from 'react';
-import { Bar } from 'react-chartjs-2';
-import ReactGA from 'react-ga';
 
 // Analytics
-import getGAKey from '../components/functions/analytics';
-ReactGA.initialize(getGAKey);
+import { trackPage, trackEvent } from '../components/functions/analytics';
 
 // Import css
 import '../components/css/style.css';
@@ -14,235 +11,164 @@ import '../components/css/labs.css';
 
 // Import other elements 
 import Header from '../components/headers/LabsHeader';
-import NavBar from "../components/elements/NavBar"
+import NavBar from "../components/elements/NavBar";
 
-const trackPage = (page) => { // Function to track page views
-  ReactGA.pageview(page);
+import PosSystems from "../components/labs_content/PosSystems";
+import Wallets from "../components/labs_content/Wallets";
+import KpiExplorer from "../components/labs_content/KpiExplorer";
+
+// API query requesting Trust Protector Candidate List data
+const getLabsPreparedData = () => {
+  return (
+    new Promise((resolve) => {
+      fetch(`/api/get/labsPreparedData`)
+        .then((res) => res.json()
+          .then((res) => {
+            resolve(res.data)
+          })
+        )
+    })
+  )
 }
 
-const trackEvent = (event) => { // Function to track user interaction with page
-  ReactGA.event({
-    category: 'Labs Page',
-    action: event,
-  });
-}
-
-// Data Transactions
-var dashRed = [1575, 925, 1050]
-var dashText = [0, 12, 7]
-var myDashWallet = [388, 450, 247.5]
-var Anypay = [13, 6, 11]
-
-// Data Electrum
-var electrumWindows = [659, 409, 91]
-var electrumMac = [119, 39, 16]
-var electrumLinux = [324, 100, 35]
-var electrumAndroid = [129, 68, 12]
-
-// Dash Help
-var dashHelp = [114, 205, 238, 316, 341, 202, 284]
-
-const dataTx = {
-  datasets: [
-    {
-      label: 'Dash.red (estimate)',
-      backgroundColor: '#f44336',
-      borderColor: '#f44336',
-      borderWidth: 1,
-      hoverBackgroundColor: '#f44336',
-      hoverBorderColor: '#f44336',
-      data: dashRed
-    }, {
-      label: 'MyDashWallet',
-      backgroundColor: '#2196F3',
-      borderColor: '#2196F3',
-      borderWidth: 1,
-      hoverBackgroundColor: '#2196F3',
-      hoverBorderColor: '#2196F3',
-      data: myDashWallet
-    }, {
-      label: 'Dash Text',
-      backgroundColor: '#13c645',
-      borderColor: '#13c645',
-      borderWidth: 1,
-      hoverBackgroundColor: '#13c645',
-      hoverBorderColor: '#13c645',
-      data: dashText
-    }, {
-      label: 'Anypay',
-      backgroundColor: '#3f51b5',
-      borderColor: '#3f51b5',
-      borderWidth: 1,
-      hoverBackgroundColor: '#3f51b5',
-      hoverBorderColor: '#3f51b5',
-      data: Anypay
-    }
-  ],
-  labels: ['Nov 2018', 'Dec 2018', 'Jan 2019'],
-};
-
-const dataElectrum = {
-
-  datasets: [
-    {
-      label: 'Windows',
-      backgroundColor: '#f44336',
-      borderColor: '#f44336',
-      borderWidth: 1,
-      hoverBackgroundColor: '#f44336',
-      hoverBorderColor: '#f44336',
-      data: electrumWindows
-    }, {
-      label: 'macOS',
-      backgroundColor: '#2196F3',
-      borderColor: '#2196F3',
-      borderWidth: 1,
-      hoverBackgroundColor: '#2196F3',
-      hoverBorderColor: '#2196F3',
-      data: electrumMac
-    }, {
-      label: 'Linux',
-      backgroundColor: '#3f51b5',
-      borderColor: '#3f51b5',
-      borderWidth: 1,
-      hoverBackgroundColor: '#3f51b5',
-      hoverBorderColor: '#3f51b5',
-      data: electrumLinux
-    }, {
-      label: 'Android',
-      backgroundColor: '#13c645',
-      borderColor: '#13c645',
-      borderWidth: 1,
-      hoverBackgroundColor: '#13c645',
-      hoverBorderColor: '#13c645',
-      data: electrumAndroid
-    }
-  ],
-  labels: ['3.2.3.2 (Released: 2018-12-14)', '3.2.4 (Released: 2019-01-04)', '3.2.5 (Released: 2019-02-20)'],
-};
-
-const dataHelp = {
-  labels: ['Jul 2018', 'Aug 2018', 'Sep 2018', 'Oct 2018', 'Nov 2018', 'Dec 2018', 'Jan 2019'],
-  datasets: [
-    {
-      label: 'Dash Help Support Requests',
-      backgroundColor: '#2196F3',
-      borderColor: '#2196F3',
-      borderWidth: 1,
-      hoverBackgroundColor: '#2196F3',
-      hoverBorderColor: '#2196F3',
-      data: dashHelp
-    }
-  ],
-};
-
-const getData = (dataId) => {
-  if (dataId == 'Transactions') {
-    return (
-      dataTx
-    )
-  } else if (dataId == 'Electrum') {
-    return (
-      dataElectrum
-    )
-  } else if (dataId == 'Dash Help') {
-    return (
-      dataHelp
-    )
-  } else {
-    return (
-      dataHelp
-    )
-  }
-}
-
-const getTabTitle = (dataId) => {
-  if (dataId == 'Transactions') {
-    return (
-      'Average Dash Transactions by known source'
-    )
-  } else if (dataId == 'Electrum') {
-    return (
-      'Dash Electrum downloads by version'
-    )
-  } else if (dataId == 'Dash Help') {
-    return (
-      'Dash Help support requests per month'
-    )
-  } else {
-    return (
-      'Plotly charts'
-    )
-  }
+// API query requesting Trust Protector Candidate List data
+const getLabsAllData = () => {
+  return (
+    new Promise((resolve) => {
+      fetch(`/api/get/labsAllData`)
+        .then((res) => res.json()
+          .then((res) => {
+            resolve(res.data)
+          })
+        )
+    })
+  )
 }
 
 class Labs extends React.Component {
-  constructor() {
-    super()
+  static async getInitialProps(ctx) {
+    const props = {
+      tab: typeof ctx.query.tab == "undefined" ? "explorer" : ctx.query.tab,   // Default no month to latest
+      project: typeof ctx.query.project == "undefined" ? 0 : ctx.query.project,
+      kpi: typeof ctx.query.kpi == "undefined" ? 0 : ctx.query.kpi,
+      chart: ctx.query.chart,
+      url: ctx.pathname,
+      as: ctx.asPath,
+    }
+    return props
+  }
+
+  constructor(props) {
+    super(props)
 
     this.state = {
-      dataId: 'Electrum',
-      tabTitle: '',
-      data: dataElectrum,
-      showPlotly: false,
-      plotlyData: '',
+      posSystemData: '',  // Dataset for posystems tab
+      walletData: '',     // Dataset for wallet tab
+      versionData: '',    // Dataset for posystems tab
+      labsData: '',       // Dataset for proposals tab
+
+      // States that can be set by queries 
+      project: props.project,
+      kpi: props.kpi,
+      showPosChart: typeof props.chart == "undefined" ? 'Transactions' : props.chart,
+      showWalletChart: typeof props.chart == "undefined" ? 'Total' : props.chart,
+
+      // Booleans for POS systems
+      showAnypay: true,
+      showPaylive: true,
+
+      // Booleans for Wallets
+      showDashCore: true,
+      showElectrum: true,
+      showCoreAndroid: true,
+      showCoreiOS: true,
+
+      labsTabId: props.tab,
+      url: '/labs',
+      as: props.as,
     }
 
     // Binding functions in this class
     this.handleSelectTab = this.handleSelectTab.bind(this);
-
+    this.handleQueries = this.handleQueries.bind(this);
   }
 
   handleSelectTab(event) {
     event.preventDefault();
     this.setState({
-      dataId: event.currentTarget.id,
+      labsTabId: event.currentTarget.id,
+      as: `/labs?tab=${event.currentTarget.id}`,
     })
-    if (event.currentTarget.id == 'Plotly') {
+    history.pushState(this.state, '', `/labs?tab=${event.currentTarget.id}`)                    // Push State to history
+    trackEvent('Labs Page', `Changed Tab to ${event.currentTarget.id}`)                 // Track Event on Google Analytics
+  }
+
+  // Function to handle queries pushed by the sub Classes/tabs
+  handleQueries(tabId, queries) {
+    if (tabId == 'explorer') {
       this.setState({
-        showPlotly: true,
-        plotlyData: (<iframe width="1000" height="800" frameBorder="0" scrolling="no" src="//plot.ly/~dashwatch/0.embed"></iframe>)
+        project: queries.activeProject,
+        kpi: queries.activeKpi,
+        as: `/labs?tab=explorer&project=${queries.activeProject}&kpi=${queries.activeKpi}`,
       })
-    } else {
-      this.setState({
-        showPlotly: false,
-      })
+      history.pushState(this.state, '', `/labs?tab=explorer&project=${queries.activeProject}&kpi=${queries.activeKpi}`)
     }
-    trackEvent(`Changed Tab to ${event.currentTarget.id}`)                 // Track Event on Google Analytics
+    if (tabId == 'possystems') {
+      this.setState({
+        showAnypay: queries.anypay,
+        showPaylive: queries.paylive,
+        showPosChart: queries.POSChart,
+        as: `/labs?tab=POSsystems&chart=${queries.POSChart}`,
+      })
+      history.pushState(this.state, '', `/labs?tab=POSsystems&chart=${queries.POSChart}`)
+    }
+    if (tabId == 'wallets') {
+      this.setState({
+        showDashCore: queries.dashCore,
+        showElectrum: queries.electrum,
+        showCoreAndroid: queries.coreAndroid,
+        showCoreiOS: queries.coreiOS,
+        showWalletChart: queries.walletChart,
+        as: `/labs?tab=wallets&chart=${queries.walletChart}`,
+      })
+      history.pushState(this.state, '', `/labs?tab=wallets&chart=${queries.walletChart}`)
+    }
   }
 
   componentDidMount() {
-    // Promise to get the initial "month list" records 
-    this.setState({
-      data: getData(this.state.dataId),
-      tabTitle: getTabTitle(this.state.dataId),
-    })
-    
+    // To handle calls from history (forward and back buttons)
+    onpopstate = event => {
+      if (event.state) {
+        this.setState(event.state)
+      }
+    }
+    var labsPreparedData = Promise.resolve(getLabsPreparedData());
+    var labsAllData = Promise.resolve(getLabsAllData());
+
+    Promise.all([labsAllData, labsPreparedData]).then(data => {
+      this.setState({
+        labsData: data[0],
+        posSystemData: data[1].pos_system_data,
+        walletData: data[1].wallet_data,
+        versionData: data[1].version_data,
+      })
+    }).then(history.replaceState(this.state, '', `${this.state.as}`))
     trackPage(`/labs`)  // Track Pageview in Analytics
   }
 
   componentDidUpdate(prevProps, prevState) {
-    // Update "Proposal list" data for search and filters
-    if (prevState.dataId !== this.state.dataId) {
-      this.setState({
-        data: getData(this.state.dataId),
-        tabTitle: getTabTitle(this.state.dataId),
-      })
+    if (prevState.labsTabId !== this.state.labsTabId || prevState.showPosChart !== this.state.showPosChart || prevState.showWalletChart !== this.state.showWalletChart) {// Just a history state update because it doesn't always work as desired in functions
+        history.replaceState(this.state, '', `${this.state.as}`)
     }
-
-  }
+}
 
   render() {
-    const options = {
-      scales: {
-        xAxes: [{
-          stacked: true
-        }],
-        yAxes: [{
-          stacked: true
-        }]
-      }
-    }
+    const { // Declare data arrays used in class
+      posSystemData,
+      walletData,
+      versionData,
+      labsData,
+    } = this.state
 
     return (
       <main>
@@ -250,26 +176,86 @@ class Labs extends React.Component {
         <NavBar
           showPage="labs"
         />
-        <section className="plotPageWrapper">
-          <div className="monthTab" id='Plotly' value={this.state.dataId == 'Plotly' ? "Active" :
+        <section className="pagewrapper">
+          <div className="monthTab" id='explorer' value={this.state.labsTabId == 'explorer' ? "Active" :
+            "Inactive"} onClick={this.handleSelectTab}><p className="monthTabText">Proposals</p></div>
+          <div className="monthTab" id='merchants' value={this.state.labsTabId == 'merchants' ? "Active" :
             "Inactive"} onClick={this.handleSelectTab}><p className="monthTabText">Merchants</p></div>
-          <div className="monthTab" id='Transactions' value={this.state.dataId == 'Transactions' ? "Active" :
-            "Inactive"} onClick={this.handleSelectTab}><p className="monthTabText">Transactions</p></div>
-          <div className="monthTab" id='Electrum' value={this.state.dataId == 'Electrum' ? "Active" :
-            "Inactive"} onClick={this.handleSelectTab}><p className="monthTabText">Dash Electrum</p></div>
-          <div className="monthTab" id='Dash Help' value={this.state.dataId == 'Dash Help' ? "Active" :
-            "Inactive"} onClick={this.handleSelectTab}><p className="monthTabText">Dash Help</p></div>
+          <div className="monthTab" id='POSsystems' value={this.state.labsTabId == 'POSsystems' ? "Active" :
+            "Inactive"} onClick={this.handleSelectTab}><p className="monthTabText">POS Systems</p></div>
+          <div className="monthTab" id='wallets' value={this.state.labsTabId == 'wallets' ? "Active" :
+            "Inactive"} onClick={this.handleSelectTab}><p className="monthTabText">Wallets</p></div>
           <div className="monthPageWrapper">
-            <div className="plotWrapper" value={this.state.showPlotly ? "Inactive" : "Active"}>
-              <h1 className="labsHeader">{this.state.tabTitle}</h1>
-              <Bar
-                data={this.state.data}
-                options={options}
-              />
-            </div>
-          </div>
-          <div className="plotWrapper" value={this.state.showPlotly ? "Active" : "Inactive"}>
-            {this.state.plotlyData}
+            <section className="plotWrapper" value={this.state.labsTabId == 'explorer' ? "Active" :
+              "Inactive"}>
+              {
+                (labsData.length > 0) ? (
+                  <div>
+                    <KpiExplorer
+                      labsData={labsData}
+                      queryFunction={this.handleQueries}
+                      project={this.state.project}
+                      kpi={this.state.kpi}
+                    />
+                  </div>
+                ) : (
+                    <section>
+                      Loading&hellip;
+                  </section>
+                  )
+              }
+            </section>
+            <section className="plotWrapper" value={this.state.labsTabId == 'merchants' ? "Active" :
+              "Inactive"}>
+              {
+                (this.state.labsTabId == 'merchants') ? (
+                  <div>
+                    <iframe width="1000" height="800" frameBorder="0" scrolling="no" src="//plot.ly/~dashwatch/0.embed"></iframe>
+                  </div>
+                ) : (
+                    null
+                  )
+              }
+            </section>
+            <section className="plotWrapper" value={this.state.labsTabId == 'POSsystems' ? "Active" :
+              "Inactive"}>
+              {
+                (posSystemData.length > 0) ? (
+                  <div>
+                    <PosSystems
+                      posSystemData={posSystemData}
+                      queryFunction={this.handleQueries}
+                      showAnypay={this.state.showAnypay}
+                      showPaylive={this.state.showPaylive}
+                      showPosChart={this.state.showPosChart}
+                    />
+                  </div>
+                ) : (
+                    null
+                  )
+              }
+            </section>
+            <section className="plotWrapper" value={this.state.labsTabId == 'wallets' ? "Active" :
+              "Inactive"}>
+              {
+                (walletData.length > 0) ? (
+                  <div>
+                    <Wallets
+                      walletData={walletData}
+                      versionData={versionData}
+                      queryFunction={this.handleQueries}
+                      showDashCore={this.state.showDashCore}
+                      showElectrum={this.state.showElectrum}
+                      showCoreAndroid={this.state.showCoreAndroid}
+                      showCoreiOS={this.state.showCoreiOS}
+                      showWalletChart={this.state.showWalletChart}
+                    />
+                  </div>
+                ) : (
+                    null
+                  )
+              }
+            </section>
           </div>
         </section>
       </main>

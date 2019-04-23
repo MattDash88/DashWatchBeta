@@ -1,47 +1,86 @@
 import React from 'react';
-import ReactGA from 'react-ga';
 
 // Analytics
-import getGAKey from '../functions/analytics';
-ReactGA.initialize(getGAKey);
+import {trackEvent} from '../functions/analytics';
 
 // Import css
 import '../css/style.css';
 import '../css/modal.css';
 import '../css/status_styling.css';
 
-const trackEvent = (event) => {
-  ReactGA.event({
-      category: 'Full Modal',
-      action: event,
-  });
-}
-
 class ModalTabMain extends React.Component {
   constructor() {
     super();
-    
+
+    this.state = { 
+      showTooltip: '',
+      eventListener: false,
+    };
+
+    // Binding functions in this class
+    this.handleClick = this.handleClick.bind(this);
+    this.handleTooltip = this.handleTooltip.bind(this);
     this.callEvent = this.callEvent.bind(this);
   }
 
+  // Function to close Modal
+  handleTooltip(event) {
+    if (this.state.showTooltip == event.currentTarget.id) {
+      this.setState({ 
+        showTooltip: '',
+        eventListener: false,
+      });
+      trackEvent('Full Modal', `Opened Tooltip by clicking`)
+    } else {
+      this.setState({ 
+        showTooltip: event.currentTarget.id,
+        eventListener: true,
+      });
+      trackEvent('Full Modal', `Closed Tooltip by clicking on it`)
+    }
+  };
+
+  // Function when the eventlistener is activated. Closes tooltips when clicking outside of them
+  handleClick(event) {
+    if (event.target.className !== "modalTooltip") {
+    this.setState({
+      showTooltip: '',
+      eventListener: false,
+    })
+    trackEvent('Full Modal', `Closed Tooltip by clicking outside`)
+  }
+}
+
   // Google Analytics function to track User interaction on page
   callEvent(event) {
-    trackEvent('clicked ' + event.currentTarget.id)
+    trackEvent('Full Modal', 'clicked ' + event.currentTarget.id)
   }
-  
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.eventListener !== this.state.eventListener) {
+      { // Start or stop event listener that handles closing of tooltip
+        this.state.eventListener ? window.addEventListener('mousedown', this.handleClick) : window.removeEventListener('mousedown', this.handleClick);        // Handles closing of dropdown menu
+      }   
+    }
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('mousedown', this.handleClick);    // Stop event listener post is unloaded
+  }
+
   render() {
     const {   // Declare single elements used in this Modal tab   
+      slug,
+      proposal_description,
+      first_payment_date,
       status,
-      payment_date,
-      comm_status,
       budget_status,
       schedule_status,
-      completion_elem_name,
+      comm_status,
+      completion_elem_type,
       completion_elem,
-      last_updated,
-      proposal_description,
       funding_received_usd,
-      slug,
+      last_updated
     } = this.props.main_data
 
     const {   // Declare individual elements used in this class
@@ -58,93 +97,168 @@ class ModalTabMain extends React.Component {
 
     return (
       <div className="modalTabContent" value={openTab == "TabMain" ? "active" : "inactive"}>
-        <div className="modalSubHeader">Proposal Description:</div>
-        <div className="modalProposalText">{proposal_description}</div>
-        <div className="modalHeader">Proposal Details:</div>
-        <div className="modalPropertyDiv">
-            <div className="modalPropertyTitle">
-              First Date Paid:
-            </div>
-            <div className="modalPropertyItem" title={payment_date}>
-            <span className="statusPropertyValue">{payment_date}</span>
-            </div>
+        {
+          comm_status == "Opted out of Dash Watch Reporting" || comm_status == "Not reported by Dash Watch" ? (
+            <section>
+              <div className="modalHeader">Proposal Details:</div>
+              <div className="modalPropertyGrid">
+                <div className="modalPropertyDiv">
+                  <div id="first_date_paid" className="modalTooltip" onClick={this.handleTooltip}>First Date Paid:
+                  <span className="modalTooltiptext" value={this.state.showTooltip == "first_date_paid" ? "Active" :
+                        "Inactive"}>The date the proposal received its first payment from a superblock (UTC).</span>
+                  </div>
+                  <div className="modalPropertyItem" title={first_payment_date}>
+                    <span>{first_payment_date}</span>
+                  </div>
+                </div>
+
+                <div className="modalPropertyDiv" value={comm_status}>
+                  <div id="comm_status" className="modalTooltip" onClick={this.handleTooltip}>Communication status:
+                  <span className="modalTooltiptext" value={this.state.showTooltip == "comm_status" ? "Active" :
+                        "Inactive"}>The communication status of the proposal team with Dash Watch.</span>
+                  </div>
+                  <div className="modalPropertyItem" title={comm_status}>
+                    <span>{comm_status}</span>
+                  </div>
+                </div>
+
+                <div className="modalPropertyDiv">
+                  <div id="total_funding_received" className="modalTooltip" onClick={this.handleTooltip}>Total funding received:
+                  <span className="modalTooltiptext" value={this.state.showTooltip == "total_funding_received" ? "Active" :
+                        "Inactive"}>An indication of the USD value of the treasury payments received by this proposal. The amount is calculated using the price of Dash rounded to full US Dollars on the days each superblock is mined.</span>
+                  </div>
+                  <div className="modalPropertyItem" title={funding_received_usd}>
+                    <span>&#36;{funding_received_usd}</span>
+                  </div>
+                </div>
+
+                <div className="modalPropertyDiv">
+                  <div id="proposal_id" className="modalTooltip" onClick={this.handleTooltip}>Proposal ID:
+                  <span className="modalTooltiptext" value={this.state.showTooltip == "proposal_id" ? "Active" :
+                        "Inactive"}>Unique proposal identifier. With a few exceptions it is the last, proposal unique part of the url of the Dash Central proposal page.</span>
+                  </div>
+                  <div className="modalPropertyItem" title={slug}>
+                    <span>{slug}</span>
+                  </div>
+                </div>
+
+                <div className="modalPropertyDiv">
+                  <div id="last_updated" className="modalTooltip" onClick={this.handleTooltip}>Last updated:
+                  <span className="modalTooltiptext" value={this.state.showTooltip == "last_updated" ? "Active" :
+                        "Inactive"}>Most recent date the metrics for this proposal were updated by Dash Watch.</span>
+                  </div>
+                  <div className="modalPropertyItem" title={last_updated}>
+                    <span>{last_updated}</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+          ) : (
+              <section>
+                <div className="modalHeader">Proposal Description:</div>
+                <div className="modalProposalText">{proposal_description}</div>
+                <div className="modalHeader">Proposal Details:</div>
+                <div className="modalPropertyGrid">
+                  <div className="modalPropertyDiv" value={status}>
+                    <div className="modalPropertyTitle">
+                      Status:
+                    </div>
+                    <div className="modalPropertyItem" title={status}>
+                      <span>{status}</span>
+                    </div>
+                  </div>
+
+                  <div className="modalPropertyDiv" value={comm_status}>
+                    <div id="comm_status" className="modalTooltip" onClick={this.handleTooltip}>Communication status:
+                  <span className="modalTooltiptext" value={this.state.showTooltip == "comm_status" ? "Active" :
+                        "Inactive"}>The communication status of the proposal team with Dash Watch.</span>
+                    </div>
+                    <div className="modalPropertyItem" title={comm_status}>
+                      <span>{comm_status}</span>
+                    </div>
+                  </div>
+
+                  <div className="modalPropertyDiv" value={budget_status}>
+                    <div className="modalPropertyTitle">
+                      Budget Status:
+                    </div>
+                    <div className="modalPropertyItem" title={budget_status}>
+                      <span>{budget_status}</span>
+                    </div>
+                  </div>
+
+                  <div className="modalPropertyDiv" value={schedule_status}>
+                    <div className="modalPropertyTitle">
+                      Schedule Status:
+                    </div>
+                    <div className="modalPropertyItem" title={schedule_status}>
+                      <span>{schedule_status}</span>
+                    </div>
+                  </div>
+
+                  <div className="modalPropertyDiv">
+                    <div id="first_date_paid" className="modalTooltip" onClick={this.handleTooltip}>First Date Paid:
+                  <span className="modalTooltiptext" value={this.state.showTooltip == "first_date_paid" ? "Active" :
+                        "Inactive"}>The date the proposal received its first payment from a superblock (UTC).</span>
+                    </div>
+                    <div className="modalPropertyItem" title={first_payment_date}>
+                      <span>{first_payment_date}</span>
+                    </div>
+                  </div>
+
+                  <div className="modalPropertyDiv">
+                    <div id="total_funding_received" className="modalTooltip" onClick={this.handleTooltip}>Total funding received:
+                  <span className="modalTooltiptext" value={this.state.showTooltip == "total_funding_received" ? "Active" :
+                        "Inactive"}>An indication of the USD value of the treasury payments received by this proposal. The amount is calculated using the price of Dash rounded to full US Dollars on the days each superblock is mined.</span>
+                    </div>
+                    <div className="modalPropertyItem" title={funding_received_usd}>
+                      <span>&#36;{funding_received_usd}</span>
+                    </div>
+                  </div>
+
+                  <div className="modalPropertyDiv">
+                    <div className="modalPropertyTitle">
+                      {completion_elem_type}
+                    </div>
+                    <div className="modalPropertyItem" title={completion_elem}>
+                      <span>{completion_elem}</span>
+                    </div>
+                  </div>
+
+                  <div className="modalPropertyDiv">
+                    <div id="proposal_id" className="modalTooltip" onClick={this.handleTooltip}>Proposal ID:
+                  <span className="modalTooltiptext" value={this.state.showTooltip == "proposal_id" ? "Active" :
+                        "Inactive"}>Unique proposal identifier. With a few exceptions it is the last, proposal unique part of the url of the Dash Central proposal page.</span>
+                    </div>
+                    <div className="modalPropertyItem" title={slug}>
+                      <span className="modalLongText">{slug}</span>
+                    </div>
+                  </div>
+
+                  <div className="modalPropertyDiv">
+                    <div id="last_updated" className="modalTooltip" onClick={this.handleTooltip}>Last updated:
+                  <span className="modalTooltiptext" value={this.state.showTooltip == "last_updated" ? "Active" :
+                        "Inactive"}>Most recent date the metrics for this proposal were updated by Dash Watch.</span>
+                    </div>
+                    <div className="modalPropertyItem" title={last_updated}>
+                      <span>{last_updated}</span>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            )
+        }
+
+        <section>
+          <div className="modalHeader">Links:</div>
+          <div className="modalLinkDiv">
+            <a id="modalDcLink" href={dclink} target="_blank" onClick={this.callEvent}><img id="DcLogo" src="https://dashwatchbeta.org/images/DashCentral.png" height="40"></img></a>
+            <div className="modalLinkSeparator"></div>
+            <a id="modalDwLink" href={`/p/${slug}`} target="" onClick={this.callEvent}><img id="Logo" src="https://dashwatchbeta.org/images/DashWatch.png" height="40"></img></a>
+            <div className="modalLinkSeparator"></div>
           </div>
-
-          <div className="modalPropertyDiv">
-            <div className="modalPropertyTitle">
-              Status:
-            </div>
-            <div className="modalPropertyItem" title={status} value={status}>
-            <span className="statusPropertyValue" value={status}>{status}</span>
-            </div>
-          </div>
-
-          <div className="modalPropertyDiv">
-            <div className="modalPropertyTitle">
-              Budget Status:
-            </div>
-            <div className="modalPropertyItem" title={budget_status} value={budget_status}>
-            <span className="statusPropertyValue" value={budget_status}>{budget_status}</span>
-            </div>
-          </div>
-
-          <div className="modalPropertyDiv">
-            <div className="modalPropertyTitle">
-              Schedule Status:
-            </div>
-            <div className="modalPropertyItem" title={schedule_status} value={schedule_status}>
-            <span className="statusPropertyValue" value={schedule_status}>{schedule_status}</span>
-            </div>
-          </div>
-
-          <div className="modalPropertyDiv">
-            <div className="modalPropertyTitle">
-              {completion_elem_name}
-            </div>
-            <div className="modalPropertyItem" title={completion_elem}>
-            <span className="statusPropertyValue">{completion_elem}</span>
-            </div>
-          </div>
-
-          <div className="modalPropertyDiv">
-            <div className="modalPropertyTitle">
-              Communication Status:
-            </div>
-            <div className="modalPropertyItem" title={comm_status} value={comm_status}>
-            <span className="statusPropertyValue" value={comm_status}>{comm_status}</span>
-            </div>
-          </div>
-
-          <div className="modalPropertyDiv">
-            <div className="modalPropertyTitle">
-              Total funding received:
-            </div>
-            <div className="modalPropertyItem" title={funding_received_usd}>
-            <span className="statusPropertyValue">&#36;{funding_received_usd}</span>
-            </div>
-          </div>
-
-          <div className="modalPropertyDiv">
-            <div className="modalPropertyTitle">
-              Last updated:
-            </div>
-            <div className="modalPropertyItem" title={last_updated}>
-            <span className="statusPropertyValue">{last_updated}</span>
-            </div>
-          </div>  
-
-      <div className="modalHeader">Links:</div>
-      <div className="modalLinkDiv">
-        <span className="modalLinkItem">
-        <a className="link" id="modalDcLink" href={dclink} target="_blank" onClick={this.callEvent}>Dashcentral Link</a>
-        </span>
+        </section>
       </div>
-      <div className="modalLinkDiv">
-        <span className="modalLinkItem">
-        <a className="link" id="modalDwLink" href={`/p/${slug}`} target="" onClick={this.callEvent}>Dash Watch Page</a>
-        </span>
-      </div>
-    </div>
     )
   }
 }

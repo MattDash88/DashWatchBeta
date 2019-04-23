@@ -62,7 +62,6 @@ Styling used in ModalContent.js
     color: white;
 }
 
-
 .simple_modalOwnerName a {
     font-family: 'Roboto', sans-serif;
     text-transform: uppercase;
@@ -119,10 +118,9 @@ Styling used in the modal tab files (ModalTabMain, ModalTabPerformance, ModalTab
 .simple_modalPropertyDiv {
     flex: 0 0 30%;                       /* don't grow, don't shrink, width */
     height: 60px;
-    text-align: left; 
-    border: 1px solid lightgrey;
-    height: 60px;
     width: 30%;
+    text-align: left; 
+    border: 1px solid lightgrey;    
     padding: 5px;
     margin-bottom: 5px;
 }

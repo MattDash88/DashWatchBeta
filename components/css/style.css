@@ -2,8 +2,10 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat');
 @import url('https://fonts.googleapis.com/css?family=Titillium+Web');
 @import url('https://fonts.googleapis.com/css?family=Roboto');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
 
 body {
+    /*background-color: #d9d8d8;*/
     background-color: #d9d8d8;
     font-family: 'Roboto', sans-serif;
 }
@@ -14,9 +16,9 @@ Styles used in index.js
 
 /* General page wrapper */
 .pagewrapper {
-    align-items: middle;
+    position: relative;
+    align-items: center;
     min-width: 800px;
-    width: 100%;
     max-width: 1000px;
     margin: 55px auto;
 }
@@ -28,11 +30,12 @@ Styles used in index.js
     left: 0;
     min-width: 1000px;    
     width: 100%; /* Full width */
+    height: 50px;
     overflow-x: auto;
     list-style-type: none;
     overflow: hidden;
-    margin-bottom: .5rem;
     background-color: #012060;
+    margin: 0;
     z-index: 999;
 }
 
@@ -40,7 +43,7 @@ Styles used in index.js
 .menuContent {
     align-items: middle;
     width: 100%;
-    max-width: 1000px;
+    max-width: 1000px;   
     margin: 0 auto;
 }
 
@@ -188,8 +191,8 @@ input[type=submit] {
     display: block;
   }
   
-  /* Style the checkmark/indicator */
-  .container .checkmark:after {
+/* Style the checkmark/indicator */
+.container .checkmark:after {
     left: 4px;
     top: 0px;
     width: 5px;
@@ -199,23 +202,24 @@ input[type=submit] {
     -webkit-transform: rotate(45deg);
     -ms-transform: rotate(45deg);
     transform: rotate(45deg);
-  }
+}
   
 /* Proposal View Header styling */
 .listHeader {
+    width: 100%;
+    text-align: center;
     color: #003347;
     font-family: 'Montserrat', sans-serif;
-    padding: 1rem;
-    margin: 0;
-    text-align: left;
-    width: 100%;
     font-size: 2rem;
+    padding: 0;
+    margin: 0;
+    font-weight: bold;
 }
 
 /* Proposal list div containing header */
 .headerLeftDiv {
     display: inline-block;
-    padding-left: 1rem;
+    padding-left: 3.5rem;
     align-self: left;
     vertical-align: top;
     width: 60%;
@@ -226,13 +230,14 @@ input[type=submit] {
     display: inline-block;
     align-self: right;
     vertical-align: top;
-    width: 35%;
+    width: 30%;
 }
 
 /* Styling of normal text in header */
 .headerText {
     font-family: 'Titillium Web', sans-serif;
-    font-size: 14px;
+    text-align: right;
+    font-size: 0.8rem;
     color: black;
 }
 
@@ -268,140 +273,112 @@ input[type=submit] {
 /* 
 Style elements used in Post.js 
 */
-
-/* Outer div of the cards, handles margin */
-.cardDiv {
-    border: 2px solid black;
-    border-radius:5px 5px 5px 5px;
+.cardDiv { 
+    width: 900px; 
+    margin-left: auto;
+    margin-right: auto;
     box-shadow: 2px 2px 1px grey;
-    min-height: 210px;
-    background: #ffffff;
-    min-width: 600px;
-    margin-bottom: 30px;
-    max-width: 900px;
-}
-
-/* Inner div wrapper of the cards, handles inside */
-.cardWrapper {
-    /* border-bottom: 2px solid lightgray; */
-    min-width: 600px;
+    border-radius:5px 5px 5px 5px;      
+    margin-bottom: 20px;
 }
 
 /* Blue title header of the card*/
 .cardTitle { 
     font-family: 'Montserrat', sans-serif;
-    color: white;
-    background-color: #012060;
-    min-width: 500px;
-    max-width: 100%;
-    height: 45px;
-    padding: 5px;
-    cursor: pointer;
+    background: #012060;
+    width: 900px;
+    height: 50px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius:5px 5px 0px 0px;
 }
 
 /* Div of area that is clickable to activate the Modal */
-.cardPropertyWrapper {
-    cursor: pointer;
+.cardContentWrapper {
+    background: white;
+    width: 900px;
+    padding-top: 5px;
+    padding-bottom: 10px;
+    border-radius: 0px 0px 5px 5px;    
 }
 
 /* Styling of the proposal name, also used in Single.js */
 .proposalName { 
     font-family: 'Montserrat', sans-serif;
-    font-size: 20px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
     color: white;
+    width: 100%;
+    min-width: 350px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
 }
 
 /* Styling of the proposal owner name also used in Single.js */
 .ownerName { 
-    font-family: 'Titillium Web', sans-serif;
-    font-size: 16px;
+    font-family: sans-serif;
+    font-size: 1rem;
     font-weight: normal;
+    text-align: center;
+    width: 100%;
     color: white;
+}
+
+.ownerName a {
+    font-family: sans-serif;
+    text-transform: uppercase;
+    color: white;
+  }
+
+/* 2x4 grid with proposal properties in it */
+.cardPropertyGrid {
+    display: flex;                       /* establish flex container */
+    flex-wrap: wrap;                     /* enable flex items to wrap */
+    justify-content: space-around;    
+    margin-top: 0.3rem;
+    margin-left: 0.2rem;
+    margin-right: 0.2rem;
 }
 
 /* Div containing both the Property Title and Property Item */
 .cardPropertyDiv {
-    display: inline-block;
-    text-align: left; 
-    align-items: top;
-    width: 21%;
+    flex: 0 0 23%;                       /* don't grow, don't shrink, width */
     height: 60px;
-    min-width: 200px;
-    margin-left: 10px;
-    margin-top: 5px;
+    text-align: left; 
+    font-size: 0.9rem;
+    border: 1px solid lightgrey;    
+    padding: 0.3rem;
+    margin-bottom: 0.3rem;
 }
 
 /* Element name styling, Status, Budget Status, etc. */
 .cardPropertyTitle {  
     font-family: 'Montserrat', sans-serif;
-    font-weight: 'bold';
-    text-align: left; 
-    font-size: 14px;
     color: black;
     height: 20px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 /* Element value styling, Completed, On Schedule, etc. */
 .cardPropertyItem {
+    font-family: sans-serif;
+    font-weight: bold;
     height: 40px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-/* Div wrapping the report element of the card*/
-.reportDiv {
-    width: 90%;
-    padding: 10px;
-}
-
-.reportTitle {
-    display: inline-block;
-    font-family: 'Montserrat', sans-serif;
-    text-align: left;
-    color: black;
-    height: 20px;
-    width: 25%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-/* Styling of the report link*/ 
-.reportItem {
-    display: inline-block;
-    font-family: 'Roboto', sans-serif;
-    width: 70%;
-
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-/* Div around the links on the bottom of the card*/
-.linkDiv {
-    display: inline-block;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    width: 99%;
 }
 
 /* Styling of the text of the bottom links*/
-.linkItem {
+.cardLinkItem {
     display: inline-block;
-    font-family: 'Roboto', sans-serif;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    color: #008de4;
     text-align: center;
+    margin-top: 10px;
     width: 33%;
     height: 20px;
 }
 
 /* Styling for links in general */
-.link {
+.cardLink {
     font-family: 'Roboto', sans-serif;
     color: #008de4;
     font-weight: 400;
@@ -411,3 +388,179 @@ Style elements used in Post.js
     text-decoration: none;
     cursor: pointer;
 }
+
+/*
+Styling for the card report section
+*/
+
+/* 2x4 grid with proposal properties in it */
+.cardReportGrid {
+    display: flex;                       /* establish flex container */
+    flex-wrap: wrap;                     /* enable flex items to wrap */
+    justify-content: space-around;    
+    margin-top: 0.3rem;
+    margin-bottom: 0.3rem;    
+}
+
+/* Div containing both the Property Title and Property Item */
+.cardReportDiv {
+    flex: 0 0 40%;                       /* don't grow, don't shrink, width */
+    align-items: center;      
+}
+
+/* Styling of the text of the bottom links*/
+.cardNoReportText {
+    font-family: sans-serif;
+    font-weight: 200;
+    font-size: 1rem;
+}
+
+/* Styling of the report link at the bottom of the proposal cards */
+.cardReportItem {
+    display: inline-block;
+    padding: 20px 10px 20px 10px;
+    margin-left: 2rem;
+    background-color: white;  
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;  
+    border: none;
+}
+
+/* Styling of the text of the bottom links*/
+.cardReportLink {
+    font-family: 'Roboto', sans-serif;
+    color: #008de4;
+    font-weight: 200;
+    font-size: 1rem;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.cardReportLink img {
+    vertical-align: middle;
+}
+
+/* Styling for the dropdown div */
+.cardDropdown {
+    display: inline-block;  
+    margin-left: 2rem;
+}
+
+/* Styling for the top entry of the dropdown list, the one with Glyph */
+.cardDropdownButton {
+    text-align: right;
+    background: white;
+    padding: 16px 10px 16px 10px;  
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; 
+}
+
+/* Dropdown div that contains the entries below the DropdownButton, overlaps other content and at aabsolute location */
+.cardDropdownMenu {
+    display: show;
+    text-align: right;
+    position: absolute;  
+    background: white;     
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 2;
+}
+
+/* Change styling of top item of the dropdown list when the menu is open */
+.cardDropdownButton[value="Active"] {
+    text-align: right;
+    background: white;
+    padding: 16px 10px 16px 10px; 
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); 
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; 
+}
+
+.cardDropdownButton[value="Active"]:hover {background-color: #ddd;}
+
+/* Styling for the individual line items of the unfolded dropdown menu */
+.cardDropdownItem {
+    display: block;
+    text-align: right;    
+    border: none;
+    padding: 16px 10px 16px 64px;  
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cardDropdownItem:hover {background-color: #ddd;}
+
+/* Div around the dropdown glyph, increase clickable area and form border */
+.cardGlyphDiv {
+    display: inline-block;
+    margin-left: 10px; 
+    margin-right: 10px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border: solid lightgrey 1px;
+    border-radius: 4px 4px 4px 4px; 
+    cursor: pointer;
+}
+
+/* Downpointing chevron on dropdown menus */
+i[id="reportsMenu"] {   
+    display: inline-block;
+    border: solid #012060;
+    border-width: 0 2px 2px 0;
+    text-align: right;    
+    margin-bottom: 3px;
+    height: 10px;
+    width: 10px;  
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg); 
+}
+
+/*
+Tooltip styling
+*/
+
+/* Styling of the tooltip element */
+.cardTooltip {
+    font-family: 'Montserrat', sans-serif;
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted lightgrey;
+    cursor: pointer;
+}
+
+/* Styling of the Tooltip block */
+.cardTooltip .cardTooltiptext {
+    font-family: sans-serif;
+    font-size: 0.8rem;
+    visibility: hidden;
+    width: 300px;
+    background-color: #555;
+    color: #fff;
+    text-align: left;
+    border-radius: 6px;
+    padding: 5px 5px;
+    
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+    top: 100%;
+    left: 50%;
+    margin-left: -150px;
+}
+
+/* Show tooltip upon hover */
+.cardTooltip:hover .cardTooltiptext {
+    visibility: visible;
+}
+
+/* Show tooltip upon hover */
+.cardTooltip .cardTooltiptext[value="Active"] {
+    visibility: visible;
+}
+  

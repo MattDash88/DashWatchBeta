@@ -1,21 +1,12 @@
 import React from 'react';
-import ReactGA from 'react-ga';
 
 // Analytics
-import getGAKey from '../functions/analytics';
-ReactGA.initialize(getGAKey);
+import {trackEvent} from '../functions/analytics';
 
 // Import css
 import '../css/style.css';
 import '../css/single.css';
 import '../css/status_styling.css';
-
-const trackEvent = (event) => {
-    ReactGA.event({
-        category: 'Single Page',
-        action: event,
-    });
-}
 
 class TabReports extends React.Component {
     
@@ -59,7 +50,7 @@ class ReportDiv extends React.Component {
     }
     // Google Analytics function to track User interaction on page
     callEvent(event) {
-        trackEvent('clicked ' + event.currentTarget.id)
+        trackEvent('Single Page', 'clicked ' + event.currentTarget.id)
     }
     
     render() {
