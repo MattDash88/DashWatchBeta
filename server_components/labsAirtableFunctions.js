@@ -14,7 +14,10 @@ const WalletDownloadPosts = function getWalletDownloadPosts(tableId) {
         // Query to feed to Airtable
         const apiQuery = {
             pageSize: 100,
-            sort: [{ field: 'Date', direction: 'asc' }]
+            sort: [
+                { field: 'Wallet', direction: 'asc' },
+                { field: 'Date', direction: 'asc' }
+            ],
         }
 
         // Get the data from the table

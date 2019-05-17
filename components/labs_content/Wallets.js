@@ -14,7 +14,7 @@ const buildContent = (labsData, queries) => {
         var desktopDownloads = []
         var mobileDownloads = []
         {
-            queries.showElectrum ? (
+            queries.showDashCore ? (
                 totalDownloads.push({
                     label: labsData[0].wallet_name,
                     fill: false,
@@ -38,7 +38,7 @@ const buildContent = (labsData, queries) => {
                 )
         }
         {
-            queries.showDashCore ? (
+            queries.showElectrum ? (
                 totalDownloads.push({
                     label: labsData[1].wallet_name,
                     fill: false,
@@ -64,19 +64,19 @@ const buildContent = (labsData, queries) => {
         {
             queries.showCoreAndroid ? (
                 totalDownloads.push({
-                    label: 'Core Android',
+                    label: labsData[2].wallet_name,
                     fill: false,
                     borderColor: 'green',
                     data: labsData[2].mobile_downloads,
                 }),
                 desktopDownloads.push({
-                    label: 'Core Android',
+                    label: labsData[2].wallet_name,
                     fill: false,
                     borderColor: 'green',
                     data: labsData[2].mobile_downloads,
                 }),
                 mobileDownloads.push({
-                    label: 'Core Android',
+                    label: labsData[2].wallet_name,
                     fill: false,
                     borderColor: 'green',
                     data: labsData[2].mobile_downloads,
