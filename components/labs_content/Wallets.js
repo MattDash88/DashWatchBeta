@@ -14,23 +14,23 @@ const buildContent = (labsData, queries) => {
         var desktopDownloads = []
         var mobileDownloads = []
         {
-            queries.showDashCore ? (
+            queries.showElectrum ? (
                 totalDownloads.push({
                     label: labsData[0].wallet_name,
                     fill: false,
-                    borderColor: 'blue',
+                    borderColor: 'purple',
                     data: labsData[0].total_downloads,
                 }),
                 desktopDownloads.push({
                     label: labsData[0].wallet_name,
                     fill: false,
-                    borderColor: 'blue',
+                    borderColor: 'purple',
                     data: labsData[0].desktop_downloads,
                 }),
                 mobileDownloads.push({
                     label: labsData[0].wallet_name,
                     fill: false,
-                    borderColor: 'blue',
+                    borderColor: 'purple',
                     data: labsData[0].mobile_downloads,
                 })
             ) : (
@@ -38,23 +38,23 @@ const buildContent = (labsData, queries) => {
                 )
         }
         {
-            queries.showElectrum ? (
+            queries.showDashCore ? (
                 totalDownloads.push({
                     label: labsData[1].wallet_name,
                     fill: false,
-                    borderColor: 'purple',
+                    borderColor: 'blue',
                     data: labsData[1].total_downloads,
                 }),
                 desktopDownloads.push({
                     label: labsData[1].wallet_name,
                     fill: false,
-                    borderColor: 'purple',
+                    borderColor: 'blue',
                     data: labsData[1].desktop_downloads,
                 }),
                 mobileDownloads.push({
                     label: labsData[1].wallet_name,
                     fill: false,
-                    borderColor: 'purple',
+                    borderColor: 'blue',
                     data: labsData[1].mobile_downloads,
                 })
             ) : (
