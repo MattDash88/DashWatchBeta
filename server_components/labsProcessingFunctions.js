@@ -106,6 +106,47 @@ var processWalletData = function mainWalletFunction(walletData) {
     return storeMainData
 }
 
+// Processing wallet metrics over time data
+var processCountryData = function mainWalletFunction(countryData) {
+    // Declaring elements 
+    storeMainData = []
+    var countryEntries = []
+    var uniqueCountries
+    
+    Object.values(countryData).map((item) => {   //Go through dataset to find all wallet types
+        countryEntries.push(item.country_name)
+    })
+    // Filter the array of wallet types on unique wallets
+    var uniqueCountries = countryEntries.filter(onlyUnique);
+
+    // Sort and prepare all the data per wallet type
+    Object.keys(uniqueCountries).map((item) => {  // Iterate through all unique wallet types
+        // Declare elements used per iteration
+        var installData = []
+        var id
+
+        // Sort the entries in the dataset to the unique wallet types
+        Object.keys(countryData).map((data_item) => {        // Iterate through the whole wallet dataset
+            if (countryData[data_item].country_name == uniqueCountries[item]) {
+                installData.push({    // Dataset for Desktop wallets
+                    x: countryData[data_item].date,
+                    y: countryData[data_item].active_devices,
+                })
+                id = countryData[data_item].id
+            }
+        })      // End of iteration through all wallet data  
+        
+        // Make an object for the wallet type
+        const countryDataConst = {
+            country_name: uniqueCountries[item],
+            active_devices: installData,
+            id: id,
+        }
+        storeMainData.push(countryDataConst)     // Push the object with wallet metrics to wallet data object      
+    })  // End of iteration loop through unique wallet array
+    return storeMainData
+}
+
 // Processing wallet metrics per version data
 var processVersionData = function mainVersionFunction(walletData) {
     // Declaring elements 
@@ -207,6 +248,7 @@ var processPosData = function mainPosFunction(posSystemData) {
 module.exports = {
     processAllLabsData,
     processWalletData,
+    processCountryData,
     processVersionData,
     processPosData,
 }

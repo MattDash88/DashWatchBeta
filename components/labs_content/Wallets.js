@@ -18,19 +18,19 @@ const buildContent = (labsData, queries) => {
                 totalDownloads.push({
                     label: labsData[0].wallet_name,
                     fill: false,
-                    borderColor: 'purple',
+                    borderColor: 'blue',
                     data: labsData[0].total_downloads,
                 }),
                 desktopDownloads.push({
                     label: labsData[0].wallet_name,
                     fill: false,
-                    borderColor: 'purple',
+                    borderColor: 'blue',
                     data: labsData[0].desktop_downloads,
                 }),
                 mobileDownloads.push({
                     label: labsData[0].wallet_name,
                     fill: false,
-                    borderColor: 'purple',
+                    borderColor: 'blue',
                     data: labsData[0].mobile_downloads,
                 })
             ) : (
@@ -42,19 +42,19 @@ const buildContent = (labsData, queries) => {
                 totalDownloads.push({
                     label: labsData[1].wallet_name,
                     fill: false,
-                    borderColor: 'blue',
+                    borderColor: 'purple',
                     data: labsData[1].total_downloads,
                 }),
                 desktopDownloads.push({
                     label: labsData[1].wallet_name,
                     fill: false,
-                    borderColor: 'blue',
+                    borderColor: 'purple',
                     data: labsData[1].desktop_downloads,
                 }),
                 mobileDownloads.push({
                     label: labsData[1].wallet_name,
                     fill: false,
-                    borderColor: 'blue',
+                    borderColor: 'purple',
                     data: labsData[1].mobile_downloads,
                 })
             ) : (
@@ -280,6 +280,7 @@ class Wallets extends React.Component {
     render() {
         const { // Declare data arrays used in class
             walletData,
+            countryData,
             versionData,
         } = this.props
 
@@ -304,7 +305,7 @@ class Wallets extends React.Component {
         return (
             <main>
                 <h1 className="labsHeader">Wallet Downloads</h1>
-                <p className="labsText">Select a metric:</p>
+                <p className="labsText">Select dataset:</p>
                 <div className="labsDropdown" id="dropdownmenu">
                     <div id="dropdownMenu" onClick={this.handleDropdown} className="labsDropbtn"><i id="dropdownMenu"></i>{tabQueries.showChart}</div>
                     {
@@ -314,6 +315,24 @@ class Wallets extends React.Component {
                                 <button id="dropdownMenu" value="Desktop" className="labsDropdownItem" onClick={this.handleSelectChart}>Desktop</button>
                                 <button id="dropdownMenu" value="Mobile" className="labsDropdownItem" onClick={this.handleSelectChart}>Mobile</button>
                                 <button id="dropdownMenu" value="Version" className="labsDropdownItem" onClick={this.handleSelectChart}>Downloads per Version</button>
+                            </div>
+                        ) : (
+                                null
+                            )
+                    }
+                </div>
+                <div className="labsDropdown" id="dropdownmenu">
+                    <p className="labsText">Select a kpi:</p>
+                    <div id="dropdownMenu" onClick={this.handleKpiDropdown} className="labsDropbtn"><i id="dropdownMenu"></i>{pageContent.kpiName}</div>
+                    {
+                        this.state.showKpiMenu ? (
+                            <div className="labsDropdownMenu" id="dropdownMenu">
+                                {
+                                    Object.keys(kpiList).map((item) =>
+                                        <div key={kpiList[item].id}>
+                                            <button id="dropdownMenu" value={item} className="labsDropdownItem" onClick={this.handleSelectKpi}>{kpiList[item].kpi_name}</button>
+                                        </div>
+                                    )}
                             </div>
                         ) : (
                                 null

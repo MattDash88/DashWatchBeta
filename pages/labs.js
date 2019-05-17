@@ -64,7 +64,8 @@ class Labs extends React.Component {
     this.state = {
       posSystemData: '',  // Dataset for posystems tab
       walletData: '',     // Dataset for wallet tab
-      versionData: '',    // Dataset for posystems tab
+      countryData: '',     // Dataset for wallet tab
+      versionData: '',    // Dataset for wallet tab
       labsData: '',       // Dataset for proposals tab
 
       // States that can be set by queries 
@@ -150,6 +151,7 @@ class Labs extends React.Component {
         labsData: data[0],
         posSystemData: data[1].pos_system_data,
         walletData: data[1].wallet_data,
+        countryData: data[1].country_data,
         versionData: data[1].version_data,
       })
     }).then(history.replaceState(this.state, '', `${this.state.as}`))
@@ -166,6 +168,7 @@ class Labs extends React.Component {
     const { // Declare data arrays used in class
       posSystemData,
       walletData,
+      countryData,
       versionData,
       labsData,
     } = this.state
@@ -242,6 +245,7 @@ class Labs extends React.Component {
                   <div>
                     <Wallets
                       walletData={walletData}
+                      countryData={countryData}
                       versionData={versionData}
                       queryFunction={this.handleQueries}
                       showDashCore={this.state.showDashCore}

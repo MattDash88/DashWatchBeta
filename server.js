@@ -366,19 +366,22 @@ const getLabsPreparedData = (refreshCache) => {
       // If cache is empty or a cache refresh is requested, retrieve from Airtable
       else {        
         var walletDataPromise = Promise.resolve(labsAirtableFunctions.WalletDownloadPosts('Dash Wallets - Month'));
+        var WalletCountryPromise = Promise.resolve(labsAirtableFunctions.WalletCountryPosts('Dash Wallets - Countries'))
         var WalletVersionPromise = Promise.resolve(labsAirtableFunctions.WalletVersionPosts('Dash Wallets - Version'))
         var posDataPromise = Promise.resolve(labsAirtableFunctions.PosMetricsPosts('POS Systems'));
         
-        Promise.all([walletDataPromise, WalletVersionPromise, posDataPromise]).then(function (valArray) {          
+        Promise.all([walletDataPromise, WalletCountryPromise, WalletVersionPromise, posDataPromise]).then(function (valArray) {          
           // Sorting out all valArray items
           labsWalletData = labsProcessingFunctions.processWalletData(valArray[0])
-          WalletVersionData = labsProcessingFunctions.processVersionData(valArray[1])
-          posSystemData = labsProcessingFunctions.processPosData(valArray[2])
+          walletCountryData = labsProcessingFunctions.processCountryData(valArray[1])
+          walletVersionData = labsProcessingFunctions.processVersionData(valArray[2])
+          posSystemData = labsProcessingFunctions.processPosData(valArray[3])
 
           // Create the data construct
           const storeAirtablePosts = {
             wallet_data: labsWalletData,
-            version_data: WalletVersionData,
+            country_data: walletCountryData,
+            version_data: walletVersionData,
             pos_system_data: posSystemData,
           }
 
