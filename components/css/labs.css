@@ -15,6 +15,10 @@
     font-weight: bold;
 }
 
+.labsContentSection[value="Inactive"] {
+  display: none;
+}
+
 /* Header of the labs tabs */
 .labsH2 {
   display: block;

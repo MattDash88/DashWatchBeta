@@ -73,6 +73,8 @@ class Labs extends React.Component {
       kpi: props.kpi,
       showPosChart: typeof props.chart == "undefined" ? 'Transactions' : props.chart,
       showWalletChart: typeof props.chart == "undefined" ? 'Total' : props.chart,
+      showWalletType: 'Total',
+      showWalletCountry: 'Nigeria',
 
       // Booleans for POS systems
       showAnypay: true,
@@ -129,6 +131,7 @@ class Labs extends React.Component {
         showElectrum: queries.electrum,
         showCoreAndroid: queries.coreAndroid,
         showCoreiOS: queries.coreiOS,
+        showWalletCountry: queries.walletCountry,
         showWalletChart: queries.walletChart,
         as: `/labs?tab=wallets&chart=${queries.walletChart}`,
       })
@@ -182,8 +185,6 @@ class Labs extends React.Component {
         <section className="pagewrapper">
           <div className="monthTab" id='explorer' value={this.state.labsTabId == 'explorer' ? "Active" :
             "Inactive"} onClick={this.handleSelectTab}><p className="monthTabText">Proposals</p></div>
-          <div className="monthTab" id='merchants' value={this.state.labsTabId == 'merchants' ? "Active" :
-            "Inactive"} onClick={this.handleSelectTab}><p className="monthTabText">Merchants</p></div>
           <div className="monthTab" id='POSsystems' value={this.state.labsTabId == 'POSsystems' ? "Active" :
             "Inactive"} onClick={this.handleSelectTab}><p className="monthTabText">POS Systems</p></div>
           <div className="monthTab" id='wallets' value={this.state.labsTabId == 'wallets' ? "Active" :
@@ -205,18 +206,6 @@ class Labs extends React.Component {
                     <section>
                       Loading&hellip;
                   </section>
-                  )
-              }
-            </section>
-            <section className="plotWrapper" value={this.state.labsTabId == 'merchants' ? "Active" :
-              "Inactive"}>
-              {
-                (this.state.labsTabId == 'merchants') ? (
-                  <div>
-                    <iframe width="1000" height="800" frameBorder="0" scrolling="no" src="//plot.ly/~dashwatch/0.embed"></iframe>
-                  </div>
-                ) : (
-                    null
                   )
               }
             </section>
@@ -253,6 +242,7 @@ class Labs extends React.Component {
                       showCoreAndroid={this.state.showCoreAndroid}
                       showCoreiOS={this.state.showCoreiOS}
                       showWalletChart={this.state.showWalletChart}
+                      showWalletCountry={this.state.showWalletCountry}
                     />
                   </div>
                 ) : (

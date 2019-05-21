@@ -166,6 +166,51 @@ const buildContent = (labsData, queries) => {
     }
 }
 
+const buildCountryContent = (countryData, queries) => {
+    try {
+        var country = queries.showCountry
+        var activeDevices = [
+            {
+                label: country,
+                fill: false,
+                borderColor: 'blue',
+                data: countryData[country].active_devices,
+            }
+        ]
+
+        const options = {
+            scales: {
+                xAxes: [{
+                    type: 'time',
+                    time: {
+                        unit: 'month'
+                    },
+                    distribution: "series",
+                }],
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Installs on Active Andriod devices in Month'
+                    },
+                }]
+            }
+        }
+
+        return {
+            countryChart: { datasets: activeDevices },
+            countryOptions: options,
+        }
+    } catch (e) {
+        return {
+            countryChart: { datasets: [] },
+            countryOptions: {},
+        }
+    }
+}
+
 const chartFunction = (chartData, options, redrawState) => {
     try {
         var chartObject =
@@ -195,13 +240,16 @@ class Wallets extends React.Component {
 
         this.state = {
             showMenu: false,
+            showCountryMenu: false,
             shouldRedraw: false,
         }
 
         // Binding functions used in this Class
         this.handleDatasetToggle = this.handleDatasetToggle.bind(this)
         this.handleSelectChart = this.handleSelectChart.bind(this)
+        this.handleSelectCountry = this.handleSelectCountry.bind(this)
         this.handleDropdown = this.handleDropdown.bind(this);
+        this.handleCountryDropdown = this.handleCountryDropdown.bind(this);
         this.handleQueries = this.handleQueries.bind(this);
         this.handleClick = this.handleClick.bind(this);
     }
@@ -211,15 +259,27 @@ class Wallets extends React.Component {
         event.preventDefault();
         this.setState({
             showMenu: !this.state.showMenu,
+            showCountryMenu: false,
             shouldRedraw: false,
         })
         trackEvent('Labs Page', `Clicked Wallets KPI dropdown`)
+    }
+
+    handleCountryDropdown(event) {
+        event.preventDefault();
+        this.setState({
+            showMenu: false,
+            showCountryMenu: !this.state.showCountryMenu,
+            shouldRedraw: false,
+        })
+        trackEvent('Labs Page', `Clicked Wallets Country dropdown`)
     }
 
     // Function to handle selection of item from the KPI dropdown menu
     handleSelectChart(event) {
         this.setState({
             showMenu: false,
+            showCountryMenu: false,
             shouldRedraw: true,
         })
 
@@ -228,7 +288,29 @@ class Wallets extends React.Component {
             electrum: this.props.showElectrum,
             coreAndroid: this.props.showCoreAndroid,
             coreiOS: this.props.showCoreiOS,
+            walletCountry:  this.props.showWalletCountry,
             walletChart: event.currentTarget.value,
+        }
+
+        this.handleQueries(queries)     // Send queries to main Labs file
+        trackEvent('Labs Page', `Changed Chart to Wallet ${event.currentTarget.value}`)                 // Track Event on Google Analytics    
+    }
+
+    // Function to handle selection of item from the KPI dropdown menu
+    handleSelectCountry(event) {
+        this.setState({
+            showMenu: false,
+            showCountryMenu: false,
+            shouldRedraw: true,
+        })
+
+        const queries = {
+            dashCore: this.props.showDashCore,
+            electrum: this.props.showElectrum,
+            coreAndroid: this.props.showCoreAndroid,
+            coreiOS: this.props.showCoreiOS,
+            walletCountry: event.currentTarget.value,
+            walletChart: this.props.showWalletChart,
         }
 
         this.handleQueries(queries)     // Send queries to main Labs file
@@ -246,6 +328,7 @@ class Wallets extends React.Component {
             electrum: event.currentTarget.id == 'DashElectrum' ? !this.props.showElectrum : this.props.showElectrum,
             coreAndroid: event.currentTarget.id == 'Core Android' ? !this.props.showCoreAndroid : this.props.showCoreAndroid,
             coreiOS: event.currentTarget.id == 'Core iOS' ? !this.props.showCoreiOS : this.props.showCoreiOS,
+            walletCountry:  this.props.showWalletCountry,
             walletChart: this.props.showWalletChart,
         }
 
@@ -263,6 +346,7 @@ class Wallets extends React.Component {
         if (event.target.id !== "dropdownMenu") {
             this.setState({
                 showMenu: false,
+                showCountryMenu: false,
                 shouldRedraw: false,
             })
             trackEvent('Labs Page', `Clicked on Labs Wallets page`)
@@ -285,7 +369,8 @@ class Wallets extends React.Component {
         } = this.props
 
         const tabQueries = {
-            showChart: this.props.showWalletChart,
+            showChart: this.props.showWalletChart,              // Dataset to look at: 'all', 'country', 'version'
+            showCountry: this.props.showWalletCountry,          // Sets the country sub chart
             showDashCore: this.props.showDashCore,
             showElectrum: this.props.showElectrum,
             showCoreAndroid: this.props.showCoreAndroid,
@@ -293,12 +378,18 @@ class Wallets extends React.Component {
         }
 
         const content = buildContent(walletData, tabQueries)
+        const country_content = buildCountryContent(countryData, tabQueries)
 
         const {
             chartData,
             options,
             pageContent
         } = content
+
+        const {
+            countryChart,
+            countryOptions,
+        } = country_content
 
         var chartObject = chartFunction(chartData, options, this.state.shouldRedraw)
 
@@ -314,6 +405,7 @@ class Wallets extends React.Component {
                                 <button id="dropdownMenu" value="Total" className="labsDropdownItem" onClick={this.handleSelectChart}>Total</button>
                                 <button id="dropdownMenu" value="Desktop" className="labsDropdownItem" onClick={this.handleSelectChart}>Desktop</button>
                                 <button id="dropdownMenu" value="Mobile" className="labsDropdownItem" onClick={this.handleSelectChart}>Mobile</button>
+                                <button id="dropdownMenu" value="Country" className="labsDropdownItem" onClick={this.handleSelectChart}>Active installs by Country</button>
                                 <button id="dropdownMenu" value="Version" className="labsDropdownItem" onClick={this.handleSelectChart}>Downloads per Version</button>
                             </div>
                         ) : (
@@ -321,16 +413,64 @@ class Wallets extends React.Component {
                             )
                     }
                 </div>
-                <div className="labsDropdown" id="dropdownmenu">
-                    <p className="labsText">Select a kpi:</p>
-                    <div id="dropdownMenu" onClick={this.handleKpiDropdown} className="labsDropbtn"><i id="dropdownMenu"></i>{pageContent.kpiName}</div>
+                <section className="labsContentSection" value={tabQueries.showChart == "Total" ? "Active" :
+                    "Inactive"}>
+                    <p className="labsText">Toggle datasets:</p>
+                    <div>
+                        <div id="Dash Core" onClick={this.handleDatasetToggle} className="labsDatabtn" value={tabQueries.showDashCore ? "Active" : "Inactive"}><span>Dash Core</span><span className="labsDatabtnText">{tabQueries.showDashCore ? "ON" : "OFF"}</span></div>
+                        <div id="DashElectrum" onClick={this.handleDatasetToggle} className="labsDatabtn" value={tabQueries.showElectrum ? "Active" : "Inactive"}><span>Dash Electrum</span><span className="labsDatabtnText">{tabQueries.showElectrum ? "ON" : "OFF"}</span></div>
+                        <div id="Core Android" onClick={this.handleDatasetToggle} className="labsDatabtn" value={tabQueries.showCoreAndroid ? "Active" : "Inactive"}><span>Core Android</span><span className="labsDatabtnText">{tabQueries.showCoreAndroid ? "ON" : "OFF"}</span></div>
+                        <div id="Core iOS" onClick={this.handleDatasetToggle} className="labsDatabtn" value={tabQueries.showCoreiOS ? "Active" : "Inactive"}><span>Core iOS</span><span className="labsDatabtnText">{tabQueries.showCoreiOS ? "ON" : "OFF"}</span></div>
+                    </div>
+                    {pageContent.proposalOwnerLink}
+                    {chartObject}
+                    <p className="labsNoteText">Note [Dash Core and Electrum]: The Dash Electrum and Dash Core wallets download metrics only include direct downloads from GitHub. They do not include downloads of binaries from other sources or when the user compiled the wallet from the source code.</p>
+                    <p className="labsNoteText">Note [Android]: The Dash Android wallet metrics only measure direct downloads from the Google Play Store. They do not account for installations using an APK (Android application package) obtained from other sources. Sharing APKs locally with one another, via Bluetooth or other technologies, is a common practice in some countries to save on bandwidth costs.</p>
+                    <p className="labsNoteText">Note [iOS]: Apple uses an opt-in system for tracking app metrics. because of this the measured download account for a subset of the total wallet app from the App store.</p>
+                </section>
+                <section className="labsContentSection" value={tabQueries.showChart == "Version" ? "Active" :
+                    "Inactive"}>
+                    <h2 className="labsHeader">Wallet Downloads per version</h2>
                     {
-                        this.state.showKpiMenu ? (
+                        Object.values(versionData).map((item) =>
+                            <section key={`${item.wallet_name}`}>
+                                <p className="labsH2">{item.wallet_name} (last updated: {item.last_updated})</p>
+                                <div className="labsTableWrapper">
+                                    <div className="labsIndexItemFirst"><p className="labsColumnTitle">Wallet Version</p></div>
+                                    <div className="labsIndexItem"><p className="labsColumnTitle">Date Released</p></div>
+                                    <div className="labsIndexItem"><p className="labsColumnTitle">Desktop</p></div>
+                                    <div className="labsIndexItem"><p className="labsColumnTitle">Mobile</p></div>
+                                    <div className="labsIndexItem"><p className="labsColumnTitle">Total</p></div>
+                                </div>
+                                {
+                                    Object.values(item.walletVersionData).map((version) =>
+                                        <div className="labsTableWrapper" key={version.id}>
+                                            <div className="labsTableItemFirst">{version.wallet_version}</div>
+                                            <div className="labsTableItem">{version.release_date}</div>
+                                            <div className="labsTableItem">{version.desktop}</div>
+                                            <div className="labsTableItem">{version.mobile}</div>
+                                            <div className="labsTableItem">{version.total}</div>
+                                        </div>
+                                    )
+                                }
+                            </section>
+                             
+                        )
+                    }
+                </section>
+                <section className="labsContentSection" value={tabQueries.showChart == "Country" ? "Active" :
+                             "Inactive"}>
+                             
+                             <div className="labsDropdown" id="dropdownmenu">
+                    <p className="labsText">Select a country:</p>
+                    <div id="dropdownMenu" onClick={this.handleCountryDropdown} className="labsDropbtn"><i id="dropdownMenu"></i>{tabQueries.showCountry}</div>
+                    {
+                        this.state.showCountryMenu ? (
                             <div className="labsDropdownMenu" id="dropdownMenu">
                                 {
-                                    Object.keys(kpiList).map((item) =>
-                                        <div key={kpiList[item].id}>
-                                            <button id="dropdownMenu" value={item} className="labsDropdownItem" onClick={this.handleSelectKpi}>{kpiList[item].kpi_name}</button>
+                                    Object.keys(countryData).map((item) =>
+                                        <div key={countryData[item].id}>
+                                            <button id={"dropdownMenu"} value={item} className="labsDropdownItem" onClick={this.handleSelectCountry}>{item}</button>
                                         </div>
                                     )}
                             </div>
@@ -339,53 +479,13 @@ class Wallets extends React.Component {
                             )
                     }
                 </div>
-                {
-                    this.props.showWalletChart == "Version" ? (
-                        <section>
-                            <h2 className="labsHeader">Wallet Downloads per version</h2>
-                            {
-                                Object.values(versionData).map((item) =>
-                                    <section key={`${item.wallet_name}`}>
-                                        <p className="labsH2">{item.wallet_name} (last updated: {item.last_updated})</p>
-                                        <div className="labsTableWrapper">
-                                            <div className="labsIndexItemFirst"><p className="labsColumnTitle">Wallet Version</p></div>
-                                            <div className="labsIndexItem"><p className="labsColumnTitle">Date Released</p></div>
-                                            <div className="labsIndexItem"><p className="labsColumnTitle">Desktop</p></div>
-                                            <div className="labsIndexItem"><p className="labsColumnTitle">Mobile</p></div>
-                                            <div className="labsIndexItem"><p className="labsColumnTitle">Total</p></div>
-                                        </div>
-                                        {
-                                            Object.values(item.walletVersionData).map((version) =>
-                                                <div className="labsTableWrapper" key={version.id}>
-                                                    <div className="labsTableItemFirst">{version.wallet_version}</div>
-                                                    <div className="labsTableItem">{version.release_date}</div>
-                                                    <div className="labsTableItem">{version.desktop}</div>
-                                                    <div className="labsTableItem">{version.mobile}</div>
-                                                    <div className="labsTableItem">{version.total}</div>
-                                                </div>
-                                            )
-                                        }
-                                    </section>
-                                )
-                            }
-                        </section>
-                    ) : (
-                            <section>
-                                <p className="labsText">Toggle datasets:</p>
-                                <div>
-                                    <div id="Dash Core" onClick={this.handleDatasetToggle} className="labsDatabtn" value={tabQueries.showDashCore ? "Active" : "Inactive"}><span>Dash Core</span><span className="labsDatabtnText">{tabQueries.showDashCore ? "ON" : "OFF"}</span></div>
-                                    <div id="DashElectrum" onClick={this.handleDatasetToggle} className="labsDatabtn" value={tabQueries.showElectrum ? "Active" : "Inactive"}><span>Dash Electrum</span><span className="labsDatabtnText">{tabQueries.showElectrum ? "ON" : "OFF"}</span></div>
-                                    <div id="Core Android" onClick={this.handleDatasetToggle} className="labsDatabtn" value={tabQueries.showCoreAndroid ? "Active" : "Inactive"}><span>Core Android</span><span className="labsDatabtnText">{tabQueries.showCoreAndroid ? "ON" : "OFF"}</span></div>
-                                    <div id="Core iOS" onClick={this.handleDatasetToggle} className="labsDatabtn" value={tabQueries.showCoreiOS ? "Active" : "Inactive"}><span>Core iOS</span><span className="labsDatabtnText">{tabQueries.showCoreiOS ? "ON" : "OFF"}</span></div>
-                                </div>
-                                {pageContent.proposalOwnerLink}
-                                {chartObject}
-                                <p className="labsNoteText">Note [Dash Core and Electrum]: The Dash Electrum and Dash Core wallets download metrics only include direct downloads from GitHub. They do not include downloads of binaries from other sources or when the user compiled the wallet from the source code.</p>
-                                <p className="labsNoteText">Note [Android]: The Dash Android wallet metrics only measure direct downloads from the Google Play Store. They do not account for installations using an APK (Android application package) obtained from other sources. Sharing APKs locally with one another, via Bluetooth or other technologies, is a common practice in some countries to save on bandwidth costs.</p>
-                                <p className="labsNoteText">Note [iOS]: Apple uses an opt-in system for tracking app metrics. because of this the measured download account for a subset of the total wallet app from the App store.</p>
-                            </section>
-                        )
-                }
+                <Line
+                    data={countryChart}
+                    options={countryOptions}
+                    redraw={this.state.shouldRedraw}
+                />
+                             </section>
+
             </main>
         )
     }

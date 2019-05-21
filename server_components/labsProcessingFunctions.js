@@ -109,7 +109,7 @@ var processWalletData = function mainWalletFunction(walletData) {
 // Processing wallet metrics over time data
 var processCountryData = function mainWalletFunction(countryData) {
     // Declaring elements 
-    storeMainData = []
+    storeMainData = {}
     var countryEntries = []
     var uniqueCountries
     
@@ -138,11 +138,12 @@ var processCountryData = function mainWalletFunction(countryData) {
         
         // Make an object for the wallet type
         const countryDataConst = {
-            country_name: uniqueCountries[item],
             active_devices: installData,
             id: id,
         }
-        storeMainData.push(countryDataConst)     // Push the object with wallet metrics to wallet data object      
+
+        storeMainData[uniqueCountries[item]] = countryDataConst
+        //storeMainData.push(countryDataConst)     // Push the object with wallet metrics to wallet data object      
     })  // End of iteration loop through unique wallet array
     return storeMainData
 }
