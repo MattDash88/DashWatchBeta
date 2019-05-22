@@ -3,6 +3,14 @@
 @import url('https://fonts.googleapis.com/css?family=Titillium+Web');
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 
+.pagewrapper {
+    position: relative;
+    align-items: center;
+    min-width: 800px;
+    max-width: 1000px;
+    margin: 55px auto;
+}
+
 /* Month page wrapper */
 .monthPageWrapper {
     display: flex;
@@ -242,6 +250,9 @@ the one containing the proposal name and proposal owner*/
     justify-content: center;
     margin-right: auto;
     min-width: 0px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     width: 75%;
 }
 
@@ -303,7 +314,7 @@ the one containing the proposal name and proposal owner*/
     color: black;
 }
 
-/* Text styling of the report linkvoting status*/
+/* Text styling of the report link*/
 .monthReportLink {
     font-family: 'Roboto', sans-serif;
     color: #008de4;
@@ -311,6 +322,17 @@ the one containing the proposal name and proposal owner*/
     font-size: 1.2rem;
     vertical-align: middle;
     text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Text styling of the kpi link*/
+.monthKpiLink {
+    font-family: 'Roboto', sans-serif;
+    color: #008de4;
+    font-weight: 200;
+    font-size: 1.2rem;
+    vertical-align: middle;
     text-decoration: none;
     cursor: pointer;
 }
@@ -459,4 +481,16 @@ Styling for old reports
     margin-bottom: 0;
     padding-bottom: 5px;
     padding-right: 0.3rem;
+}
+
+/* Separator for image links */
+.monthLinkSeparator {
+    display: inline-flex;
+    border-left: 1px solid lightgrey;
+    height: 35px;
+    vertical-align: middle;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    margin-top: auto;
+    margin-bottom: auto;
 }

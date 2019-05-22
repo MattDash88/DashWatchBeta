@@ -36,8 +36,8 @@ const getMonthList = () => {
 class Month extends React.Component {
     static async getInitialProps(ctx) {
         const props = {
-            year: typeof ctx.query.year == "undefined" ? "2018" : ctx.query.year,   // Default no month to latest
-            month: typeof ctx.query.month == "undefined" ? "December" : ctx.query.month,   // Default no month to latest
+            year: typeof ctx.query.year == "undefined" ? "2019" : ctx.query.year,   // Default no month to latest
+            month: typeof ctx.query.month == "undefined" ? "January" : ctx.query.month,   // Default no month to latest
             url: ctx.pathname,
             as: ctx.asPath,
         }
@@ -69,10 +69,19 @@ class Month extends React.Component {
     // Function to handle the selection of the top year tabs
     handleTab(event) {
         event.preventDefault();
+        if (event.currentTarget.id == "2018") {
+            this.setState({
+                monthId: "December",        // Change state to load different month
+            })
+        } else if (event.currentTarget.id == "2019") {
+            this.setState({
+                monthId: "January",        // Change state to load different month
+            })
+        }
         this.setState({
-            tabId: event.currentTarget.id,        // Change state to load different month
-            as: `/oldreports?month=${event.currentTarget.id}`,
-        })
+            yearId: event.currentTarget.id,        // Change state to load different month
+            as: `/oldreports?year=${event.currentTarget.id}`,
+        })        
         trackEvent('Old Reports Page', 'Changed Year')                 // Track Event on Google Analytics    
     }
 
@@ -92,7 +101,7 @@ class Month extends React.Component {
             as: `/oldreports?month=${event.currentTarget.value}&year=${this.state.yearId}`,
         })
 
-        history.pushState(this.state, '', `/oldreports?month=${event.currentTarget.value}&year=${this.state.yearId}`)   // Push State to history
+        history.pushState(this.state, '', `/oldreports?year=${this.state.yearId}&month=${event.currentTarget.value}`)   // Push State to history
         trackEvent('Old Reports Page', `Changed Month to ${event.currentTarget.value} ${this.state.yearId}`)                 // Track Event on Google Analytics    
     }
 
@@ -179,8 +188,12 @@ class Month extends React.Component {
                     showPage="reports"
                 />
                 <section className="pagewrapper">
-                    <div className="monthTab" id='2018' value={this.state.tabId == '2018' ? "Active" :
-                        "Inactive"} onClick={this.handleTab}><p className="monthTabText">2018</p></div>
+                    <div className="monthTab" id='2018' value={this.state.yearId == '2018' ? "Active" :
+                        "Inactive"} onClick={this.handleTab}><p className="monthTabText">2018</p>
+                    </div>
+                    <div className="monthTab" id='2019' value={this.state.yearId == '2019' ? "Active" :
+                        "Inactive"} onClick={this.handleTab}><p className="monthTabText">2019</p>
+                    </div>
                     <div className="monthPageWrapper"> 
                         <div className="monthHeaderWrapper">
                             <div className="monthHeader">Dash Watch {monthId} {yearId} reports</div>
@@ -189,20 +202,32 @@ class Month extends React.Component {
                         <p className="monthText">Select a month:</p> 
                         <div className="dropdown" id="dropdownmenu">
                             <div id="dropdownMenu" onClick={this.handleDropdown} className="dropbtn"><i id="dropdownMenu"></i>{monthId} {yearId}</div>
-                            {
+                            {   
                                 this.state.showMenu ? (
+                                    this.state.yearId == "2018" ? (
                                     <div className="dropdownMenu" id="dropdownMenu">
-                                        <button id="dropdownMenu" value="December" className="dropdownItem"  onClick={this.handleSelectMonth}>December 2018</button>
-                                        <button id="dropdownMenu" value="November" className="dropdownItem"  onClick={this.handleSelectMonth}>November 2018</button>
-                                        <button id="dropdownMenu" value="October" className="dropdownItem"  onClick={this.handleSelectMonth}>October 2018</button>
-                                        <button id="dropdownMenu" value="September" className="dropdownItem"  onClick={this.handleSelectMonth}>September 2018</button>
-                                        <button id="dropdownMenu" value="August" className="dropdownItem"  onClick={this.handleSelectMonth}>August 2018</button>
-                                        <button id="dropdownMenu" value="July" className="dropdownItem"  onClick={this.handleSelectMonth}>July 2018</button>
-                                        <button id="dropdownMenu" value="June" className="dropdownItem"  onClick={this.handleSelectMonth}>June 2018</button>
+                                        <button id="dropdownMenu" value="December" className="dropdownItem"  onClick={this.handleSelectMonth}>December {this.state.yearId}</button>
+                                        <button id="dropdownMenu" value="November" className="dropdownItem"  onClick={this.handleSelectMonth}>November {this.state.yearId}</button>
+                                        <button id="dropdownMenu" value="October" className="dropdownItem"  onClick={this.handleSelectMonth}>October {this.state.yearId}</button>
+                                        <button id="dropdownMenu" value="September" className="dropdownItem"  onClick={this.handleSelectMonth}>September {this.state.yearId}</button>
+                                        <button id="dropdownMenu" value="August" className="dropdownItem"  onClick={this.handleSelectMonth}>August {this.state.yearId}</button>
+                                        <button id="dropdownMenu" value="July" className="dropdownItem"  onClick={this.handleSelectMonth}>July {this.state.yearId}</button>
+                                        <button id="dropdownMenu" value="June" className="dropdownItem"  onClick={this.handleSelectMonth}>June {this.state.yearId}</button>
                                    </div>
+                                    ) : (
+                                        this.state.yearId == "2019" ? (  
+                                            <div className="dropdownMenu" id="dropdownMenu">
+                                                <button id="dropdownMenu" value="January" className="dropdownItem"  onClick={this.handleSelectMonth}>January {this.state.yearId}</button>
+                                            </div>
+                                        ) : (
+                                            <div className="dropdownMenu" id="dropdownMenu">
+                                                <button id="dropdownMenu" value="January" className="dropdownItem">No reports available</button>
+                                            </div>
+                                        )
+                                    )
                                 ) : (
                                         null
-                                    )
+                                )
                             }
                         </div>  
                         <div className="monthIndexWrapper">

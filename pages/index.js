@@ -36,7 +36,7 @@ const getMonthList = () => {
 class Month extends React.Component {
     static async getInitialProps(ctx) {
         const props = {
-            month: typeof ctx.query.month == "undefined" ? "Apr19" : ctx.query.month,   // Default no query month to latest
+            month: typeof ctx.query.month == "undefined" ? "May19" : ctx.query.month,   // Default no query month to latest
             url: ctx.pathname,
             as: ctx.asPath,
         }
@@ -110,14 +110,14 @@ class Month extends React.Component {
         } = this.state
 
         let monthText
-        if (monthId == "Jan19") {
-            monthText = "Dash Watch January 2019 Reports"
-        } else if (monthId == "Feb19") {
+        if (monthId == "Feb19") {
             monthText = "Dash Watch February 2019 Reports"
         } else if (monthId == "Mar19") {
             monthText = "Dash Watch March 2019 Reports"
         } else if (monthId == "Apr19") {
             monthText = "Dash Watch April 2019 Reports"
+        } else if (monthId == "May19") {
+            monthText = "Dash Watch May 2019 Reports"
         } else {
             monthText = "Please select a month tab to view reports"
         }
@@ -160,14 +160,14 @@ class Month extends React.Component {
                     showPage="reports"
                 />
                 <section className="pagewrapper">
-                    <div className="monthTab" id='Jan19' value={this.state.monthId == 'Jan19' ? "Active" :
-                        "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">January 2019</p></div>
                     <div className="monthTab" id='Feb19' value={this.state.monthId == 'Feb19' ? "Active" :
                         "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">February 2019</p></div>
                     <div className="monthTab" id='Mar19' value={this.state.monthId == 'Mar19' ? "Active" :
                         "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">March 2019</p></div>
                     <div className="monthTab" id='Apr19' value={this.state.monthId == 'Apr19' ? "Active" :
                         "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">April 2019</p></div>
+                    <div className="monthTab" id='May19' value={this.state.monthId == 'May19' ? "Active" :
+                        "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">May 2019</p></div>
                     <div className="monthPageWrapper">
                         <div className="monthHeaderWrapper">
                             <a className="reportPageLink" id="oldReports" href="/oldreports"><i id="oldReports"></i>Older Reports</a>
@@ -256,8 +256,22 @@ class MonthReportRow extends React.Component {
                         <img className="reportIcon" id="Podcast" src="https://dashwatchbeta.org/images/Podcast.png" height="30"></img> Podcast</a></div></div>
                 )
             } else {
-                reportLink = (
-                    <div className="monthItem" id="monthReportLink"><div><a className="monthReportLink" href={list_data.report_link} target="_blank" title={list_data.report_link} onClick={this.callEvent}><img id="PDF" src="https://dashwatchbeta.org/images/PDF.png" height="30"></img> Report</a></div></div>
+                reportLink = (                    
+                    <div className="monthItem" id="monthReportLink">
+                    {
+                        typeof list_data.kpi_link !== 'undefined' ? (
+                            <div>
+                                <a className="monthReportLink" href={list_data.report_link} target="_blank" title={list_data.report_link} onClick={this.callEvent}><img id="PDF" src="https://dashwatchbeta.org/images/PDF.png" height="30"></img> Report</a> 
+                                <div className="monthLinkSeparator"></div> 
+                                <a className="monthKpiLink" href={list_data.kpi_link} target="_blank" title={list_data.kpi_link} onClick={this.callEvent}><img id="Charts" src="https://dashwatchbeta.org/images/Charts.png" height="30"></img> KPIs</a>
+                            </div>
+                        ) : (
+                            <div>
+                                <a className="monthReportLink" href={list_data.report_link} target="_blank" title={list_data.report_link} onClick={this.callEvent}><img id="PDF" src="https://dashwatchbeta.org/images/PDF.png" height="30"></img> Report</a>
+                            </div>
+                        )
+                    }
+                    </div>
                 )
             }
         } // End of report status if
