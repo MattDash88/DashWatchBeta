@@ -72,13 +72,14 @@ class Labs extends React.Component {
       project: props.project,
       kpi: props.kpi,
       showPosChart: typeof props.chart == "undefined" ? 'Transactions' : props.chart,
-      showWalletChart: typeof props.chart == "undefined" ? 'Total' : props.chart,
-      showWalletType: 'Total',
+      showWalletChart: typeof props.chart == "undefined" ? 'Wallet' : props.chart,
+      showWalletType: 'All',
       showWalletCountry: 'Nigeria',
 
       // Booleans for POS systems
       showAnypay: true,
       showPaylive: true,
+      showDashRetail: true,
 
       // Booleans for Wallets
       showDashCore: true,
@@ -120,6 +121,7 @@ class Labs extends React.Component {
       this.setState({
         showAnypay: queries.anypay,
         showPaylive: queries.paylive,
+        showDashRetail: queries.dashretail,
         showPosChart: queries.POSChart,
         as: `/labs?tab=POSsystems&chart=${queries.POSChart}`,
       })
@@ -131,6 +133,7 @@ class Labs extends React.Component {
         showElectrum: queries.electrum,
         showCoreAndroid: queries.coreAndroid,
         showCoreiOS: queries.coreiOS,
+        showWalletType: queries.walletType,
         showWalletCountry: queries.walletCountry,
         showWalletChart: queries.walletChart,
         as: `/labs?tab=wallets&chart=${queries.walletChart}`,
@@ -219,6 +222,7 @@ class Labs extends React.Component {
                       queryFunction={this.handleQueries}
                       showAnypay={this.state.showAnypay}
                       showPaylive={this.state.showPaylive}
+                      showDashRetail={this.state.showDashRetail}
                       showPosChart={this.state.showPosChart}
                     />
                   </div>
@@ -242,6 +246,7 @@ class Labs extends React.Component {
                       showCoreAndroid={this.state.showCoreAndroid}
                       showCoreiOS={this.state.showCoreiOS}
                       showWalletChart={this.state.showWalletChart}
+                      showWalletType={this.state.showWalletType}
                       showWalletCountry={this.state.showWalletCountry}
                     />
                   </div>

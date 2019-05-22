@@ -48,6 +48,24 @@ const buildContent = (labsData, queries) => {
                     null
                 )
         }
+        {
+            queries.showDashRetail ? (
+                transactionsData.push({
+                    label: labsData[2].system_name,
+                    fill: false,
+                    borderColor: 'purple',
+                    data: labsData[2].dash_transactions,    // participation data points
+                }),
+                volumeData.push({
+                    label: labsData[2].system_name,
+                    fill: false,
+                    borderColor: 'purple',
+                    data: labsData[2].dash_volume,    // participation data points
+                })
+            ) : (
+                    null
+                )
+        }
 
         const optionsTransactions = {
             scales: {
@@ -98,6 +116,9 @@ const buildContent = (labsData, queries) => {
                     </span><br></br>
                     <span className="labsText">
                         <a id="Proposal Owner Link" href={`/proposals?search=${labsData[1].system_proposal_owner}`} target="" >Link to Proposal Owner {labsData[1].system_name}</a>
+                    </span><br></br>
+                    <span className="labsText">
+                        <a id="Proposal Owner Link" href={`/proposals?search=${labsData[2].system_proposal_owner}`} target="" >Link to Proposal Owner {labsData[2].system_name}</a>
                     </span>
                 </div>
         }
@@ -190,6 +211,7 @@ class PosSystems extends React.Component {
         const queries = {
             anypay: this.props.showAnypay,
             paylive: this.props.showPaylive,
+            dashretail: this.props.showDashRetail,
             POSChart: event.currentTarget.value,
         }
 
@@ -206,6 +228,7 @@ class PosSystems extends React.Component {
         const queries = {
             anypay: event.currentTarget.id == 'Anypay' ? !this.props.showAnypay : this.props.showAnypay,
             paylive: event.currentTarget.id == 'Paylive' ? !this.props.showPaylive : this.props.showPaylive,
+            dashretail: event.currentTarget.id == 'DashRetail' ? !this.props.showDashRetail : this.props.showDashRetail,
             POSChart: this.props.showPosChart,
         }
 
@@ -246,6 +269,7 @@ class PosSystems extends React.Component {
             showChart: this.props.showPosChart,
             showAnypay: typeof this.props.showAnypay == 'undefined' ? true : this.props.showAnypay,
             showPaylive: typeof this.props.showPaylive == 'undefined' ? true : this.props.showPaylive,
+            showDashRetail: typeof this.props.showDashRetail == 'undefined' ? true : this.props.showDashRetail,
         }
 
         const content = buildContent(posSystemData, tabQueries)
@@ -279,6 +303,7 @@ class PosSystems extends React.Component {
                 <div>
                     <div id="Anypay" onClick={this.handleDatasetToggle} className="labsDatabtn" value={tabQueries.showAnypay ? "Active" : "Inactive"}><span>Anypay</span><span className="labsDatabtnText">{tabQueries.showAnypay ? "ON" : "OFF"}</span></div>
                     <div id="Paylive" onClick={this.handleDatasetToggle} className="labsDatabtn" value={tabQueries.showPaylive ? "Active" : "Inactive"}><span>Paylive</span><span className="labsDatabtnText">{tabQueries.showPaylive ? "ON" : "OFF"}</span></div>
+                    <div id="DashRetail" onClick={this.handleDatasetToggle} className="labsDatabtn" value={tabQueries.showDashRetail ? "Active" : "Inactive"}><span>Dash Retail</span><span className="labsDatabtnText">{tabQueries.showDashRetail ? "ON" : "OFF"}</span></div>
                 </div>
                 <section>
                 {pageContent.proposalOwnerLink}

@@ -67,13 +67,13 @@ const buildContent = (labsData, queries) => {
                     label: labsData[2].wallet_name,
                     fill: false,
                     borderColor: 'green',
-                    data: labsData[2].mobile_downloads,
+                    data: labsData[2].total_downloads,
                 }),
                 desktopDownloads.push({
                     label: labsData[2].wallet_name,
                     fill: false,
                     borderColor: 'green',
-                    data: labsData[2].mobile_downloads,
+                    data: labsData[2].desktop_downloads,
                 }),
                 mobileDownloads.push({
                     label: labsData[2].wallet_name,
@@ -91,13 +91,13 @@ const buildContent = (labsData, queries) => {
                     label: 'Core iOS',
                     fill: false,
                     borderColor: '#FF3824',
-                    data: labsData[3].mobile_downloads,
+                    data: labsData[3].total_downloads,
                 }),
                 desktopDownloads.push({
                     label: 'Core iOS',
                     fill: false,
                     borderColor: '#FF3824',
-                    data: labsData[3].mobile_downloads,
+                    data: labsData[3].desktop_downloads,
                 }),
                 mobileDownloads.push({
                     label: 'Core iOS',
@@ -140,11 +140,11 @@ const buildContent = (labsData, queries) => {
                 </div>
         }
 
-        if (queries.showChart == 'Total') {
+        if (queries.showType == 'All') {
             var chartData = { datasets: totalDownloads }
-        } else if (queries.showChart == 'Desktop') {
+        } else if (queries.showType == 'Desktop') {
             var chartData = { datasets: desktopDownloads }
-        } else if (queries.showChart == 'Mobile') {
+        } else if (queries.showType == 'Mobile') {
             var chartData = { datasets: mobileDownloads }
         } else {
             var chartData = { datasets: totalDownloads }
@@ -239,16 +239,20 @@ class Wallets extends React.Component {
         super(props);
 
         this.state = {
-            showMenu: false,
-            showCountryMenu: false,
-            shouldRedraw: false,
+            showMenu: false,            // Main Wallet Menu Toggle
+            showTypeMenu: false,        // Wallet Type Menu Toggle
+            showCountryMenu: false,     // Country Menu Toggle
+            showTooltip: false,         // Toggle show/hiding tooltip
+            shouldRedraw: false,        // Toggle redraw of charts
         }
 
         // Binding functions used in this Class
         this.handleDatasetToggle = this.handleDatasetToggle.bind(this)
         this.handleSelectChart = this.handleSelectChart.bind(this)
         this.handleSelectCountry = this.handleSelectCountry.bind(this)
+        this.handleSelectType = this.handleSelectType.bind(this)
         this.handleDropdown = this.handleDropdown.bind(this);
+        this.handleTypeDropdown = this.handleTypeDropdown.bind(this);
         this.handleCountryDropdown = this.handleCountryDropdown.bind(this);
         this.handleQueries = this.handleQueries.bind(this);
         this.handleClick = this.handleClick.bind(this);
@@ -259,10 +263,21 @@ class Wallets extends React.Component {
         event.preventDefault();
         this.setState({
             showMenu: !this.state.showMenu,
+            showTypeMenu: false,
             showCountryMenu: false,
             shouldRedraw: false,
         })
         trackEvent('Labs Page', `Clicked Wallets KPI dropdown`)
+    }
+
+    handleTypeDropdown(event) {
+        event.preventDefault();
+        this.setState({
+            showMenu: false,
+            showTypeMenu: !this.state.showTypeMenu,
+            shouldRedraw: false,
+        })
+        trackEvent('Labs Page', `Clicked Wallets Country dropdown`)
     }
 
     handleCountryDropdown(event) {
@@ -288,8 +303,31 @@ class Wallets extends React.Component {
             electrum: this.props.showElectrum,
             coreAndroid: this.props.showCoreAndroid,
             coreiOS: this.props.showCoreiOS,
+            walletType: this.props.showWalletType,
             walletCountry:  this.props.showWalletCountry,
             walletChart: event.currentTarget.value,
+        }
+
+        this.handleQueries(queries)     // Send queries to main Labs file
+        trackEvent('Labs Page', `Changed Chart to Wallet ${event.currentTarget.value}`)                 // Track Event on Google Analytics    
+    }
+
+    // Function to handle selection of item from the KPI dropdown menu
+    handleSelectType(event) {
+        this.setState({
+            showMenu: false,
+            showTypeMenu: false,
+            shouldRedraw: true,
+        })
+
+        const queries = {
+            dashCore: this.props.showDashCore,
+            electrum: this.props.showElectrum,
+            coreAndroid: this.props.showCoreAndroid,
+            coreiOS: this.props.showCoreiOS,
+            walletType: event.currentTarget.value,
+            walletCountry: this.props.showWalletCountry,
+            walletChart: this.props.showWalletChart,
         }
 
         this.handleQueries(queries)     // Send queries to main Labs file
@@ -309,6 +347,7 @@ class Wallets extends React.Component {
             electrum: this.props.showElectrum,
             coreAndroid: this.props.showCoreAndroid,
             coreiOS: this.props.showCoreiOS,
+            walletType: this.props.showWalletType,
             walletCountry: event.currentTarget.value,
             walletChart: this.props.showWalletChart,
         }
@@ -328,6 +367,7 @@ class Wallets extends React.Component {
             electrum: event.currentTarget.id == 'DashElectrum' ? !this.props.showElectrum : this.props.showElectrum,
             coreAndroid: event.currentTarget.id == 'Core Android' ? !this.props.showCoreAndroid : this.props.showCoreAndroid,
             coreiOS: event.currentTarget.id == 'Core iOS' ? !this.props.showCoreiOS : this.props.showCoreiOS,
+            walletType: this.props.showWalletType,
             walletCountry:  this.props.showWalletCountry,
             walletChart: this.props.showWalletChart,
         }
@@ -339,6 +379,17 @@ class Wallets extends React.Component {
     // Function to push queries to main labs Class
     handleQueries(queries) {
         this.props.queryFunction('wallets', queries)
+    }
+
+    // Function to show and hide tooltip on click (for mobile users that can't hover)
+    handleTooltip(event) {
+        event.preventDefault();
+        this.setState({
+            showTooltip: !this.state.showTooltip,
+            showMenu: false,
+            showCountryMenu: false,
+        })
+        trackEvent('Labs Page', `Clicked Tooltip`)
     }
 
     // Function ran when the eventlistener is activated. Close dropdown menu if clicked outside of it
@@ -370,6 +421,7 @@ class Wallets extends React.Component {
 
         const tabQueries = {
             showChart: this.props.showWalletChart,              // Dataset to look at: 'all', 'country', 'version'
+            showType: this.props.showWalletType,
             showCountry: this.props.showWalletCountry,          // Sets the country sub chart
             showDashCore: this.props.showDashCore,
             showElectrum: this.props.showElectrum,
@@ -395,17 +447,15 @@ class Wallets extends React.Component {
 
         return (
             <main>
-                <h1 className="labsHeader">Wallet Downloads</h1>
-                <p className="labsText">Select dataset:</p>
+                <h1 className="labsHeader">Wallet Metrics</h1>
+                <p className="labsText">Select chart type:</p>
                 <div className="labsDropdown" id="dropdownmenu">
                     <div id="dropdownMenu" onClick={this.handleDropdown} className="labsDropbtn"><i id="dropdownMenu"></i>{tabQueries.showChart}</div>
                     {
                         this.state.showMenu ? (
                             <div className="labsDropdownMenu" id="dropdownMenu">
-                                <button id="dropdownMenu" value="Total" className="labsDropdownItem" onClick={this.handleSelectChart}>Total</button>
-                                <button id="dropdownMenu" value="Desktop" className="labsDropdownItem" onClick={this.handleSelectChart}>Desktop</button>
-                                <button id="dropdownMenu" value="Mobile" className="labsDropdownItem" onClick={this.handleSelectChart}>Mobile</button>
-                                <button id="dropdownMenu" value="Country" className="labsDropdownItem" onClick={this.handleSelectChart}>Active installs by Country</button>
+                                <button id="dropdownMenu" value="Wallet" className="labsDropdownItem" onClick={this.handleSelectChart}>Downloads per Wallet</button>
+                                <button id="dropdownMenu" value="Country" className="labsDropdownItem" onClick={this.handleSelectChart}>Android installs by Country</button>
                                 <button id="dropdownMenu" value="Version" className="labsDropdownItem" onClick={this.handleSelectChart}>Downloads per Version</button>
                             </div>
                         ) : (
@@ -413,8 +463,23 @@ class Wallets extends React.Component {
                             )
                     }
                 </div>
-                <section className="labsContentSection" value={tabQueries.showChart == "Total" ? "Active" :
+                <section className="labsContentSection" value={tabQueries.showChart == "Wallet" ? "Active" :
                     "Inactive"}>
+                    <p className="labsText">Select dataset:</p>
+                <div className="labsDropdown" id="dropdownmenu">
+                    <div id="dropdownMenu" onClick={this.handleTypeDropdown} className="labsDropbtn"><i id="dropdownMenu"></i>{tabQueries.showType}</div>
+                    {
+                        this.state.showTypeMenu ? (
+                            <div className="labsDropdownMenu" id="dropdownMenu">
+                                <button id="dropdownMenu" value="All" className="labsDropdownItem" onClick={this.handleSelectType}>All Downloads</button>
+                                <button id="dropdownMenu" value="Desktop" className="labsDropdownItem" onClick={this.handleSelectType}>Desktop only</button>
+                                <button id="dropdownMenu" value="Mobile" className="labsDropdownItem" onClick={this.handleSelectType}>Mobile only</button>
+                            </div>
+                        ) : (
+                                null
+                            )
+                    }
+                </div>
                     <p className="labsText">Toggle datasets:</p>
                     <div>
                         <div id="Dash Core" onClick={this.handleDatasetToggle} className="labsDatabtn" value={tabQueries.showDashCore ? "Active" : "Inactive"}><span>Dash Core</span><span className="labsDatabtnText">{tabQueries.showDashCore ? "ON" : "OFF"}</span></div>
@@ -453,15 +518,14 @@ class Wallets extends React.Component {
                                         </div>
                                     )
                                 }
-                            </section>
-                             
+                            </section>                             
                         )
                     }
                 </section>
                 <section className="labsContentSection" value={tabQueries.showChart == "Country" ? "Active" :
                              "Inactive"}>
                              
-                             <div className="labsDropdown" id="dropdownmenu">
+                <div className="labsDropdown" id="dropdownmenu">
                     <p className="labsText">Select a country:</p>
                     <div id="dropdownMenu" onClick={this.handleCountryDropdown} className="labsDropbtn"><i id="dropdownMenu"></i>{tabQueries.showCountry}</div>
                     {
@@ -477,7 +541,11 @@ class Wallets extends React.Component {
                         ) : (
                                 null
                             )
-                    }
+                    }                   
+                </div>
+                <div id="tooltip" className="labsTooltip" onClick={this.handleTooltip}>Active Android devices?
+                    <span className="labsTooltipBlock" value={this.state.showTooltip ? "Active" :
+                        "Inactive"}>Android devices that have been online at least once in the past 30 days that have the Dash Wallet app installed.</span>
                 </div>
                 <Line
                     data={countryChart}

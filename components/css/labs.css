@@ -166,6 +166,10 @@ i[id="dropdownMenu"] {
   background-color: darkgreen;
   color: white;
 }
+.labsDatabtn[value="Active"][id="DashRetail"] {
+  background-color: purple;
+  color: white;
+}
 
 .labsDatabtn[value="Active"][id="Dash Core"] {
   background-color: blue;
