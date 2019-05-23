@@ -87,21 +87,18 @@
 i[id="dropdownMenu"] {
     border: solid white;
     border-width: 0 2px 2px 0;
-    margin-left: 10px; 
-    margin-right: 10px;
-    margin-bottom: 3px;
+    margin: 0 10px 3px 10px;
     height: 10px;
     width: 10px;  
     transform: rotate(45deg);
+    z-index: 1;
     -webkit-transform: rotate(45deg); 
 }
 
 /* Styling for the dropdown div */
 .labsDropdown {
-  display: inline-block;  
-  margin-right: 1rem;
-  margin-left: 0.2rem;
-  margin-bottom: 0.5rem;
+  display: inline-block;
+  margin: 0 1rem 0.2rem 0.5rem; 
   }
 
 /* Styling for the button of the dropdown menu */
@@ -123,6 +120,7 @@ i[id="dropdownMenu"] {
 /* Styling for the dropdown menu as a whole */
   .labsDropdownMenu {
     display: show;
+    z-index: 2;
     position: absolute; 
   }
 
@@ -138,7 +136,6 @@ i[id="dropdownMenu"] {
     text-decoration: none;   
     box-shadow: 0px 8px 16px 0px black;
     border: none;
-    z-index: 1;
     cursor: pointer;
   }
   

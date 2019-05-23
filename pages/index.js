@@ -174,8 +174,8 @@ class Month extends React.Component {
                             <div className="monthHeader">{monthText}</div>
                         </div>
                         <div className="monthIndexWrapper">
-                            <div className="monthIndexItem"><p className="monthColumnTitle">Proposal</p></div>
-                            <div className="monthIndexItem"><p className="monthColumnTitle">Report Link</p></div>
+                            <div className="monthIndexItem" id="proposalColumn"><p className="monthColumnTitle">Proposal</p></div>
+                            <div className="monthIndexItem" id="reportsColumn"><p className="monthColumnTitle">Report Link</p></div>
                             <div className="monthIndexItem"><p className="monthColumnTitle">Proposal Type</p></div>
                             <div className="monthIndexItem"><p className="monthColumnTitle">Voting Status</p></div>
                         </div>
@@ -247,17 +247,17 @@ class MonthReportRow extends React.Component {
         } else {  // If report is published, show links to report and modal
             if (list_data.entry_type == "Video") {
                 reportLink = (
-                    <div className="monthItem" id="monthReportLink"><div><a className="monthReportLink" href={list_data.report_link} target="_blank" title={list_data.report_link} onClick={this.callEvent}>
+                    <div className="monthItem" id="reportsColumn"><div><a className="monthReportLink" href={list_data.report_link} target="_blank" title={list_data.report_link} onClick={this.callEvent}>
                         <img className="reportIcon" id="YouTube" src="https://dashwatchbeta.org/images/Video.png" height="30"></img> Video</a></div></div>
                 )
             } else if (list_data.entry_type == "Podcast") {
                 reportLink = (
-                    <div className="monthItem" id="monthReportLink"><div><a className="monthReportLink" href={list_data.report_link} target="_blank" title={list_data.report_link} onClick={this.callEvent}>
+                    <div className="monthItem" id="reportsColumn"><div><a className="monthReportLink" href={list_data.report_link} target="_blank" title={list_data.report_link} onClick={this.callEvent}>
                         <img className="reportIcon" id="Podcast" src="https://dashwatchbeta.org/images/Podcast.png" height="30"></img> Podcast</a></div></div>
                 )
             } else {
                 reportLink = (                    
-                    <div className="monthItem" id="monthReportLink">
+                    <div className="monthItem" id="reportsColumn">
                     {
                         typeof list_data.kpi_link !== 'undefined' ? (
                             <div>
@@ -308,7 +308,7 @@ class MonthReportRow extends React.Component {
             <div className="monthProposalWrapper" month={this.props.showMonth == list_data.published_month ? "Active" :
             "Inactive"} response={list_data.response_status == "No" ? "No" :
             "Yes"}>
-                <div className="monthItemTitle" onClick={this.showModal}><p className="monthProposalName">{list_data.project_name}</p>
+                <div className="monthItem" id="proposalColumn" onClick={this.showModal}><p className="monthProposalName">{list_data.project_name}</p>
                     <p className="monthOwnerName">by {main_data.proposal_owner}</p></div>
                 {reportLink}
                 <div className="monthItem" onClick={this.showModal}><p className="monthProposalType" value={list_data.proposal_type}>{list_data.proposal_type}</p></div>

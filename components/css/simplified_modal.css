@@ -170,7 +170,7 @@ Styling used in the modal tab files (ModalTabMain, ModalTabPerformance, ModalTab
     margin-top: 0.3rem;
   }
 
-  /* Separator for image links */
+/* Separator for image links */
 .linkSeparator {
     display: inline-flex;
     border-left: 1px solid lightgrey;

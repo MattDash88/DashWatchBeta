@@ -122,7 +122,15 @@ Style elements for the top of the month list table
     justify-content: center;
     margin-right: auto;
     min-width: 0px;
-    width: 75%;
+    width: 60%;
+}
+
+.monthIndexItem[id="proposalColumn"] {
+    width: 90%;
+}
+
+.monthIndexItem[id="reportsColumn"] {
+    width: 90%;
 }
 
 /* Text styling of the index */
@@ -200,7 +208,7 @@ i[id="dropdownMenu"] {
     height: 4rem;
     border-bottom: 0.1rem solid #d8dce3;
     background: white;
-    min-width: 750px;
+    min-width: 800px;
     max-width: 1000px;
 }
 
@@ -221,23 +229,6 @@ i[id="dropdownMenu"] {
     display: None;
 }
 
-
-
-/* Wrapper of the first cell of the month list table, 
-the one containing the proposal name and proposal owner*/
-.monthItemTitle {
-    display: flex;
-    flex-direction: column;
-    -webkit-box-pack: center;
-    line-height: 1rem;
-    justify-content: center;
-    margin-right: auto;
-    min-width: 0px;
-    width: 75%;
-    border: 1px;
-    cursor: pointer;
-}
-
 .monthItemTitle:hover {
     box-shadow: outset 0 -2px 4px -3px black;
 }
@@ -250,10 +241,30 @@ the one containing the proposal name and proposal owner*/
     justify-content: center;
     margin-right: auto;
     min-width: 0px;
+    width: 60%;
+}
+
+/* Special styling for the cell containing the link to reports and media items */
+.monthItem[id="reportsColumn"] {
+    display: flex;
+    flex-direction: column;
+    line-height: 1rem;
+    justify-content: center;
+    margin-right: auto;
+    text-transform: uppercase;
     white-space: nowrap;
-    overflow: hidden;
     text-overflow: ellipsis;
-    width: 75%;
+    overflow: hidden;    
+    min-width: 0px;
+    width: 90%;
+}
+
+/* Special styling for of the first cell of the month list table, 
+the one containing the proposal name and proposal owner*/
+.monthItem[id="proposalColumn"] {
+    width: 90%;
+    border: 1px;
+    cursor: pointer;
 }
 
 /* Text styling proposal name*/
@@ -471,7 +482,7 @@ Styling for old reports
   
 .show {display: block;}
 
-  /* Styling of text on top of page */
+/* Styling of text on top of page */
 .monthText {
     font-family: 'Titillium Web', sans-serif;
     font-size: 1rem;
@@ -489,8 +500,8 @@ Styling for old reports
     border-left: 1px solid lightgrey;
     height: 35px;
     vertical-align: middle;
-    margin-left: 1rem;
-    margin-right: 1rem;
+    margin-left: 2rem;
+    margin-right: 2rem;
     margin-top: auto;
     margin-bottom: auto;
 }

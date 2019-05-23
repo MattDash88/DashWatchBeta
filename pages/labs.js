@@ -74,7 +74,7 @@ class Labs extends React.Component {
       showPosChart: typeof props.chart == "undefined" ? 'Transactions' : props.chart,
       showWalletChart: typeof props.chart == "undefined" ? 'Wallet' : props.chart,
       showWalletType: 'All',
-      showWalletCountry: 'Nigeria',
+      showWalletCountry: 'Brazil',
 
       // Booleans for POS systems
       showAnypay: true,
@@ -165,7 +165,8 @@ class Labs extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.labsTabId !== this.state.labsTabId || prevState.showPosChart !== this.state.showPosChart || prevState.showWalletChart !== this.state.showWalletChart) {// Just a history state update because it doesn't always work as desired in functions
+    if (prevState.labsTabId !== this.state.labsTabId || prevState.showPosChart !== this.state.showPosChart || prevState.showWalletChart !== this.state.showWalletChart 
+      || prevState.showWalletType !== this.state.showWalletType || prevState.showWalletCountry !== this.state.showWalletCountry ) {// Just a history state update because it doesn't always work as desired in functions
         history.replaceState(this.state, '', `${this.state.as}`)
     }
 }

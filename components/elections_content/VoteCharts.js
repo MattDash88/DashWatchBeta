@@ -11,6 +11,7 @@ class VoteCharts extends React.Component {
     }
     render() {
         const {     // Elements passed down to the component
+            electionId,
             vote_data,
             chart_dates,
             data_participation,
@@ -81,6 +82,9 @@ class VoteCharts extends React.Component {
 
         return (
             <main>
+                <section className="tpPageTopSection" value={electionId == "tpe2019" ? "Active" : "Inactive"}>
+                <h1 className="tpHeader">2019 Dash TP Elections voting participation</h1>
+                <div className="tpText">The chart was updated once a day during the elections.</div>
                 <div className="tpChartStatsDiv">
                     <div className="tpChartStatsTitle">Last updated:</div><div className="tpChartStatsItem" title={updatedDate}>{updatedDate}</div><br></br>
                     <div className="tpChartStatsTitle">Number of eligible MNs:</div><div className="tpChartStatsItem" title={vote_data[vote_data.length - 1].number_of_masternodes}>{vote_data[vote_data.length - 1].number_of_masternodes}</div><br></br>
@@ -90,6 +94,11 @@ class VoteCharts extends React.Component {
                     data={data}
                     options={options}
                 />
+                </section>
+                <section className="tpPageTopSection" value={electionId == "dif2019" ? "Active" : "Inactive"}>
+                    <h1 className="tpHeader">2019 DIF Supervisor Elections voting participation</h1>
+                    <p className="tpText">Participation metrics will be available here once the election has started on May 31, 2019.</p>
+                </section>
             </main>
         )
     }

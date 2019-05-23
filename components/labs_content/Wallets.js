@@ -304,7 +304,7 @@ class Wallets extends React.Component {
             coreAndroid: this.props.showCoreAndroid,
             coreiOS: this.props.showCoreiOS,
             walletType: this.props.showWalletType,
-            walletCountry:  this.props.showWalletCountry,
+            walletCountry: this.props.showWalletCountry,
             walletChart: event.currentTarget.value,
         }
 
@@ -368,7 +368,7 @@ class Wallets extends React.Component {
             coreAndroid: event.currentTarget.id == 'Core Android' ? !this.props.showCoreAndroid : this.props.showCoreAndroid,
             coreiOS: event.currentTarget.id == 'Core iOS' ? !this.props.showCoreiOS : this.props.showCoreiOS,
             walletType: this.props.showWalletType,
-            walletCountry:  this.props.showWalletCountry,
+            walletCountry: this.props.showWalletCountry,
             walletChart: this.props.showWalletChart,
         }
 
@@ -466,20 +466,20 @@ class Wallets extends React.Component {
                 <section className="labsContentSection" value={tabQueries.showChart == "Wallet" ? "Active" :
                     "Inactive"}>
                     <p className="labsText">Select dataset:</p>
-                <div className="labsDropdown" id="dropdownmenu">
-                    <div id="dropdownMenu" onClick={this.handleTypeDropdown} className="labsDropbtn"><i id="dropdownMenu"></i>{tabQueries.showType}</div>
-                    {
-                        this.state.showTypeMenu ? (
-                            <div className="labsDropdownMenu" id="dropdownMenu">
-                                <button id="dropdownMenu" value="All" className="labsDropdownItem" onClick={this.handleSelectType}>All Downloads</button>
-                                <button id="dropdownMenu" value="Desktop" className="labsDropdownItem" onClick={this.handleSelectType}>Desktop only</button>
-                                <button id="dropdownMenu" value="Mobile" className="labsDropdownItem" onClick={this.handleSelectType}>Mobile only</button>
-                            </div>
-                        ) : (
-                                null
-                            )
-                    }
-                </div>
+                    <div className="labsDropdown" id="dropdownmenu">
+                        <div id="dropdownMenu" onClick={this.handleTypeDropdown} className="labsDropbtn"><i id="dropdownMenu"></i>{tabQueries.showType}</div>
+                        {
+                            this.state.showTypeMenu ? (
+                                <div className="labsDropdownMenu" id="dropdownMenu">
+                                    <button id="dropdownMenu" value="All" className="labsDropdownItem" onClick={this.handleSelectType}>All Downloads</button>
+                                    <button id="dropdownMenu" value="Desktop" className="labsDropdownItem" onClick={this.handleSelectType}>Desktop only</button>
+                                    <button id="dropdownMenu" value="Mobile" className="labsDropdownItem" onClick={this.handleSelectType}>Mobile only</button>
+                                </div>
+                            ) : (
+                                    null
+                                )
+                        }
+                    </div>
                     <p className="labsText">Toggle datasets:</p>
                     <div>
                         <div id="Dash Core" onClick={this.handleDatasetToggle} className="labsDatabtn" value={tabQueries.showDashCore ? "Active" : "Inactive"}><span>Dash Core</span><span className="labsDatabtnText">{tabQueries.showDashCore ? "ON" : "OFF"}</span></div>
@@ -518,41 +518,41 @@ class Wallets extends React.Component {
                                         </div>
                                     )
                                 }
-                            </section>                             
+                            </section>
                         )
                     }
                 </section>
                 <section className="labsContentSection" value={tabQueries.showChart == "Country" ? "Active" :
-                             "Inactive"}>
-                             
-                <div className="labsDropdown" id="dropdownmenu">
-                    <p className="labsText">Select a country:</p>
-                    <div id="dropdownMenu" onClick={this.handleCountryDropdown} className="labsDropbtn"><i id="dropdownMenu"></i>{tabQueries.showCountry}</div>
-                    {
-                        this.state.showCountryMenu ? (
-                            <div className="labsDropdownMenu" id="dropdownMenu">
-                                {
-                                    Object.keys(countryData).map((item) =>
-                                        <div key={countryData[item].id}>
-                                            <button id={"dropdownMenu"} value={item} className="labsDropdownItem" onClick={this.handleSelectCountry}>{item}</button>
-                                        </div>
-                                    )}
-                            </div>
-                        ) : (
-                                null
-                            )
-                    }                   
-                </div>
-                <div id="tooltip" className="labsTooltip" onClick={this.handleTooltip}>Active Android devices?
+                    "Inactive"}>
+                    <div className="labsDropdown" id="dropdownmenu">
+                        <p className="labsText">Select a country:</p>
+                        <div id="dropdownMenu" onClick={this.handleCountryDropdown} className="labsDropbtn"><i id="dropdownMenu"></i>{tabQueries.showCountry}</div>
+                        {
+                            this.state.showCountryMenu ? (
+                                <div className="labsDropdownMenu" id="dropdownMenu">
+                                    {
+                                        Object.keys(countryData).map((item) =>
+                                            <div key={countryData[item].id}>
+                                                <button id={"dropdownMenu"} value={item} className="labsDropdownItem" onClick={this.handleSelectCountry}>{item}</button>
+                                            </div>
+                                        )}
+                                </div>
+                            ) : (
+                                    null
+                                )
+                        }
+                    </div>
+                    <div id="tooltip" className="labsTooltip" onClick={this.handleTooltip}>Active Android devices?
                     <span className="labsTooltipBlock" value={this.state.showTooltip ? "Active" :
-                        "Inactive"}>Android devices that have been online at least once in the past 30 days that have the Dash Wallet app installed.</span>
-                </div>
-                <Line
-                    data={countryChart}
-                    options={countryOptions}
-                    redraw={this.state.shouldRedraw}
-                />
-                             </section>
+                            "Inactive"}>Android devices that have the Dash Wallet app installed and have been online at least once in the past 30 days.</span>
+                    </div>
+                    <Line
+                        data={countryChart}
+                        options={countryOptions}
+                        redraw={this.state.shouldRedraw}
+                    />
+                    <p className="labsNoteText">Note: The Dash Android wallet metrics only measure direct downloads from the Google Play Store. They do not account for installations using an APK (Android application package) obtained from other sources. Sharing APKs locally with one another, via Bluetooth or other technologies, is a common practice in some countries to save on bandwidth costs.</p>
+                </section>
 
             </main>
         )
