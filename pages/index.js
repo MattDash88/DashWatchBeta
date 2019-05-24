@@ -242,7 +242,7 @@ class MonthReportRow extends React.Component {
         let reportLink = null;
         if (list_data.report_status == "Pending") { // If report is pending show "Pending"
             reportLink = (
-                <div className="monthItem">Pending</div>
+                <div className="monthItem" id="reportsColumn">Pending</div>
             )
         } else {  // If report is published, show links to report and modal
             if (list_data.entry_type == "Video") {

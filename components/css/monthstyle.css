@@ -41,14 +41,9 @@
 }
 
 /* Styling of button of active tab */
-.monthTab[value='Active'] {
-    display: inline-flex;    
-    line-height: 1 rem;
-    vertical-align: middle;
+.monthTab[value='Active'] { 
     color: black;
     background-color: white;
-    width: 20%;
-    margin-right: 6px;
     cursor: default;
     box-shadow: none;
     transition: 0.15s;
@@ -126,7 +121,7 @@ Style elements for the top of the month list table
 }
 
 .monthIndexItem[id="proposalColumn"] {
-    width: 90%;
+    width: 80%;
 }
 
 .monthIndexItem[id="reportsColumn"] {
@@ -251,7 +246,6 @@ i[id="dropdownMenu"] {
     line-height: 1rem;
     justify-content: center;
     margin-right: auto;
-    text-transform: uppercase;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;    
@@ -262,7 +256,7 @@ i[id="dropdownMenu"] {
 /* Special styling for of the first cell of the month list table, 
 the one containing the proposal name and proposal owner*/
 .monthItem[id="proposalColumn"] {
-    width: 90%;
+    width: 80%;
     border: 1px;
     cursor: pointer;
 }
@@ -500,8 +494,5 @@ Styling for old reports
     border-left: 1px solid lightgrey;
     height: 35px;
     vertical-align: middle;
-    margin-left: 2rem;
-    margin-right: 2rem;
-    margin-top: auto;
-    margin-bottom: auto;
+    margin: auto 2.5rem auto 2.5rem;
 }

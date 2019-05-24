@@ -37,7 +37,7 @@ class TrustElections extends React.Component {
     static async getInitialProps(ctx) {
         const props = {
             tab: typeof ctx.query.tab == "undefined" ? "candidates" : ctx.query.tab,   // Default no month to latest
-            election: typeof ctx.query.tab == "undefined" ? "tpe2019" : ctx.query.election,   // Default no month to latest
+            election: typeof ctx.query.tab == "undefined" ? "dif2019" : ctx.query.election,   // Default no month to latest
             url: ctx.pathname,
             as: ctx.asPath,
         }
@@ -189,11 +189,11 @@ class TrustElections extends React.Component {
                 />
                 <section className="pagewrapper">
                     <div className="tpTab" id="candidates" value={this.state.tabId == "candidates" ? "Active" :
-                        "Inactive"} onClick={this.handleSelectTab}><p className="tpTabText">Candidates</p></div>
+                        "Inactive"} onClick={this.handleSelectTab}><div className="tpTabText">Candidates</div></div>
                     <div className="tpTab" id="participation" value={this.state.tabId == "participation" ? "Active" :
-                        "Inactive"} onClick={this.handleSelectTab}><p className="tpTabText">Participation</p></div>
+                        "Inactive"} onClick={this.handleSelectTab}><div className="tpTabText">Participation</div></div>
                     <div className="tpTab" id="results" value={this.state.tabId == "results" ? "Active" :
-                        "Inactive"} onClick={this.handleSelectTab}><p className="tpTabText">Results</p></div>
+                        "Inactive"} onClick={this.handleSelectTab}><div className="tpTabText">Results</div></div>
                     <div className="tpPageWrapper">
                     <div className="tpText">Select an election:</div> 
                     <div className="electionsDropdown" id="dropdownMenu">

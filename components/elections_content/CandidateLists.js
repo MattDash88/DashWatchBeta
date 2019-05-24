@@ -58,8 +58,8 @@ class CandidateLists extends React.Component {
                 </section>   
                 <section className="tpPageTopSection" value={electionId == "dif2019" ? "Active" : "Inactive"}>
                     <h1 className="tpHeader">2019 Investment Foundation Supervisor Candidates</h1>
-                    <p className="tpText">The list of candidates for the Dash Investment Foundation supervisors will be published here shortly before the elections start on May 31, 2019. More information is available <a className="tpHowToLink" id="results" target="_blank" href="https://blog.dash.org/details-on-the-election-for-dash-investment-foundation-supervisors-25766c55a1f">Here</a>.</p>
-                    <p className="tpText">If you would like to apply as a candidate for the Dash Investment Foundation Supervisor elections, please complete the <a className="tpHowToLink" id="results" target="_blank" href="https://dashwatchbeta.org/files/DIF19_CandidateApplicationForm.pdf">Application form</a> and submit it to <a href="mailto:team@dashwatch.org" target="">team@dashwatch.org</a>.</p>
+                    <p className="tpText">The list of candidates for the Dash Investment Foundation supervisors will be published here shortly before the elections start on May 31, 2019. More information is available <a id="results" target="_blank" href="https://blog.dash.org/details-on-the-election-for-dash-investment-foundation-supervisors-25766c55a1f">Here</a>.</p>
+                    <p className="tpText">If you would like to apply as a candidate for the Dash Investment Foundation Supervisor elections, please complete the <a id="results" target="_blank" href="https://dashwatchbeta.org/files/DIF19_CandidateApplicationForm.pdf">Application form</a> and submit it to <a href="mailto:team@dashwatch.org" target="">team@dashwatch.org</a>.</p>
                 </section>             
             </main>
         )
