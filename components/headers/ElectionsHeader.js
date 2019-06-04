@@ -8,7 +8,7 @@ export default class Header extends React.Component {
         return (
             <div>
                 <Head>
-                    <title>Dash Watch Trust Protector Elections Page</title>
+                    <title>Dash Watch Elections Section</title>
                     <meta name="twitter:card" content="summary" />
                     <meta name="twitter:site" content="https://dashwatchbeta.org" />
                     <meta name="twitter:creator" content="@DashWatchTeam" />

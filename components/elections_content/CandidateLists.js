@@ -59,6 +59,7 @@ class CandidateLists extends React.Component {
                 <section className="tpPageTopSection" value={electionId == "dif2019" ? "Active" : "Inactive"}>
                     <h1 className="tpHeader">2019 Investment Foundation Supervisor Candidates</h1>
                     <p className="tpText"><b>Update May 31, 2019</b>: Dash Core Group has decided to extend the deadline to apply for the Dash Investment Foundation Supervisor role due to a limited number of applicants and a community desire to receive more information about the role. We will be releasing the new deadline soon.</p>
+                    <p className="tpText"><b>Update June 4, 2019</b>: The new deadline to submit candidacies for a supervisor role at the Dash Investment Foundation is June 7 23.59 GMT.</p>
                     <p className="tpText">The list of candidates for the Dash Investment Foundation supervisors will be published on this page shortly before the elections starts. More information is available <a id="results" target="_blank" href="https://blog.dash.org/details-on-the-election-for-dash-investment-foundation-supervisors-25766c55a1f">Here</a>.</p>
                     <p className="tpText">If you would like to apply as a candidate for the Dash Investment Foundation Supervisor elections, please complete the <a id="results" target="_blank" href="https://dashwatchbeta.org/files/DIF19_CandidateApplicationForm.pdf">Application form</a> and submit it to <a href="mailto:team@dashwatch.org" target="">team@dashwatch.org</a>.</p>
                 </section>             
