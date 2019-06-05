@@ -24,7 +24,7 @@ Styles used in index.js
 }
 
 /* Styling for the whole navBar */
-.menu{
+.menu {
     position: fixed;
     top: 0; /* Position the navbar at the top of the page */
     left: 0;
@@ -54,6 +54,13 @@ Styles used in index.js
     color: white;
 }
 
+.menuItem[value="Active"] {
+    display: inline-flex;
+    vertical-align: middle;
+    background: white;
+    color: black;
+}
+
 /* Link item styling of navbar buttons*/
 .menuItem a {
     display: inline-flex;
@@ -68,6 +75,7 @@ Styles used in index.js
 
 /* Show Red line under active page */
 .menuItem a[value="Active"] {
+    color: black;
     border-bottom: 2px solid #e90056;
 }
 

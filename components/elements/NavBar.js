@@ -34,8 +34,8 @@ class NavBar extends React.Component {
             <div className="menu">
                 <nav className="menuContent">
                     <li className="menuItem" id="image"><a title="Home" id="home" href="/" target="" onClick={this.callEvent}><img id="Home" src="https://dashwatchbeta.org/Logo/logo_white20.png"></img></a></li>
-                    <li className="menuItem"><a title="Reports" id="reports" value={showPage == "reports" ? "Active" : "Inactive"} href="/reportlist" target="" onClick={this.callEvent}>Reports</a></li>
-                    <li className="menuItem"><a title="Proposals" id="proposals" value={showPage == "proposals" ? "Active" : "Inactive"} href="/proposals" target="" onClick={this.callEvent}>Proposals</a></li>
+                    <li className="menuItem" value={showPage == "reports" ? "Active" : "Inactive"}><a title="Reports" id="reports" value={showPage == "reports" ? "Active" : "Inactive"} href="/reportlist" target="" onClick={this.callEvent}>Reports</a></li>
+                    <li className="menuItem" value={showPage == "proposals" ? "Active" : "Inactive"}><a title="Proposals" id="proposals" value={showPage == "proposals" ? "Active" : "Inactive"} href="/proposals" target="" onClick={this.callEvent}>Proposals</a></li>
                     <form className="searchForm" onSubmit={this.handleSubmit}>
                     {   // Display the search value in the field when the user is searching
                         searchQuery == '' || typeof searchQuery == 'undefined' ? (
@@ -51,9 +51,9 @@ class NavBar extends React.Component {
                                 )
                     }                      
                     </form>
-                    <li className="menuItem"><a title="Labs" id="labs" value={showPage == "labs" ? "Active" : "Inactive"} href="/labs" target="" onClick={this.callEvent}>Labs</a></li>
-                    <li className="menuItem"><a title="Trust Protector Elections" id="elections" value={showPage == "elections" ? "Active" : "Inactive"} href="/elections" target="" onClick={this.callEvent}>Elections</a></li>
-                    <li className="menuItem"><a title="About" id="about" value={showPage == "about" ? "Active" : "Inactive"} href="/about" target="" onClick={this.callEvent}>About</a></li>
+                    <li className="menuItem" value={showPage == "elections" ? "Active" : "Inactive"}><a title="Trust Protector Elections" id="elections" value={showPage == "elections" ? "Active" : "Inactive"} href="/elections" target="" onClick={this.callEvent}>Elections</a></li>
+                    <li className="menuItem" value={showPage == "labs" ? "Active" : "Inactive"}><a title="Labs" id="labs" value={showPage == "labs" ? "Active" : "Inactive"} href="/labs" target="" onClick={this.callEvent}>Labs</a></li>                   
+                    <li className="menuItem" value={showPage == "about" ? "Active" : "Inactive"}><a title="About" id="about" value={showPage == "about" ? "Active" : "Inactive"} href="/about" target="" onClick={this.callEvent}>About</a></li>
                 </nav>
             </div>
         )

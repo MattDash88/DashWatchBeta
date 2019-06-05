@@ -36,7 +36,7 @@ const getMonthList = () => {
 class Month extends React.Component {
     static async getInitialProps(ctx) {
         const props = {
-            month: typeof ctx.query.month == "undefined" ? "Apr19" : ctx.query.month,   // Default no query month to latest
+            month: typeof ctx.query.month == "undefined" ? "May19" : ctx.query.month,   // Default no query month to latest
             url: ctx.pathname,
             as: ctx.asPath,
         }
@@ -110,14 +110,14 @@ class Month extends React.Component {
         } = this.state
 
         let monthText
-        if (monthId == "Jan19") {
-            monthText = "Dash Watch January 2019 Reports"
-        } else if (monthId == "Feb19") {
+        if (monthId == "Feb19") {
             monthText = "Dash Watch February 2019 Reports"
         } else if (monthId == "Mar19") {
             monthText = "Dash Watch March 2019 Reports"
         } else if (monthId == "Apr19") {
             monthText = "Dash Watch April 2019 Reports"
+        } else if (monthId == "May19") {
+            monthText = "Dash Watch May 2019 Reports"
         } else {
             monthText = "Please select a month tab to view reports"
         }
@@ -160,22 +160,22 @@ class Month extends React.Component {
                     showPage="reports"
                 />
                 <section className="pagewrapper">
-                    <div className="monthTab" id='Jan19' value={this.state.monthId == 'Jan19' ? "Active" :
-                        "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">January 2019</p></div>
                     <div className="monthTab" id='Feb19' value={this.state.monthId == 'Feb19' ? "Active" :
                         "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">February 2019</p></div>
                     <div className="monthTab" id='Mar19' value={this.state.monthId == 'Mar19' ? "Active" :
                         "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">March 2019</p></div>
                     <div className="monthTab" id='Apr19' value={this.state.monthId == 'Apr19' ? "Active" :
                         "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">April 2019</p></div>
+                    <div className="monthTab" id='May19' value={this.state.monthId == 'May19' ? "Active" :
+                        "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">May 2019</p></div>
                     <div className="monthPageWrapper">
                         <div className="monthHeaderWrapper">
                             <a className="reportPageLink" id="oldReports" href="/oldreports"><i id="oldReports"></i>Older Reports</a>
                             <div className="monthHeader">{monthText}</div>
                         </div>
                         <div className="monthIndexWrapper">
-                            <div className="monthIndexItem"><p className="monthColumnTitle">Proposal</p></div>
-                            <div className="monthIndexItem"><p className="monthColumnTitle">Report Link</p></div>
+                            <div className="monthIndexItem" id="proposalColumn"><p className="monthColumnTitle">Proposal</p></div>
+                            <div className="monthIndexItem" id="reportsColumn"><p className="monthColumnTitle">Report Link</p></div>
                             <div className="monthIndexItem"><p className="monthColumnTitle">Proposal Type</p></div>
                             <div className="monthIndexItem"><p className="monthColumnTitle">Voting Status</p></div>
                         </div>
@@ -242,22 +242,36 @@ class MonthReportRow extends React.Component {
         let reportLink = null;
         if (list_data.report_status == "Pending") { // If report is pending show "Pending"
             reportLink = (
-                <div className="monthItem">Pending</div>
+                <div className="monthItem" id="reportsColumn">Pending</div>
             )
         } else {  // If report is published, show links to report and modal
-            if (list_data.report_type == "Video") {
+            if (list_data.entry_type == "Video") {
                 reportLink = (
-                    <div className="monthItem" id="monthReportLink"><div><a className="monthReportLink" href={list_data.report_link} target="_blank" title={list_data.report_link} onClick={this.callEvent}>
+                    <div className="monthItem" id="reportsColumn"><div><a className="monthReportLink" href={list_data.report_link} target="_blank" title={list_data.report_link} onClick={this.callEvent}>
                         <img className="reportIcon" id="YouTube" src="https://dashwatchbeta.org/images/Video.png" height="30"></img> Video</a></div></div>
                 )
-            } else if (list_data.report_type == "Podcast") {
+            } else if (list_data.entry_type == "Podcast") {
                 reportLink = (
-                    <div className="monthItem" id="monthReportLink"><div><a className="monthReportLink" href={list_data.report_link} target="_blank" title={list_data.report_link} onClick={this.callEvent}>
+                    <div className="monthItem" id="reportsColumn"><div><a className="monthReportLink" href={list_data.report_link} target="_blank" title={list_data.report_link} onClick={this.callEvent}>
                         <img className="reportIcon" id="Podcast" src="https://dashwatchbeta.org/images/Podcast.png" height="30"></img> Podcast</a></div></div>
                 )
             } else {
-                reportLink = (
-                    <div className="monthItem" id="monthReportLink"><div><a className="monthReportLink" href={list_data.report_link} target="_blank" title={list_data.report_link} onClick={this.callEvent}><img id="PDF" src="https://dashwatchbeta.org/images/PDF.png" height="30"></img> Report</a></div></div>
+                reportLink = (                    
+                    <div className="monthItem" id="reportsColumn">
+                    {
+                        typeof list_data.kpi_link !== 'undefined' ? (
+                            <div>
+                                <a className="monthReportLink" href={list_data.report_link} target="_blank" title={list_data.report_link} onClick={this.callEvent}><img id="PDF" src="https://dashwatchbeta.org/images/PDF.png" height="30"></img> Report</a> 
+                                <div className="monthLinkSeparator"></div> 
+                                <a className="monthKpiLink" href={list_data.kpi_link} target="_blank" title={list_data.kpi_link} onClick={this.callEvent}><img id="Charts" src="https://dashwatchbeta.org/images/Charts.png" height="30"></img> KPIs</a>
+                            </div>
+                        ) : (
+                            <div>
+                                <a className="monthReportLink" href={list_data.report_link} target="_blank" title={list_data.report_link} onClick={this.callEvent}><img id="PDF" src="https://dashwatchbeta.org/images/PDF.png" height="30"></img> Report</a>
+                            </div>
+                        )
+                    }
+                    </div>
                 )
             }
         } // End of report status if
@@ -294,7 +308,7 @@ class MonthReportRow extends React.Component {
             <div className="monthProposalWrapper" month={this.props.showMonth == list_data.published_month ? "Active" :
             "Inactive"} response={list_data.response_status == "No" ? "No" :
             "Yes"}>
-                <div className="monthItemTitle" onClick={this.showModal}><p className="monthProposalName">{list_data.project_name}</p>
+                <div className="monthItem" id="proposalColumn" onClick={this.showModal}><p className="monthProposalName">{list_data.project_name}</p>
                     <p className="monthOwnerName">by {main_data.proposal_owner}</p></div>
                 {reportLink}
                 <div className="monthItem" onClick={this.showModal}><p className="monthProposalType" value={list_data.proposal_type}>{list_data.proposal_type}</p></div>

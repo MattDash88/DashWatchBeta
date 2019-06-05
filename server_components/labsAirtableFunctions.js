@@ -14,7 +14,10 @@ const WalletDownloadPosts = function getWalletDownloadPosts(tableId) {
         // Query to feed to Airtable
         const apiQuery = {
             pageSize: 100,
-            sort: [{ field: 'Date', direction: 'asc' }]
+            sort: [
+                { field: 'Wallet', direction: 'asc' },
+                { field: 'Date', direction: 'asc' }
+            ],
         }
 
         // Get the data from the table
@@ -30,6 +33,49 @@ const WalletDownloadPosts = function getWalletDownloadPosts(tableId) {
                     desktop: record.get('Desktop'),
                     mobile: record.get('Mobile'),
                     proposal_owner: record.get('Proposal Owner'),
+                    id: record.id,                    // Used as unique record identifier
+                }
+
+                // Push retrieved data to const
+                storeAirtablePosts.push(post)
+            })
+
+            // Continue to next record
+            fetchNextPage()
+        }, function done(error) {
+            if (error) reject({ error })
+            // Finish
+            resolve(storeAirtablePosts)
+        })
+    })
+}
+
+const WalletCountryPosts = function getWalletCountryPosts(tableId) {
+    const base = new Airtable.base('apprp0FchTP02vzul') // Connect to Base
+
+    return new Promise((resolve, reject) => {
+        // Read cache for this function
+        const storeAirtablePosts = []       // Create const to store results in
+
+        // Query to feed to Airtable
+        const apiQuery = {
+            pageSize: 100,
+            sort: [
+                { field: 'Country', direction: 'asc' },
+                { field: 'Date', direction: 'asc' }
+            ],
+        }
+
+        // Get the data from the table
+        base(tableId).select(apiQuery).eachPage((records, fetchNextPage) => {
+            // This function (`page`) will get called for each page of records.
+
+            // Create a const with the required fields
+            records.forEach(function (record) {
+                const post = {
+                    date: record.get('Date'),
+                    country_name: record.get('Country'),  //This is the ending of the Dash Central url, it is used as an proposal identifier
+                    active_devices: record.get('Active Devices'),
                     id: record.id,                    // Used as unique record identifier
                 }
 
@@ -260,7 +306,8 @@ const LabsKpiValues = function getLabsKpiValues(tableId) {
 }
 
 module.exports = {
-    WalletDownloadPosts,  
+    WalletDownloadPosts,
+    WalletCountryPosts,  
     WalletVersionPosts,
     PosMetricsPosts,
     LabsKpiProjects,

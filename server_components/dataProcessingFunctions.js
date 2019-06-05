@@ -273,6 +273,7 @@ var processMonthListData = function monthDataFunction(monthReportData) {
             entry_type: monthReportData.entry_type,
             entry_name: monthReportData.entry_name,
             report_link: monthReportData.report_link,
+            kpi_link: monthReportData.kpi_link,
             published_month: monthReportData.published_month,
             id: monthReportData.id,
         },

@@ -76,8 +76,11 @@ const MonthReportPosts = function getMonthReportPosts(tableId) {
         // Query to feed to Airtable
         const apiQuery = {
             pageSize: 50,
-            sort: [{ field: 'Voting Status', direction: 'asc' },
-            { field: 'Proposal Name', direction: 'asc' }]
+            sort: [
+                { field: 'Published Month', direction: 'desc' },
+                { field: 'Voting Status', direction: 'asc' },
+                { field: 'Proposal Name', direction: 'asc' }
+            ]
         }
 
         // Get the data from the table
@@ -96,6 +99,7 @@ const MonthReportPosts = function getMonthReportPosts(tableId) {
                     report_status: record.get('Report Status'),         // This variable is used to handle pending reports 
                     published_month: record.get('Published Month'),     // Variable used to determine in which list it should be published
                     report_link: record.get('Report URL'),
+                    kpi_link: record.get('KPI Link'),
                     entry_type: record.get('Entry Type'),               // Written report or Video
                     report_ref: record.get('Report ID'),
                     id: record.id,                                      // Used as unique record identifier
