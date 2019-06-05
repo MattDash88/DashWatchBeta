@@ -540,7 +540,7 @@ const getAirtablePost = (recordId, baseId) => {
 }
 
 // Airtable Query to create the Trust protector candidate table
-const TrustProtectorList = function getTrustProtectors(tableId) {
+const ElectionsCandidateList = function getElectionCandidates(tableId) {
     const base = new Airtable.base('appXzI83ECDm5ggmA')     // Connect to Base
 
     return new Promise((resolve, reject) => {
@@ -671,7 +671,7 @@ module.exports = {
     PublicRelationsKpiPosts,
     ReportPosts,
     OldReportPosts,
-    TrustProtectorList,
+    ElectionsCandidateList,
     VoteResults,
     VoteData,
 }

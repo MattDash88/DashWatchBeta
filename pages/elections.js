@@ -136,7 +136,7 @@ class TrustElections extends React.Component {
         Promise.resolve(getElectionsData()).then(data => {
             var dateArray = []
             var participationArray = []
-            Object.values(data.vote_metrics).map((item) => {
+            Object.values(data.vote_metrics.TPE19).map((item) => {
                 dateArray.push(item.date)
                 participationArray.push(item.vote_participation)
             })

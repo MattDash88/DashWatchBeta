@@ -37,7 +37,7 @@ class CandidateLists extends React.Component {
                         </div>
                     ) : (
                             <div>
-                                {candidateListData.map((post) =>
+                                {candidateListData.TPE19.map((post) =>
                                     <CandidateListRow
                                         key={`${post.id}`}
                                         airtableData={post}      // Elements for the Month report list    
@@ -62,6 +62,28 @@ class CandidateLists extends React.Component {
                     <p className="tpText"><b>Update June 4, 2019</b>: The new deadline to submit candidacies for a supervisor role at the Dash Investment Foundation is June 7 23.59 GMT.</p>
                     <p className="tpText">The list of candidates for the Dash Investment Foundation supervisors will be published on this page shortly before the elections starts. More information is available <a id="results" target="_blank" href="https://blog.dash.org/details-on-the-election-for-dash-investment-foundation-supervisors-25766c55a1f">Here</a>.</p>
                     <p className="tpText">If you would like to apply as a candidate for the Dash Investment Foundation Supervisor elections, please complete the <a id="results" target="_blank" href="https://dashwatchbeta.org/files/DIF19_CandidateApplicationForm.pdf">Application form</a> and submit it to <a href="mailto:team@dashwatch.org" target="">team@dashwatch.org</a>.</p>
+                    <div className="tpIndexWrapper">
+                    <div className="tpIndexItemFirst"><p className="tpColumnTitle">Candidate</p></div>
+                    <div className="tpIndexItem"><p className="tpColumnTitle">Contact</p></div>
+                    <div className="tpIndexItem"><p className="tpColumnTitle">Dash Involvement</p></div>
+                    <div className="tpIndexItem"><p className="tpColumnTitle">Profile Link</p></div>
+                </div>
+                {
+                    candidateListData.length == 0 ? (
+                        <div>
+                            <p>Loading&hellip;</p>
+                        </div>
+                    ) : (
+                            <div>
+                                {candidateListData.DIF19.map((post) =>
+                                    <CandidateListRow
+                                        key={`${post.id}`}
+                                        airtableData={post}      // Elements for the Month report list    
+                                    />
+                                )}
+                            </div>
+                        )
+                }
                 </section>             
             </main>
         )

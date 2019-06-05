@@ -301,41 +301,84 @@ const getElectionsData = (refreshCache) => {
 
       // If cache is empty or a cache refresh is requested, retrieve from Airtable
       else {    
-        var electionsCandidatePromise = Promise.resolve(airtableFunctions.TrustProtectorList('Candidate List'));
-        var electionsVoteDataPromise = Promise.resolve(airtableFunctions.VoteData('Vote Data'));
-        var electionsVoteResultsPromise = Promise.resolve(airtableFunctions.VoteResults('Vote Results'));
+        var TPE19CandidatePromise = Promise.resolve(airtableFunctions.ElectionsCandidateList('Candidate List - TPE19'));
+        var DIF19CandidatePromise = Promise.resolve(airtableFunctions.ElectionsCandidateList('Candidate List - DIF19'));
+        var TPE19VoteDataPromise = Promise.resolve(airtableFunctions.VoteData('Vote Data - TPE19'));
+        var DIF19VoteDataPromise = Promise.resolve(airtableFunctions.VoteData('Vote Data - DIF19'));
+        var TPE19VoteResultsPromise = Promise.resolve(airtableFunctions.VoteResults('Vote Results - TPE19'));
+        var DIF19VoteResultsPromise = Promise.resolve(airtableFunctions.VoteResults('Vote Results - DIF19'));
 
-        Promise.all([electionsCandidatePromise, electionsVoteDataPromise, electionsVoteResultsPromise]).then(function (valArray) {
-          electionsCandidateData = []
-          electionsVoteData = []
-          electionsVoteResultsData = []
+        Promise.all([TPE19CandidatePromise, DIF19CandidatePromise, TPE19VoteDataPromise, DIF19VoteDataPromise, TPE19VoteResultsPromise, DIF19VoteResultsPromise]).then(function (valArray) {
+          TPE19CandidateList = valArray[0]
+          DIF19CandidateList = valArray[1]
+          TPE19ParticipationData = valArray[2]
+          DIF19ParticipationData = valArray[3]
+          TPE19ResultsData = valArray[4]
+          DIF19ResultsData = valArray[5]
 
-          // Check if candidate name exists
-          Object.values(valArray[0]).map((item) => {            
+          var TPE19CandidateData = []
+          var DIF19CandidateData = []
+          var TPE19VoteData = []
+          var DIF19VoteData = []
+          var TPE19VoteResultsData = []
+          var DIF19VoteResultsData = []
+
+          // Check if TPE19 candidate name exists
+          Object.values(TPE19CandidateList).map((item) => {            
             if (typeof item.candidate_name !== 'undefined') {    //Check if record exists
-              electionsCandidateData.push(item)
+              TPE19CandidateData.push(item)
+            }
+          })
+
+          // Check if DIF19 candidate name exists
+          Object.values(DIF19CandidateList).map((item) => {            
+            if (typeof item.candidate_name !== 'undefined') {    //Check if record exists
+              DIF19CandidateData.push(item)
             }
           })
 
           // Check if participation data and values were entered correctly
-          Object.values(valArray[1]).map((item) => {            
+          Object.values(TPE19ParticipationData).map((item) => {            
             if (typeof item.date !== 'undefined' && typeof item.vote_participation !== 'undefined') {    //Check if record exists
-              electionsVoteData.push(item)
+              TPE19VoteData.push(item)
+            }
+          })
+
+          // Check if participation data and values were entered correctly
+          Object.values(DIF19ParticipationData).map((item) => {            
+            if (typeof item.date !== 'undefined' && typeof item.vote_participation !== 'undefined') {    //Check if record exists
+              DIF19VoteData.push(item)
             }
           })
           
           // Check if candidate results were entered correctly
-          Object.values(valArray[2]).map((item) => {            
+          Object.values(TPE19ResultsData).map((item) => {            
             if (typeof item.candidate_name !== 'undefined' && typeof item.votes !== 'undefined') {    //Check if record exists
-              electionsVoteResultsData.push(item)
+              TPE19VoteResultsData.push(item)
+            }
+          })
+
+          // Check if candidate results were entered correctly
+          Object.values(DIF19ResultsData).map((item) => {            
+            if (typeof item.candidate_name !== 'undefined' && typeof item.votes !== 'undefined') {    //Check if record exists
+              DIF19VoteResultsData.push(item)
             }
           })
 
           // Create the data construct
           const electionsAllData = {
-            candidate_data: electionsCandidateData,
-            vote_metrics: electionsVoteData,
-            vote_results: electionsVoteResultsData,
+            candidate_data: {
+              TPE19: TPE19CandidateData,
+              DIF19: DIF19CandidateData,
+            },
+            vote_metrics: {
+              TPE19: TPE19VoteData,
+              DIF19: DIF19VoteData,
+            },
+            vote_results: {
+              TPE19: TPE19VoteResultsData,
+              DIF19: DIF19VoteResultsData,
+            },
           }
           // Store results in Redis cache, cache expire time is defined in .env
           cache.setex('ElectionsData', cacheExpirationTime, JSON.stringify(electionsAllData))
