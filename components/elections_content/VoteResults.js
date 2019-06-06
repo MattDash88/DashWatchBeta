@@ -20,7 +20,7 @@ class VoteResults extends React.Component {
 
         return (
             <main>              
-                <section className="tpPageTopSection" value={electionId == "tpe2019" ? "Active" : "Inactive"}>
+                <section className="tpPageTopSection" value={electionId == "TPE2019" ? "Active" : "Inactive"}>
                 <h1 className="tpHeader">2019 Dash Trust Protector Elections Results</h1>
                 <div className="tpResultsWrapper">
                     <div className="tpIndexItemFirst"><p className="tpColumnTitle">Candidate</p></div>
@@ -33,7 +33,7 @@ class VoteResults extends React.Component {
                         </section>
                     ) : (
                             <section>
-                                {vote_results.TPE19.map((post) =>
+                                {vote_results.TPE2019.map((post) =>
                                     <ResultsListRow
                                         key={`${post.id}`}
                                         airtableData={post}      // Elements for the Month report list    
@@ -43,7 +43,7 @@ class VoteResults extends React.Component {
                         )
                 }
                 </section>
-                <section className="tpPageTopSection" value={electionId == "dif2019" ? "Active" : "Inactive"}>
+                <section className="tpPageTopSection" value={electionId == "DIF2019" ? "Active" : "Inactive"}>
                     <h1 className="tpHeader">2019 Investment Foundation Supervisor Elections Results</h1>
                     <div className="tpText">The Dash Investment Foundation Supervisor election results will be published here shortly after the election is concluded, no later than July 5th, 2019.</div>
                 </section>

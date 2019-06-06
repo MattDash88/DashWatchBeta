@@ -21,7 +21,7 @@ class CandidateLists extends React.Component {
 
         return (
             <main>                
-                <section className="tpPageTopSection" value={electionId == "tpe2019" ? "Active" : "Inactive"}>
+                <section className="tpPageTopSection" value={electionId == "TPE2019" ? "Active" : "Inactive"}>
                 <h1 className="tpHeader">2019 Dash Trust Protector Candidates</h1>
                 <p className="tpText">Voting for the Trust Protectors Elections 2019 ended on March 31, 2019. The results are available <a className="tpHowToLink" id="results" href={`/elections?tab=results&election=${electionId}`}>Here</a>.</p>
                 <div className="tpIndexWrapper">
@@ -37,7 +37,7 @@ class CandidateLists extends React.Component {
                         </div>
                     ) : (
                             <div>
-                                {candidateListData.TPE19.map((post) =>
+                                {candidateListData.TPE2019.map((post) =>
                                     <CandidateListRow
                                         key={`${post.id}`}
                                         airtableData={post}      // Elements for the Month report list    
@@ -56,7 +56,7 @@ class CandidateLists extends React.Component {
                     Twitter: <a href="https://twitter.com/DashWatch" target="_blank">@DashWatch</a>
                 </div>
                 </section>   
-                <section className="tpPageTopSection" value={electionId == "dif2019" ? "Active" : "Inactive"}>
+                <section className="tpPageTopSection" value={electionId == "DIF2019" ? "Active" : "Inactive"}>
                     <h1 className="tpHeader">2019 Investment Foundation Supervisor Candidates</h1>
                     <p className="tpText"><b>Update May 31, 2019</b>: Dash Core Group has decided to extend the deadline to apply for the Dash Investment Foundation Supervisor role due to a limited number of applicants and a community desire to receive more information about the role. We will be releasing the new deadline soon.</p>
                     <p className="tpText"><b>Update June 4, 2019</b>: The new deadline to submit candidacies for a supervisor role at the Dash Investment Foundation is June 7 23.59 GMT.</p>
@@ -75,7 +75,7 @@ class CandidateLists extends React.Component {
                         </div>
                     ) : (
                             <div>
-                                {candidateListData.DIF19.map((post) =>
+                                {candidateListData.DIF2019.map((post) =>
                                     <CandidateListRow
                                         key={`${post.id}`}
                                         airtableData={post}      // Elements for the Month report list    
