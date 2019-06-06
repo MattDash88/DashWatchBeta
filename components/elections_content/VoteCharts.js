@@ -19,7 +19,6 @@ const buildContent = (voteMetrics, electionId) => {
         )
 
         const chartData = {
-            //labels: chartDates,         // The dates of the datapoints are the labels on the x-axis
             data: {                     // Data + styling for the chart
                 datasets: [{
                     label: 'Percentage of Masternodes that voted',

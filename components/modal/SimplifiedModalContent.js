@@ -46,7 +46,7 @@ class ModalContent extends React.Component {
 
   render() {
     const { // Declare grouped elements passed on to sub tab 
-      slug,
+      
       proposal_name,
       proposal_owner,
       proposal_description,
@@ -57,6 +57,9 @@ class ModalContent extends React.Component {
       comm_status,
       completion_elem_type,
       completion_elem,
+      slug,
+      dc_url,
+      nexus_url,
       funding_received_usd,
       last_updated
     } = this.props.main_data
@@ -157,10 +160,19 @@ class ModalContent extends React.Component {
               <div className="simple_modalPropertyTitle">
                 Links:
             </div>
-              <a className="link" id="modalDcLink" href={dclink} target="_blank" onClick={this.callEvent}><img id="DcLogo" src="https://dashwatchbeta.org/images/DashCentral.png" height="40"></img></a>
+            {
+              typeof nexus_url !== 'undefined' ? (
+                <section>
+                <a id="modalNexusLink" href={nexus_url} target="_blank" onClick={this.callEvent}><img id="NexusLogo" src="https://dashwatchbeta.org/images/DashNexus.png" height="40"></img></a>
+                <div className="modalLinkSeparator"></div>
+                </section>
+               ) : (
+                 null
+               )
+            } 
+              <a className="link" id="modalDcLink" href={dc_url} target="_blank" onClick={this.callEvent}><img id="DcLogo" src="https://dashwatchbeta.org/images/DashCentral.png" height="40"></img></a>
               <div className="linkSeparator"></div>
               <a className="link" id="modalDwLink" href={`/p/${slug}`} target="" onClick={this.callEvent}><img id="Logo" src="https://dashwatchbeta.org/images/DashWatch.png" height="40"></img></a>
-              <div className="linkSeparator"></div>
             </div>
           </div>
         </div>

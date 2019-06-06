@@ -24,17 +24,21 @@ const MainProposalPosts = function getMainProposalPosts(tableId) {
             records.forEach(function (record) {
                 const post = {
                     // Main Tab Elements
-                    title: record.get('Proposal Name'),
-                    slug: record.get('Proposal ID'),    //This is the ending of the Dash Central url, it is used as an proposal identifier
+                    title: record.get('Proposal Name'),                    
                     last_updated: record.get('Date Updated'),
                     status: record.get('Status'),
                     first_payment_date: record.get('Date of First Payment'),
                     proposal_owner: record.get('Proposal Owner Name'),
                     comm_status: record.get('Communication Status'),
+                    reporting_status: record.get('Reporting Status'),
                     budget_status: record.get('Budget Status'),
                     schedule_status: record.get('Schedule Status'),
                     estimated_completion_date: record.get('Estimated Completion Date'),
                     actual_completion_date: record.get('Actual Completion'),
+                    slug: record.get('Proposal ID'),                // This is the ending of the Dash Central url, it is used as an proposal identifier
+                    dc_url: record.get('Dashcentral URL'),          // Url to the proposal on Dashcentral
+                    nexus_id: record.get('Nexus ID'),               // ID of the proposal on Dash Nexus           
+                    nexus_url: record.get('Nexus URL'),             // Url to the proposal on Dash Nexus   
                     proposal_description: record.get('Proposal Description'),
                     id: record.id,                      // Used as unique record identifier
 
@@ -106,8 +110,7 @@ const MonthReportPosts = function getMonthReportPosts(tableId) {
 
                     // Elements for Modal
                     proposal_name: record.get('Proposal Title'),
-                    proposal_owner: record.get('Proposal Owner'),
-                    slug: record.get('Proposal ID Text'),
+                    proposal_owner: record.get('Proposal Owner'),                    
                     proposal_description: record.get('Proposal Description'),
                     payment_date: record.get('Date of First Payment'),
                     last_updated: record.get('Date Updated'),
@@ -117,9 +120,11 @@ const MonthReportPosts = function getMonthReportPosts(tableId) {
                     estimated_completion_date: record.get('Estimated Completion Date'),
                     actual_completion_date: record.get('Actual Completion'),
                     comm_status: record.get('Communication Status'),
+                    slug: record.get('Proposal ID Text'),
+                    dc_url: record.get('Dashcentral URL'),          // Url to the proposal on Dashcentral        
+                    nexus_url: record.get('Nexus URL'),             // Url to the proposal on Dash Nexus  
                     funding_received_usd: record.get('Funding Received (USD)'),
                 }
-
                 storeAirtablePosts.push(post)   // Push data to const
             })
 

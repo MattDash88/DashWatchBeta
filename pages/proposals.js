@@ -33,7 +33,7 @@ const getProposals = () => {
 const filterPost = (query) => {
     return (
         new Promise((resolve) => {
-            fetch(`/api/filter/${query}`)
+            fetch(`/api/filter?${query}`)
                 .then((res) => res.json()
                     .then((res) => {
                         resolve(res.data)
@@ -111,6 +111,7 @@ class Home extends React.Component {
 
             // Set Promises for Promise.all
             const query = `search=${this.state.search.toLowerCase()}&show_inactive=${this.state.showInactivePosts}`
+            console.log(query)
             var getProposalsPromise = Promise.resolve(getProposals());
             var filterPostsPromise = Promise.resolve(filterPost(query));
 
@@ -122,8 +123,6 @@ class Home extends React.Component {
             })//.then(history.replaceState(this.state, '', this.state.as))
         }
     }
-
-
 
     render() {
         const { // Declare data arrays used in class

@@ -23,9 +23,9 @@ var filterQuery = function filterInactiveFunction(proposalData) {
     storeProposalData = []        // Create Array to store report data in
     Object.keys(proposalData).map((item) => {
         // Filter out proposals with matching comm_status
-        if (typeof proposalData[item].main_data.comm_status === 'undefined') {
+        if (typeof proposalData[item].main_data.reporting_status === 'undefined') {
             // Do nothing, skip entry
-        } else if (proposalData[item].main_data.comm_status[0] !== 'Opted out of Dash Watch' && proposalData[item].main_data.comm_status[0] !== 'Dash Watch reporting concluded' && proposalData[item].main_data.comm_status[0] !== 'Not reported by Dash Watch') {
+        } else if (proposalData[item].main_data.reporting_status !== 'Opted Out of Dash Watch Reporting' && proposalData[item].main_data.reporting_status !== 'Not Reported on By Dash Watch') {
             // Return data when a match is found
             storeProposalData.push(proposalData[item])
         }

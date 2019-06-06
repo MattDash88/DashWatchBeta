@@ -4,7 +4,6 @@ const express = require('express')
 const next = require('next')
 const cache = require('./cache')
 const fetch = require('isomorphic-unfetch');
-const qs = require('query-string');
 
 const dev = process.env.NODE_ENV !== 'production'
 const port = process.env.PORT
@@ -558,8 +557,8 @@ app.prepare()
     })
 
     // Internal API call to support search
-    server.get('/api/filter/:query', (req, res) => {
-      query = qs.parse(req.params.query)
+    server.get('/api/filter', (req, res) => {
+      query = req.query
       var refreshCache = false    // Load from cache if available
       Promise.resolve(getProposalListData(refreshCache)).then(function (valArray) {
         processedData = valArray    // Put proposal data in processedData
