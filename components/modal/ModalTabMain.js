@@ -69,8 +69,7 @@ class ModalTabMain extends React.Component {
   }
 
   render() {
-    const {   // Declare single elements used in this Modal tab   
-      
+    const {   // Declare single elements used in this Modal tab         
       proposal_description,
       first_payment_date,
       status,
@@ -94,11 +93,17 @@ class ModalTabMain extends React.Component {
 
     return (
       <div className="modalTabContent" value={openTab == "TabMain" ? "active" : "inactive"}>
-        <section>          
-          <div className="modalHeader">Proposal Description:</div>
-          <div className="modalProposalText">{proposal_description}</div>
-          <span id="proposal_id" className="modalHeader">Proposal ID: </span>
-          <span className="modalLongText">{slug}</span>
+        <section> 
+          {     // Only show proposal description header for proposals that have one
+            typeof proposal_description !== 'undefined' ? (
+              <div>
+                <div className="modalHeader">Proposal Description:</div>
+                <div className="modalProposalText">{proposal_description}</div>
+              </div>
+            ) : (
+              null
+            )
+          }                   
           <div className="modalHeader">Proposal Details:</div>
           <div className="modalPropertyGrid">
             <div className="modalPropertyDiv" value={status}>
@@ -187,7 +192,9 @@ class ModalTabMain extends React.Component {
               </div>
             </div>
           </div>
-        </section>
+          <p><span id="proposal_id" className="modalHeader">Proposal ID: </span>
+          <span className="modalLongText">{slug}</span></p>
+        </section>        
         <section>
           <div className="modalHeader">Links:</div>
           <div className="modalLinkDiv">

@@ -278,7 +278,7 @@ var processMonthListData = function monthDataFunction(monthReportData) {
             id: monthReportData.id,
         },
         main_data: {
-            slug: monthReportData.slug,
+            
             proposal_name: monthReportData.proposal_name,
             proposal_owner: monthReportData.proposal_owner,
             payment_date: monthReportData.payment_date,
@@ -286,10 +286,14 @@ var processMonthListData = function monthDataFunction(monthReportData) {
             budget_status: monthReportData.budget_status,
             schedule_status: monthReportData.schedule_status,
             comm_status: monthReportData.comm_status,
+            reporting_status: monthReportData.reporting_status,
             completion_elem_type: monthReportData.completion_elem_type,
             completion_elem: monthReportData.completion_elem,
             funding_received_usd: monthReportData.funding_received_usd,
             last_updated: monthReportData.last_updated,
+            slug: monthReportData.slug,
+            dc_url: monthReportData.dc_url,
+            nexus_url: monthReportData.nexus_url,
             proposal_description: monthReportData.proposal_description,
             proposal_ref: monthReportData.proposal_ref,
         },

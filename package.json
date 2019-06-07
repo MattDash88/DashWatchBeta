@@ -5,6 +5,9 @@
     "build": "next build",
     "start": "node server.js"
   },
+  "engines" : { 
+    "node" : ">=0.10.16" 
+  },
   "dependencies": {
     "@zeit/next-css": "^1.0.1",
     "airtable": "^0.5.10",
