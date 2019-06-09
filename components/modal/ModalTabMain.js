@@ -94,7 +94,7 @@ class ModalTabMain extends React.Component {
     return (
       <div className="modalTabContent" value={openTab == "TabMain" ? "active" : "inactive"}>
         <section> 
-          {     // Only show proposal description header for proposals that have one
+          {     // Only show Proposal Description header for proposals that have one
             typeof proposal_description !== 'undefined' ? (
               <div>
                 <div className="modalHeader">Proposal Description:</div>
@@ -103,7 +103,7 @@ class ModalTabMain extends React.Component {
             ) : (
               null
             )
-          }                   
+          }                    
           <div className="modalHeader">Proposal Details:</div>
           <div className="modalPropertyGrid">
             <div className="modalPropertyDiv" value={status}>
