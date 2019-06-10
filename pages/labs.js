@@ -64,18 +64,22 @@ class Labs extends React.Component {
     this.state = {
       posSystemData: '',  // Dataset for posystems tab
       walletData: '',     // Dataset for wallet tab
-      versionData: '',    // Dataset for posystems tab
+      countryData: '',     // Dataset for wallet tab
+      versionData: '',    // Dataset for wallet tab
       labsData: '',       // Dataset for proposals tab
 
       // States that can be set by queries 
       project: props.project,
       kpi: props.kpi,
       showPosChart: typeof props.chart == "undefined" ? 'Transactions' : props.chart,
-      showWalletChart: typeof props.chart == "undefined" ? 'Total' : props.chart,
+      showWalletChart: typeof props.chart == "undefined" ? 'Wallet' : props.chart,
+      showWalletType: 'All',
+      showWalletCountry: 'Brazil',
 
       // Booleans for POS systems
       showAnypay: true,
       showPaylive: true,
+      showDashRetail: true,
 
       // Booleans for Wallets
       showDashCore: true,
@@ -117,6 +121,7 @@ class Labs extends React.Component {
       this.setState({
         showAnypay: queries.anypay,
         showPaylive: queries.paylive,
+        showDashRetail: queries.dashretail,
         showPosChart: queries.POSChart,
         as: `/labs?tab=POSsystems&chart=${queries.POSChart}`,
       })
@@ -128,6 +133,8 @@ class Labs extends React.Component {
         showElectrum: queries.electrum,
         showCoreAndroid: queries.coreAndroid,
         showCoreiOS: queries.coreiOS,
+        showWalletType: queries.walletType,
+        showWalletCountry: queries.walletCountry,
         showWalletChart: queries.walletChart,
         as: `/labs?tab=wallets&chart=${queries.walletChart}`,
       })
@@ -150,6 +157,7 @@ class Labs extends React.Component {
         labsData: data[0],
         posSystemData: data[1].pos_system_data,
         walletData: data[1].wallet_data,
+        countryData: data[1].country_data,
         versionData: data[1].version_data,
       })
     }).then(history.replaceState(this.state, '', `${this.state.as}`))
@@ -157,7 +165,8 @@ class Labs extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.labsTabId !== this.state.labsTabId || prevState.showPosChart !== this.state.showPosChart || prevState.showWalletChart !== this.state.showWalletChart) {// Just a history state update because it doesn't always work as desired in functions
+    if (prevState.labsTabId !== this.state.labsTabId || prevState.showPosChart !== this.state.showPosChart || prevState.showWalletChart !== this.state.showWalletChart 
+      || prevState.showWalletType !== this.state.showWalletType || prevState.showWalletCountry !== this.state.showWalletCountry ) {// Just a history state update because it doesn't always work as desired in functions
         history.replaceState(this.state, '', `${this.state.as}`)
     }
 }
@@ -166,6 +175,7 @@ class Labs extends React.Component {
     const { // Declare data arrays used in class
       posSystemData,
       walletData,
+      countryData,
       versionData,
       labsData,
     } = this.state
@@ -179,8 +189,6 @@ class Labs extends React.Component {
         <section className="pagewrapper">
           <div className="monthTab" id='explorer' value={this.state.labsTabId == 'explorer' ? "Active" :
             "Inactive"} onClick={this.handleSelectTab}><p className="monthTabText">Proposals</p></div>
-          <div className="monthTab" id='merchants' value={this.state.labsTabId == 'merchants' ? "Active" :
-            "Inactive"} onClick={this.handleSelectTab}><p className="monthTabText">Merchants</p></div>
           <div className="monthTab" id='POSsystems' value={this.state.labsTabId == 'POSsystems' ? "Active" :
             "Inactive"} onClick={this.handleSelectTab}><p className="monthTabText">POS Systems</p></div>
           <div className="monthTab" id='wallets' value={this.state.labsTabId == 'wallets' ? "Active" :
@@ -205,18 +213,6 @@ class Labs extends React.Component {
                   )
               }
             </section>
-            <section className="plotWrapper" value={this.state.labsTabId == 'merchants' ? "Active" :
-              "Inactive"}>
-              {
-                (this.state.labsTabId == 'merchants') ? (
-                  <div>
-                    <iframe width="1000" height="800" frameBorder="0" scrolling="no" src="//plot.ly/~dashwatch/0.embed"></iframe>
-                  </div>
-                ) : (
-                    null
-                  )
-              }
-            </section>
             <section className="plotWrapper" value={this.state.labsTabId == 'POSsystems' ? "Active" :
               "Inactive"}>
               {
@@ -227,6 +223,7 @@ class Labs extends React.Component {
                       queryFunction={this.handleQueries}
                       showAnypay={this.state.showAnypay}
                       showPaylive={this.state.showPaylive}
+                      showDashRetail={this.state.showDashRetail}
                       showPosChart={this.state.showPosChart}
                     />
                   </div>
@@ -242,6 +239,7 @@ class Labs extends React.Component {
                   <div>
                     <Wallets
                       walletData={walletData}
+                      countryData={countryData}
                       versionData={versionData}
                       queryFunction={this.handleQueries}
                       showDashCore={this.state.showDashCore}
@@ -249,6 +247,8 @@ class Labs extends React.Component {
                       showCoreAndroid={this.state.showCoreAndroid}
                       showCoreiOS={this.state.showCoreiOS}
                       showWalletChart={this.state.showWalletChart}
+                      showWalletType={this.state.showWalletType}
+                      showWalletCountry={this.state.showWalletCountry}
                     />
                   </div>
                 ) : (

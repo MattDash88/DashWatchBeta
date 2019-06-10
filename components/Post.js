@@ -98,22 +98,16 @@ handleClick(event) {
       completion_elem,        // Date or status of completion element
       completion_elem_type,   // Type of the completion element, anticipated or actual completion
       funding_received_usd,
-      last_updated,
+      reporting_status,
       first_payment_date,
       proposal_owner,
       schedule_status,
       slug,
+      dc_url,
+      nexus_url,
       status,
       id,                     // Unique id of the proposal's Airtable record
     } = this.props.main_data
-
-    // Code to generate Dashcentral link
-    let dclink = null;
-    if (slug.match("Dash-Help-Support-Center") !== null) { // Code to handle Dash-Help proposals
-      dclink = ('http://dashcentral.org/p/Dash-Help-Support-Center')
-    } else {
-      dclink = ('http://dashcentral.org/p/' + slug) // Pattern for all other proposals
-    }
 
     // Code generating Modal or not
     let modal = null;
@@ -148,89 +142,13 @@ handleClick(event) {
           <div className="ownerName">proposed by <a id="owner link" target="" href={`/proposals?search=${proposal_owner}`} onClick={this.callEvent} title={`Search ${proposal_owner}`}>{proposal_owner}</a></div>
         </section>
         <div className="cardContentWrapper">
-          {
-            comm_status == "Opted out of Dash Watch Reporting" || comm_status == "Not reported by Dash Watch" ? (
-              // If a proposal is not reported on show a shorter card without reporting metrics
-              <section className="cardPropertyGrid">
-                <div className="cardPropertyDiv">
-                  <div className="cardPropertyTitle">
-                    <div id="first_date_paid" className="cardTooltip" onClick={this.handleTooltip}>First Date Paid:
-                  <span className="cardTooltiptext" value={this.state.showTooltip == "first_date_paid" ? "Active" :
-                        "Inactive"}>The date the proposal received its first payment from a superblock (UTC).</span>
-                    </div>
-                  </div>
-                  <div className="cardPropertyItem" title={first_payment_date}>
-                    <span>{first_payment_date}</span>
-                  </div>
-                </div>
-
-                <div className="cardPropertyDiv" value={comm_status}>
-                  <div id="comm_status" className="cardTooltip" onClick={this.handleTooltip}>Communication status:
-                  <span className="cardTooltiptext" value={this.state.showTooltip == "comm_status" ? "Active" :
-                        "Inactive"}>The communication status of the proposal team with Dash Watch.</span>
-                  </div>
-                  <div className="cardPropertyItem" title={comm_status}>
-                    <span>{comm_status}</span>
-                  </div>
-                </div>
-
-                <div className="cardPropertyDiv">
-                  <div id="total_funding_received" className="cardTooltip" onClick={this.handleTooltip}>Total funding received:
-                  <span className="cardTooltiptext" value={this.state.showTooltip == "total_funding_received" ? "Active" :
-                        "Inactive"}>An indication of the USD value of the treasury payments received by this proposal. The amount is calculated using the price of Dash rounded to full US Dollars on the days each superblock is mined.</span>
-                  </div>
-                  <div className="cardPropertyItem" title={funding_received_usd}>
-                    <span>&#36;{funding_received_usd}</span>
-                  </div>
-                </div>
-
-                <div className="cardPropertyDiv">
-                  <div id="last_updated" className="cardTooltip" onClick={this.handleTooltip}>Last updated:
-                  <span className="cardTooltiptext" value={this.state.showTooltip == "last_updated" ? "Active" :
-                        "Inactive"}>Last time the metrics for this proposal were updated by Dash Watch.</span>
-                  </div>
-                  <div className="cardPropertyItem" title={last_updated}>
-                    <span>{last_updated}</span>
-                  </div>
-                </div>
-              </section>
-            ) : (
-              // Else show full card
                 <section className="cardPropertyGrid">
                   <div className="cardPropertyDiv" value={status}>
                     <div className="cardPropertyTitle">
                       Status:
-          </div>
+                  </div>
                     <div className="cardPropertyItem" title={status}>
                       <span>{status}</span>
-                    </div>
-                  </div>
-
-                  <div className="cardPropertyDiv" value={comm_status}>
-                    <div id="comm_status" className="cardTooltip" onClick={this.handleTooltip}>Communication status:
-                  <span className="cardTooltiptext" value={this.state.showTooltip == "comm_status" ? "Active" :
-                        "Inactive"}>The communication status of the proposal team with Dash Watch.</span>
-                    </div>
-                    <div id="comm_status" className="cardPropertyItem" title={comm_status}>
-                      <span>{comm_status}</span>
-                    </div>
-                  </div>
-
-                  <div className="cardPropertyDiv" value={budget_status}>
-                    <div className="cardPropertyTitle">
-                      Budget Status:
-          </div>
-                    <div className="cardPropertyItem" title={budget_status}>
-                      <span>{budget_status}</span>
-                    </div>
-                  </div>
-
-                  <div className="cardPropertyDiv" value={schedule_status}>
-                    <div className="cardPropertyTitle">
-                      Schedule Status:
-          </div>
-                    <div className="cardPropertyItem" title={schedule_status}>
-                      <span>{schedule_status}</span>
                     </div>
                   </div>
 
@@ -244,6 +162,46 @@ handleClick(event) {
                     </div>
                   </div>
 
+                  <div className="cardPropertyDiv" value={comm_status}>
+                    <div id="comm_status" className="cardTooltip" onClick={this.handleTooltip}>Communication status:
+                  <span className="cardTooltiptext" value={this.state.showTooltip == "comm_status" ? "Active" :
+                        "Inactive"}>The communication status of the proposal team with Dash Watch.</span>
+                    </div>
+                    <div id="comm_status" className="cardPropertyItem" title={comm_status}>
+                      <span>{comm_status}</span>
+                    </div>
+                  </div>
+
+                  <div className="cardPropertyDiv" value={reporting_status}>
+                    <div id="reporting_status" className="cardTooltip" onClick={this.handleTooltip}>Reporting Status:
+                  <span className="cardTooltiptext" value={this.state.showTooltip == "reporting_status" ? "Active" :
+                        "Inactive"}>Indicates if Dash Watch is still reporting on the proposal.</span>
+                    </div>
+                    <div id="reporting_status" className="cardPropertyItem" title={reporting_status}>
+                      <span>{reporting_status}</span>
+                    </div>
+                  </div>
+
+                  <div className="cardPropertyDiv" value={budget_status}>
+                    <div className="cardPropertyTitle">
+                      Budget Status:
+                    </div>
+                    <div className="cardPropertyItem" title={budget_status}>
+                      <span>{budget_status}</span>
+                    </div>
+                  </div>
+
+                  <div className="cardPropertyDiv" value={schedule_status}>
+                    <div className="cardPropertyTitle">
+                      Schedule Status:
+                    </div>
+                    <div className="cardPropertyItem" title={schedule_status}>
+                      <span>{schedule_status}</span>
+                    </div>
+                  </div>
+
+                  
+
                   <div className="cardPropertyDiv">
                     <div id="total_funding_received" className="cardTooltip" onClick={this.handleTooltip}>Total funding received:
                   <span className="cardTooltiptext" value={this.state.showTooltip == "total_funding_received" ? "Active" :
@@ -256,25 +214,13 @@ handleClick(event) {
 
                   <div className="cardPropertyDiv">
                     <div className="cardPropertyTitle">
-                      {completion_elem_type}
+                      {completion_elem_type}:
                     </div>
                     <div className="cardPropertyItem" title={completion_elem}>
                       <span>{completion_elem}</span>
                     </div>
-                  </div>
-
-                  <div className="cardPropertyDiv">
-                    <div id="last_updated" className="cardTooltip" onClick={this.handleTooltip}>Last updated:
-                  <span className="cardTooltiptext" value={this.state.showTooltip == "last_updated" ? "Active" :
-                        "Inactive"}>Most recent date the metrics for this proposal were updated by Dash Watch.</span>
-                    </div>
-                    <div className="cardPropertyItem" title={last_updated}>
-                      <span>{last_updated}</span>
-                    </div>
-                  </div>
+                  </div>                  
                 </section>
-              ) // End of comm_status if
-          }
           {
             typeof report_data == 'undefined' ? (
               // Throw error if there are errors in the Data
@@ -312,7 +258,13 @@ handleClick(event) {
           }
           <section>
             <div className="cardLinkItem">
-              <a className="cardLink" id="Dash Central Link" href={dclink} target="_blank" onClick={this.callEvent}>DASHCENTRAL LINK</a>
+              {
+                typeof nexus_url !== 'undefined' ? (
+                  <a className="cardLink" id="Dash Nexus Link" href={nexus_url} target="_blank" onClick={this.callEvent}>DASH NEXUS LINK</a>
+                ) : (
+                  <a className="cardLink" id="Dash Central Link" href={dc_url} target="_blank" onClick={this.callEvent}>DASHCENTRAL LINK</a>
+                )
+              }
             </div>
 
             <div className="cardLinkItem">

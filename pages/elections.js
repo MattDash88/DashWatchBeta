@@ -2,9 +2,10 @@ import fetch from 'isomorphic-unfetch';
 import React from 'react';
 
 // Analytics
-import {trackPage, trackEvent} from '../components/functions/analytics';
+import { trackPage, trackEvent } from '../components/functions/analytics';
 
 // Import pages
+import CandidateLists from '../components/elections_content/CandidateLists';
 import VoteCharts from '../components/elections_content/VoteCharts';
 import VoteResults from '../components/elections_content/VoteResults';
 
@@ -34,8 +35,9 @@ const getElectionsData = () => {
 
 class TrustElections extends React.Component {
     static async getInitialProps(ctx) {
-        const props = {           
+        const props = {
             tab: typeof ctx.query.tab == "undefined" ? "candidates" : ctx.query.tab,   // Default no month to latest
+            election: typeof ctx.query.tab == "undefined" ? "DIF2019" : ctx.query.election,   // Default no month to latest
             url: ctx.pathname,
             as: ctx.asPath,
         }
@@ -46,12 +48,18 @@ class TrustElections extends React.Component {
         super(props);
 
         this.state = {
+            // General election section states
             tabId: props.tab,
+            electionId: props.election,
+            showMenu: false,
+            redrawState: false,        // State to determine when the participation chart should rerender
+
+            // Vote datasets
             candidateListData: '',
-            voteData: '',
+            voteMetrics: '',
             voteResults: '',
-            chartDates: '',
-            chartData_participation: '',
+
+            // History states
             url: '/elections',
             as: props.as,
         }
@@ -59,6 +67,9 @@ class TrustElections extends React.Component {
         // Bind functions used in class
         this.callEvent = this.callEvent.bind(this);
         this.handleSelectTab = this.handleSelectTab.bind(this);
+        this.handleDropdown = this.handleDropdown.bind(this);
+        this.handleSelectElection = this.handleSelectElection.bind(this);
+        this.handleClick = this.handleClick.bind(this)
     }
 
     // Function initiated when a month list button is pressed, requests the data for that month from index.js
@@ -66,11 +77,46 @@ class TrustElections extends React.Component {
         event.preventDefault();
         this.setState({
             tabId: event.currentTarget.id,        // Change state to load different month
-            as: `/elections?tab=${event.currentTarget.id}`,
+            shouldRedraw: false,
+            as: `/elections?tab=${event.currentTarget.id}&election=${this.state.electionId}`,
         })
 
-        history.pushState(this.state, '', `/elections?tab=${event.currentTarget.id}`)   // Push State to history
+        history.pushState(this.state, '', `/elections?tab=${event.currentTarget.id}&election=${this.state.electionId}`)   // Push State to history
         trackEvent('Elections', `Changed Tab to ${event.currentTarget.id}`)                 // Track Event on Google Analytics                                                     
+    }
+
+    // Function to activate month dropdown menu
+    handleDropdown(event) {
+        event.preventDefault();
+        this.setState({
+            showMenu: !this.state.showMenu,
+            shouldRedraw: false,
+        })
+        trackEvent('Elections', `Clicked Election Results dropdown`)
+    }
+
+    // Function to handle showing the month selected from the dropdown menu
+    handleSelectElection(event) {
+        this.setState({
+            showMenu: false,
+            electionId: event.currentTarget.value,
+            shouldRedraw: true,
+            as: `/elections?tab=${this.state.tabId}&election=${event.currentTarget.value}`,
+        })
+
+        history.pushState(this.state, '', `/elections?tab=${this.state.tabId}&election=${event.currentTarget.value}`)
+        trackEvent('Elections', `Changed Elections to ${event.currentTarget.value}`)                 // Track Event on Google Analytics   
+    }
+
+    // Function ran when the eventlistener is activated. Close dropdown menu and tooltip if clicked outside of it
+    handleClick = (event) => {
+        if (event.target.id !== "dropdownMenu") {
+            this.setState({
+                showMenu: false,
+                shouldRedraw: false,
+            })
+            trackEvent('Elections', `Clicked on Elections Vote Results page`)
+        }
     }
 
     // Google Analytics function to track User interaction on page
@@ -85,30 +131,26 @@ class TrustElections extends React.Component {
                 this.setState(event.state)
             }
         }
-        
+
         trackPage(`/elections`) // Track Pageview in Analytics
+        window.addEventListener('mousedown', this.handleClick);     // Handles closing of dropdown menu
 
         // Promise to get the initial "month list" records 
-        Promise.resolve(getElectionsData()).then(data => {
-            var dateArray = []
-            var participationArray = []
-            Object.values(data.vote_metrics).map((item) => {
-                dateArray.push(item.date)
-                participationArray.push(item.vote_participation)
-            })
-            
+        Promise.resolve(getElectionsData()).then(data => {          
             this.setState({
                 candidateListData: data.candidate_data,
-                voteData: data.vote_metrics,
+                voteMetrics: data.vote_metrics,
                 voteResults: data.vote_results,
-                chartDates: dateArray,
-                chartData_participation: participationArray
             })
         }).then(history.replaceState(this.state, '', `${this.state.as}`))
     }
-   
+
+    componentWillUnmount() {
+        window.removeEventListener('mousedown', this.handleClick);  // Stop event listener when modal is unloaded
+    }
+
     componentDidUpdate(prevProps, prevState) {
-        if (prevState.tabId !== this.state.tabId) {         // Just a history state update because it doesn't always work as desired in functions
+        if (prevState.tabId !== this.state.tabId || prevState.electionId !== this.state.electionId) {         // Just a history state update because it doesn't always work as desired in functions
             history.replaceState(this.state, '', `${this.state.as}`)
         }
     }
@@ -116,35 +158,22 @@ class TrustElections extends React.Component {
     render() {
         const { // Declare data arrays used in class
             candidateListData,
-            voteData,
+            voteMetrics,
             voteResults,
-            chartDates,
-            chartData_participation,
+            redrawState,
             tabId,
+            electionId,
         } = this.state
 
-            if (candidateListData.length == 0) {    // Show if still loading content
-                var pageContent = (
-                    <section>
-                        <div>
-                            <p>Loading&hellip;</p>
-                        </div>
-                    </section>
-                )
-            } else {    // Show candidate list
-                var pageContent = (
-                    <div>
-                        {candidateListData.map((post) =>
-                            <CandidateListRow
-                                key={`${post.id}`}
-                                airtableData={post}      // Elements for the Month report list    
-                                showTab={tabId}
-                            />
-                        )}
-                    </div>
-                )
-            }   // End of page content loop
-           
+        let electionName
+        if (electionId == "DIF2019") {
+            electionName = "2019 Foundation Supervisors"
+        } else if (electionId == "TPE2019") {
+            electionName = "2019 Trust Protectors"
+        } else {
+            electionName = "Select an election"
+        }
+
         return (
             <main>
                 <Header></Header>
@@ -153,59 +182,57 @@ class TrustElections extends React.Component {
                 />
                 <section className="pagewrapper">
                     <div className="tpTab" id="candidates" value={this.state.tabId == "candidates" ? "Active" :
-                        "Inactive"} onClick={this.handleSelectTab}><p className="tpTabText">2019 Candidates</p></div>                    
-                        <div className="tpTab" id="participation" value={this.state.tabId == "participation" ? "Active" :
-                        "Inactive"} onClick={this.handleSelectTab}><p className="tpTabText">Participation</p></div>
-                        <div className="tpTab" id="results" value={this.state.tabId == "results" ? "Active" :
-                        "Inactive"} onClick={this.handleSelectTab}><p className="tpTabText">Results</p></div>
+                        "Inactive"} onClick={this.handleSelectTab}><div className="tpTabText">Candidates</div></div>
+                    <div className="tpTab" id="participation" value={this.state.tabId == "participation" ? "Active" :
+                        "Inactive"} onClick={this.handleSelectTab}><div className="tpTabText">Participation</div></div>
+                    <div className="tpTab" id="results" value={this.state.tabId == "results" ? "Active" :
+                        "Inactive"} onClick={this.handleSelectTab}><div className="tpTabText">Results</div></div>
                     <div className="tpPageWrapper">
-
-                    <section className="tpPageTopSection" value={this.state.tabId == "candidates" ? "Active" :
-                        "Inactive"}>
-                        <h1 className="tpHeader">2019 Dash Trust Protector Elections Candidates</h1>
-                        <p className="tpText">Voting for the Trust Protectors Elections 2019 ended on March 31, 2019. The results are available <span className="tpHowToLink" id="results" onClick={this.handleSelectTab}>Here</span>.</p>
-                        <div className="tpIndexWrapper">
-                            <div className="tpIndexItemFirst"><p className="tpColumnTitle">Candidate</p></div>
-                            <div className="tpIndexItem"><p className="tpColumnTitle">Contact</p></div>
-                            <div className="tpIndexItem"><p className="tpColumnTitle">Dash Involvement</p></div>
-                            <div className="tpIndexItem"><p className="tpColumnTitle">Profile Link</p></div>
-                        </div>
-                        {pageContent}
-                        <div className="tpBottomDiv" value={this.state.tabId == 'candidates' ? "Active" : "Inactive"}>
-                            <div className="tpSubHeader">Questions, Comments, Concerns? Contact Us</div>
-                            E-mail: <a href="mailto:team@dashwatch.org" target="mailto:team@dashwatch.org">team@dashwatch.org</a><br></br>
-                            DashWatchTeam#5277 Discord<br></br>
-                            Dash-AI#1455 Discord<br></br>
-                            MattDash#6481 Discord<br></br>
-                            paragon#2778 Discord<br></br>
-                            Twitter: <a href="https://twitter.com/DashWatch" target="_blank">@DashWatch</a>
-                        </div>
-                    </section>
-                    <section className="tpPageTopSection" value={this.state.tabId == 'participation' ? "Active" :
-                        "Inactive"}>
-                        <h1 className="tpHeader">Masternode Voting Participation</h1>
-                        <div className="tpText">The chart was updated once a day during the elections.</div>
-                        {
-                                voteData.length == 0 ? (
+                    <div className="tpText">Select an election:</div> 
+                    <div className="electionsDropdown" id="dropdownMenu">
+                    <div id="dropdownMenu" onClick={this.handleDropdown} className="electionsDropbtn"><i id="electionsDropdownMenu"></i>{electionName}</div>
+                    {
+                        this.state.showMenu ? (
+                            <div className="electionsDropdownMenu" id="dropdownMenu">
+                                <button id="dropdownMenu" value="DIF2019" className="electionsDropdownItem" onClick={this.handleSelectElection}>2019 Foundation Supervisors</button>
+                                <button id="dropdownMenu" value="TPE2019" className="electionsDropdownItem" onClick={this.handleSelectElection}>2019 Trust Protectors</button>
+                            </div>
+                        ) : (
+                                null
+                            )
+                    }
+                    </div>
+                        <section className="tpPageTopSection" value={this.state.tabId == "candidates" ? "Active" :
+                            "Inactive"}>
+                            <CandidateLists
+                                electionId={electionId}
+                                candidateListData={candidateListData}
+                            />
+                        </section>
+                        <section className="tpPageTopSection" value={this.state.tabId == 'participation' ? "Active" :
+                            "Inactive"}>
+                            {
+                                voteMetrics.length == 0 ? (
                                     <div>
                                         <p>Loading&hellip;</p>
                                     </div>
                                 ) : (
-                        <VoteCharts
-                            vote_data = {voteData}
-                            chart_dates = {chartDates}
-                            data_participation = {chartData_participation}
-                        />
-                                )
-                        }
-                    </section>
-                    <section className="tpPageTopSection" value={this.state.tabId == "results" ? "Active" :
-                        "Inactive"}>
-                        <VoteResults
-                            vote_results = {voteResults}
-                        />
-                        
-                        </section>                 
+                                        <VoteCharts
+                                            electionId={electionId}
+                                            voteMetrics={voteMetrics}
+                                            redrawState={redrawState}
+                                        />
+                                    )
+                            }
+                        </section>
+                        <section className="tpPageTopSection" value={this.state.tabId == "results" ? "Active" :
+                            "Inactive"}>
+                            <VoteResults
+                                electionId={electionId}
+                                vote_results={voteResults}
+                            />
+
+                        </section>
                     </div>
                 </section>
                 <ScrollButton scrollStepInPx="125" delayInMs="16.66" />
@@ -214,102 +241,6 @@ class TrustElections extends React.Component {
             </main>
         )
 
-    }
-}
-
-// Component for Report List Table
-class CandidateListRow extends React.Component {
-    constructor(props) {
-        super(props);
-
-        // Binding functions in this class
-        this.callEvent = this.callEvent.bind(this);
-    }
-
-    callEvent(event) {
-        trackEvent('Elections', 'clicked: ' + event.currentTarget.id)
-    }
-
-    
-
-    render() {
-        const { // Declare grouped elements used in class
-            showTab,
-        } = this.props
-
-        const { // Declare grouped elements used in class
-            candidate_name,
-            alias,
-            contact,
-            dash_involvement,
-            dash_involvement_link,
-            interview_link,
-            interview_type,
-        } = this.props.airtableData
-
-        // Code to generate involvement link
-        let involvementLink = null;
-        if (typeof dash_involvement == "undefined") { // If report is pending show "Pending"
-            involvementLink = (
-                <div className="tpItem"></div>
-            )
-        } else if (typeof dash_involvement_link == "undefined") {  // If report is published, show links to report and modal
-            involvementLink = (
-                    <div className="tpItem">{dash_involvement}</div>
-                )
-            } else {
-                involvementLink = (
-                    <div className="tpItem"><a className="tpInvolvementLink" id="involvementLink" href={dash_involvement_link} target="_blank" title={dash_involvement_link} onClick={this.callEvent}>
-                        {dash_involvement}</a></div>
-                )
-        } // End of involvement if
-
-        let candidateNameCell = null;
-        if (typeof alias == "undefined") {
-            candidateNameCell = (
-                <div><p className="tpCandidateName" title={candidate_name}>{candidate_name}</p>
-                    </div>
-            )
-        }  else {
-            candidateNameCell = (
-                <div><p className="tpCandidateName" title={candidate_name}>{candidate_name}</p>
-                    <p className="tpCandidateAlias" title={alias}>aka {alias}</p></div>
-            )
-        }   // End of candidate name if
-
-        // Code to generate interview link
-        let interviewLink = null;
-        if (typeof interview_type == "undefined") { // If report is pending show "Pending"
-            interviewLink = (
-                <div className="tpItem"></div>
-            )
-        } else {  // If report is published, show links to report and modal
-            if (interview_type == "Video") {
-                interviewLink = (
-                    <div className="tpItem" id="tpInterviewLink"><div><a className="tpInterviewLink" id="reportLink" href={interview_link} target="_blank" title={interview_link} onClick={this.callEvent}>
-                        <img className="reportIcon" id="YouTube" src="https://dashwatchbeta.org/images/Video.png" height="30"></img> Profile</a></div></div>
-                )
-            } else if (interview_type == "Text") {
-                interviewLink = (
-                    <div className="tpItem" id="tpInterviewLink"><div><a className="tpInterviewLink" id="reportLink" href={interview_link} target="_blank" title={interview_link} onClick={this.callEvent}>
-                        <img className="reportIcon" id="Text" src="https://dashwatchbeta.org/images/PDF.png" height="30"></img> Profile</a></div></div>
-                )
-            } else {
-                interviewLink = (
-                    <div className="tpItem"></div>
-                )
-            }
-        } // End of interview link if
-
-        // Output for the month list rows
-        return (
-            <div className="tpProposalWrapper" month="Active">
-                <div className="tpItemFirst">{candidateNameCell}</div>
-                    <div className="tpItem"><p className="tpCandidateContact" title={contact}>{contact}</p></div>
-                {involvementLink}                
-                <div className="tpItem">{interviewLink}</div>
-            </div>
-        )
     }
 }
 

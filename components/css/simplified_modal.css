@@ -170,7 +170,12 @@ Styling used in the modal tab files (ModalTabMain, ModalTabPerformance, ModalTab
     margin-top: 0.3rem;
   }
 
-  /* Separator for image links */
+.simple_modalLinkDiv {
+    display: flex;
+    margin: 0.5rem 0.4rem;
+}
+
+/* Separator for image links */
 .linkSeparator {
     display: inline-flex;
     border-left: 1px solid lightgrey;
@@ -181,7 +186,6 @@ Styling used in the modal tab files (ModalTabMain, ModalTabPerformance, ModalTab
 
 /* Div around the report link on the bottom of the modal*/
 .simple_modalReportDiv {
-    margin-top: 0.5rem;
     margin-left: 0.5rem;
-    margin-bottom: 1rem;
+    margin-right: 0.5rem;
 }

@@ -4,7 +4,7 @@ const express = require('express')
 const next = require('next')
 const cache = require('./cache')
 const fetch = require('isomorphic-unfetch');
-const qs = require('query-string');
+var mysql = require('mysql');
 
 const dev = process.env.NODE_ENV !== 'production'
 const port = process.env.PORT
@@ -15,6 +15,15 @@ ReactGA.initialize(gaKey);
 
 const serialize = data => JSON.stringify({ data })
 var cacheExpirationTime = process.env.CACHEEXPIRATION;  //Time until cache expires, can be adjusted for testing purposes
+
+
+var connection = mysql.createPool({
+  connectionLimit : 10,
+  host     : process.env.MYSQL_HOST,
+  user     : process.env.MYSQL_USER,
+  password : process.env.MYSQL_PW,
+  database : process.env.MYSQL_DB,
+});
 
 // Get data processing functions from another file
 var airtableFunctions = require('./server_components/airtableFunctions');
@@ -301,41 +310,84 @@ const getElectionsData = (refreshCache) => {
 
       // If cache is empty or a cache refresh is requested, retrieve from Airtable
       else {    
-        var electionsCandidatePromise = Promise.resolve(airtableFunctions.TrustProtectorList('Candidate List'));
-        var electionsVoteDataPromise = Promise.resolve(airtableFunctions.VoteData('Vote Data'));
-        var electionsVoteResultsPromise = Promise.resolve(airtableFunctions.VoteResults('Vote Results'));
+        var TPE2019CandidatePromise = Promise.resolve(airtableFunctions.ElectionsCandidateList('Candidate List - TPE2019'));
+        var DIF2019CandidatePromise = Promise.resolve(airtableFunctions.ElectionsCandidateList('Candidate List - DIF2019'));
+        var TPE2019VoteDataPromise = Promise.resolve(airtableFunctions.VoteData('Vote Data - TPE2019'));
+        var DIF2019VoteDataPromise = Promise.resolve(airtableFunctions.VoteData('Vote Data - DIF2019'));
+        var TPE2019VoteResultsPromise = Promise.resolve(airtableFunctions.VoteResults('Vote Results - TPE2019'));
+        var DIF2019VoteResultsPromise = Promise.resolve(airtableFunctions.VoteResults('Vote Results - DIF2019'));
 
-        Promise.all([electionsCandidatePromise, electionsVoteDataPromise, electionsVoteResultsPromise]).then(function (valArray) {
-          electionsCandidateData = []
-          electionsVoteData = []
-          electionsVoteResultsData = []
+        Promise.all([TPE2019CandidatePromise, DIF2019CandidatePromise, TPE2019VoteDataPromise, DIF2019VoteDataPromise, TPE2019VoteResultsPromise, DIF2019VoteResultsPromise]).then(function (valArray) {
+          TPE2019CandidateList = valArray[0]
+          DIF2019CandidateList = valArray[1]
+          TPE2019ParticipationData = valArray[2]
+          DIF2019ParticipationData = valArray[3]
+          TPE2019ResultsData = valArray[4]
+          DIF2019ResultsData = valArray[5]
 
-          // Check if candidate name exists
-          Object.values(valArray[0]).map((item) => {            
+          var TPE2019CandidateData = []
+          var DIF2019CandidateData = []
+          var TPE2019VoteData = []
+          var DIF2019VoteData = []
+          var TPE2019VoteResultsData = []
+          var DIF2019VoteResultsData = []
+
+          // Check if TPE2019 candidate name exists
+          Object.values(TPE2019CandidateList).map((item) => {            
             if (typeof item.candidate_name !== 'undefined') {    //Check if record exists
-              electionsCandidateData.push(item)
+              TPE2019CandidateData.push(item)
+            }
+          })
+
+          // Check if DIF2019 candidate name exists
+          Object.values(DIF2019CandidateList).map((item) => {            
+            if (typeof item.candidate_name !== 'undefined') {    //Check if record exists
+              DIF2019CandidateData.push(item)
             }
           })
 
           // Check if participation data and values were entered correctly
-          Object.values(valArray[1]).map((item) => {            
+          Object.values(TPE2019ParticipationData).map((item) => {            
             if (typeof item.date !== 'undefined' && typeof item.vote_participation !== 'undefined') {    //Check if record exists
-              electionsVoteData.push(item)
+              TPE2019VoteData.push(item)
+            }
+          })
+
+          // Check if participation data and values were entered correctly
+          Object.values(DIF2019ParticipationData).map((item) => {            
+            if (typeof item.date !== 'undefined' && typeof item.vote_participation !== 'undefined') {    //Check if record exists
+              DIF2019VoteData.push(item)
             }
           })
           
           // Check if candidate results were entered correctly
-          Object.values(valArray[2]).map((item) => {            
+          Object.values(TPE2019ResultsData).map((item) => {            
             if (typeof item.candidate_name !== 'undefined' && typeof item.votes !== 'undefined') {    //Check if record exists
-              electionsVoteResultsData.push(item)
+              TPE2019VoteResultsData.push(item)
+            }
+          })
+
+          // Check if candidate results were entered correctly
+          Object.values(DIF2019ResultsData).map((item) => {            
+            if (typeof item.candidate_name !== 'undefined' && typeof item.votes !== 'undefined') {    //Check if record exists
+              DIF2019VoteResultsData.push(item)
             }
           })
 
           // Create the data construct
           const electionsAllData = {
-            candidate_data: electionsCandidateData,
-            vote_metrics: electionsVoteData,
-            vote_results: electionsVoteResultsData,
+            candidate_data: {
+              TPE2019: TPE2019CandidateData,
+              DIF2019: DIF2019CandidateData,
+            },
+            vote_metrics: {
+              TPE2019: TPE2019VoteData,
+              DIF2019: DIF2019VoteData,
+            },
+            vote_results: {
+              TPE2019: TPE2019VoteResultsData,
+              DIF2019: DIF2019VoteResultsData,
+            },
           }
           // Store results in Redis cache, cache expire time is defined in .env
           cache.setex('ElectionsData', cacheExpirationTime, JSON.stringify(electionsAllData))
@@ -366,19 +418,22 @@ const getLabsPreparedData = (refreshCache) => {
       // If cache is empty or a cache refresh is requested, retrieve from Airtable
       else {        
         var walletDataPromise = Promise.resolve(labsAirtableFunctions.WalletDownloadPosts('Dash Wallets - Month'));
+        var WalletCountryPromise = Promise.resolve(labsAirtableFunctions.WalletCountryPosts('Dash Wallets - Countries'))
         var WalletVersionPromise = Promise.resolve(labsAirtableFunctions.WalletVersionPosts('Dash Wallets - Version'))
         var posDataPromise = Promise.resolve(labsAirtableFunctions.PosMetricsPosts('POS Systems'));
         
-        Promise.all([walletDataPromise, WalletVersionPromise, posDataPromise]).then(function (valArray) {          
+        Promise.all([walletDataPromise, WalletCountryPromise, WalletVersionPromise, posDataPromise]).then(function (valArray) {          
           // Sorting out all valArray items
           labsWalletData = labsProcessingFunctions.processWalletData(valArray[0])
-          WalletVersionData = labsProcessingFunctions.processVersionData(valArray[1])
-          posSystemData = labsProcessingFunctions.processPosData(valArray[2])
+          walletCountryData = labsProcessingFunctions.processCountryData(valArray[1])
+          walletVersionData = labsProcessingFunctions.processVersionData(valArray[2])
+          posSystemData = labsProcessingFunctions.processPosData(valArray[3])
 
           // Create the data construct
           const storeAirtablePosts = {
             wallet_data: labsWalletData,
-            version_data: WalletVersionData,
+            country_data: walletCountryData,
+            version_data: walletVersionData,
             pos_system_data: posSystemData,
           }
 
@@ -512,8 +567,8 @@ app.prepare()
     })
 
     // Internal API call to support search
-    server.get('/api/filter/:query', (req, res) => {
-      query = qs.parse(req.params.query)
+    server.get('/api/filter', (req, res) => {
+      query = req.query
       var refreshCache = false    // Load from cache if available
       Promise.resolve(getProposalListData(refreshCache)).then(function (valArray) {
         processedData = valArray    // Put proposal data in processedData
@@ -723,6 +778,15 @@ app.prepare()
       app.render(req, res, actualPage, queryParams_elections)
     })
 
+    // Routing to the TP Elections page
+    server.get('/poll', (req, res) => {
+      const actualPage = '/poll'
+
+      const queryParams_poll = req.query // Pass on queries
+
+      app.render(req, res, actualPage, queryParams_poll)
+    })
+
     // Backward compatibility routing for January 2019 reports
     server.get('/January2019', (req, res) => {
       const actualPage = '/index'
@@ -741,6 +805,47 @@ app.prepare()
       queryParams_reports.month = req.params.month
 
       app.render(req, res, actualPage, queryParams_reports)
+    })
+
+    server.post('/vote', function (req, res) {
+      try {
+        if (req.method === 'POST') {          
+            let body = '';
+            req.on('data', chunk => {
+              body += chunk.toString();
+            });
+            req.on('end', () => {
+              var payload = JSON.parse(body)
+              connection.query(`INSERT INTO votes ( address, message, signature ) VALUES ('${payload.addr}','${payload.msg}','${payload.sig}')`, function(err, result) {
+                if (err) throw err;
+                console.log(result)      
+              })
+              
+              res.end('ok');
+            });
+        } else {
+          throw "Please use a POST request"
+        }
+      } catch (error) {
+        console.log(error)
+        res.end(error); 
+      } 
+    });
+
+    server.get('/MySQL', function(req, res) {
+      try {
+        const queryParams_mysql = req.query.name // Pass on queries
+
+        connection.query(`INSERT INTO pets ( name ) VALUES ('${req.query.name}')`, function(err, result) {
+          if (err) throw err;
+          console.log(result)      
+        })
+
+      res.end('Success'); 
+      } catch (error) {
+        console.log(error)
+        res.end(error); 
+      }  
     })
 
     // Routing to main page

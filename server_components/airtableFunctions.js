@@ -24,17 +24,21 @@ const MainProposalPosts = function getMainProposalPosts(tableId) {
             records.forEach(function (record) {
                 const post = {
                     // Main Tab Elements
-                    title: record.get('Proposal Name'),
-                    slug: record.get('Proposal ID'),    //This is the ending of the Dash Central url, it is used as an proposal identifier
+                    title: record.get('Proposal Name'),                    
                     last_updated: record.get('Date Updated'),
                     status: record.get('Status'),
                     first_payment_date: record.get('Date of First Payment'),
                     proposal_owner: record.get('Proposal Owner Name'),
                     comm_status: record.get('Communication Status'),
+                    reporting_status: record.get('Reporting Status'),
                     budget_status: record.get('Budget Status'),
                     schedule_status: record.get('Schedule Status'),
                     estimated_completion_date: record.get('Estimated Completion Date'),
                     actual_completion_date: record.get('Actual Completion'),
+                    slug: record.get('Proposal ID'),                // This is the ending of the Dash Central url, it is used as an proposal identifier
+                    dc_url: record.get('Dashcentral URL'),          // Url to the proposal on Dashcentral
+                    nexus_id: record.get('Nexus ID'),               // ID of the proposal on Dash Nexus           
+                    nexus_url: record.get('Nexus URL'),             // Url to the proposal on Dash Nexus   
                     proposal_description: record.get('Proposal Description'),
                     id: record.id,                      // Used as unique record identifier
 
@@ -76,8 +80,11 @@ const MonthReportPosts = function getMonthReportPosts(tableId) {
         // Query to feed to Airtable
         const apiQuery = {
             pageSize: 50,
-            sort: [{ field: 'Voting Status', direction: 'asc' },
-            { field: 'Proposal Name', direction: 'asc' }]
+            sort: [
+                { field: 'Published Month', direction: 'desc' },
+                { field: 'Voting Status', direction: 'asc' },
+                { field: 'Proposal Name', direction: 'asc' }
+            ]
         }
 
         // Get the data from the table
@@ -96,14 +103,14 @@ const MonthReportPosts = function getMonthReportPosts(tableId) {
                     report_status: record.get('Report Status'),         // This variable is used to handle pending reports 
                     published_month: record.get('Published Month'),     // Variable used to determine in which list it should be published
                     report_link: record.get('Report URL'),
+                    kpi_link: record.get('KPI Link'),
                     entry_type: record.get('Entry Type'),               // Written report or Video
                     report_ref: record.get('Report ID'),
                     id: record.id,                                      // Used as unique record identifier
 
                     // Elements for Modal
                     proposal_name: record.get('Proposal Title'),
-                    proposal_owner: record.get('Proposal Owner'),
-                    slug: record.get('Proposal ID Text'),
+                    proposal_owner: record.get('Proposal Owner'),                    
                     proposal_description: record.get('Proposal Description'),
                     payment_date: record.get('Date of First Payment'),
                     last_updated: record.get('Date Updated'),
@@ -113,9 +120,12 @@ const MonthReportPosts = function getMonthReportPosts(tableId) {
                     estimated_completion_date: record.get('Estimated Completion Date'),
                     actual_completion_date: record.get('Actual Completion'),
                     comm_status: record.get('Communication Status'),
+                    reporting_status: record.get('Reporting Status'),
+                    slug: record.get('Proposal ID Text'),
+                    dc_url: record.get('Dashcentral URL'),          // Url to the proposal on Dashcentral        
+                    nexus_url: record.get('Nexus URL'),             // Url to the proposal on Dash Nexus  
                     funding_received_usd: record.get('Funding Received (USD)'),
                 }
-
                 storeAirtablePosts.push(post)   // Push data to const
             })
 
@@ -483,7 +493,6 @@ const OldReportPosts = function getOldReportPosts(tableId) {
                     // Elements for Modal
                     proposal_name: record.get('Proposal Title'),
                     proposal_owner: record.get('Proposal Owner'),
-                    slug: record.get('Proposal ID Text'),
                     proposal_description: record.get('Proposal Description'),
                     payment_date: record.get('Date of First Payment'),
                     last_updated: record.get('Date Updated'),
@@ -493,6 +502,10 @@ const OldReportPosts = function getOldReportPosts(tableId) {
                     estimated_completion_date: record.get('Estimated Completion Date'),
                     actual_completion_date: record.get('Actual Completion'),
                     comm_status: record.get('Communication Status'),
+                    reporting_status: record.get('Reporting Status'),
+                    slug: record.get('Proposal ID Text'),
+                    dc_url: record.get('Dashcentral URL'),          // Url to the proposal on Dashcentral        
+                    nexus_url: record.get('Nexus URL'),             // Url to the proposal on Dash Nexus  
                     funding_received_usd: record.get('Funding Received (USD)'),
                 }
 
@@ -536,7 +549,7 @@ const getAirtablePost = (recordId, baseId) => {
 }
 
 // Airtable Query to create the Trust protector candidate table
-const TrustProtectorList = function getTrustProtectors(tableId) {
+const ElectionsCandidateList = function getElectionCandidates(tableId) {
     const base = new Airtable.base('appXzI83ECDm5ggmA')     // Connect to Base
 
     return new Promise((resolve, reject) => {
@@ -667,7 +680,7 @@ module.exports = {
     PublicRelationsKpiPosts,
     ReportPosts,
     OldReportPosts,
-    TrustProtectorList,
+    ElectionsCandidateList,
     VoteResults,
     VoteData,
 }
