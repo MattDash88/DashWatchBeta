@@ -832,6 +832,27 @@ app.prepare()
       } 
     });
 
+    server.get('/view_votes', function (req, res) {
+      try {
+        connection.query(`SELECT * FROM votes`, function(err, rows, fields) {
+          if (err) throw err;
+          var objs = []
+          Object.values(rows).map((item) => { 
+            objs.push({
+              id: item.id,
+              address: item.address,
+              message: item.message,
+              signature: item.signature,
+            })
+          })   
+          res.end(JSON.stringify(objs));                  
+        })        
+      } catch (error) {
+        console.log(error)
+        res.end(error); 
+      }  
+    })
+
     server.get('/MySQL', function(req, res) {
       try {
         const queryParams_mysql = req.query.name // Pass on queries
