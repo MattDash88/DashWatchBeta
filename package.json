@@ -1,12 +1,12 @@
 {
-  "name": "matts-dw-site-0.11a",
+  "name": "matts-dw-site-0.11.2-polling_edition",
   "scripts": {
     "dev": "node server.js",
     "build": "next build",
     "start": "node server.js"
   },
   "engines": {
-    "node": ">=0.10.15"
+    "node": ">=0.10.16"
   },
   "dependencies": {
     "@zeit/next-css": "^1.0.1",
@@ -16,11 +16,10 @@
     "chart.js": "^2.8.0",
     "clipboard-copy": "^3.0.0",
     "dotenv": "^6.2.0",
-    "express": "^4.16.4",
+    "express": "^4.17.1",
     "isomorphic-unfetch": "^3.0.0",
     "mysql": "^2.17.1",
     "next": "7.0.2",
-    "query-string": "^6.4.2",
     "react": "16.6.3",
     "react-chartjs-2": "^2.7.6",
     "react-dom": "16.6.3",
@@ -28,6 +27,6 @@
     "redis": "^2.8.0",
     "semantic-ui-react": "^0.87.1",
     "shortid": "^2.2.14",
-    "styled-components": "^4.2.0"
+    "styled-components": "^4.3.1"
   }
 }
