@@ -13,7 +13,6 @@ import {
 } from 'semantic-ui-react';
 import axios from 'axios';
 import copy from 'clipboard-copy';
-import dashcore from '@dashevo/dashcore-lib';
 
 import NavBar from "../components/elements/NavBar"
 
