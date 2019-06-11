@@ -1,6 +1,6 @@
 import React from 'react';
 import Airtable from 'airtable'
-Airtable.configure({apiKey: 'key_here'});
+Airtable.configure({apiKey: 'key'});
 
 // Analytics
 import {trackPage} from '../components/functions/analytics';
