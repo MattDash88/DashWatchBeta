@@ -1,4 +1,4 @@
-runtime: node.js
+runtime: nodejs
 env: flex
 
 # update with Redis instance network name
@@ -6,16 +6,9 @@ network:
     name: default
 
 handlers:
-- url: /.*
-  secure: always
-  redirect_http_response_code: 301
-  script: auto
-
 - url: /*
   secure: always
   script: auto
-
-
 
 automatic_scaling:
   min_num_instances: 0
