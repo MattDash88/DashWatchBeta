@@ -1,13 +1,11 @@
-runtime: nodejs
-env: flex
+runtime: nodejs10
+env: standard
 
 # update with Redis instance network name
 network:
     name: default
 
-manual_scaling:
-  instances: 1
-resources:
-  cpu: 1
-  memory_gb: 0.5
-  disk_size_gb: 10
+automatic_scaling:
+  min_instances: 0
+  max_instances: 2
+  target_cpu_utilization: 0.6
