@@ -5,9 +5,20 @@ env: flex
 network:
     name: default
 
+handlers:
+- url: /.*
+  secure: always
+  redirect_http_response_code: 301
+  script: auto
+
+- url: /*
+  secure: always
+  script: auto
+
+
+
 automatic_scaling:
-  cool_down_period: 120s
   min_num_instances: 0
-  max_num_instances: 10
+  max_num_instances: 2
   cpu_utilization:
     target_utilization: 0.5
