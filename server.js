@@ -504,7 +504,7 @@ app.prepare()
           'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/json'
         })
-        return res.end(serialize(valArray))
+        return res.end(JSON.stringify(valArray))
       }).catch((error) => {
         console.log(error)
         // Send empty JSON otherwise page load hangs indefinitely
@@ -517,11 +517,7 @@ app.prepare()
     server.get('/api-allposts', (req, res) => {
       var refreshCache = false    // Load from cache if available
       Promise.resolve(getAirtableData(refreshCache)).then(function (valArray) {
-        res.writeHead(200, {
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json'
-        })
-        return res.end(serialize(valArray))
+        return res.end(JSON.stringify(valArray))
       }).catch((error) => {
         console.log(error)
         // Send empty JSON otherwise page load hangs indefinitely

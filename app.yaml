@@ -1,4 +1,4 @@
-runtime: node.js
+runtime: nodejs
 env: flex
 
 # update with Redis instance network name
