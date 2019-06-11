@@ -497,7 +497,7 @@ app.prepare()
     const server = express()
 
     // Internal API call to get Airtable data
-    server.get('/api/get/posts', (req, res) => {
+    server.get('/api-allposts', (req, res) => {
       var refreshCache = false    // Load from cache if available
       Promise.resolve(getAirtableData(refreshCache)).then(function (valArray) {
         res.writeHead(200, {
