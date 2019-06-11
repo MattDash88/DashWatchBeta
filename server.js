@@ -702,11 +702,7 @@ app.prepare()
       var labsAllPromise = Promise.resolve(getLabsAllData(refreshCache));
 
       Promise.all([airtablePromise, monthListPromise, oldListPromise, proposalListPromise, electionsPromise, labsPreparedPromise, labsAllPromise]).then(function (valArray) {
-        res.writeHead(200, {
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json'
-        })
-        return res.end(serialize('caches reloaded'))
+        return res.end('caches reloaded')
       }).catch((error) => {
         console.log(error)
         // Send empty JSON otherwise page load hangs indefinitely
