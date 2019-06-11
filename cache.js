@@ -1,6 +1,6 @@
 const redis = require('redis')
 const redisOptions = {
-  host: "34.74.57.226",
+  host: "10.128.0.2",
   port: 6379,
   password: "foobared",
 }
