@@ -517,9 +517,14 @@ app.prepare()
     server.get('/api-allposts', (req, res) => {
       var refreshCache = true    // Load from cache if available
       Promise.resolve(getAirtableData(refreshCache)).then(function (valArray) {
-        console.log(valArray) 
-      })
-      res.end(JSON.stringify('Test'))
+        res.end(JSON.stringify(valArray))
+      }).catch((error) => {
+        console.log(error)
+        // Send empty JSON otherwise page load hangs indefinitely
+        res.writeHead(200, { 'Content-Type': 'application/json' })
+        return res.end(serialize(error))
+      });
+
     })
 
     // Internal API call to create Reports page
