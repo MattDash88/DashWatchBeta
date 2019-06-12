@@ -515,7 +515,7 @@ app.prepare()
 
     // Internal API call to get Airtable data
     server.get('/api-allposts', (req, res) => {
-      var refreshCache = false    // Load from cache if available
+      var refreshCache = true    // Load from cache if available
       Promise.resolve(getAirtableData(refreshCache)).then(function (valArray) {
         return res.end(JSON.stringify(valArray))
       }).catch((error) => {
@@ -700,7 +700,6 @@ app.prepare()
       var electionsPromise = Promise.resolve(getElectionsData(refreshCache));
       var labsPreparedPromise = Promise.resolve(getLabsPreparedData(refreshCache));
       var labsAllPromise = Promise.resolve(getLabsAllData(refreshCache));
-
       Promise.all([airtablePromise, monthListPromise, oldListPromise, proposalListPromise, electionsPromise, labsPreparedPromise, labsAllPromise]).then(function (valArray) {
         return res.end('caches reloaded')
       }).catch((error) => {

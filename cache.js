@@ -1,8 +1,9 @@
 const redis = require('redis')
+require('dotenv').config()      // Access .env variables
 const redisOptions = {
-  host: "10.128.0.2",
-  port: 6379,
-  password: "foobared",
+  host: process.env.REDIS_IP,
+  port: process.env.REDIS_PORT,
+  password: process.env.REDIS_PASS,
 }
 const client = redis.createClient(redisOptions)
 
