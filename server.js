@@ -4,25 +4,25 @@ const express = require('express')
 const next = require('next')
 const cache = require('./cache')
 const fetch = require('isomorphic-unfetch');
-var mysql = require('mysql');
+const { Pool, Client } = require('pg');
 
 const dev = process.env.NODE_ENV !== 'production'
 const port = process.env.PORT
 var gaKey = process.env.GAKEY
 const app = next({ dev })
+
 const ReactGA = require('react-ga');
 ReactGA.initialize(gaKey);
 
 const serialize = data => JSON.stringify({ data })
 var cacheExpirationTime = process.env.CACHEEXPIRATION;  //Time until cache expires, can be adjusted for testing purposes
 
-
-var connection = mysql.createPool({
-  connectionLimit : 10,
-  host     : process.env.MYSQL_HOST,
-  user     : process.env.MYSQL_USER,
-  password : process.env.MYSQL_PW,
-  database : process.env.MYSQL_DB,
+const pool = new Pool({
+  host     : process.env.PG_HOST,
+  user     : process.env.PG_USER,
+  password : process.env.PG_PW,
+  database : process.env.PG_DB,
+  port     : process.env.PG_PORT,
 });
 
 // Get data processing functions from another file
@@ -514,17 +514,9 @@ app.prepare()
     })
 
     // Internal API call to get Airtable data
-    server.get('/api-allposts', (req, res) => {
-      var refreshCache = true    // Load from cache if available
-      Promise.resolve(getAirtableData(refreshCache)).then(function (valArray) {
-        res.end(JSON.stringify(valArray))
-      }).catch((error) => {
-        console.log(error)
-        // Send empty JSON otherwise page load hangs indefinitely
-        res.writeHead(200, { 'Content-Type': 'application/json' })
-        return res.end(serialize(error))
-      });
-
+    server.get('/api/buckets', (req, res) => {
+      bucket.getFiles({}, (err, files, apires) => { console.log(err, files, apires) });
+      res.end(JSON.stringify('Something'))
     })
 
     // Internal API call to create Reports page
@@ -825,7 +817,7 @@ app.prepare()
             });
             req.on('end', () => {
               var payload = JSON.parse(body)
-              connection.query(`INSERT INTO votes ( address, message, signature ) VALUES ('${payload.addr}','${payload.msg}','${payload.sig}')`, function(err, result) {
+              pool.query(`INSERT INTO votes ( address, message, signature ) VALUES ('${payload.addr}','${payload.msg}','${payload.sig}')`, function(err, result) {
                 if (err) throw err;
                 console.log(result)      
               })
@@ -843,35 +835,20 @@ app.prepare()
 
     server.get('/view_votes', function (req, res) {
       try {
-        connection.query(`SELECT * FROM votes`, function(err, rows, fields) {
+        pool.query(`SELECT * FROM votes`, function(err, result) {
           if (err) throw err;
           var objs = []
-          Object.values(rows).map((item) => { 
+          //console.log(result.rows)
+          console.log(result)
+          Object.values(result.rows).map((item) => { 
             objs.push({
-              id: item.id,
               address: item.address,
               message: item.message,
               signature: item.signature,
             })
           })   
-          res.end(JSON.stringify(objs));                  
+          res.end(JSON.stringify(objs));                
         })        
-      } catch (error) {
-        console.log(error)
-        res.end(error); 
-      }  
-    })
-
-    server.get('/MySQL', function(req, res) {
-      try {
-        const queryParams_mysql = req.query.name // Pass on queries
-
-        connection.query(`INSERT INTO pets ( name ) VALUES ('${req.query.name}')`, function(err, result) {
-          if (err) throw err;
-          console.log(result)      
-        })
-
-      res.end('Success'); 
       } catch (error) {
         console.log(error)
         res.end(error); 
