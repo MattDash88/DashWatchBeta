@@ -61,7 +61,7 @@ class Poll extends React.Component {
         const { payload, signature, address } = this.state;
         if (payload == "dw2019_LamboVote-No") {
             this.setState({
-                response_message: 'Vote Rejected'
+                response_message: 'Vote Rejected. Please vote yes!'
             })
         } else {
             // TODO: handle network errors / what if promise never returned?
@@ -87,7 +87,7 @@ class Poll extends React.Component {
     render() {
         return (
             <main>
-                Would you support a treasury funding request to buy a Lambo for all Dash Watch Report Team members?
+                Would you support a treasury proposal to buy a Lambo for all Dash Watch Report Team members?
                 <Form.Field>
                     <Checkbox
                         radio
