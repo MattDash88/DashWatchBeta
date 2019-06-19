@@ -1,3 +1,4 @@
+service: DashWatchBeta
 runtime: nodejs
 env: flex
 
