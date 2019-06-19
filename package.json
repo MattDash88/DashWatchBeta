@@ -3,7 +3,8 @@
   "scripts": {
     "dev": "node server.js",
     "build": "next build",
-    "start": "node server.js"
+    "start": "node server.js",
+    "deploy": "npm run build && gcloud app deploy"
   },
   "engines": {
     "node": ">=10.0"

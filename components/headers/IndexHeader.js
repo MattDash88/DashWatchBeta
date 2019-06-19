@@ -8,6 +8,7 @@ export default class Header extends React.Component {
         return (
             <div>
                 <Head>
+                    <link rel="shortcut icon" type="image/x-icon" href="/static/icons/favicon.ico" />
                     <title>Dash Watch Reports</title>
                     <meta property="og:title" content="Dash Watch - Reports" />
                     <meta property="og:type" content="website" />
