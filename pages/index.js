@@ -5,6 +5,7 @@ import React from 'react';
 import {trackPage, trackEvent} from '../components/functions/analytics';
 
 // Import pages
+//import PDF from "../images/PDF.png"
 
 // Import css
 import "../components/css/style.css";
@@ -261,13 +262,13 @@ class MonthReportRow extends React.Component {
                     {
                         typeof list_data.kpi_link !== 'undefined' ? (
                             <div>
-                                <a className="monthReportLink" href={list_data.report_link} target="_blank" title={list_data.report_link} onClick={this.callEvent}><img id="PDF" src="https://dashwatchbeta.org/images/PDF.png" height="30"></img> Report</a> 
+                                <a className="monthReportLink" href={list_data.report_link} target="_blank" title={list_data.report_link} onClick={this.callEvent}><img id="PDF" src="/static/images/PDF.png" height="30"></img> Report</a> 
                                 <div className="monthLinkSeparator"></div> 
-                                <a className="monthKpiLink" href={list_data.kpi_link} target="_blank" title={list_data.kpi_link} onClick={this.callEvent}><img id="Charts" src="https://dashwatchbeta.org/images/Charts.png" height="30"></img> KPIs</a>
+                                <a className="monthKpiLink" href={list_data.kpi_link} target="_blank" title={list_data.kpi_link} onClick={this.callEvent}><img id="Charts" src="/static/images/Charts.png" height="30"></img> KPIs</a>
                             </div>
                         ) : (
                             <div>
-                                <a className="monthReportLink" href={list_data.report_link} target="_blank" title={list_data.report_link} onClick={this.callEvent}><img id="PDF" src="https://dashwatchbeta.org/images/PDF.png" height="30"></img> Report</a>
+                                <a className="monthReportLink" href={list_data.report_link} target="_blank" title={list_data.report_link} onClick={this.callEvent}><img id="PDF" src="/static/images/PDF.png" height="30"></img> Report</a>
                             </div>
                         )
                     }

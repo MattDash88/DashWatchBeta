@@ -4,7 +4,6 @@ const express = require('express')
 const next = require('next')
 const cache = require('./cache')
 const fetch = require('isomorphic-unfetch');
-const { Pool, Client } = require('pg');
 
 const dev = process.env.NODE_ENV !== 'production'
 const port = process.env.PORT
@@ -17,13 +16,6 @@ ReactGA.initialize(gaKey);
 const serialize = data => JSON.stringify({ data })
 var cacheExpirationTime = process.env.CACHEEXPIRATION;  //Time until cache expires, can be adjusted for testing purposes
 
-const pool = new Pool({
-  host     : process.env.PG_HOST,
-  user     : process.env.PG_USER,
-  password : process.env.PG_PW,
-  database : process.env.PG_DB,
-  port     : process.env.PG_PORT,
-});
 
 // Get data processing functions from another file
 var airtableFunctions = require('./server_components/airtableFunctions');
@@ -779,15 +771,6 @@ app.prepare()
       app.render(req, res, actualPage, queryParams_elections)
     })
 
-    // Routing to the TP Elections page
-    server.get('/poll', (req, res) => {
-      const actualPage = '/poll'
-
-      const queryParams_poll = req.query // Pass on queries
-
-      app.render(req, res, actualPage, queryParams_poll)
-    })
-
     // Backward compatibility routing for January 2019 reports
     server.get('/January2019', (req, res) => {
       const actualPage = '/index'
@@ -806,53 +789,6 @@ app.prepare()
       queryParams_reports.month = req.params.month
 
       app.render(req, res, actualPage, queryParams_reports)
-    })
-
-    server.post('/vote', function (req, res) {
-      try {
-        if (req.method === 'POST') {          
-            let body = '';
-            req.on('data', chunk => {
-              body += chunk.toString();
-            });
-            req.on('end', () => {
-              var payload = JSON.parse(body)
-              pool.query(`INSERT INTO votes ( address, message, signature ) VALUES ('${payload.addr}','${payload.msg}','${payload.sig}')`, function(err, result) {
-                if (err) throw err;
-                console.log(result)      
-              })
-              
-              res.end('ok');
-            });
-        } else {
-          throw "Please use a POST request"
-        }
-      } catch (error) {
-        console.log(error)
-        res.end(error); 
-      } 
-    });
-
-    server.get('/view_votes', function (req, res) {
-      try {
-        pool.query(`SELECT * FROM votes`, function(err, result) {
-          if (err) throw err;
-          var objs = []
-          //console.log(result.rows)
-          console.log(result)
-          Object.values(result.rows).map((item) => { 
-            objs.push({
-              address: item.address,
-              message: item.message,
-              signature: item.signature,
-            })
-          })   
-          res.end(JSON.stringify(objs));                
-        })        
-      } catch (error) {
-        console.log(error)
-        res.end(error); 
-      }  
     })
 
     // Routing to main page
