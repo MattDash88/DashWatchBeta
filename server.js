@@ -484,6 +484,7 @@ const getLabsAllData = (refreshCache) => {
   })
 }
 
+
 app.prepare()
   .then(() => {
     const server = express()
