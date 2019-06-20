@@ -249,12 +249,12 @@ class MonthReportRow extends React.Component {
             if (list_data.entry_type == "Video") {
                 reportLink = (
                     <div className="monthItem" id="reportsColumn"><div><a className="monthReportLink" href={list_data.report_link} target="_blank" title={list_data.report_link} onClick={this.callEvent}>
-                        <img className="reportIcon" id="YouTube" src="https://dashwatchbeta.org/images/Video.png" height="30"></img> Video</a></div></div>
+                        <img className="reportIcon" id="YouTube" src="/static/images/Video.png" height="30"></img> Video</a></div></div>
                 )
             } else if (list_data.entry_type == "Podcast") {
                 reportLink = (
                     <div className="monthItem" id="reportsColumn"><div><a className="monthReportLink" href={list_data.report_link} target="_blank" title={list_data.report_link} onClick={this.callEvent}>
-                        <img className="reportIcon" id="Podcast" src="https://dashwatchbeta.org/images/Podcast.png" height="30"></img> Podcast</a></div></div>
+                        <img className="reportIcon" id="Podcast" src="/static/images/Podcast.png" height="30"></img> Podcast</a></div></div>
                 )
             } else {
                 reportLink = (                    

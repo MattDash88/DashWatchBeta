@@ -201,16 +201,16 @@ class ModalTabMain extends React.Component {
             {
               typeof nexus_url !== 'undefined' ? (
                 <section>
-                <a id="modalNexusLink" href={nexus_url} target="_blank" onClick={this.callEvent}><img id="NexusLogo" src="https://dashwatchbeta.org/images/DashNexus.png" height="40"></img></a>
+                <a id="modalNexusLink" href={nexus_url} target="_blank" onClick={this.callEvent}><img id="NexusLogo" src="/static/images/DashNexus.png" height="40"></img></a>
                 <div className="modalLinkSeparator"></div>
                 </section>
                ) : (
                  null
                )
             }           
-            <a id="modalDcLink" href={dc_url} target="_blank" onClick={this.callEvent}><img id="DcLogo" src="https://dashwatchbeta.org/images/DashCentral.png" height="40"></img></a>
+            <a id="modalDcLink" href={dc_url} target="_blank" onClick={this.callEvent}><img id="DcLogo" src="/static/images/DashCentral.png" height="40"></img></a>
             <div className="modalLinkSeparator"></div>
-            <a id="modalDwLink" href={`/p/${slug}`} target="" onClick={this.callEvent}><img id="Logo" src="https://dashwatchbeta.org/images/DashWatch.png" height="40"></img></a>
+            <a id="modalDwLink" href={`/p/${slug}`} target="" onClick={this.callEvent}><img id="Logo" src="/static/images/DashWatch.png" height="40"></img></a>
           </div>
         </section>
       </div>
