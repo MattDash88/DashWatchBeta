@@ -58,6 +58,7 @@ class CandidateLists extends React.Component {
                 </section>   
                 <section className="tpPageTopSection" value={electionId == "DIF2019" ? "Active" : "Inactive"}>
                     <h1 className="tpHeader">2019 Investment Foundation Supervisor Candidates</h1>
+                    <p className="tpText">Voting is now open. The voting app is avalable at <a className="votingLink" id="votingLink" href='https://difvote.dash.org/'>difvote.dash.org</a>.</p>
                     <div className="tpIndexWrapper">
                     <div className="tpIndexItemFirst"><p className="tpColumnTitle">Candidate</p></div>
                     <div className="tpIndexItem"><p className="tpColumnTitle">Contact</p></div>
