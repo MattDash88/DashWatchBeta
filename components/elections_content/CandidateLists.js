@@ -151,12 +151,12 @@ class CandidateListRow extends React.Component {
             if (interview_type == "Video") {
                 interviewLink = (
                     <div className="tpItem" id="tpInterviewLink"><div><a className="tpInterviewLink" id="reportLink" href={interview_link} target="_blank" title={interview_link} onClick={this.callEvent}>
-                        <img className="reportIcon" id="YouTube" src="https://dashwatchbeta.org/images/Video.png" height="30"></img> Profile</a></div></div>
+                        <img className="reportIcon" id="YouTube" src="/static/images/Video.png" height="30"></img> Profile</a></div></div>
                 )
             } else if (interview_type == "Text") {
                 interviewLink = (
                     <div className="tpItem" id="tpInterviewLink"><div><a className="tpInterviewLink" id="reportLink" href={interview_link} target="_blank" title={interview_link} onClick={this.callEvent}>
-                        <img className="reportIcon" id="Text" src="https://dashwatchbeta.org/images/PDF.png" height="30"></img> Profile</a></div></div>
+                        <img className="reportIcon" id="Text" src="/static/images/PDF.png" height="30"></img> Profile</a></div></div>
                 )
             } else {
                 interviewLink = (

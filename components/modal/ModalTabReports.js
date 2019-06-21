@@ -65,13 +65,13 @@ class ModalReportSection extends React.Component {
     // Function that returns what image to show for the media
     getImageUrl(type) {
         if (type == "Video") {
-            return (<img id="cardMediaLink" src="https://dashwatchbeta.org/images/Video.png" height="25"></img>)
+            return (<img id="cardMediaLink" src="/static/images/Video.png" height="25"></img>)
         } else if (type == "Podcast") {
-            return (<img id="cardMediaLink" src="https://dashwatchbeta.org/images/Podcast.png" height="25"></img>)
+            return (<img id="cardMediaLink" src="/static/images/Podcast.png" height="25"></img>)
         } else if (type == "Report") {
-            return (<img id="cardDocumentLink" src="https://dashwatchbeta.org/images/PDF.png" height="25"></img>)
+            return (<img id="cardDocumentLink" src="/static/images/PDF.png" height="25"></img>)
         } else {
-            return (<img id="cardMediaLink" src="https://dashwatchbeta.org/images/PDF.png" height="25"></img>)
+            return (<img id="cardMediaLink" src="/static/images/PDF.png" height="25"></img>)
         }
     }
 
