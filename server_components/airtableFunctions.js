@@ -575,6 +575,7 @@ const ElectionsCandidateList = function getElectionCandidates(tableId) {
                     dash_involvement_link: record.get('Dash Involvement Link'), // Used to attach a link to the candidate's Dash activity, if available
                     interview_link: record.get('Interview Link'),
                     interview_type: record.get('Interview Type'),           // Interview document taken by Dash Watch
+                    video_link: record.get('Video Link'),           // Interview document taken by Dash Watch
                     id: record.id,                                          // Used as unique record identifier
                 }
 

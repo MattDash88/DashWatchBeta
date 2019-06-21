@@ -24,11 +24,11 @@ class CandidateLists extends React.Component {
                 <section className="tpPageTopSection" value={electionId == "TPE2019" ? "Active" : "Inactive"}>
                 <h1 className="tpHeader">2019 Dash Trust Protector Candidates</h1>
                 <p className="tpText">Voting for the Trust Protectors Elections 2019 ended on March 31, 2019. The results are available <a className="tpHowToLink" id="results" href={`/elections?tab=results&election=${electionId}`}>Here</a>.</p>
-                <div className="tpIndexWrapper">
-                    <div className="tpIndexItemFirst"><p className="tpColumnTitle">Candidate</p></div>
-                    <div className="tpIndexItem"><p className="tpColumnTitle">Contact</p></div>
-                    <div className="tpIndexItem"><p className="tpColumnTitle">Dash Involvement</p></div>
-                    <div className="tpIndexItem"><p className="tpColumnTitle">Profile Link</p></div>
+                <div className="electionsIndexWrapper">
+                    <div className="electionsIndexItemFirst"><p className="tpColumnTitle">Candidate</p></div>
+                    <div className="electionsIndexItem"><p className="tpColumnTitle">Contact</p></div>
+                    <div className="electionsIndexItem"><p className="tpColumnTitle">Dash Involvement</p></div>
+                    <div className="electionsIndexItem"><p className="tpColumnTitle">Profile Link</p></div>
                 </div>
                 {
                     candidateListData.length == 0 ? (
@@ -38,7 +38,7 @@ class CandidateLists extends React.Component {
                     ) : (
                             <div>
                                 {candidateListData.TPE2019.map((post) =>
-                                    <CandidateListRow
+                                    <TPECandidateListRow
                                         key={`${post.id}`}
                                         airtableData={post}      // Elements for the Month report list    
                                     />
@@ -59,11 +59,12 @@ class CandidateLists extends React.Component {
                 <section className="tpPageTopSection" value={electionId == "DIF2019" ? "Active" : "Inactive"}>
                     <h1 className="tpHeader">2019 Investment Foundation Supervisor Candidates</h1>
                     <p className="tpText">Voting is now open. The voting app is avalable at <a className="votingLink" id="votingLink" href='https://difvote.dash.org/'>difvote.dash.org</a>.</p>
-                    <div className="tpIndexWrapper">
-                    <div className="tpIndexItemFirst"><p className="tpColumnTitle">Candidate</p></div>
-                    <div className="tpIndexItem"><p className="tpColumnTitle">Contact</p></div>
-                    <div className="tpIndexItem"><p className="tpColumnTitle">Dash Involvement</p></div>
-                    <div className="tpIndexItem"><p className="tpColumnTitle">Profile Link</p></div>
+                    <div className="electionsIndexWrapper">
+                    <div className="electionsIndexItem" id="nameColumn"><p className="tpColumnTitle">Candidate</p></div>
+                    <div className="electionsIndexItem"><p className="tpColumnTitle">Contact</p></div>
+                    <div className="electionsIndexItem"><p className="tpColumnTitle">Dash Involvement</p></div>
+                    <div className="electionsIndexItem"><p className="tpColumnTitle">Candidate Profile</p></div>
+                    <div className="electionsIndexItem"><p className="tpColumnTitle">Candidate Video</p></div>
                 </div>
                 {
                     candidateListData.length == 0 ? (
@@ -73,7 +74,7 @@ class CandidateLists extends React.Component {
                     ) : (
                             <div>
                                 {candidateListData.DIF2019.map((post) =>
-                                    <CandidateListRow
+                                    <DIFCandidateListRow
                                         key={`${post.id}`}
                                         airtableData={post}      // Elements for the Month report list    
                                     />
@@ -88,7 +89,111 @@ class CandidateLists extends React.Component {
 }
 
 // Component for Report List Table
-class CandidateListRow extends React.Component {
+class DIFCandidateListRow extends React.Component {
+    constructor(props) {
+        super(props);
+
+        // Binding functions in this class
+        this.callEvent = this.callEvent.bind(this);
+    }
+
+    callEvent(event) {
+        trackEvent('Elections', 'clicked: ' + event.currentTarget.id)
+    }
+
+    render() {
+        const { // Declare grouped elements used in class
+            candidate_name,
+            alias,
+            contact,
+            dash_involvement,
+            dash_involvement_link,
+            interview_link,
+            interview_type,
+            video_link,
+        } = this.props.airtableData
+
+        // Code to generate involvement link
+        let involvementLink = null;
+        if (typeof dash_involvement == "undefined") { // If report is pending show "Pending"
+            involvementLink = (
+                <div className="electionsItem"></div>
+            )
+        } else if (typeof dash_involvement_link == "undefined") {  // If report is published, show links to report and modal
+            involvementLink = (
+                <div className="electionsItem">{dash_involvement}</div>
+            )
+        } else {
+            involvementLink = (
+                <div className="electionsItem"><a className="tpInvolvementLink" id="involvementLink" href={dash_involvement_link} target="_blank" title={dash_involvement_link} onClick={this.callEvent}>
+                    {dash_involvement}</a></div>
+            )
+        } // End of involvement if
+
+        let candidateNameCell = null;
+        if (typeof alias == "undefined") {
+            candidateNameCell = (
+                <div><p className="tpCandidateName" title={candidate_name}>{candidate_name}</p>
+                </div>
+            )
+        } else {
+            candidateNameCell = (
+                <div><p className="tpCandidateName" title={candidate_name}>{candidate_name}</p>
+                    <p className="tpCandidateAlias" title={alias}>aka {alias}</p></div>
+            )
+        }   // End of candidate name if
+
+        // Code to generate interview link
+        let profileLink = null;
+        if (typeof interview_type == "undefined") { // If report is pending show "Pending"
+        profileLink = (
+                <div className="electionsItem"></div>
+            )
+        } else {  // If report is published, show links to report and modal
+            if (interview_type == "Video") {
+                profileLink = (
+                    <div className="electionsItem"><div><a className="tpInterviewLink" id="profileLink" href={interview_link} target="_blank" title={interview_link} onClick={this.callEvent}>
+                        <img className="reportIcon" id="YouTube" src="/static/images/Video.png" height="30"></img> Profile</a></div></div>
+                )
+            } else if (interview_type == "Text") {
+                profileLink = (
+                    <div className="electionsItem"><div><a className="tpInterviewLink" id="profileLink" href={interview_link} target="_blank" title={interview_link} onClick={this.callEvent}>
+                        <img className="reportIcon" id="Text" src="/static/images/PDF.png" height="30"></img> Profile</a></div></div>
+                )
+            } else {
+                profileLink = (
+                    <div className="electionsItem"></div>
+                )
+            }
+        } // End of interview link if
+
+        let videoLink = null;
+        if (typeof video_link == "undefined") { // If report is pending show "Pending"
+        videoLink = (
+                <div className="electionsItem"></div>
+            )
+        } else {  // If report is published, show links to report and modal
+            videoLink = (
+                <div className="electionsItem" id="linksColumn"><div><a className="tpInterviewLink" id="videoLink" href={video_link} target="_blank" title={video_link} onClick={this.callEvent}>
+                    <img className="reportIcon" id="YouTube" src="/static/images/Video.png" height="30"></img> Video</a></div></div>
+            )
+        }
+
+        // Output for the month list rows
+        return (
+            <div className="electionsRowWrapper" month="Active">
+                <div className="electionsItemFirst">{candidateNameCell}</div>
+                <div className="electionsItem"><p className="tpCandidateContact" title={contact}>{contact}</p></div>
+                {involvementLink}
+                {profileLink}
+                {videoLink}
+            </div>
+        )
+    }
+}
+
+// Component for Report List Table
+class TPECandidateListRow extends React.Component {
     constructor(props) {
         super(props);
 
@@ -115,15 +220,15 @@ class CandidateListRow extends React.Component {
         let involvementLink = null;
         if (typeof dash_involvement == "undefined") { // If report is pending show "Pending"
             involvementLink = (
-                <div className="tpItem"></div>
+                <div className="electionsItem"></div>
             )
         } else if (typeof dash_involvement_link == "undefined") {  // If report is published, show links to report and modal
             involvementLink = (
-                <div className="tpItem">{dash_involvement}</div>
+                <div className="electionsItem">{dash_involvement}</div>
             )
         } else {
             involvementLink = (
-                <div className="tpItem"><a className="tpInvolvementLink" id="involvementLink" href={dash_involvement_link} target="_blank" title={dash_involvement_link} onClick={this.callEvent}>
+                <div className="electionsItem"><a className="tpInvolvementLink" id="involvementLink" href={dash_involvement_link} target="_blank" title={dash_involvement_link} onClick={this.callEvent}>
                     {dash_involvement}</a></div>
             )
         } // End of involvement if
@@ -145,33 +250,33 @@ class CandidateListRow extends React.Component {
         let interviewLink = null;
         if (typeof interview_type == "undefined") { // If report is pending show "Pending"
             interviewLink = (
-                <div className="tpItem"></div>
+                <div className="electionsItem"></div>
             )
         } else {  // If report is published, show links to report and modal
             if (interview_type == "Video") {
                 interviewLink = (
-                    <div className="tpItem" id="tpInterviewLink"><div><a className="tpInterviewLink" id="reportLink" href={interview_link} target="_blank" title={interview_link} onClick={this.callEvent}>
+                    <div className="electionsItem" id="tpInterviewLink"><div><a className="tpInterviewLink" id="reportLink" href={interview_link} target="_blank" title={interview_link} onClick={this.callEvent}>
                         <img className="reportIcon" id="YouTube" src="/static/images/Video.png" height="30"></img> Profile</a></div></div>
                 )
             } else if (interview_type == "Text") {
                 interviewLink = (
-                    <div className="tpItem" id="tpInterviewLink"><div><a className="tpInterviewLink" id="reportLink" href={interview_link} target="_blank" title={interview_link} onClick={this.callEvent}>
+                    <div className="electionsItem" id="tpInterviewLink"><div><a className="tpInterviewLink" id="reportLink" href={interview_link} target="_blank" title={interview_link} onClick={this.callEvent}>
                         <img className="reportIcon" id="Text" src="/static/images/PDF.png" height="30"></img> Profile</a></div></div>
                 )
             } else {
                 interviewLink = (
-                    <div className="tpItem"></div>
+                    <div className="electionsItem"></div>
                 )
             }
         } // End of interview link if
 
         // Output for the month list rows
         return (
-            <div className="tpProposalWrapper" month="Active">
-                <div className="tpItemFirst">{candidateNameCell}</div>
-                <div className="tpItem"><p className="tpCandidateContact" title={contact}>{contact}</p></div>
+            <div className="electionsRowWrapper" month="Active">
+                <div className="electionsItemFirst">{candidateNameCell}</div>
+                <div className="electionsItem"><p className="tpCandidateContact" title={contact}>{contact}</p></div>
                 {involvementLink}
-                <div className="tpItem">{interviewLink}</div>
+                {interviewLink}
             </div>
         )
     }
