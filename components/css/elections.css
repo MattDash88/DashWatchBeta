@@ -101,7 +101,7 @@
 }
 
 /* Wrapper of the month list index row */
-.tpIndexWrapper {
+.electionsIndexWrapper {
     display: flex;
     height: 3rem;
     border-bottom: 0.1rem solid black;
@@ -111,7 +111,7 @@
 }
 
 /* Div for the cells of the index */
-.tpIndexItemFirst {
+.electionsIndexItemFirst {
     display: flex;
     text-align: left;
     flex-direction: column;
@@ -120,10 +120,10 @@
     justify-content: center;
     margin-right: auto;
     min-width: 0px;
-    width: 75%;
+    width: 60%;
 }
 
-.tpIndexItem {
+.electionsIndexItem {
     display: flex;
     text-align: left;
     flex-direction: column;
@@ -132,7 +132,11 @@
     justify-content: center;
     margin-right: auto;
     min-width: 0px;
-    width: 75%;
+    width: 60%;
+}
+
+.electionsIndexItem[id="nameColumn"] {
+    width: 60%;
 }
 
 /* Text styling of the index */
@@ -157,21 +161,21 @@
 }
 
 /* Wrapper for the month list rows  */
-.tpProposalWrapper {
+.electionsRowWrapper {
     display: flex;
     height: 4rem;
-    border-bottom: 0.1rem solid rgb(216, 220, 227);
+    border-bottom: 0.1rem solid #d8dce3;
     background: white;
     min-width: 750px;
     max-width: 1000px;
 }
 
-.tpProposalWrapper:hover {
+.electionsRowWrapper:hover {
     background: #f3f3f3;
 }
 
 /* Div of the other cells of the month list table*/
-.tpItemFirst {
+.electionsItemFirst {
     display: flex;
     text-align: left;
     flex-direction: column;
@@ -180,22 +184,33 @@
     justify-content: center;
     margin-right: auto;
     min-width: 0px;
-    width: 75%;
+    width: 60%;
     border: 1px;
 }
 
 /* Div of the other cells of the month list table*/
-.tpItem {
+.electionsItem {
     display: flex;
-    text-align: left;
     flex-direction: column;
-    -webkit-box-pack: center;
     line-height: 1rem;
     justify-content: center;
     margin-right: auto;
     min-width: 0px;
-    width: 75%;
-    border: 1px;
+    width: 60%;
+}
+
+/* Special styling for the cell containing the link to reports and media items */
+.monthItem[id="linksColumn"] {
+    display: flex;
+    flex-direction: column;
+    line-height: 1rem;
+    justify-content: center;
+    margin-right: auto;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;    
+    min-width: 0px;
+    width: 90%;
 }
 
 /* Text styling proposal name*/
@@ -251,7 +266,7 @@
     cursor: pointer;
 }
 
-.tpItem img {
+.electionsItem img {
     vertical-align: middle;
 }
 
@@ -328,10 +343,10 @@
 }
 
 /* Wrapper for the month list rows  */
-.tpResultsWrapper {
+.electionsResultsWrapper {
     display: flex;
     height: 3rem;
-    border-bottom: 0.1rem solid rgb(216, 220, 227);
+    border-bottom: 0.1rem solid #d8dce3;
     background: white;
     min-width: 375px;
     max-width: 500px;

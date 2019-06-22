@@ -37,7 +37,7 @@ class TrustElections extends React.Component {
     static async getInitialProps(ctx) {
         const props = {
             tab: typeof ctx.query.tab == "undefined" ? "candidates" : ctx.query.tab,   // Default no month to latest
-            election: typeof ctx.query.tab == "undefined" ? "dif2019" : ctx.query.election,   // Default no month to latest
+            election: typeof ctx.query.tab == "undefined" ? "DIF2019" : ctx.query.election,   // Default no month to latest
             url: ctx.pathname,
             as: ctx.asPath,
         }
@@ -52,13 +52,12 @@ class TrustElections extends React.Component {
             tabId: props.tab,
             electionId: props.election,
             showMenu: false,
+            redrawState: false,        // State to determine when the participation chart should rerender
 
             // Vote datasets
             candidateListData: '',
-            voteData: '',
+            voteMetrics: '',
             voteResults: '',
-            chartDates: '',
-            chartData_participation: '',
 
             // History states
             url: '/elections',
@@ -78,6 +77,7 @@ class TrustElections extends React.Component {
         event.preventDefault();
         this.setState({
             tabId: event.currentTarget.id,        // Change state to load different month
+            shouldRedraw: false,
             as: `/elections?tab=${event.currentTarget.id}&election=${this.state.electionId}`,
         })
 
@@ -90,6 +90,7 @@ class TrustElections extends React.Component {
         event.preventDefault();
         this.setState({
             showMenu: !this.state.showMenu,
+            shouldRedraw: false,
         })
         trackEvent('Elections', `Clicked Election Results dropdown`)
     }
@@ -99,6 +100,7 @@ class TrustElections extends React.Component {
         this.setState({
             showMenu: false,
             electionId: event.currentTarget.value,
+            shouldRedraw: true,
             as: `/elections?tab=${this.state.tabId}&election=${event.currentTarget.value}`,
         })
 
@@ -111,6 +113,7 @@ class TrustElections extends React.Component {
         if (event.target.id !== "dropdownMenu") {
             this.setState({
                 showMenu: false,
+                shouldRedraw: false,
             })
             trackEvent('Elections', `Clicked on Elections Vote Results page`)
         }
@@ -133,20 +136,11 @@ class TrustElections extends React.Component {
         window.addEventListener('mousedown', this.handleClick);     // Handles closing of dropdown menu
 
         // Promise to get the initial "month list" records 
-        Promise.resolve(getElectionsData()).then(data => {
-            var dateArray = []
-            var participationArray = []
-            Object.values(data.vote_metrics).map((item) => {
-                dateArray.push(item.date)
-                participationArray.push(item.vote_participation)
-            })
-
+        Promise.resolve(getElectionsData()).then(data => {          
             this.setState({
                 candidateListData: data.candidate_data,
-                voteData: data.vote_metrics,
+                voteMetrics: data.vote_metrics,
                 voteResults: data.vote_results,
-                chartDates: dateArray,
-                chartData_participation: participationArray
             })
         }).then(history.replaceState(this.state, '', `${this.state.as}`))
     }
@@ -164,18 +158,17 @@ class TrustElections extends React.Component {
     render() {
         const { // Declare data arrays used in class
             candidateListData,
-            voteData,
+            voteMetrics,
             voteResults,
-            chartDates,
-            chartData_participation,
+            redrawState,
             tabId,
             electionId,
         } = this.state
 
         let electionName
-        if (electionId == "dif2019") {
+        if (electionId == "DIF2019") {
             electionName = "2019 Foundation Supervisors"
-        } else if (electionId == "tpe2019") {
+        } else if (electionId == "TPE2019") {
             electionName = "2019 Trust Protectors"
         } else {
             electionName = "Select an election"
@@ -201,8 +194,8 @@ class TrustElections extends React.Component {
                     {
                         this.state.showMenu ? (
                             <div className="electionsDropdownMenu" id="dropdownMenu">
-                                <button id="dropdownMenu" value="dif2019" className="electionsDropdownItem" onClick={this.handleSelectElection}>2019 Foundation Supervisors</button>
-                                <button id="dropdownMenu" value="tpe2019" className="electionsDropdownItem" onClick={this.handleSelectElection}>2019 Trust Protectors</button>
+                                <button id="dropdownMenu" value="DIF2019" className="electionsDropdownItem" onClick={this.handleSelectElection}>2019 Foundation Supervisors</button>
+                                <button id="dropdownMenu" value="TPE2019" className="electionsDropdownItem" onClick={this.handleSelectElection}>2019 Trust Protectors</button>
                             </div>
                         ) : (
                                 null
@@ -219,16 +212,15 @@ class TrustElections extends React.Component {
                         <section className="tpPageTopSection" value={this.state.tabId == 'participation' ? "Active" :
                             "Inactive"}>
                             {
-                                voteData.length == 0 ? (
+                                voteMetrics.length == 0 ? (
                                     <div>
                                         <p>Loading&hellip;</p>
                                     </div>
                                 ) : (
                                         <VoteCharts
                                             electionId={electionId}
-                                            vote_data={voteData}
-                                            chart_dates={chartDates}
-                                            data_participation={chartData_participation}
+                                            voteMetrics={voteMetrics}
+                                            redrawState={redrawState}
                                         />
                                     )
                             }
@@ -239,7 +231,6 @@ class TrustElections extends React.Component {
                                 electionId={electionId}
                                 vote_results={voteResults}
                             />
-
                         </section>
                     </div>
                 </section>

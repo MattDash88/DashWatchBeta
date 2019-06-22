@@ -1,0 +1,4 @@
+dispatch:
+  # All traffic routed to dash-watch-beta app
+  - url: "*/*"
+    service: dash-watch-beta

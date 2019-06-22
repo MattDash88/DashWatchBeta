@@ -218,6 +218,7 @@ class Month extends React.Component {
                                         this.state.yearId == "2019" ? (  
                                             <div className="dropdownMenu" id="dropdownMenu">
                                                 <button id="dropdownMenu" value="January" className="dropdownItem"  onClick={this.handleSelectMonth}>January {this.state.yearId}</button>
+                                                <button id="dropdownMenu" value="February" className="dropdownItem"  onClick={this.handleSelectMonth}>February {this.state.yearId}</button>
                                             </div>
                                         ) : (
                                             <div className="dropdownMenu" id="dropdownMenu">
@@ -297,16 +298,16 @@ class MonthReportRow extends React.Component {
             if (list_data.report_type == "Video") {
                 reportLink = (
                     <div className="monthItem" id="reportsColumn"><div><a className="monthReportLink" href={list_data.report_link} target="_blank" title={list_data.report_link} onClick={this.callEvent}>
-                        <img className="reportIcon" id="YouTube" src="https://dashwatchbeta.org/images/Video.png" height="30"></img> Video</a></div></div>
+                        <img className="reportIcon" id="YouTube" src="/static/images/Video.png" height="30"></img> Video</a></div></div>
                 )
             } else if (list_data.report_type == "Podcast") {
                 reportLink = (
                     <div className="monthItem" id="reportsColumn"><div><a className="monthReportLink" href={list_data.report_link} target="_blank" title={list_data.report_link} onClick={this.callEvent}>
-                        <img className="reportIcon" id="YouTube" src="https://dashwatchbeta.org/images/Podcast.png" height="30"></img> Podcast</a></div></div>
+                        <img className="reportIcon" id="YouTube" src="/static/images/Podcast.png" height="30"></img> Podcast</a></div></div>
                 )
             } else {
                 reportLink = (
-                    <div className="monthItem" id="reportsColumn"><div><a className="monthReportLink" href={list_data.report_link} target="_blank" title={list_data.report_link} onClick={this.callEvent}><img id="PDF" src="https://dashwatchbeta.org/images/PDF.png" height="30"></img> Report</a></div></div>
+                    <div className="monthItem" id="reportsColumn"><div><a className="monthReportLink" href={list_data.report_link} target="_blank" title={list_data.report_link} onClick={this.callEvent}><img id="PDF" src="/static/images/PDF.png" height="30"></img> Report</a></div></div>
                 )
             }
         } // End of report status if

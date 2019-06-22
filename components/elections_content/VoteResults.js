@@ -20,11 +20,11 @@ class VoteResults extends React.Component {
 
         return (
             <main>              
-                <section className="tpPageTopSection" value={electionId == "tpe2019" ? "Active" : "Inactive"}>
+                <section className="tpPageTopSection" value={electionId == "TPE2019" ? "Active" : "Inactive"}>
                 <h1 className="tpHeader">2019 Dash Trust Protector Elections Results</h1>
-                <div className="tpResultsWrapper">
-                    <div className="tpIndexItemFirst"><p className="tpColumnTitle">Candidate</p></div>
-                    <div className="tpIndexItem"><p className="tpColumnTitle">Results</p></div>
+                <div className="electionsResultsWrapper">
+                    <div className="electionsIndexItemFirst"><p className="tpColumnTitle">Candidate</p></div>
+                    <div className="electionsIndexItem"><p className="tpColumnTitle">Results</p></div>
                 </div>               
                 {
                     (vote_results.length == 0) ? (
@@ -33,7 +33,7 @@ class VoteResults extends React.Component {
                         </section>
                     ) : (
                             <section>
-                                {vote_results.map((post) =>
+                                {vote_results.TPE2019.map((post) =>
                                     <ResultsListRow
                                         key={`${post.id}`}
                                         airtableData={post}      // Elements for the Month report list    
@@ -43,9 +43,9 @@ class VoteResults extends React.Component {
                         )
                 }
                 </section>
-                <section className="tpPageTopSection" value={electionId == "dif2019" ? "Active" : "Inactive"}>
+                <section className="tpPageTopSection" value={electionId == "DIF2019" ? "Active" : "Inactive"}>
                     <h1 className="tpHeader">2019 Investment Foundation Supervisor Elections Results</h1>
-                    <div className="tpText">The Dash Investment Foundation Supervisor election results will be published here shortly after the election is concluded on June 23, 2019 (23:59 UTC).</div>
+                    <div className="tpText">The Dash Investment Foundation Supervisor election results will be published here shortly after the election is concluded, no later than July 5th, 2019.</div>
                 </section>
             </main>
         )
@@ -87,9 +87,9 @@ class ResultsListRow extends React.Component {
 
         // Output for the month list rows
         return (
-            <div className="tpResultsWrapper" month="Active">
-                <div className="tpItemFirst">{candidateNameCell}</div>
-                <div className="tpItem">{votes}</div>
+            <div className="electionsResultsWrapper" month="Active">
+                <div className="electionsItemFirst">{candidateNameCell}</div>
+                <div className="electionsItem">{votes}</div>
             </div>
         )
     }

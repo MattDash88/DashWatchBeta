@@ -1,0 +1,18 @@
+service: dash-watch-beta
+runtime: nodejs10
+env: standard
+
+# update with Redis instance network name
+vpc_access_connector:
+  name: "projects/dwatch-184008/locations/us-central1/connectors/dashwatchbeta-connector"
+
+instance_class: F1
+automatic_scaling:
+  target_cpu_utilization: 0.6
+  min_instances: 1
+  max_instances: 2
+
+handlers:
+- url: /.*
+  script: auto
+  secure: always
