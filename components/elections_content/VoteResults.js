@@ -22,9 +22,9 @@ class VoteResults extends React.Component {
             <main>              
                 <section className="tpPageTopSection" value={electionId == "TPE2019" ? "Active" : "Inactive"}>
                 <h1 className="tpHeader">2019 Dash Trust Protector Elections Results</h1>
-                <div className="tpResultsWrapper">
-                    <div className="tpIndexItemFirst"><p className="tpColumnTitle">Candidate</p></div>
-                    <div className="tpIndexItem"><p className="tpColumnTitle">Results</p></div>
+                <div className="electionsResultsWrapper">
+                    <div className="electionsIndexItemFirst"><p className="tpColumnTitle">Candidate</p></div>
+                    <div className="electionsIndexItem"><p className="tpColumnTitle">Results</p></div>
                 </div>               
                 {
                     (vote_results.length == 0) ? (
@@ -87,9 +87,9 @@ class ResultsListRow extends React.Component {
 
         // Output for the month list rows
         return (
-            <div className="tpResultsWrapper" month="Active">
-                <div className="tpItemFirst">{candidateNameCell}</div>
-                <div className="tpItem">{votes}</div>
+            <div className="electionsResultsWrapper" month="Active">
+                <div className="electionsItemFirst">{candidateNameCell}</div>
+                <div className="electionsItem">{votes}</div>
             </div>
         )
     }
