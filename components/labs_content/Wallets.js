@@ -110,6 +110,7 @@ const buildContent = (labsData, queries) => {
                 )
         }
 
+        // Set chart options
         const options = {
             scales: {
                 xAxes: [{
@@ -131,15 +132,28 @@ const buildContent = (labsData, queries) => {
             }
         }
 
+        // Set Dropdown name
+        if (queries.showChart == 'type') {
+            var dropdownName = "Wallet type"
+        } else if (queries.showChart == 'country') {
+            var dropdownName = "Installs by country"
+        } else if (queries.showChart == 'version') {
+            var dropdownName = "Downloads by version"
+        } else {
+            var dropdownName = "Select chart type"
+        }
+
         const pageContent = {   // Elements that are used in page rendering
             proposalOwnerLink:
                 <div>
                     <p className="labsText">
                         <a id="Proposal Owner Link" href={`/proposals?search=${labsData[1].wallet_proposal_owner}`} target="" >Link to Proposal Owner {labsData[1].wallet_name}</a>
                     </p>
-                </div>
+                </div>,
+            dropdownMenuString: dropdownName,
         }
-
+        
+        // Set the requested dataset as chartdata
         if (queries.showType == 'All') {
             var chartData = { datasets: totalDownloads }
         } else if (queries.showType == 'Desktop') {
@@ -155,8 +169,20 @@ const buildContent = (labsData, queries) => {
             pageContent: pageContent,
         }
     } catch (e) {
+        // Set Dropdown name
+        if (queries.showChart == 'type') {
+            var dropdownName = "Wallet type"
+        } else if (queries.showChart == 'country') {
+            var dropdownName = "Installs by country"
+        } else if (queries.showChart == 'version') {
+            var dropdownName = "Downloads by version"
+        } else {
+            var dropdownName = "Select chart type"
+        }
+
         const pageContent = {   // Elements that are used in page rendering
             proposalOwnerLink: <div></div>,
+            dropdownMenuString: dropdownName,
         }
         return {
             chartData: { datasets: [] },
@@ -435,7 +461,7 @@ class Wallets extends React.Component {
         const {
             chartData,
             options,
-            pageContent
+            pageContent,
         } = content
 
         const {
@@ -450,20 +476,20 @@ class Wallets extends React.Component {
                 <h1 className="labsHeader">Wallet Metrics</h1>
                 <p className="labsText">Select chart type:</p>
                 <div className="labsDropdown" id="dropdownmenu">
-                    <div id="dropdownMenu" onClick={this.handleDropdown} className="labsDropbtn"><i id="dropdownMenu"></i>{tabQueries.showChart}</div>
+                    <div id="dropdownMenu" onClick={this.handleDropdown} className="labsDropbtn"><i id="dropdownMenu"></i>{pageContent.dropdownMenuString}</div>
                     {
                         this.state.showMenu ? (
                             <div className="labsDropdownMenu" id="dropdownMenu">
-                                <button id="dropdownMenu" value="Wallet" className="labsDropdownItem" onClick={this.handleSelectChart}>Downloads per Wallet</button>
-                                <button id="dropdownMenu" value="Country" className="labsDropdownItem" onClick={this.handleSelectChart}>Android installs by Country</button>
-                                <button id="dropdownMenu" value="Version" className="labsDropdownItem" onClick={this.handleSelectChart}>Downloads per Version</button>
+                                <button id="dropdownMenu" value="type" className="labsDropdownItem" onClick={this.handleSelectChart}>Downloads by Wallet type</button>
+                                <button id="dropdownMenu" value="country" className="labsDropdownItem" onClick={this.handleSelectChart}>Android installs by country</button>
+                                <button id="dropdownMenu" value="version" className="labsDropdownItem" onClick={this.handleSelectChart}>Downloads by version</button>
                             </div>
                         ) : (
                                 null
                             )
                     }
                 </div>
-                <section className="labsContentSection" value={tabQueries.showChart == "Wallet" ? "Active" :
+                <section className="labsContentSection" value={tabQueries.showChart == "type" ? "Active" :
                     "Inactive"}>
                     <p className="labsText">Select dataset:</p>
                     <div className="labsDropdown" id="dropdownmenu">
@@ -493,7 +519,7 @@ class Wallets extends React.Component {
                     <p className="labsNoteText">Note [Android]: The Dash Android wallet metrics only measure direct downloads from the Google Play Store. They do not account for installations using an APK (Android application package) obtained from other sources. Sharing APKs locally with one another, via Bluetooth or other technologies, is a common practice in some countries to save on bandwidth costs.</p>
                     <p className="labsNoteText">Note [iOS]: Apple uses an opt-in system for tracking app metrics. because of this the measured download account for a subset of the total wallet app from the App store.</p>
                 </section>
-                <section className="labsContentSection" value={tabQueries.showChart == "Version" ? "Active" :
+                <section className="labsContentSection" value={tabQueries.showChart == "version" ? "Active" :
                     "Inactive"}>
                     <h2 className="labsHeader">Wallet Downloads per version</h2>
                     {
@@ -522,7 +548,7 @@ class Wallets extends React.Component {
                         )
                     }
                 </section>
-                <section className="labsContentSection" value={tabQueries.showChart == "Country" ? "Active" :
+                <section className="labsContentSection" value={tabQueries.showChart == "country" ? "Active" :
                     "Inactive"}>
                     <div className="labsDropdown" id="dropdownmenu">
                         <p className="labsText">Select a country:</p>

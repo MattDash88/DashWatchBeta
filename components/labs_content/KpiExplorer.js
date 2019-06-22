@@ -20,8 +20,6 @@ const buildContent = (labsData, prj, akp) => {
             kpiList.push(projectData.kpi_entries[item])
         )
 
-        console.log(kpiData.kpi_values)
-
         const chartData = {
             data: {  // Data + styling for the chart
                 datasets: [{

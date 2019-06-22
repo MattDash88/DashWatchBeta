@@ -231,7 +231,6 @@ class TrustElections extends React.Component {
                                 electionId={electionId}
                                 vote_results={voteResults}
                             />
-
                         </section>
                     </div>
                 </section>

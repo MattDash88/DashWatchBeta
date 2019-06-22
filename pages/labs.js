@@ -48,9 +48,10 @@ const getLabsAllData = () => {
 class Labs extends React.Component {
   static async getInitialProps(ctx) {
     const props = {
-      tab: typeof ctx.query.tab == "undefined" ? "explorer" : ctx.query.tab,   // Default no month to latest
-      project: typeof ctx.query.project == "undefined" ? 0 : ctx.query.project,
-      kpi: typeof ctx.query.kpi == "undefined" ? 0 : ctx.query.kpi,
+      tab: typeof ctx.query.tab == "undefined" ? "explorer" : ctx.query.tab,        // Default tab is explorer
+      project: typeof ctx.query.project == "undefined" ? 0 : ctx.query.project,     // Default project is the first in the list
+      kpi: typeof ctx.query.kpi == "undefined" ? 0 : ctx.query.kpi,                 // Default kpi is the first in the list
+      country: typeof ctx.query.country == "undefined" ? 'Brazil' : ctx.query.country,  // Default country is the first alphabetically
       chart: ctx.query.chart,
       url: ctx.pathname,
       as: ctx.asPath,
@@ -72,9 +73,9 @@ class Labs extends React.Component {
       project: props.project,
       kpi: props.kpi,
       showPosChart: typeof props.chart == "undefined" ? 'Transactions' : props.chart,
-      showWalletChart: typeof props.chart == "undefined" ? 'Wallet' : props.chart,
+      showWalletChart: typeof props.chart == "undefined" ? 'type' : props.chart,
       showWalletType: 'All',
-      showWalletCountry: 'Brazil',
+      showWalletCountry: props.country,
 
       // Booleans for POS systems
       showAnypay: true,
@@ -128,6 +129,15 @@ class Labs extends React.Component {
       history.pushState(this.state, '', `/labs?tab=POSsystems&chart=${queries.POSChart}`)
     }
     if (tabId == 'wallets') {
+      // Add an extra query for wallet type or country charts
+      if (queries.walletChart == "type") { 
+        var subChartQuery = `&type=${queries.walletType}`
+      } else if (queries.walletChart == "country") {
+        var subChartQuery = `&country=${queries.walletCountry}`
+      } else {
+        var subChartQuery = ''
+      }
+
       this.setState({
         showDashCore: queries.dashCore,
         showElectrum: queries.electrum,
@@ -136,9 +146,10 @@ class Labs extends React.Component {
         showWalletType: queries.walletType,
         showWalletCountry: queries.walletCountry,
         showWalletChart: queries.walletChart,
-        as: `/labs?tab=wallets&chart=${queries.walletChart}`,
+        as: `/labs?tab=wallets&chart=${queries.walletChart}`+subChartQuery,
       })
-      history.pushState(this.state, '', `/labs?tab=wallets&chart=${queries.walletChart}`)
+   
+      history.pushState(this.state, '', `/labs?tab=wallets&chart=${queries.walletChart}`+subChartQuery)
     }
   }
 
@@ -165,7 +176,7 @@ class Labs extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.labsTabId !== this.state.labsTabId || prevState.showPosChart !== this.state.showPosChart || prevState.showWalletChart !== this.state.showWalletChart 
+    if (prevState.labsData !== this.state.labsData || prevState.labsTabId !== this.state.labsTabId || prevState.showPosChart !== this.state.showPosChart || prevState.showWalletChart !== this.state.showWalletChart 
       || prevState.showWalletType !== this.state.showWalletType || prevState.showWalletCountry !== this.state.showWalletCountry ) {// Just a history state update because it doesn't always work as desired in functions
         history.replaceState(this.state, '', `${this.state.as}`)
     }

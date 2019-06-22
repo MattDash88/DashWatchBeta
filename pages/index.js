@@ -174,7 +174,7 @@ class Month extends React.Component {
                             <div className="monthHeader">{monthText}</div>
                         </div>
                         <p className="monthText">Voting for the Dash Investment Foundation Supervisors is currently in progress. The voting app is avalable at <a className="votingLink" id="votingLink" href='https://difvote.dash.org/'>difvote.dash.org</a>. <br/>
-                        More information on the supervisor candidates is available in the <a className="votingLink" id="votingLink" href='/elections'>elections section</a> of this site.</p>
+                        More information about the supervisor candidates is available on the <a className="votingLink" id="votingLink" href='/elections'>elections section</a> of this website.</p>
                         <div className="monthIndexWrapper">
                             <div className="monthIndexItem" id="proposalColumn"><p className="monthColumnTitle">Proposal</p></div>
                             <div className="monthIndexItem" id="reportsColumn"><p className="monthColumnTitle">Report Link</p></div>

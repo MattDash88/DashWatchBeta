@@ -7,8 +7,8 @@
     "start": "node server.js",
     "deploy": "npm run build && gcloud beta app deploy"
   },
-  "engines" : { 
-    "node" : ">=10.0" 
+  "engines": {
+    "node": ">=10.0"
   },
   "repository": {
     "type": "git",
@@ -28,6 +28,7 @@
     "react-dom": "16.6.3",
     "react-ga": "^2.5.7",
     "redis": "^2.8.0",
+    "semantic-ui-react": "^0.87.2",
     "shortid": "^2.2.14",
     "styled-components": "^4.2.0"
   }
