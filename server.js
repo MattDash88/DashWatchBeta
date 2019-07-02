@@ -21,6 +21,7 @@ var labsAirtableFunctions = require('./server_components/labsAirtableFunctions')
 var processingFunctions = require('./server_components/dataProcessingFunctions');
 var labsProcessingFunctions = require('./server_components/labsProcessingFunctions');
 var filterFunctions = require('./server_components/filterFunctions');
+var routingFunctions = require('./server_components/routingFunctions');
 
 /* Airtable Query for Proposal Information Table */
 const getAirtableData = (refreshCache) => {
@@ -692,17 +693,15 @@ app.prepare()
       });
     })
 
-    // Routing for reports
+    // Routing for reports for /r
     server.get('/r/:month/:reportId', (req, res) => {
-      const actualPage = `https://dashwatchbeta.org/reports/${req.params.month}/${req.params.reportId}.pdf`
+      const actualPage = routingFunctions.reportRedirects(req.params.month, req.params.reportId)
+      res.redirect(actualPage);
+    })
 
-      // Sending (anonymous) pageview request to Analytics
-      var x = Math.floor((Math.random() * 100000) + 1);   // Random number to avoid caching
-      fetch(`https://www.google-analytics.com/collect?v=1&tid=${gaKey}&cid=4B8302DA-21AD-401F-AF45-1DFD956B80B5&sc=end&t=pageview&dp=%2F/r/${req.params.month}/${req.params.reportId}&z=${x}`,
-        {
-          method: 'post',
-        })
-
+    // Routing for reports for /reports
+    server.get('/reports/:month/:reportId', (req, res) => {
+      const actualPage = routingFunctions.reportRedirects(req.params.month, req.params.reportId)
       res.redirect(actualPage);
     })
 
