@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MattDash88/DashWatchBeta.git"
+    "url": "https://github.com/MattDash88/DashWatchBeta.git"
   },
   "dependencies": {
     "@zeit/next-css": "^1.0.1",
     "airtable": "^0.5.10",
     "babel-plugin-styled-components": "^1.10.0",
     "chart.js": "^2.8.0",
-    "dotenv": "^6.2.0",
+    "dotenv": "^8.0.0",
     "express": "^4.16.4",
     "isomorphic-unfetch": "^3.0.0",
     "next": "7.0.2",
