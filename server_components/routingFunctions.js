@@ -10,7 +10,7 @@ ReactGA.initialize(gaKey);
 var reportRedirects = function handleReportRedirects(month, proposalID) {
     // Sending (anonymous) pageview request to Analytics
     var x = Math.floor((Math.random() * 100000) + 1);   // Random number to avoid caching
-    fetch(`https://www.google-analytics.com/collect?v=1&tid=${gaKey}&cid=4B8302DA-21AD-401F-AF45-1DFD956B80B5&sc=end&t=pageview&dp=%2F/r/${req.params.month}/${req.params.reportId}&z=${x}`,
+    fetch(`https://www.google-analytics.com/collect?v=1&tid=${gaKey}&cid=4B8302DA-21AD-401F-AF45-1DFD956B80B5&sc=end&t=pageview&dp=%2F/r/${month}/${proposalID}&z=${x}`,
       {
         method: 'post',
       }
