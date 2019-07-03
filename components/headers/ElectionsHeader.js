@@ -19,7 +19,7 @@ export default class Header extends React.Component {
                     <meta name="twitter:creator" content="@DashWatchTeam" />
                     <meta name="twitter:title" content="Dash Watch - Elections" />
                     <meta name="twitter:description" content="" />
-                    <meta name="twitter:image" content="https://beta.dashwatch.org/static/images/preview_elections.png" />
+                    <meta name="twitter:image" content="http://files.dashwatch.org/website_previews/preview_elections.png" />
                 </Head>
             </div>
         )
