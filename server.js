@@ -1,18 +1,18 @@
 // All server code uses ES5 because of Airtable plugin
 require('dotenv').config()    // Access .env variables
-const express = require('express')
-const next = require('next')
-const cache = require('./cache')
+const express = require('express');
+const next = require('next');
+const cache = require('./cache');
 const fetch = require('isomorphic-unfetch');
 
-const dev = process.env.NODE_ENV !== 'production'
-const port = process.env.PORT
-var gaKey = process.env.GAKEY
-const app = next({ dev })
+const dev = process.env.NODE_ENV !== 'production';
+const port = process.env.PORT;
+var gaKey = process.env.GAKEY;
+const app = next({ dev });
 const ReactGA = require('react-ga');
 ReactGA.initialize(gaKey);
 
-const serialize = data => JSON.stringify({ data })
+const serialize = data => JSON.stringify({ data });
 var cacheExpirationTime = process.env.CACHEEXPIRATION;  //Time until cache expires, can be adjusted for testing purposes
 
 // Get data processing functions from another file
