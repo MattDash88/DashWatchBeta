@@ -1,5 +1,18 @@
 import React from 'react';
 import 'semantic-ui-react'
+import {
+    Container,
+    Label,
+    Form,
+    Checkbox,
+    Segment,
+    Button,
+    Divider,
+    TextArea,
+    Input,
+    Message,
+    Dimmer,
+} from 'semantic-ui-react';
 
 // Analytics
 import { trackPage, trackEvent } from '../components/functions/analytics';

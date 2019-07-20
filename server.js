@@ -18,6 +18,7 @@ var cacheExpirationTime = process.env.CACHEEXPIRATION;  //Time until cache expir
 // Get data processing functions from another file
 var airtableFunctions = require('./server_components/airtableFunctions');
 var datasetBuildingFunctions = require('./server_components/datasetBuildingFunctions');
+var databaseFunctions = require('./server_components/db_functions');
 var labsAirtableFunctions = require('./server_components/labsAirtableFunctions');
 var processingFunctions = require('./server_components/dataProcessingFunctions');
 var labsProcessingFunctions = require('./server_components/labsProcessingFunctions');
@@ -34,13 +35,13 @@ const getAirtableData = (refreshCache) => {
       if (error) redisConnectionFailure = true;
 
       // If data is available in cache and a cache refresh is not requested, load from cache
-      if (!!data && refreshCache==false) { 
+      if (!!data && refreshCache == false) {
         // Stored value, grab from cache
         resolve(JSON.parse(data))
       }
 
       // If cache is empty or a cache refresh is requested, retrieve from Airtable
-      else {  
+      else {
         var mainInfoPromise = Promise.resolve(airtableFunctions.MainProposalPosts('Proposals'));
         var financialDataPromise = Promise.resolve(airtableFunctions.FinanceDataPosts('Funding and Expenses'));
         var merchantKpiPromise = Promise.resolve(airtableFunctions.MerchantKpiPosts('Merchant KPIs'));
@@ -104,20 +105,19 @@ const getMonthListData = (refreshCache) => {
       if (error) redisConnectionFailure = true;
 
       // If data is available in cache and a cache refresh is not requested, load from cache
-      if (!!data && refreshCache==false) { 
+      if (!!data && refreshCache == false) {
         resolve(JSON.parse(data))
       }
 
       // If cache is empty or a cache refresh is requested, retrieve from Airtable
-      else { 
+      else {
         Promise.resolve(airtableFunctions.MonthReportPosts('Month List Reports')).then(function (valArray) {
           const reportListPosts = datasetBuildingFunctions.createMonthListDataset(valArray)
-
           if (!redisConnectionFailure) {
-          // Store results in Redis cache, cache expire time is defined in .env
+            // Store results in Redis cache, cache expire time is defined in .env
             cache.setex('monthListData', cacheExpirationTime, JSON.stringify(reportListPosts))
           }
-          
+
           resolve(reportListPosts)
         }).catch((error) => {
           reject({ error })
@@ -138,12 +138,12 @@ const getOldListData = (refreshCache) => {
       if (error) redisConnectionFailure = true;
 
       // If data is available in cache and a cache refresh is not requested, load from cache
-      if (!!data && refreshCache==false) { 
+      if (!!data && refreshCache == false) {
         resolve(JSON.parse(data))
       }
 
       // If cache is empty or a cache refresh is requested, retrieve from Airtable
-      else {  
+      else {
         Promise.resolve(airtableFunctions.OldReportPosts('Old Reports')).then(function (valArray) {
           // Create const to push proposal data in
           const reportPosts = []
@@ -190,15 +190,15 @@ const getProposalListData = (refreshCache) => {
       // Connection with redis fails, for back to direct Airtable retrieval
       var redisConnectionFailure;
       if (error) redisConnectionFailure = true;
-      
+
       // If data is available in cache and a cache refresh is not requested, load from cache
-      if (!!data && refreshCache==false) { 
+      if (!!data && refreshCache == false) {
         // Stored value, grab from cache
         resolve(JSON.parse(data))
-      } 
-      
+      }
+
       // If cache is empty or a cache refresh is requested, retrieve from Airtable
-      else {    
+      else {
         var mainInfoPromise = Promise.resolve(airtableFunctions.MainProposalPosts('Proposals'));
         var reportDataPromise = Promise.resolve(airtableFunctions.ReportPosts('Reports'));
 
@@ -224,7 +224,7 @@ const getProposalListData = (refreshCache) => {
 
           if (!redisConnectionFailure) {
             // Store results in Redis cache, cache expire time is defined in .env
-          cache.setex('proposalListData', cacheExpirationTime, JSON.stringify(storeAirtablePosts))
+            cache.setex('proposalListData', cacheExpirationTime, JSON.stringify(storeAirtablePosts))
           }
 
           // Finish
@@ -274,7 +274,7 @@ const getMerchantKpiData = () => {
           })
           if (!redisConnectionFailure) {
             // Store results in Redis cache, cache expire time is defined in .env
-          cache.setex('peytonsKpiData', cacheExpirationTime, JSON.stringify(storeAirtablePosts))
+            cache.setex('peytonsKpiData', cacheExpirationTime, JSON.stringify(storeAirtablePosts))
           }
           resolve(storeAirtablePosts)
         }).catch((error) => {
@@ -296,12 +296,12 @@ const getElectionsData = (refreshCache) => {
       if (error) redisConnectionFailure = true;
 
       // If data is available in cache and a cache refresh is not requested, load from cache
-      if (!!data && refreshCache==false) {
+      if (!!data && refreshCache == false) {
         resolve(JSON.parse(data))
       }
 
       // If cache is empty or a cache refresh is requested, retrieve from Airtable
-      else {    
+      else {
         var TPE2019CandidatePromise = Promise.resolve(airtableFunctions.ElectionsCandidateList('Candidate List - TPE2019'));
         var DIF2019CandidatePromise = Promise.resolve(airtableFunctions.ElectionsCandidateList('Candidate List - DIF2019'));
         var TPE2019VoteDataPromise = Promise.resolve(airtableFunctions.VoteData('Vote Data - TPE2019'));
@@ -325,42 +325,42 @@ const getElectionsData = (refreshCache) => {
           var DIF2019VoteResultsData = []
 
           // Check if TPE2019 candidate name exists
-          Object.values(TPE2019CandidateList).map((item) => {            
+          Object.values(TPE2019CandidateList).map((item) => {
             if (typeof item.candidate_name !== 'undefined') {    //Check if record exists
               TPE2019CandidateData.push(item)
             }
           })
 
           // Check if DIF2019 candidate name exists
-          Object.values(DIF2019CandidateList).map((item) => {            
+          Object.values(DIF2019CandidateList).map((item) => {
             if (typeof item.candidate_name !== 'undefined') {    //Check if record exists
               DIF2019CandidateData.push(item)
             }
           })
 
           // Check if participation data and values were entered correctly
-          Object.values(TPE2019ParticipationData).map((item) => {            
+          Object.values(TPE2019ParticipationData).map((item) => {
             if (typeof item.date !== 'undefined' && typeof item.vote_participation !== 'undefined') {    //Check if record exists
               TPE2019VoteData.push(item)
             }
           })
 
           // Check if participation data and values were entered correctly
-          Object.values(DIF2019ParticipationData).map((item) => {            
+          Object.values(DIF2019ParticipationData).map((item) => {
             if (typeof item.date !== 'undefined' && typeof item.vote_participation !== 'undefined') {    //Check if record exists
               DIF2019VoteData.push(item)
             }
           })
-          
+
           // Check if candidate results were entered correctly
-          Object.values(TPE2019ResultsData).map((item) => {            
+          Object.values(TPE2019ResultsData).map((item) => {
             if (typeof item.candidate_name !== 'undefined' && typeof item.votes !== 'undefined') {    //Check if record exists
               TPE2019VoteResultsData.push(item)
             }
           })
 
           // Check if candidate results were entered correctly
-          Object.values(DIF2019ResultsData).map((item) => {            
+          Object.values(DIF2019ResultsData).map((item) => {
             if (typeof item.candidate_name !== 'undefined' && typeof item.votes !== 'undefined') {    //Check if record exists
               DIF2019VoteResultsData.push(item)
             }
@@ -383,9 +383,9 @@ const getElectionsData = (refreshCache) => {
           }
           if (!redisConnectionFailure) {
             // Store results in Redis cache, cache expire time is defined in .env
-          cache.setex('ElectionsData', cacheExpirationTime, JSON.stringify(electionsAllData))
+            cache.setex('ElectionsData', cacheExpirationTime, JSON.stringify(electionsAllData))
           }
-          
+
           // Finish
           resolve(electionsAllData)
         }).catch((error) => {
@@ -407,18 +407,18 @@ const getLabsPreparedData = (refreshCache) => {
       if (error) redisConnectionFailure = true;
 
       // If data is available in cache and a cache refresh is not requested, load from cache
-      if (!!data && refreshCache==false) { 
+      if (!!data && refreshCache == false) {
         resolve(JSON.parse(data))
       }
 
       // If cache is empty or a cache refresh is requested, retrieve from Airtable
-      else {        
+      else {
         var walletDataPromise = Promise.resolve(labsAirtableFunctions.WalletDownloadPosts('Dash Wallets - Month'));
         var WalletCountryPromise = Promise.resolve(labsAirtableFunctions.WalletCountryPosts('Dash Wallets - Countries'))
         var WalletVersionPromise = Promise.resolve(labsAirtableFunctions.WalletVersionPosts('Dash Wallets - Version'))
         var posDataPromise = Promise.resolve(labsAirtableFunctions.PosMetricsPosts('POS Systems'));
-        
-        Promise.all([walletDataPromise, WalletCountryPromise, WalletVersionPromise, posDataPromise]).then(function (valArray) {          
+
+        Promise.all([walletDataPromise, WalletCountryPromise, WalletVersionPromise, posDataPromise]).then(function (valArray) {
           // Sorting out all valArray items
           labsWalletData = labsProcessingFunctions.processWalletData(valArray[0])
           walletCountryData = labsProcessingFunctions.processCountryData(valArray[1])
@@ -435,9 +435,9 @@ const getLabsPreparedData = (refreshCache) => {
 
           if (!redisConnectionFailure) {
             // Store results in Redis cache, cache expire time is defined in .env
-          cache.setex('labsPreparedData', cacheExpirationTime, JSON.stringify(storeAirtablePosts))
+            cache.setex('labsPreparedData', cacheExpirationTime, JSON.stringify(storeAirtablePosts))
           }
-          
+
           // Finish
           resolve(storeAirtablePosts)
         }).catch((error) => {
@@ -459,12 +459,12 @@ const getLabsAllData = (refreshCache) => {
       if (error) redisConnectionFailure = true;
 
       // If data is available in cache and a cache refresh is not requested, load from cache
-      if (!!data && refreshCache==false) {
+      if (!!data && refreshCache == false) {
         resolve(JSON.parse(data))
       }
-      
+
       // If cache is empty or a cache refresh is requested, retrieve from Airtable
-      else {   
+      else {
         var labsProjectsPromise = Promise.resolve(labsAirtableFunctions.LabsKpiProjects('KPI - Dash Projects'));
         var labsKpiPromise = Promise.resolve(labsAirtableFunctions.LabsKpiEntries('KPI - Entries'));
         var labsValuesPromise = Promise.resolve(labsAirtableFunctions.LabsKpiValues('KPI - Values'));
@@ -480,9 +480,9 @@ const getLabsAllData = (refreshCache) => {
 
           if (!redisConnectionFailure) {
             // Store results in Redis cache, cache expire time is defined in .env
-          cache.setex('AllLabsData', cacheExpirationTime, JSON.stringify(labsAllData))
+            cache.setex('AllLabsData', cacheExpirationTime, JSON.stringify(labsAllData))
           }
-          
+
           // Finish
           resolve(labsAllData)
         }).catch((error) => {
@@ -781,7 +781,7 @@ app.prepare()
       const queryParams_labs = req.query // Pass on queries      
 
       app.render(req, res, actualPage, queryParams_labs)
-    })  
+    })
 
     // Routing to the TP Elections page
     server.get('/elections', (req, res) => {
@@ -800,6 +800,15 @@ app.prepare()
       queryParams_reports.month = "Jan19"
 
       app.render(req, res, actualPage, queryParams_reports)
+    })
+
+    // Routing for reports for /r
+    server.get('/database', (req, res) => {
+      Promise.resolve(databaseFunctions.retrieveData()).then(function (voteData) {
+        res.status(200).send(serialize(voteData));
+      }).catch((error) => {                                                           // Run this if the retrieving functions returns an error
+        res.status(200).send(serialize(error))
+      })
     })
 
     // Backward compatibility routing for February 2019 reports

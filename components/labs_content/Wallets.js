@@ -1,5 +1,20 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
+import 'semantic-ui-react'
+import {
+    Container,
+    Dropdown,
+    Label,
+    Form,
+    Checkbox,
+    Segment,
+    Button,
+    Divider,
+    TextArea,
+    Input,
+    Message,
+    Dimmer,
+} from 'semantic-ui-react';
 
 // Analytics
 import { trackEvent } from '../functions/analytics';
@@ -270,6 +285,7 @@ class Wallets extends React.Component {
             showCountryMenu: false,     // Country Menu Toggle
             showTooltip: false,         // Toggle show/hiding tooltip
             shouldRedraw: false,        // Toggle redraw of charts
+            semanticDropdown: '',
         }
 
         // Binding functions used in this Class
@@ -430,6 +446,12 @@ class Wallets extends React.Component {
         }
     }
 
+    handleChange = (e, { value }) => {
+        this.setState({
+            semanticDropdown: value,
+        })
+    }
+
     componentDidMount() {
         window.addEventListener('mousedown', this.handleClick);     // Handles closing of dropdown menu
     }
@@ -470,11 +492,40 @@ class Wallets extends React.Component {
         } = country_content
 
         var chartObject = chartFunction(chartData, options, this.state.shouldRedraw)
+        const dropdownOptions = [
+        {
+            key: 'type',
+            text: 'Downloads by Wallet type',
+            value: 'type',
+        },
+        {
+            key: 'country',
+            text: 'Android installs by country',
+            value: 'country',
+        },
+        {
+            key: 'version',
+            text: 'Downloads by version',
+            value: 'version',
+        },
+    ]
+
+    console.log(this.state.semanticDropdown)
 
         return (
             <main>
+                <Dropdown
+                    placeholder={this.state.semanticDropdown}
+                    compact
+                    selection
+                    fluid
+                    options={dropdownOptions}
+                    onChange={this.handleChange}
+                />
                 <h1 className="labsHeader">Wallet Metrics</h1>
                 <p className="labsText">Select chart type:</p>
+                
+                <br></br>
                 <div className="labsDropdown" id="dropdownmenu">
                     <div id="dropdownMenu" onClick={this.handleDropdown} className="labsDropbtn"><i id="dropdownMenu"></i>{pageContent.dropdownMenuString}</div>
                     {
