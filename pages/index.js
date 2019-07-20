@@ -36,7 +36,7 @@ const getMonthList = () => {
 class Month extends React.Component {
     static async getInitialProps(ctx) {
         const props = {
-            month: typeof ctx.query.month == "undefined" ? "Jun19" : ctx.query.month,   // Default no query month to latest
+            month: typeof ctx.query.month == "undefined" ? "Jul19" : ctx.query.month,   // Default no query month to latest
             url: ctx.pathname,
             as: ctx.asPath,
         }
@@ -110,14 +110,14 @@ class Month extends React.Component {
         } = this.state
 
         let monthText
-        if (monthId == "Mar19") {
-            monthText = "Dash Watch March 2019 Reports"
-        } else if (monthId == "Apr19") {
+        if (monthId == "Apr19") {
             monthText = "Dash Watch April 2019 Reports"
         } else if (monthId == "May19") {
             monthText = "Dash Watch May 2019 Reports"
         } else if (monthId == "Jun19") {
             monthText = "Dash Watch June 2019 Reports"
+        } else if (monthId == "Jul19") {
+            monthText = "Dash Watch July 2019 Reports"
         } else {
             monthText = "Please select a month tab to view reports"
         }
@@ -160,20 +160,19 @@ class Month extends React.Component {
                     showPage="reports"
                 />
                 <section className="pagewrapper">
-                    <div className="monthTab" id='Mar19' value={this.state.monthId == 'Mar19' ? "Active" :
-                        "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">March 2019</p></div>
                     <div className="monthTab" id='Apr19' value={this.state.monthId == 'Apr19' ? "Active" :
                         "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">April 2019</p></div>
                     <div className="monthTab" id='May19' value={this.state.monthId == 'May19' ? "Active" :
                         "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">May 2019</p></div>
                     <div className="monthTab" id='Jun19' value={this.state.monthId == 'Jun19' ? "Active" :
                         "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">June 2019</p></div>
+                    <div className="monthTab" id='Jul19' value={this.state.monthId == 'Jul19' ? "Active" :
+                        "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">July 2019</p></div>
                     <div className="monthPageWrapper">
                         <div className="monthHeaderWrapper">
                             <a className="reportPageLink" id="oldReports" href="/oldreports"><i id="oldReports"></i>Older Reports</a>
                             <div className="monthHeader">{monthText}</div>
                         </div>
-                        <p className="monthText">Voting for the Dash Investment Foundation Supervisors is now closed. The voting results should be published shortly in the <a className="votingLink" id="votingLink" href='/elections?tab=results&election=DIF2019'>elections section</a> of this website.</p>
                         <div className="monthIndexWrapper">
                             <div className="monthIndexItem" id="proposalColumn"><p className="monthColumnTitle">Proposal</p></div>
                             <div className="monthIndexItem" id="reportsColumn"><p className="monthColumnTitle">Report Link</p></div>
