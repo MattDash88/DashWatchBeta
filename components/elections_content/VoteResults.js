@@ -19,33 +19,57 @@ class VoteResults extends React.Component {
         } = this.props
 
         return (
-            <main>              
+            <main>
                 <section className="tpPageTopSection" value={electionId == "TPE2019" ? "Active" : "Inactive"}>
-                <h1 className="tpHeader">2019 Dash Trust Protector Elections Results</h1>
-                <div className="electionsResultsWrapper">
-                    <div className="electionsIndexItemFirst"><p className="tpColumnTitle">Candidate</p></div>
-                    <div className="electionsIndexItem"><p className="tpColumnTitle">Results</p></div>
-                </div>               
-                {
-                    (vote_results.length == 0) ? (
-                        <section>
-                            <p>Loading&hellip;</p>
-                        </section>
-                    ) : (
+                    <h1 className="tpHeader">2019 Dash Trust Protector Elections Results</h1>
+                    <div className="electionsResultsWrapper">
+                        <div className="electionsIndexItemFirst"><p className="tpColumnTitle">Candidate</p></div>
+                        <div className="electionsIndexItem"><p className="tpColumnTitle">Results</p></div>
+                    </div>
+                    {
+                        (vote_results.length == 0) ? (
                             <section>
-                                {vote_results.TPE2019.map((post) =>
-                                    <ResultsListRow
-                                        key={`${post.id}`}
-                                        airtableData={post}      // Elements for the Month report list    
-                                    />
-                                )}
+                                <p>Loading&hellip;</p>
                             </section>
-                        )
-                }
+                        ) : (
+                                <section>
+                                    {vote_results.TPE2019.map((post) =>
+                                        <ResultsListRow
+                                            key={`${post.id}`}
+                                            airtableData={post}      // Elements for the Month report list    
+                                        />
+                                    )}
+                                </section>
+                            )
+                    }
                 </section>
                 <section className="tpPageTopSection" value={electionId == "DIF2019" ? "Active" : "Inactive"}>
                     <h1 className="tpHeader">2019 Investment Foundation Supervisor Elections Results</h1>
-                    <div className="tpText">The Dash Investment Foundation Supervisor election results will be published here shortly after the election is concluded, no later than July 5th, 2019.</div>
+                    {
+                        (vote_results.length == 0) ? (
+                            <section>
+                                <p>Loading&hellip;</p>
+                            </section>
+                        ) : (
+                                (vote_results.DIF2019.length == 0) ? (
+                                    <section><div className="tpText">The Dash Investment Foundation Supervisor election results will be published here shortly.</div></section>
+                                ) : (
+                                        <section>
+                                            <div className="electionsResultsWrapper">
+                                                <div className="electionsIndexItemFirst"><p className="tpColumnTitle">Candidate</p></div>
+                                                <div className="electionsIndexItem"><p className="tpColumnTitle">Results</p></div>
+                                            </div>
+                                            {vote_results.DIF2019.map((post) =>
+                                                <ResultsListRow
+                                                    key={`${post.id}`}
+                                                    airtableData={post}      // Elements for the Month report list    
+                                                />
+                                            )}
+                                        </section>
+                                    )
+
+                            )
+                    }
                 </section>
             </main>
         )

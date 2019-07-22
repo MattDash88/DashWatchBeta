@@ -1,4 +1,5 @@
 import React from 'react';
+import 'semantic-ui-react'
 
 // Analytics
 import { trackPage, trackEvent } from '../components/functions/analytics';

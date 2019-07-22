@@ -1,33 +1,37 @@
 // All server code uses ES5 because of Airtable plugin
 require('dotenv').config()    // Access .env variables
-const express = require('express')
-const next = require('next')
-const cache = require('./cache')
+const express = require('express');
+const next = require('next');
+const cache = require('./cache');
 const fetch = require('isomorphic-unfetch');
 
-const dev = process.env.NODE_ENV !== 'production'
-const port = process.env.PORT
-var gaKey = process.env.GAKEY
-const app = next({ dev })
+const dev = process.env.NODE_ENV !== 'production';
+const port = process.env.PORT;
+var gaKey = process.env.GAKEY;
+const app = next({ dev });
 const ReactGA = require('react-ga');
 ReactGA.initialize(gaKey);
 
-const serialize = data => JSON.stringify({ data })
+const serialize = data => JSON.stringify({ data });
 var cacheExpirationTime = process.env.CACHEEXPIRATION;  //Time until cache expires, can be adjusted for testing purposes
 
 // Get data processing functions from another file
 var airtableFunctions = require('./server_components/airtableFunctions');
+var datasetBuildingFunctions = require('./server_components/datasetBuildingFunctions');
 var labsAirtableFunctions = require('./server_components/labsAirtableFunctions');
 var processingFunctions = require('./server_components/dataProcessingFunctions');
 var labsProcessingFunctions = require('./server_components/labsProcessingFunctions');
 var filterFunctions = require('./server_components/filterFunctions');
+var routingFunctions = require('./server_components/routingFunctions');
 
 /* Airtable Query for Proposal Information Table */
 const getAirtableData = (refreshCache) => {
   return new Promise((resolve, reject) => {
     // Read cache for this function
     cache.get('airtableData', function (error, data) {
-      if (error) throw error
+      // Connection with redis fails, for back to direct Airtable retrieval
+      var redisConnectionFailure;
+      if (error) redisConnectionFailure = true;
 
       // If data is available in cache and a cache refresh is not requested, load from cache
       if (!!data && refreshCache==false) { 
@@ -75,7 +79,9 @@ const getAirtableData = (refreshCache) => {
           }) // End of loop through all proposals
 
           // Store results in Redis cache, cache expire time is defined in .env
-          cache.setex('airtableData', cacheExpirationTime, JSON.stringify(storeAirtablePosts))
+          if (!redisConnectionFailure) {
+            cache.setex('airtableData', cacheExpirationTime, JSON.stringify(storeAirtablePosts))
+          }
 
           // Finish
           resolve(storeAirtablePosts)
@@ -93,7 +99,9 @@ const getMonthListData = (refreshCache) => {
   return new Promise((resolve, reject) => {
     // Read cache for this function
     cache.get('monthListData', function (error, data) {
-      if (error) throw error
+      // Connection with redis fails, for back to direct Airtable retrieval
+      var redisConnectionFailure;
+      if (error) redisConnectionFailure = true;
 
       // If data is available in cache and a cache refresh is not requested, load from cache
       if (!!data && refreshCache==false) { 
@@ -103,31 +111,13 @@ const getMonthListData = (refreshCache) => {
       // If cache is empty or a cache refresh is requested, retrieve from Airtable
       else { 
         Promise.resolve(airtableFunctions.MonthReportPosts('Month List Reports')).then(function (valArray) {
-          // Create const to push proposal data in
-          const reportPosts = []
-          const optedOutPosts = []
+          const reportListPosts = datasetBuildingFunctions.createMonthListDataset(valArray)
 
-          // Sorting out all valArray items
-          monthReportData = valArray
-
-          Object.keys(monthReportData).map((item) => {
-            if (typeof monthReportData[item].proposal_ref !== 'undefined' && typeof monthReportData[item].report_status !== 'undefined') {     //Check if record exists
-              monthData = processingFunctions.processMonthListData(monthReportData[item])
-              if (monthData.list_data.report_status[0] == "Opted Out") {
-                optedOutPosts.push(monthData)
-              } else {
-                reportPosts.push(monthData)
-              }
-            }
-          })
-
-          const reportListPosts = {     // Create const with both lists
-            report_list: reportPosts,
-            opted_out_list: optedOutPosts,
-          }
-
+          if (!redisConnectionFailure) {
           // Store results in Redis cache, cache expire time is defined in .env
-          cache.setex('monthListData', cacheExpirationTime, JSON.stringify(reportListPosts))
+            cache.setex('monthListData', cacheExpirationTime, JSON.stringify(reportListPosts))
+          }
+          
           resolve(reportListPosts)
         }).catch((error) => {
           reject({ error })
@@ -143,7 +133,9 @@ const getOldListData = (refreshCache) => {
   return new Promise((resolve, reject) => {
     // Read cache for this function
     cache.get('oldListData', function (error, data) {
-      if (error) throw error
+      // Connection with redis fails, for back to direct Airtable retrieval
+      var redisConnectionFailure;
+      if (error) redisConnectionFailure = true;
 
       // If data is available in cache and a cache refresh is not requested, load from cache
       if (!!data && refreshCache==false) { 
@@ -176,8 +168,10 @@ const getOldListData = (refreshCache) => {
             opted_out_list: optedOutPosts,
           }
 
-          // Store results in Redis cache, cache expire time is defined in .env
-          cache.setex('oldListData', cacheExpirationTime, JSON.stringify(reportListPosts))
+          if (!redisConnectionFailure) {
+            // Store results in Redis cache, cache expire time is defined in .env
+            cache.setex('oldListData', cacheExpirationTime, JSON.stringify(reportListPosts))
+          }
           resolve(reportListPosts)
         }).catch((error) => {
           reject({ error })
@@ -193,7 +187,9 @@ const getProposalListData = (refreshCache) => {
   return new Promise((resolve, reject) => {
     // Read cache for this function
     cache.get('proposalListData', function (error, data) {
-      if (error) throw error
+      // Connection with redis fails, for back to direct Airtable retrieval
+      var redisConnectionFailure;
+      if (error) redisConnectionFailure = true;
       
       // If data is available in cache and a cache refresh is not requested, load from cache
       if (!!data && refreshCache==false) { 
@@ -226,8 +222,10 @@ const getProposalListData = (refreshCache) => {
             }
           }) // End of loop through all proposals
 
-          // Store results in Redis cache, cache expire time is defined in .env
+          if (!redisConnectionFailure) {
+            // Store results in Redis cache, cache expire time is defined in .env
           cache.setex('proposalListData', cacheExpirationTime, JSON.stringify(storeAirtablePosts))
+          }
 
           // Finish
           resolve(storeAirtablePosts)
@@ -274,8 +272,10 @@ const getMerchantKpiData = () => {
               }
             }
           })
-          // Store results in Redis cache, cache expire time is defined in .env
+          if (!redisConnectionFailure) {
+            // Store results in Redis cache, cache expire time is defined in .env
           cache.setex('peytonsKpiData', cacheExpirationTime, JSON.stringify(storeAirtablePosts))
+          }
           resolve(storeAirtablePosts)
         }).catch((error) => {
           reject({ error })
@@ -291,7 +291,9 @@ const getElectionsData = (refreshCache) => {
   return new Promise((resolve, reject) => {
     // Read cache for this function
     cache.get('ElectionsData', function (error, data) {
-      if (error) throw error
+      // Connection with redis fails, for back to direct Airtable retrieval
+      var redisConnectionFailure;
+      if (error) redisConnectionFailure = true;
 
       // If data is available in cache and a cache refresh is not requested, load from cache
       if (!!data && refreshCache==false) {
@@ -379,8 +381,10 @@ const getElectionsData = (refreshCache) => {
               DIF2019: DIF2019VoteResultsData,
             },
           }
-          // Store results in Redis cache, cache expire time is defined in .env
+          if (!redisConnectionFailure) {
+            // Store results in Redis cache, cache expire time is defined in .env
           cache.setex('ElectionsData', cacheExpirationTime, JSON.stringify(electionsAllData))
+          }
           
           // Finish
           resolve(electionsAllData)
@@ -398,7 +402,9 @@ const getLabsPreparedData = (refreshCache) => {
   return new Promise((resolve, reject) => {
     // Read cache for this function
     cache.get('labsPreparedData', function (error, data) {
-      if (error) throw error
+      // Connection with redis fails, for back to direct Airtable retrieval
+      var redisConnectionFailure;
+      if (error) redisConnectionFailure = true;
 
       // If data is available in cache and a cache refresh is not requested, load from cache
       if (!!data && refreshCache==false) { 
@@ -427,8 +433,10 @@ const getLabsPreparedData = (refreshCache) => {
             pos_system_data: posSystemData,
           }
 
-          // Store results in Redis cache, cache expire time is defined in .env
+          if (!redisConnectionFailure) {
+            // Store results in Redis cache, cache expire time is defined in .env
           cache.setex('labsPreparedData', cacheExpirationTime, JSON.stringify(storeAirtablePosts))
+          }
           
           // Finish
           resolve(storeAirtablePosts)
@@ -446,7 +454,9 @@ const getLabsAllData = (refreshCache) => {
   return new Promise((resolve, reject) => {
     // Read cache for this function
     cache.get('AllLabsData', function (error, data) {
-      if (error) throw error
+      // Connection with redis fails, for back to direct Airtable retrieval
+      var redisConnectionFailure;
+      if (error) redisConnectionFailure = true;
 
       // If data is available in cache and a cache refresh is not requested, load from cache
       if (!!data && refreshCache==false) {
@@ -468,8 +478,10 @@ const getLabsAllData = (refreshCache) => {
           // Put datasets through processing function to build the array
           labsAllData = labsProcessingFunctions.processAllLabsData(labsProjectData, labsKpiData, labsValuesData)
 
-          // Store results in Redis cache, cache expire time is defined in .env
+          if (!redisConnectionFailure) {
+            // Store results in Redis cache, cache expire time is defined in .env
           cache.setex('AllLabsData', cacheExpirationTime, JSON.stringify(labsAllData))
+          }
           
           // Finish
           resolve(labsAllData)
@@ -507,7 +519,8 @@ app.prepare()
     server.get('/api/get/monthlist', (req, res) => {
       monthSelection = []
       var refreshCache = false    // Load from cache if available
-      Promise.resolve(getMonthListData(refreshCache)).then(function (valArray) {
+      Promise.resolve(getMonthListData(refreshCache)).then(function (valArray, error) {
+        if (error) throw error
         res.writeHead(200, {
           'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/json'
@@ -692,17 +705,15 @@ app.prepare()
       });
     })
 
-    // Routing for reports
+    // Routing for reports for /r
     server.get('/r/:month/:reportId', (req, res) => {
-      const actualPage = `https://dashwatchbeta.org/reports/${req.params.month}/${req.params.reportId}.pdf`
+      const actualPage = routingFunctions.reportRedirects(req.params.month, req.params.reportId)
+      res.redirect(actualPage);
+    })
 
-      // Sending (anonymous) pageview request to Analytics
-      var x = Math.floor((Math.random() * 100000) + 1);   // Random number to avoid caching
-      fetch(`https://www.google-analytics.com/collect?v=1&tid=${gaKey}&cid=4B8302DA-21AD-401F-AF45-1DFD956B80B5&sc=end&t=pageview&dp=%2F/r/${req.params.month}/${req.params.reportId}&z=${x}`,
-        {
-          method: 'post',
-        })
-
+    // Routing for reports for /reports
+    server.get('/reports/:month/:reportId', (req, res) => {
+      const actualPage = routingFunctions.reportRedirects(req.params.month, req.params.reportId)
       res.redirect(actualPage);
     })
 
