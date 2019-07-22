@@ -1,6 +1,6 @@
-Dash Watch Beta Website v0.11.2
+Dash Watch Beta Website v0.11.3
 Minor site update featuring:
-<li>Complete overhaul of Election section to support multiple elections.</li>
-<li>Added "Reporting Status" metric and revised the Status, Comm status, budget status and schedule status metrics, removed making them simpler.</li>
-<li>Added links to the Nexus page when available, Nexus is now the default proposal link on the card with a fallback to Dash Central when the proposal is not available on Nexus.</li>
-<li>Changes in the code preparing for deployment on Google Cloud.</li>
+<li>Changed redirector to point to the report's new location at reports.dashwatch.org.</li>
+<li>Some code additions for the Dash Investment Foundation Results.</li>
+<li>Stability update, if the connection to Redis is lost it will now fall back to retrieve data directly from Airtable.</li>
+<li>Update dependency packages and some other bug fixes.</li>

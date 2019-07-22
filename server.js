@@ -727,19 +727,6 @@ app.prepare()
     })
 
     // Routing to main page
-    server.get('/health', (req, res) => {
-      cache.get('monthListData', function (error, data) {
-        var redisConnectionFailure;
-        if (error) redisConnectionFailure = true;
-        if (!redisConnectionFailure) {
-          console.log('Redis is up')
-        } else {
-          console.log('Redis is down')
-        }
-      })
-    })
-
-    // Routing to main page
     server.get('/oldreports', (req, res) => {
       const actualPage = '/old_reports'
 
