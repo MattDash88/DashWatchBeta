@@ -219,7 +219,7 @@ const buildCountryContent = (countryData, queries) => {
                     },
                     scaleLabel: {
                         display: true,
-                        labelString: 'Installs on Active Andriod devices in Month'
+                        labelString: 'Active Andriod devices with wallet installed'
                     },
                 }]
             }
