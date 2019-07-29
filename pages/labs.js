@@ -1,22 +1,31 @@
 import React from 'react';
-import 'semantic-ui-react'
+import {
+  Container,
+  Dropdown,
+  Label,
+  Form,
+  Checkbox,
+  Segment,
+  Button,
+  Divider,
+  TextArea,
+  Input,
+  Message,
+  Dimmer,
+  Tab,
+  Menu,
+} from 'semantic-ui-react';
+
 
 // Analytics
 import { trackPage, trackEvent } from '../components/functions/analytics';
 
 // Import css
-import '../components/css/style.css';
-import '../components/css/monthstyle.css';
-import '../components/css/labs.css';
-
 
 // Import other elements 
 import Header from '../components/headers/LabsHeader';
-import NavBar from "../components/elements/NavBar";
 
-import PosSystems from "../components/labs_content/PosSystems";
 import Wallets from "../components/labs_content/Wallets";
-import KpiExplorer from "../components/labs_content/KpiExplorer";
 
 // API query requesting Trust Protector Candidate List data
 const getLabsPreparedData = () => {
@@ -131,7 +140,7 @@ class Labs extends React.Component {
     }
     if (tabId == 'wallets') {
       // Add an extra query for wallet type or country charts
-      if (queries.walletChart == "type") { 
+      if (queries.walletChart == "type") {
         var subChartQuery = `&type=${queries.walletType}`
       } else if (queries.walletChart == "country") {
         var subChartQuery = `&country=${queries.walletCountry}`
@@ -147,10 +156,10 @@ class Labs extends React.Component {
         showWalletType: queries.walletType,
         showWalletCountry: queries.walletCountry,
         showWalletChart: queries.walletChart,
-        as: `/labs?tab=wallets&chart=${queries.walletChart}`+subChartQuery,
+        as: `/labs?tab=wallets&chart=${queries.walletChart}` + subChartQuery,
       })
-   
-      history.pushState(this.state, '', `/labs?tab=wallets&chart=${queries.walletChart}`+subChartQuery)
+
+      history.pushState(this.state, '', `/labs?tab=wallets&chart=${queries.walletChart}` + subChartQuery)
     }
   }
 
@@ -177,11 +186,11 @@ class Labs extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.labsData !== this.state.labsData || prevState.labsTabId !== this.state.labsTabId || prevState.showPosChart !== this.state.showPosChart || prevState.showWalletChart !== this.state.showWalletChart 
-      || prevState.showWalletType !== this.state.showWalletType || prevState.showWalletCountry !== this.state.showWalletCountry ) {// Just a history state update because it doesn't always work as desired in functions
-        history.replaceState(this.state, '', `${this.state.as}`)
+    if (prevState.labsData !== this.state.labsData || prevState.labsTabId !== this.state.labsTabId || prevState.showPosChart !== this.state.showPosChart || prevState.showWalletChart !== this.state.showWalletChart
+      || prevState.showWalletType !== this.state.showWalletType || prevState.showWalletCountry !== this.state.showWalletCountry) {// Just a history state update because it doesn't always work as desired in functions
+      history.replaceState(this.state, '', `${this.state.as}`)
     }
-}
+  }
 
   render() {
     const { // Declare data arrays used in class
@@ -195,81 +204,23 @@ class Labs extends React.Component {
     return (
       <main>
         <Header></Header>
-        <NavBar
-          showPage="labs"
+        <Menu>
+        <Tab.Pane>Something</Tab.Pane>
+        <Tab.Pane>Another</Tab.Pane>
+        </Menu>
+        <Wallets
+          walletData={walletData}
+          countryData={countryData}
+          versionData={versionData}
+          queryFunction={this.handleQueries}
+          showDashCore={this.state.showDashCore}
+          showElectrum={this.state.showElectrum}
+          showCoreAndroid={this.state.showCoreAndroid}
+          showCoreiOS={this.state.showCoreiOS}
+          showWalletChart={this.state.showWalletChart}
+          showWalletType={this.state.showWalletType}
+          showWalletCountry={this.state.showWalletCountry}
         />
-        <section className="pagewrapper">
-          <div className="monthTab" id='explorer' value={this.state.labsTabId == 'explorer' ? "Active" :
-            "Inactive"} onClick={this.handleSelectTab}><p className="monthTabText">Proposals</p></div>
-          <div className="monthTab" id='POSsystems' value={this.state.labsTabId == 'POSsystems' ? "Active" :
-            "Inactive"} onClick={this.handleSelectTab}><p className="monthTabText">POS Systems</p></div>
-          <div className="monthTab" id='wallets' value={this.state.labsTabId == 'wallets' ? "Active" :
-            "Inactive"} onClick={this.handleSelectTab}><p className="monthTabText">Wallets</p></div>
-          <div className="monthPageWrapper">
-            <section className="plotWrapper" value={this.state.labsTabId == 'explorer' ? "Active" :
-              "Inactive"}>
-              {
-                (labsData.length > 0) ? (
-                  <div>
-                    <KpiExplorer
-                      labsData={labsData}
-                      queryFunction={this.handleQueries}
-                      project={this.state.project}
-                      kpi={this.state.kpi}
-                    />
-                  </div>
-                ) : (
-                    <section>
-                      Loading&hellip;
-                  </section>
-                  )
-              }
-            </section>
-            <section className="plotWrapper" value={this.state.labsTabId == 'POSsystems' ? "Active" :
-              "Inactive"}>
-              {
-                (posSystemData.length > 0) ? (
-                  <div>
-                    <PosSystems
-                      posSystemData={posSystemData}
-                      queryFunction={this.handleQueries}
-                      showAnypay={this.state.showAnypay}
-                      showPaylive={this.state.showPaylive}
-                      showDashRetail={this.state.showDashRetail}
-                      showPosChart={this.state.showPosChart}
-                    />
-                  </div>
-                ) : (
-                    null
-                  )
-              }
-            </section>
-            <section className="plotWrapper" value={this.state.labsTabId == 'wallets' ? "Active" :
-              "Inactive"}>
-              {
-                (walletData.length > 0) ? (
-                  <div>
-                    <Wallets
-                      walletData={walletData}
-                      countryData={countryData}
-                      versionData={versionData}
-                      queryFunction={this.handleQueries}
-                      showDashCore={this.state.showDashCore}
-                      showElectrum={this.state.showElectrum}
-                      showCoreAndroid={this.state.showCoreAndroid}
-                      showCoreiOS={this.state.showCoreiOS}
-                      showWalletChart={this.state.showWalletChart}
-                      showWalletType={this.state.showWalletType}
-                      showWalletCountry={this.state.showWalletCountry}
-                    />
-                  </div>
-                ) : (
-                    null
-                  )
-              }
-            </section>
-          </div>
-        </section>
       </main>
     )
   }

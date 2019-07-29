@@ -3,6 +3,10 @@
 @import url('https://fonts.googleapis.com/css?family=Titillium+Web');
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 
+.plotContianer {
+  height: 400px;
+}
+
 /* Header of the labs tabs */
 .labsHeader {
     display: block;

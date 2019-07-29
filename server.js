@@ -18,6 +18,7 @@ var cacheExpirationTime = process.env.CACHEEXPIRATION;  //Time until cache expir
 // Get data processing functions from another file
 var airtableFunctions = require('./server_components/airtableFunctions');
 var datasetBuildingFunctions = require('./server_components/datasetBuildingFunctions');
+var databaseFunctions = require('./server_components/db_functions');
 var labsAirtableFunctions = require('./server_components/labsAirtableFunctions');
 var processingFunctions = require('./server_components/dataProcessingFunctions');
 var labsProcessingFunctions = require('./server_components/labsProcessingFunctions');
@@ -787,6 +788,15 @@ app.prepare()
       queryParams_reports.month = "Jan19"
 
       app.render(req, res, actualPage, queryParams_reports)
+    })
+
+    // Routing for reports for /r
+    server.get('/database/:country_code', (req, res) => {
+      Promise.resolve(databaseFunctions.retrieveArray(req.params.country_code)).then(function (results) {
+        res.status(200).send(results);
+      }).catch((error) => {                                                           // Run this if the retrieving functions returns an error
+        res.status(200).send(serialize(error))
+      })
     })
 
     // Backward compatibility routing for February 2019 reports
