@@ -36,7 +36,7 @@ const getMonthList = () => {
 class Month extends React.Component {
     static async getInitialProps(ctx) {
         const props = {
-            month: typeof ctx.query.month == "undefined" ? "Jul19" : ctx.query.month,   // Default no query month to latest
+            month: typeof ctx.query.month == "undefined" ? "Aug19" : ctx.query.month,   // Default no query month to latest
             url: ctx.pathname,
             as: ctx.asPath,
         }
@@ -177,7 +177,7 @@ class Month extends React.Component {
                             <p>Hey everyone,</p>
                             <p>As you may know Dash Watch was not able to be funded this cycle for the first time in over 1.7 years despite having a greater than 10 to 1 yes to no vote ratio. It appears some votes were reversed at the last minute in order to keep other proposals funded which may have been on their last funding attempt. We totally understand the budgetary constraints the DAO is under, and have come up with the following plans: in order to produce some of our normal reporting work this month, we will try to raise at least 40 Dash in donations with a goal of 121 (our original proposal amount). If we fail to raise at least 40 Dash by August 15, we will return all donations on a proportional basis except for 10 Dash worth so that we have enough funds to resubmit. <b>If we don't reach our minimum, we will not report on the month of August.</b> For our next proposal which will cover September, depending on the budget situation, we will likely reduce scope and let one team member go at least temporarily in order to fit into the restricted budget. Let us know your thoughts. And once again thanks for the continued support for the last 1.7 years, it's been an honor serving the Dash community.</p>
                             <p>
-                            Here is our donation address: XtBX2gg1H5XdkGKczStAzpAmiaBYdjJgBT </p>
+                            Here is our donation address:<br></br> <b>XtBX2gg1H5XdkGKczStAzpAmiaBYdjJgBT</b></p>
                             <p>Please PM one of our team members your return address in case we don't reach our minimum of 40 Dash. (Also, please send from an address that you can sign a message on in order to prove you own the wallet).</p>
                             <p>Kind Regards, <br></br>
                             Dash Watch Report Team
