@@ -36,7 +36,7 @@ const getMonthList = () => {
 class Month extends React.Component {
     static async getInitialProps(ctx) {
         const props = {
-            month: typeof ctx.query.month == "undefined" ? "Jul19" : ctx.query.month,   // Default no query month to latest
+            month: typeof ctx.query.month == "undefined" ? "Aug19" : ctx.query.month,   // Default no query month to latest
             url: ctx.pathname,
             as: ctx.asPath,
         }
@@ -110,14 +110,14 @@ class Month extends React.Component {
         } = this.state
 
         let monthText
-        if (monthId == "Apr19") {
-            monthText = "Dash Watch April 2019 Reports"
-        } else if (monthId == "May19") {
+        if (monthId == "May19") {
             monthText = "Dash Watch May 2019 Reports"
         } else if (monthId == "Jun19") {
             monthText = "Dash Watch June 2019 Reports"
         } else if (monthId == "Jul19") {
             monthText = "Dash Watch July 2019 Reports"
+        } else if (monthId == "Aug19") {
+            monthText = "Dash Watch August 2019 Reports"
         } else {
             monthText = "Please select a month tab to view reports"
         }
@@ -160,19 +160,31 @@ class Month extends React.Component {
                     showPage="reports"
                 />
                 <section className="pagewrapper">
-                    <div className="monthTab" id='Apr19' value={this.state.monthId == 'Apr19' ? "Active" :
-                        "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">April 2019</p></div>
                     <div className="monthTab" id='May19' value={this.state.monthId == 'May19' ? "Active" :
                         "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">May 2019</p></div>
                     <div className="monthTab" id='Jun19' value={this.state.monthId == 'Jun19' ? "Active" :
                         "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">June 2019</p></div>
                     <div className="monthTab" id='Jul19' value={this.state.monthId == 'Jul19' ? "Active" :
                         "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">July 2019</p></div>
+                    <div className="monthTab" id='Aug19' value={this.state.monthId == 'Aug19' ? "Active" :
+                        "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">August 2019</p></div>
                     <div className="monthPageWrapper">
                         <div className="monthHeaderWrapper">
                             <a className="reportPageLink" id="oldReports" href="/oldreports"><i id="oldReports"></i>Older Reports</a>
                             <div className="monthHeader">{monthText}</div>
                         </div>
+                        {this.state.monthId=='Aug19' && <div className='monthTabMessage'>
+                            <p>Hey everyone,</p>
+                            <p>As you may know Dash Watch was not able to be funded this cycle for the first time in over 1.7 years despite having a greater than 10 to 1 yes to no vote ratio. It appears some votes were reversed at the last minute in order to keep other proposals funded which may have been on their last funding attempt. We totally understand the budgetary constraints the DAO is under, and have come up with the following plans: in order to produce some of our normal reporting work this month, we will try to raise at least 40 Dash in donations with a goal of 121 (our original proposal amount). If we fail to raise at least 40 Dash by August 15, we will return all donations on a proportional basis except for 10 Dash worth so that we have enough funds to resubmit. <b>If we don't reach our minimum, we will not report on the month of August.</b> For our next proposal which will cover September, depending on the budget situation, we will likely reduce scope and let one team member go at least temporarily in order to fit into the restricted budget. Let us know your thoughts. And once again thanks for the continued support for the last 1.7 years, it's been an honor serving the Dash community.</p>
+                            <p>
+                            Here is our donation address: XtBX2gg1H5XdkGKczStAzpAmiaBYdjJgBT </p>
+                            <p>Please PM one of our team members your return address in case we don't reach our minimum of 40 Dash. (Also, please send from an address that you can sign a message on in order to prove you own the wallet).</p>
+                            <p>Kind Regards, <br></br>
+                            Dash Watch Report Team
+                            </p>
+                        </div>}
+
+                        {this.state.monthId!=='Aug19' && <section>
                         <div className="monthIndexWrapper">
                             <div className="monthIndexItem" id="proposalColumn"><p className="monthColumnTitle">Proposal</p></div>
                             <div className="monthIndexItem" id="reportsColumn"><p className="monthColumnTitle">Report Link</p></div>
@@ -180,6 +192,7 @@ class Month extends React.Component {
                             <div className="monthIndexItem"><p className="monthColumnTitle">Voting Status</p></div>
                         </div>
                         {pageContent}
+                        </section>}
                         <div className="monthBottomDiv">
                             <div className="monthSubHeader">Questions, Comments, Concerns? Contact Us</div>
                             E-mail: <a href="mailto:team@dashwatch.org" target="mailto:team@dashwatch.org">team@dashwatch.org</a><br></br>

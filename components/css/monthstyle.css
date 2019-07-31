@@ -94,6 +94,10 @@
     border: solid 1px black;
 }
 
+.monthTabMessage {
+    margin: 0 1rem 0 1rem;
+}
+
 /*
 Style elements for the top of the month list table
 */
