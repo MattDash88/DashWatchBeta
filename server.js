@@ -153,7 +153,7 @@ const getOldListData = (refreshCache) => {
           monthReportData = valArray
 
           Object.keys(monthReportData).map((item) => {
-            if (typeof monthReportData[item].proposal_ref !== 'undefined' && typeof monthReportData[item].report_status !== 'undefined') {     //Check if record exists
+            if (typeof monthReportData[item].proposal_ref !== 'undefined' && typeof monthReportData[item].report_status !== 'undefined' && monthReportData[item].published_month !== 'June2018') {     //Check if record exists
               monthData = processingFunctions.processMonthListData(monthReportData[item])
               if (monthData.list_data.report_status[0] == "Opted Out") {
                 optedOutPosts.push(monthData)
