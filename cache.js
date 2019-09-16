@@ -14,13 +14,14 @@ function dbCall(userFunc) {
 
   // Log any errors
   client.on('error', function(error) {
-  console.log(error)
+  //console.log(error)
 })
 }
 
 function redisRetrieve(listId, fn) { 
   dbCall((client, done) => { 
-    client.get(listId, function (error, data) {      
+    client.get(listId, function (error, data) {   
+      console.log(error)   
       fn(error, data)
       done();
     });
@@ -29,7 +30,7 @@ function redisRetrieve(listId, fn) {
 
 function redisStore(listId, data) { 
   dbCall((client, done) => { 
-    client.set(listId, JSON.stringify(data), 'EX', cacheExpirationTime, function(err, reply) {
+    client.set(listId, JSON.stringify(data), 'EX', cacheExpirationTime, function(err, res) {
       if (err) console.log('err')
       done();
     }) 
