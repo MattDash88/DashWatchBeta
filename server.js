@@ -16,6 +16,7 @@ const serialize = data => JSON.stringify({ data });
 // Get data processing functions from another file
 var airtableFunctions = require('./server_components/airtableFunctions');
 var datasetBuildingFunctions = require('./server_components/datasetBuildingFunctions');
+var dbFunctions = require('./server_components/db_functions');
 var labsAirtableFunctions = require('./server_components/labsAirtableFunctions');
 var processingFunctions = require('./server_components/dataProcessingFunctions');
 var labsProcessingFunctions = require('./server_components/labsProcessingFunctions');
@@ -566,6 +567,16 @@ app.prepare()
         res.writeHead(200, { 'Content-Type': 'application/json' })
         return res.end(serialize({}))
       });
+    })
+
+    // Retrieve votes from database
+    server.get('/api/polldata', function (req, res) {
+      let database = 'polldb'                                                    // A query for the database that is accessed is required                                                   // Try retrieving data if the user is authorized is provided
+      Promise.resolve(dbFunctions.retrievePollData()).then(function (pollData) {
+        res.status(200).end(serialize(pollData));
+      }).catch((error) => {                                                           // Run this if the retrieving functions returns an error
+        res.status(500).send('Token is valid but something went wrong retrieving the data')
+      })
     })
 
     // Internal API call to support search

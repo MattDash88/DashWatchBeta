@@ -8,8 +8,9 @@ export default class Header extends React.Component {
         return (
             <div>
                 <Head>
-                    <link rel="shortcut icon" type="image/x-icon" href="/static/icons/favicon.ico" />   
-                    <title>Dash Watch Elections Section</title>
+                    <link rel="shortcut icon" type="image/x-icon" href="/static/icons/favicon.ico" /> 
+                    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css" />  
+                    <title>Dash Watch Polls and Elections Section</title>
                     <meta property="og:title" content="Dash Watch - Elections" />
                     <meta property="og:type" content="website" />
                     <meta property="og:description" content="" />

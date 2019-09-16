@@ -1,5 +1,23 @@
 import fetch from 'isomorphic-unfetch';
 import React from 'react';
+import 'semantic-ui-react'
+import {
+    Container,
+    Dropdown,
+    Label,
+    Form,
+    Checkbox,
+    Segment,
+    Table,
+    Menu,
+    Icon,
+    Button,
+    Divider,
+    TextArea,
+    Input,
+    Message,
+    Dimmer,
+} from 'semantic-ui-react';
 
 // Analytics
 import { trackPage, trackEvent } from '../components/functions/analytics';
@@ -33,7 +51,7 @@ const getElectionsData = () => {
     )
 }
 
-class TrustElections extends React.Component {
+class PollSection extends React.Component {
     static async getInitialProps(ctx) {
         const props = {
             tab: typeof ctx.query.tab == "undefined" ? "candidates" : ctx.query.tab,   // Default no month to latest
@@ -64,183 +82,91 @@ class TrustElections extends React.Component {
             as: props.as,
         }
 
-        // Bind functions used in class
-        this.callEvent = this.callEvent.bind(this);
-        this.handleSelectTab = this.handleSelectTab.bind(this);
-        this.handleDropdown = this.handleDropdown.bind(this);
-        this.handleSelectElection = this.handleSelectElection.bind(this);
-        this.handleClick = this.handleClick.bind(this)
-    }
-
-    // Function initiated when a month list button is pressed, requests the data for that month from index.js
-    handleSelectTab(event) {
-        event.preventDefault();
-        this.setState({
-            tabId: event.currentTarget.id,        // Change state to load different month
-            shouldRedraw: false,
-            as: `/elections?tab=${event.currentTarget.id}&election=${this.state.electionId}`,
-        })
-
-        history.pushState(this.state, '', `/elections?tab=${event.currentTarget.id}&election=${this.state.electionId}`)   // Push State to history
-        trackEvent('Elections', `Changed Tab to ${event.currentTarget.id}`)                 // Track Event on Google Analytics                                                     
-    }
-
-    // Function to activate month dropdown menu
-    handleDropdown(event) {
-        event.preventDefault();
-        this.setState({
-            showMenu: !this.state.showMenu,
-            shouldRedraw: false,
-        })
-        trackEvent('Elections', `Clicked Election Results dropdown`)
-    }
-
-    // Function to handle showing the month selected from the dropdown menu
-    handleSelectElection(event) {
-        this.setState({
-            showMenu: false,
-            electionId: event.currentTarget.value,
-            shouldRedraw: true,
-            as: `/elections?tab=${this.state.tabId}&election=${event.currentTarget.value}`,
-        })
-
-        history.pushState(this.state, '', `/elections?tab=${this.state.tabId}&election=${event.currentTarget.value}`)
-        trackEvent('Elections', `Changed Elections to ${event.currentTarget.value}`)                 // Track Event on Google Analytics   
-    }
-
-    // Function ran when the eventlistener is activated. Close dropdown menu and tooltip if clicked outside of it
-    handleClick = (event) => {
-        if (event.target.id !== "dropdownMenu") {
-            this.setState({
-                showMenu: false,
-                shouldRedraw: false,
-            })
-            trackEvent('Elections', `Clicked on Elections Vote Results page`)
-        }
-    }
-
-    // Google Analytics function to track User interaction on page
-    callEvent(event) {
-        trackEvent('Elections', 'clicked ' + event.currentTarget.id)
-    }
-
-    componentDidMount() {
-        // To handle calls from popstate when the page is called from history
-        onpopstate = event => {
-            if (event.state) {
-                this.setState(event.state)
-            }
-        }
-
-        trackPage(`/elections`) // Track Pageview in Analytics
-        window.addEventListener('mousedown', this.handleClick);     // Handles closing of dropdown menu
-
-        // Promise to get the initial "month list" records 
-        Promise.resolve(getElectionsData()).then(data => {          
-            this.setState({
-                candidateListData: data.candidate_data,
-                voteMetrics: data.vote_metrics,
-                voteResults: data.vote_results,
-            })
-        }).then(history.replaceState(this.state, '', `${this.state.as}`))
-    }
-
-    componentWillUnmount() {
-        window.removeEventListener('mousedown', this.handleClick);  // Stop event listener when modal is unloaded
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-        if (prevState.tabId !== this.state.tabId || prevState.electionId !== this.state.electionId) {         // Just a history state update because it doesn't always work as desired in functions
-            history.replaceState(this.state, '', `${this.state.as}`)
-        }
+        //this.handleClick = this.handleClick.bind(this)
     }
 
     render() {
         const { // Declare data arrays used in class
-            candidateListData,
-            voteMetrics,
-            voteResults,
-            redrawState,
-            tabId,
-            electionId,
         } = this.state
 
-        let electionName
-        if (electionId == "DIF2019") {
-            electionName = "2019 Foundation Supervisors"
-        } else if (electionId == "TPE2019") {
-            electionName = "2019 Trust Protectors"
-        } else {
-            electionName = "Select an election"
-        }
-
         return (
-            <main>
+            <main className="ui container" style={{
+                marginTop: '20px',
+            }}>
                 <Header></Header>
-                <NavBar
-                    showPage="elections"
-                />
-                <section className="pagewrapper">
-                    <div className="tpTab" id="candidates" value={this.state.tabId == "candidates" ? "Active" :
-                        "Inactive"} onClick={this.handleSelectTab}><div className="tpTabText">Candidates</div></div>
-                    <div className="tpTab" id="participation" value={this.state.tabId == "participation" ? "Active" :
-                        "Inactive"} onClick={this.handleSelectTab}><div className="tpTabText">Participation</div></div>
-                    <div className="tpTab" id="results" value={this.state.tabId == "results" ? "Active" :
-                        "Inactive"} onClick={this.handleSelectTab}><div className="tpTabText">Results</div></div>
-                    <div className="tpPageWrapper">
-                    <div className="tpText">Select an election:</div> 
-                    <div className="electionsDropdown" id="dropdownMenu">
-                    <div id="dropdownMenu" onClick={this.handleDropdown} className="electionsDropbtn"><i id="electionsDropdownMenu"></i>{electionName}</div>
-                    {
-                        this.state.showMenu ? (
-                            <div className="electionsDropdownMenu" id="dropdownMenu">
-                                <button id="dropdownMenu" value="DIF2019" className="electionsDropdownItem" onClick={this.handleSelectElection}>2019 Foundation Supervisors</button>
-                                <button id="dropdownMenu" value="TPE2019" className="electionsDropdownItem" onClick={this.handleSelectElection}>2019 Trust Protectors</button>
-                            </div>
-                        ) : (
-                                null
-                            )
-                    }
-                    </div>
-                        <section className="tpPageTopSection" value={this.state.tabId == "candidates" ? "Active" :
-                            "Inactive"}>
-                            <CandidateLists
-                                electionId={electionId}
-                                candidateListData={candidateListData}
-                            />
-                        </section>
-                        <section className="tpPageTopSection" value={this.state.tabId == 'participation' ? "Active" :
-                            "Inactive"}>
-                            {
-                                voteMetrics.length == 0 ? (
-                                    <div>
-                                        <p>Loading&hellip;</p>
-                                    </div>
-                                ) : (
-                                        <VoteCharts
-                                            electionId={electionId}
-                                            voteMetrics={voteMetrics}
-                                            redrawState={redrawState}
-                                        />
-                                    )
-                            }
-                        </section>
-                        <section className="tpPageTopSection" value={this.state.tabId == "results" ? "Active" :
-                            "Inactive"}>
-                            <VoteResults
-                                electionId={electionId}
-                                vote_results={voteResults}
-                            />
-                        </section>
-                    </div>
-                </section>
-                <ScrollButton scrollStepInPx="125" delayInMs="16.66" />
-                <section className="pagewrapper">
-                </section>
+
+                <Container>
+                    <Segment>
+                        <h2>Dash Watch Polling Section</h2>
+                    </Segment>
+                    <Segment>
+                        <h3>Current polls</h3>
+                        <Table selectable>
+                            <Table.Header>
+                                <Table.Row>
+                                    <Table.HeaderCell>Poll Title</Table.HeaderCell>
+                                    <Table.HeaderCell>Poll Deadline</Table.HeaderCell>
+                                    <Table.HeaderCell>Poll URL</Table.HeaderCell>
+                                    <Table.HeaderCell>More info</Table.HeaderCell>
+                                </Table.Row>
+                            </Table.Header>
+
+                            <Table.Body>
+                                <Table.Row>
+                                    <Table.Cell>Cell</Table.Cell>
+                                    <Table.Cell>Cell</Table.Cell>
+                                    <Table.Cell>Cell</Table.Cell>
+                                    <Table.Cell>Cell</Table.Cell>
+                                </Table.Row>
+                                <Table.Row>
+                                    <Table.Cell>Cell</Table.Cell>
+                                    <Table.Cell>Cell</Table.Cell>
+                                    <Table.Cell>Cell</Table.Cell>
+                                    <Table.Cell>Cell</Table.Cell>
+                                </Table.Row>
+                                <Table.Row>
+                                    <Table.Cell>Cell</Table.Cell>
+                                    <Table.Cell>Cell</Table.Cell>
+                                    <Table.Cell>Cell</Table.Cell>
+                                    <Table.Cell>Cell</Table.Cell>
+                                </Table.Row>
+                            </Table.Body>
+                        </Table>
+                    </Segment>
+                    <Segment>
+                        <h3>Old polls</h3>
+                        <Table celled>
+                            <Table.Header>
+                                <Table.Row>
+                                    <Table.HeaderCell>Poll Title</Table.HeaderCell>
+                                    <Table.HeaderCell>Poll Deadline</Table.HeaderCell>
+                                    <Table.HeaderCell>More info and Results</Table.HeaderCell>
+                                </Table.Row>
+                            </Table.Header>
+
+                            <Table.Body>
+                                <Table.Row>
+                                    <Table.Cell>Cell</Table.Cell>
+                                    <Table.Cell>Cell</Table.Cell>
+                                    <Table.Cell>Cell</Table.Cell>
+                                </Table.Row>
+                                <Table.Row>
+                                    <Table.Cell>Cell</Table.Cell>
+                                    <Table.Cell>Cell</Table.Cell>
+                                    <Table.Cell>Cell</Table.Cell>
+                                </Table.Row>
+                                <Table.Row>
+                                    <Table.Cell>Cell</Table.Cell>
+                                    <Table.Cell>Cell</Table.Cell>
+                                    <Table.Cell>Cell</Table.Cell>
+                                </Table.Row>
+                            </Table.Body>
+                        </Table>
+                    </Segment>
+                </Container>
             </main>
         )
-
     }
 }
 
-export default TrustElections
+export default PollSection
