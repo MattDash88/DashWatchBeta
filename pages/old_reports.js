@@ -209,8 +209,6 @@ class Month extends React.Component {
                                         <button id="dropdownMenu" value="November" className="dropdownItem"  onClick={this.handleSelectMonth}>November {this.state.yearId}</button>
                                         <button id="dropdownMenu" value="October" className="dropdownItem"  onClick={this.handleSelectMonth}>October {this.state.yearId}</button>
                                         <button id="dropdownMenu" value="September" className="dropdownItem"  onClick={this.handleSelectMonth}>September {this.state.yearId}</button>
-                                        <button id="dropdownMenu" value="August" className="dropdownItem"  onClick={this.handleSelectMonth}>August {this.state.yearId}</button>
-                                        <button id="dropdownMenu" value="July" className="dropdownItem"  onClick={this.handleSelectMonth}>July {this.state.yearId}</button>
                                    </div>
                                     ) : (
                                         this.state.yearId == "2019" ? (  
@@ -219,6 +217,7 @@ class Month extends React.Component {
                                                 <button id="dropdownMenu" value="February" className="dropdownItem"  onClick={this.handleSelectMonth}>February {this.state.yearId}</button>
                                                 <button id="dropdownMenu" value="March" className="dropdownItem"  onClick={this.handleSelectMonth}>March {this.state.yearId}</button>
                                                 <button id="dropdownMenu" value="April" className="dropdownItem"  onClick={this.handleSelectMonth}>April {this.state.yearId}</button>
+                                                <button id="dropdownMenu" value="May" className="dropdownItem"  onClick={this.handleSelectMonth}>May {this.state.yearId}</button>
                                             </div>
                                         ) : (
                                             <div className="dropdownMenu" id="dropdownMenu">

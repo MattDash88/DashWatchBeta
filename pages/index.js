@@ -36,7 +36,7 @@ const getMonthList = () => {
 class Month extends React.Component {
     static async getInitialProps(ctx) {
         const props = {
-            month: typeof ctx.query.month == "undefined" ? "Aug19" : ctx.query.month,   // Default no query month to latest
+            month: typeof ctx.query.month == "undefined" ? "Sep19" : ctx.query.month,   // Default no query month to latest
             url: ctx.pathname,
             as: ctx.asPath,
         }
@@ -110,14 +110,14 @@ class Month extends React.Component {
         } = this.state
 
         let monthText
-        if (monthId == "May19") {
-            monthText = "Dash Watch May 2019 Reports"
-        } else if (monthId == "Jun19") {
+        if (monthId == "Jun19") {
             monthText = "Dash Watch June 2019 Reports"
         } else if (monthId == "Jul19") {
             monthText = "Dash Watch July 2019 Reports"
         } else if (monthId == "Aug19") {
             monthText = "Dash Watch August 2019 Reports"
+        } else if (monthId == "Sep19") {
+            monthText = "Dash Watch September 2019 Reports"
         } else {
             monthText = "Please select a month tab to view reports"
         }
@@ -160,14 +160,14 @@ class Month extends React.Component {
                     showPage="reports"
                 />
                 <section className="pagewrapper">
-                    <div className="monthTab" id='May19' value={this.state.monthId == 'May19' ? "Active" :
-                        "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">May 2019</p></div>
                     <div className="monthTab" id='Jun19' value={this.state.monthId == 'Jun19' ? "Active" :
                         "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">June 2019</p></div>
                     <div className="monthTab" id='Jul19' value={this.state.monthId == 'Jul19' ? "Active" :
                         "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">July 2019</p></div>
                     <div className="monthTab" id='Aug19' value={this.state.monthId == 'Aug19' ? "Active" :
                         "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">August 2019</p></div>
+                        <div className="monthTab" id='Sep19' value={this.state.monthId == 'Sep19' ? "Active" :
+                        "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">September 2019</p></div>
                     <div className="monthPageWrapper">
                         <div className="monthHeaderWrapper">
                             <a className="reportPageLink" id="oldReports" href="/oldreports"><i id="oldReports"></i>Older Reports</a>
@@ -175,8 +175,7 @@ class Month extends React.Component {
                         </div>
                         {this.state.monthId=='Aug19' && <div className='monthTabMessage'>
                             <p>Hey everyone,</p>
-                            <p>As you may know Dash Watch was not able to be funded this cycle for the first time in over 1.7 years despite having a greater than 10 to 1 yes to no vote ratio. It appears some votes were reversed at the last minute in order to keep other proposals funded which may have been on their last funding attempt. We totally understand the budgetary constraints the DAO is under, however without funding we are not able to report on the month of August.</p>                            
-                            <p> If you would like to see us resume reporting in September, we submitted a new proposal (<a className="votingLink" id="votingLink" href='https://app.dashnexus.org/proposals/dash-watch-12th-proposal-september-2019-funding-request/overview'>link</a>). Thank you for the continued support, it's been an honor serving the Dash community.</p>
+                            <p>As you may know Dash Watch was not able to be funded this cycle for the first time in over 1.7 years despite having a greater than 10 to 1 yes to no vote ratio. It appears some votes were reversed at the last minute in order to keep other proposals funded which may have been on their last funding attempt. We totally understand the budgetary constraints the DAO is under, however without funding we were not able to report on the month of August.</p>                            
                             <p>Kind Regards, <br></br>
                             Dash Watch Report Team
                             </p>
