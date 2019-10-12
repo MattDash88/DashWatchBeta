@@ -17,6 +17,8 @@ var cacheExpirationTime = process.env.CACHEEXPIRATION;  //Time until cache expir
 
 // Get data processing functions from another file
 var airtableFunctions = require('./server_components/airtableFunctions');
+var newLabsRetrievalFunctions = require('./server_components/newLabsRetrievalFunctions');
+var newLabsProcessingFunctions = require('./server_components/newLabsProcessingFunctions');
 var datasetBuildingFunctions = require('./server_components/datasetBuildingFunctions');
 var databaseFunctions = require('./server_components/db_functions');
 var labsAirtableFunctions = require('./server_components/labsAirtableFunctions');
@@ -450,6 +452,48 @@ const getLabsPreparedData = (refreshCache) => {
   })
 }
 
+// Function to prepare data for the Prepared Datasets for Labs (Wallets and POS systems)
+const getLabsCountryData = (refreshCache) => {
+  return new Promise((resolve, reject) => {
+    // Read cache for this function
+    cache.get('labsCountryData', function (error, data) {
+      // Connection with redis fails, for back to direct Airtable retrieval
+      var redisConnectionFailure;
+      if (error) redisConnectionFailure = true;
+
+      // If data is available in cache and a cache refresh is not requested, load from cache
+      if (!!data && refreshCache==false) { 
+        resolve(JSON.parse(data))
+      }
+
+      // If cache is empty or a cache refresh is requested, retrieve from Airtable
+      else {        
+        var countryListPromise = Promise.resolve(newLabsRetrievalFunctions.retrieveCountryList());
+        var countryListPromise = Promise.resolve(newLabsRetrievalFunctions.retrieveWalletData());
+        
+        Promise.all([countryListPromise, countryListPromise]).then(function (valArray) {          
+          // Sorting out all valArray items
+          countryListData = valArray[0]
+          countryWalletData = valArray[1]
+
+          var storeWalletData = newLabsProcessingFunctions.processCountryWalletData(countryListData, countryWalletData)
+
+          if (!redisConnectionFailure) {
+            // Store results in Redis cache, cache expire time is defined in .env
+          cache.setex('labsCountryData', cacheExpirationTime, JSON.stringify(storeWalletData))
+          }
+          
+          // Finish
+          resolve(storeWalletData)
+        }).catch((error) => {
+          reject({ error })
+          console.log(error)
+        })
+      }
+    })
+  })
+}
+
 // Function to prepare data project data for labs 
 const getLabsAllData = (refreshCache) => {
   return new Promise((resolve, reject) => {
@@ -791,8 +835,10 @@ app.prepare()
     })
 
     // Routing for reports for /r
-    server.get('/database/:country_code', (req, res) => {
-      Promise.resolve(databaseFunctions.retrieveArray(req.params.country_code)).then(function (results) {
+    server.get('/database/test', (req, res) => {
+      var refreshCache = true   // Request cache refresh
+      Promise.resolve(getLabsCountryData(refreshCache)).then(function (results) {
+        //console.log(results)
         res.status(200).send(results);
       }).catch((error) => {                                                           // Run this if the retrieving functions returns an error
         res.status(200).send(serialize(error))

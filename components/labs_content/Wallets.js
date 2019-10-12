@@ -24,18 +24,28 @@ import country_list from './lists/country_list.js';
 const colors = ['blue', 'green','red','purple']
 
 // API query requesting Trust Protector Candidate List data
-const getLabsCountryData = (country_code) => {
+const getLabsCountryData = () => {
     return (
       new Promise((resolve) => {
-        fetch(`/database/${country_code}`,)
+        fetch(`/database/test`)
           .then((res) => res.json()
-            .then((res) => {
+            .then((res) => {              
                 resolve(res)
             })
           )
       })
     )
   }
+
+function dbCall(userFunc) {
+    const client = redis.createClient(redisOptions)
+    userFunc(client, () => { client.quit(); })
+
+    // Log any errors
+    client.on('error', function (error) {
+        //console.log(error)
+    })
+}
 
 const buildContent = (labsData, queries) => {
     try {
@@ -299,13 +309,9 @@ class Wallets extends React.Component {
             showCountryMenu: false,     // Country Menu Toggle
             showTooltip: false,         // Toggle show/hiding tooltip
             shouldRedraw: false,        // Toggle redraw of charts
-            country: ['AL'],
-            countryData: [{
-                label: 'placeholder',
-                fill: false,
-                borderColor: 'blue',
-                data: [],
-            }],
+            country: new Set(),
+            countryData: '',
+            chartData: '',
             countryData2: [],
             semanticDropdown: 'Select a Country',
         }
@@ -412,72 +418,61 @@ class Wallets extends React.Component {
         }
     }
 
-    handleChange = (e, { value }) => {
+    handleChange = (e, { value, flag, text }) => {
+        var chartData = []
+        var countryList = new Set(value)
+        var countryData = this.state.countryData
+        var i = 0
+        
+        // Iterate through set of countries selecting datasets
+        countryList.forEach(function (country) {
+            chartData.push({
+                label: country,
+                fill: false,
+                borderColor: colors[i % 4],
+                data: countryData[country]
+            })
+            i = i + 1;      // Iterator for chart colors
+        })
+        
+        var countryList = new Set(value)
         this.setState({
             semanticDropdown: value,
-            country: value,
+            country: new Set(value),
+            chartData: {
+                datasets: chartData
+            }
         })
         
     }
 
     componentDidMount() {
-        window.addEventListener('mousedown', this.handleClick);     // Handles closing of dropdown menu
-        var labsCountryData2 = []
-        Object.values(this.state.country).map((item) => {
-            labsCountryData2.push(Promise.resolve(getLabsCountryData(item)));
-        })
-        
-        var labsCountryData = Promise.resolve(getLabsCountryData(this.state.country));
-        Promise.all([labsCountryData]).then(data => {            
+        window.addEventListener('mousedown', this.handleClick);     // Handles closing of dropdown menu        
+        Promise.resolve(getLabsCountryData()).then(data => {
+            var chartData = []
+            var countrySet = this.state.country
+            var i = 0
+
+            // Iterate through set of countries selecting datasets
+            countrySet.forEach(function (value) {
+                chartData.push({
+                    label: value,
+                    fill: false,
+                    borderColor: colors[i],
+                    data: data[value]
+                })
+                i++     // Iterator for chart colors
+            })
             this.setState({
-              countryData: [{
-                label: this.state.country[0],
-                fill: false,
-                borderColor: colors[0],
-                data: data[0],
-            }]
+                countryData: data,
+                chartData: {
+                    datasets: chartData
+                }
             })
         })
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        if (prevState.country !== this.state.country ) {
-            
-            var newData = []
-            Object.keys(this.state.country).map((item) => {
-                var number = item % 4;
-                Promise.resolve(getLabsCountryData(this.state.country[item])).then((data) => {
-                    newData.push({
-                        label: this.state.country[item],
-                        fill: false,
-                        borderColor: colors[number],
-                        data: data,
-                    })
-                }) ;
-            })
-
-            this.setState({
-                countryData: newData,
-            })
-
-            
-
-                //console.log(this.state.countryData)
-            //Promise.all(labsCountryData).then(data => {
-            //    const dataConstruct
-            //})
-                
-                //Object.values(data[0]).map((item) => {
-                //    dataConstruct.push({
-                //        label: this.state.country[item],
-                //        fill: false,
-                //        borderColor: 'blue',
-                //        data: data[item],
-                //    })
-                //})
-                //console.log(data)          
-        }
-    }
+   
 
     componentWillUnmount() {
         window.removeEventListener('mousedown', this.handleClick);  // Stop event listener when modal is unloaded        
@@ -490,9 +485,11 @@ class Wallets extends React.Component {
             versionData,
         } = this.props
 
-        var activeDevices = { datasets: 
-            this.state.countryData        
+        var activeDevices = { 
+            datasets: this.state.countryData        
         }
+
+        //console.log(this.state.countryData)
 
         const options = {
             scales: {
@@ -515,8 +512,8 @@ class Wallets extends React.Component {
             }
         }
 
-        console.log(this.state.countryData)
-            console.log(this.state.countryData2)
+        //console.log(this.state.countryData)
+        //console.log(this.state.countryData2)
 
         const tabQueries = {
             showChart: this.props.showWalletChart,              // Dataset to look at: 'all', 'country', 'version'
@@ -542,31 +539,28 @@ class Wallets extends React.Component {
         } = country_content
 
         //var chartObject = chartFunction(chartData, options, this.state.shouldRedraw)
-        const dropdownOptions = [
-            { key: 'af', value: 'af', flag: 'af', text: 'Afghanistan' },
-            { key: 'ax', value: 'ax', flag: 'ax', text: 'Aland Islands' },
-            { key: 'al', value: 'al', flag: 'al', text: 'Albania' },
-            { key: 'dz', value: 'dz', flag: 'dz', text: 'Algeria' },
-        ];
+        const dropdownOptions = country_list;
 
         return (
             <main>
                 <Segment>
                 <h1 className="labsHeader">Wallet Metrics</h1>
                 <Dropdown
-                    placeholder='placeholder'
+                    placeholder='Select a country'
                     search
                     clearable
                     multiple
                     selection
-                    options={country_list}
+                    options={dropdownOptions}
                     onChange={this.handleChange}
-                />                                
-                
+                /> 
+                {
+                   this.state.chartData.length !== 0 &&                               
                 <Line
-                        data={activeDevices}
-                        options={options}
-                />
+                    data={this.state.chartData}
+                    options={options}
+                />  
+                }              
                 </Segment>
             </main>
         )

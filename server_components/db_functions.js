@@ -8,11 +8,13 @@ const pool = new Pool({
     port: process.env.PG_PORT,
 });
 
+
 // Function to retrieve all votes from database
 var retrieveData = function retrieveFunction(countryCode) {
     return new Promise((resolve, reject) => {
         pool.query(`SELECT * 
-                    FROM tblAndroidWalletActiveCount'`, 
+                    FROM tblAndroidWalletActiveCount
+                    WHERE androiddb.country_code = 'VE'`, 
                     function (err, results) {
             if (err) reject(err);
             else {
@@ -35,22 +37,26 @@ var retrieveData = function retrieveFunction(countryCode) {
 }
 
 // Function to retrieve all votes from database
-var retrieveArray = function retrieveArrayFunction(countryCode) {
+var retrieveArray = function retrieveArrayFunction() {
     return new Promise((resolve, reject) => {
+        var countryList
         pool.query(`SELECT * 
-                    FROM tblAndroidWalletActiveCount 
-                    WHERE tblAndroidWalletActiveCount.countrycode = '${countryCode}'`, 
+                    FROM androiddb`, 
                     function (err, results) {
             if (err) reject(err);
             else {
-                var objs = [];                          
+                // Declaring elements 
+                storeMainData = {}                         
                 Object.values(results.rows).map((item) => {
-                    objs.push({
-                        x: item.year+'-'+item.month,
-                        y : item.activedeviceinstalls,                      
-                    });
+                    var countryCode = item.country_code
+                    var dataItem = []
+                    dataItem.push({
+                        x: item.year,
+                        y: item.activedeviceinstalls,
+                    })  
+                    storeMainData[countryCode].push(dataItem)    
                 })
-                resolve(objs);
+                resolve(storeMainData);
             }
         })
     })

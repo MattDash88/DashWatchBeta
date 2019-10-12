@@ -58,7 +58,7 @@ const getLabsAllData = () => {
 class Labs extends React.Component {
   static async getInitialProps(ctx) {
     const props = {
-      tab: typeof ctx.query.tab == "undefined" ? "explorer" : ctx.query.tab,        // Default tab is explorer
+      tab: typeof ctx.query.tab == "undefined" ? "overview" : ctx.query.tab,        // Default tab is explorer
       project: typeof ctx.query.project == "undefined" ? 0 : ctx.query.project,     // Default project is the first in the list
       kpi: typeof ctx.query.kpi == "undefined" ? 0 : ctx.query.kpi,                 // Default kpi is the first in the list
       country: typeof ctx.query.country == "undefined" ? 'Brazil' : ctx.query.country,  // Default country is the first alphabetically
@@ -98,7 +98,7 @@ class Labs extends React.Component {
       showCoreAndroid: true,
       showCoreiOS: true,
 
-      labsTabId: props.tab,
+      activeTab: props.tab,
       url: '/labs',
       as: props.as,
     }
@@ -108,14 +108,15 @@ class Labs extends React.Component {
     this.handleQueries = this.handleQueries.bind(this);
   }
 
-  handleSelectTab(event) {
+  handleSelectTab(event, { name }) {
     event.preventDefault();
+    console.log(name)
     this.setState({
-      labsTabId: event.currentTarget.id,
-      as: `/labs?tab=${event.currentTarget.id}`,
+      activeTab: name,
+      as: `/labs?tab=${name}`,
     })
-    history.pushState(this.state, '', `/labs?tab=${event.currentTarget.id}`)                    // Push State to history
-    trackEvent('Labs Page', `Changed Tab to ${event.currentTarget.id}`)                 // Track Event on Google Analytics
+    history.pushState(this.state, '', `/labs?tab=${name}`)                    // Push State to history
+    trackEvent('Labs Page', `Changed Tab to ${name}`)                 // Track Event on Google Analytics
   }
 
   // Function to handle queries pushed by the sub Classes/tabs
@@ -199,15 +200,34 @@ class Labs extends React.Component {
       countryData,
       versionData,
       labsData,
+      activeTab,
     } = this.state
 
+    console.log(activeTab === 'overview')
+
     return (
-      <main>
+      <main className="ui container" style={{
+        marginTop: '20px',
+      }}>
         <Header></Header>
         <Menu>
-        <Tab.Pane>Something</Tab.Pane>
-        <Tab.Pane>Another</Tab.Pane>
+        <Menu.Item
+        name='overview'
+        active={activeTab === 'overview'}
+        onClick={this.handleSelectTab}
+        >
+          Overview
+        </Menu.Item>
+        <Menu.Item
+        name='wallets'
+        active={activeTab === 'wallets'}
+        onClick={this.handleSelectTab}
+        >
+          Wallets
+        </Menu.Item>
         </Menu>
+        {
+          activeTab == 'wallets' &&
         <Wallets
           walletData={walletData}
           countryData={countryData}
@@ -221,6 +241,7 @@ class Labs extends React.Component {
           showWalletType={this.state.showWalletType}
           showWalletCountry={this.state.showWalletCountry}
         />
+        }
       </main>
     )
   }
