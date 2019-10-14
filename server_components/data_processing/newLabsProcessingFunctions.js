@@ -10,11 +10,11 @@ var processCountryWalletData = function mainWalletFunction(countryList, walletDa
         deltaInstallsArray = []
         Object.values(walletData).map((item) => {   //Go through full Android wallet SQL dataset            
             if (item.country_code == countryCode) { // Match country code with SQL entry, datasets are build up by country
-                var dateString = item.year+'-'+item.month
+                var dateString = item.date.toISOString().substring(0,7)  // Cut of day and timezone from string
                 // Prepare datasets for charts
                 activeInstallsArray.push({
                     x: dateString,
-                    y: item.activedeviceinstalls,
+                    y: item.active_device_installs,
                 })
                 if (item.delta_active_installs !== null) {
                     deltaInstallsArray.push({

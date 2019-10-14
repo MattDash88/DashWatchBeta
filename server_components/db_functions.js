@@ -1,6 +1,12 @@
 require('dotenv').config();    // Access .env variables
-const { Pool, Client } = require('pg');
-const pool = new Pool({
+const pg = require('pg');
+var types = pg.types;
+types.setTypeParser(1114, function(stringValue) {
+    return new Date(stringValue + "+0000");
+});
+
+
+const pool = new pg.Pool({
     host: process.env.PG_HOST,
     user: process.env.PG_USER,
     password: process.env.PG_PW,
@@ -62,7 +68,35 @@ var retrieveArray = function retrieveArrayFunction() {
     })
 }
 
+// Function to retrieve all votes from database
+var retrieveTest = function retrieveTestFunction() {
+    return new Promise((resolve, reject) => {
+        var countryList
+        pool.query(`SELECT * FROM android_work_table ORDER BY date DESC, active_device_installs DESC`, 
+                    function (err, results) {
+            if (err) reject(err);
+            else {
+                // Declaring elements 
+                storeMainData = {}      
+                var dataItem = []                            
+                Object.values(results.rows).map((item) => {
+                    var dateString = item.date.toISOString().substring(0,7)  // Cut of day and timezone from string      
+                    console.log(dateString) 
+                    var countryCode = item.country_code                    
+                    dataItem.push({
+                        x: dateString,
+                        y: item.active_device_installs,
+                        z: item.delta_active_installs,
+                    })   
+                })
+                resolve(dataItem);
+            }
+        })
+    })
+}
+
 module.exports = {
     retrieveData,
     retrieveArray,
+    retrieveTest,
 }
