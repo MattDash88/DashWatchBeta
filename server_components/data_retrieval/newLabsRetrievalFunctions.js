@@ -53,6 +53,7 @@ var retrieveTopList = function retrieveWalletDataFunction(element) {
                         country: item.country_code,
                         active_devices: item.active_device_installs,
                         delta_installs: item.delta_active_installs,
+                        id: item.unique_id,
                     }) 
                 })
                 resolve(storeMainData);

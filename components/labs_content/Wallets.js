@@ -27,7 +27,7 @@ const colors = ['blue', 'green','red','purple']
 const getLabsCountryData = () => {
     return (
       new Promise((resolve) => {
-        fetch(`/database/test`)
+        fetch(`/api/dataset/labsWalletData`)
           .then((res) => res.json()
             .then((res) => {              
                 resolve(res)
@@ -449,6 +449,8 @@ class Wallets extends React.Component {
     componentDidMount() {
         window.addEventListener('mousedown', this.handleClick);     // Handles closing of dropdown menu        
         Promise.resolve(getLabsCountryData()).then(data => {
+            const activeDevices = data.active_installs
+            
             var chartData = []
             var countrySet = this.state.country
             var i = 0
@@ -459,12 +461,12 @@ class Wallets extends React.Component {
                     label: value,
                     fill: false,
                     borderColor: colors[i],
-                    data: data[value]
+                    data: activeDevices[value]
                 })
                 i++     // Iterator for chart colors
             })
             this.setState({
-                countryData: data,
+                countryData: activeDevices,
                 chartData: {
                     datasets: chartData
                 }

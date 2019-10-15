@@ -688,7 +688,7 @@ app.prepare()
 
     // API call to get labs Wallet top lists
     server.get('/api/dataset/labsWalletTopLists', (req, res) => {
-      var refreshCache = false   // Request cache refresh
+      var refreshCache = true   // Request cache refresh
       Promise.resolve(labsFunctions.getLabsTopWalletList(refreshCache)).then(function (results) {
         res.status(200).send(results);
       }).catch((error) => {                                                           // Run this if the retrieving functions returns an error
@@ -698,7 +698,7 @@ app.prepare()
 
     // API call to get labs Wallet data
     server.get('/api/dataset/labsWalletData', (req, res) => {
-      var refreshCache = false   // Request cache refresh
+      var refreshCache = true   // Request cache refresh
       Promise.resolve(labsFunctions.getLabsCountryData(refreshCache)).then(function (results) {
         res.status(200).send(results);
       }).catch((error) => {                                                           // Run this if the retrieving functions returns an error

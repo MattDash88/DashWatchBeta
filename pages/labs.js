@@ -25,6 +25,7 @@ import { trackPage, trackEvent } from '../components/functions/analytics';
 // Import other elements 
 import Header from '../components/headers/LabsHeader';
 
+import LabsOverview from "../components/labs_content/Overview";
 import Wallets from "../components/labs_content/Wallets";
 
 // API query requesting Trust Protector Candidate List data
@@ -203,8 +204,6 @@ class Labs extends React.Component {
       activeTab,
     } = this.state
 
-    console.log(activeTab === 'overview')
-
     return (
       <main className="ui container" style={{
         marginTop: '20px',
@@ -226,6 +225,10 @@ class Labs extends React.Component {
           Wallets
         </Menu.Item>
         </Menu>
+        {
+          activeTab == 'overview' &&
+          <LabsOverview></LabsOverview>
+        }
         {
           activeTab == 'wallets' &&
         <Wallets
