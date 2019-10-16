@@ -9,7 +9,7 @@ const pool = new Pool({
 });
 
 // Function to retrieve all votes from database
-var retrieveCountryList = function retrieveCountryListFunction() {
+var retrieveWalletCountryList = function retrieveCountryListFunction() {
     return new Promise((resolve, reject) => {
         pool.query(`SELECT * 
                     FROM countryList`, 
@@ -64,6 +64,6 @@ var retrieveTopList = function retrieveWalletDataFunction(element) {
 
 module.exports = {
     retrieveTopList,
-    retrieveCountryList,
+    retrieveWalletCountryList,
     retrieveWalletData,
 }

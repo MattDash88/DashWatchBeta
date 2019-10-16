@@ -706,6 +706,16 @@ app.prepare()
       })
     })
 
+    // API call to get labs Wallet data
+    server.get('/api/dataset/labsWalletCountryList', (req, res) => {
+      var refreshCache = true   // Request cache refresh
+      Promise.resolve(labsFunctions.getLabsWalletCountryList(refreshCache)).then(function (results) {
+        res.status(200).send(results);
+      }).catch((error) => {                                                           // Run this if the retrieving functions returns an error
+        res.status(200).send(serialize(error))
+      })
+    })
+
     // Internal API call to refresh cache
     server.get('/api/cache/refresh', (req, res) => {
       var refreshCache = true   // Request cache refresh

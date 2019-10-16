@@ -71,7 +71,7 @@ const getLabsCountryData = (refreshCache) => {
 
             // If cache is empty or a cache refresh is requested, retrieve from Airtable
             else {
-                var countryListPromise = Promise.resolve(newLabsRetrievalFunctions.retrieveCountryList());
+                var countryListPromise = Promise.resolve(newLabsRetrievalFunctions.retrieveWalletCountryList());
                 var countryListPromise = Promise.resolve(newLabsRetrievalFunctions.retrieveWalletData());
 
                 Promise.all([countryListPromise, countryListPromise]).then(function (valArray) {
@@ -97,7 +97,52 @@ const getLabsCountryData = (refreshCache) => {
     })
 }
 
+// Function to prepare data for the Prepared Datasets for Labs (Wallets and POS systems)
+const getLabsWalletCountryList = (refreshCache) => {
+    return new Promise((resolve, reject) => {
+        // Read cache for this function
+        cache.get('labsWalletCountryList', function (error, data) {
+            // Connection with redis fails, for back to direct Airtable retrieval
+            var redisConnectionFailure;
+            if (error) redisConnectionFailure = true;
+
+            // If data is available in cache and a cache refresh is not requested, load from cache
+            if (!!data && refreshCache == false) {
+                resolve(JSON.parse(data))
+            }
+
+            // If cache is empty or a cache refresh is requested, retrieve from Airtable
+            else {
+                var countryListPromise = Promise.resolve(newLabsRetrievalFunctions.retrieveWalletCountryList());
+
+                Promise.resolve(countryListPromise).then(function (valArray) {
+                    // Sorting out all valArray items
+                    var countryList = valArray
+                    storeCountryData = {}
+
+                    Object.values(countryList).map((item) => {
+                        var countryCode = item.country_code
+                        storeCountryData[countryCode] = item
+                    })
+
+                    if (!redisConnectionFailure) {
+                        // Store results in Redis cache, cache expire time is defined in .env
+                        cache.setex('labsCountryData', cacheExpirationTime, JSON.stringify(storeCountryData))
+                    }
+
+                    // Finish
+                    resolve(storeCountryData)
+                }).catch((error) => {
+                    reject({ error })
+                    console.log(error)
+                })
+            }
+        })
+    })
+}
+
 module.exports = {
     getLabsTopWalletList,
     getLabsCountryData,
+    getLabsWalletCountryList,
 }
