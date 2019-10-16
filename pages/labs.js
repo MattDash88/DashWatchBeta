@@ -56,6 +56,19 @@ const getLabsAllData = () => {
   )
 }
 
+const getWalletCountryList = () => {
+  return (
+    new Promise((resolve) => {
+      fetch(`/api/dataset/labsWalletCountryList`)
+        .then((res) => res.json()
+          .then((res) => {              
+              resolve(res)
+          })
+        )
+    })
+  )
+}
+
 class Labs extends React.Component {
   static async getInitialProps(ctx) {
     const props = {

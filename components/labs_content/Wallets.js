@@ -21,7 +21,6 @@ import { trackEvent } from '../functions/analytics';
 // Import css
 import country_list from './lists/country_list.js';
 
-
 const colors = ['blue', 'green','red','purple']
 
 // API query requesting Trust Protector Candidate List data

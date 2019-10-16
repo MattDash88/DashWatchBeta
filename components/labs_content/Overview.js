@@ -87,7 +87,7 @@ const getWalletTopLists = () => {
             var wCountryListData = data[1]
             
             var year = walletListData.top_active_devices[0].date.slice(0,4)
-            var month = Number(walletListData.top_active_devices[0].date.slice(5,7))
+            var month = Number(walletListData.top_active_devices[0].date.slice(5,7)-1)
             var walletdateString = `${monthsList[month]} ${year}`
             this.setState({
                 activeWalletDevices: walletListData.top_active_devices,
@@ -109,10 +109,10 @@ const getWalletTopLists = () => {
                     <h1>Wallet Metrics</h1>
                     <h2>{this.state.walletListsDate}</h2>
     <Grid>
-    <Grid.Column width={4}>
+    <Grid.Column width={6}>
     {
                    this.state.activeWalletDevices.length !== 0 && 
-                    <Table collapsing selectable >
+                    <Table selectable>
                         <Table.Header>
                         <Table.Row>
                             <Table.HeaderCell>Country</Table.HeaderCell>
@@ -134,8 +134,8 @@ const getWalletTopLists = () => {
     
     {
                    this.state.deltaWalletInstalls.length !== 0 && (
-                    <Grid.Column width={4}>
-                    <Table collapsing selectable>
+                    <Grid.Column width={6}>
+                    <Table selectable>
                         <Table.Header>
                         <Table.Row>
                             <Table.HeaderCell>Country</Table.HeaderCell>
@@ -146,7 +146,7 @@ const getWalletTopLists = () => {
                         <Table.Body>
                         {deltaWalletInstalls.slice(0,6).map((row) =>
                         <Table.Row key={row.id}>
-                            <Table.Cell><Flag name = {row.country.toLowerCase()} />{row.country}</Table.Cell>
+                            <Table.Cell><Flag name = {walletCountryList[row.country].flag} />{walletCountryList[row.country].country_name}</Table.Cell>
                             <Table.Cell>{row.delta_installs}</Table.Cell>
                         </Table.Row>
                         )}
@@ -155,7 +155,7 @@ const getWalletTopLists = () => {
                     </Grid.Column>
                    ) || (<Grid.Column></Grid.Column>)}
     
-    <Grid.Column width={8}>Right</Grid.Column>
+    <Grid.Column width={6}>Right</Grid.Column>
   </Grid>
   </Container>
             
