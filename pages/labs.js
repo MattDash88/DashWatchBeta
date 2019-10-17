@@ -28,34 +28,6 @@ import Header from '../components/headers/LabsHeader';
 import LabsOverview from "../components/labs_content/Overview";
 import Wallets from "../components/labs_content/Wallets";
 
-// API query requesting Trust Protector Candidate List data
-const getLabsPreparedData = () => {
-  return (
-    new Promise((resolve) => {
-      fetch(`/api/get/labsPreparedData`)
-        .then((res) => res.json()
-          .then((res) => {
-            resolve(res.data)
-          })
-        )
-    })
-  )
-}
-
-// API query requesting Trust Protector Candidate List data
-const getLabsAllData = () => {
-  return (
-    new Promise((resolve) => {
-      fetch(`/api/get/labsAllData`)
-        .then((res) => res.json()
-          .then((res) => {
-            resolve(res.data)
-          })
-        )
-    })
-  )
-}
-
 const getWalletCountryList = () => {
   return (
     new Promise((resolve) => {
@@ -87,30 +59,13 @@ class Labs extends React.Component {
     super(props)
 
     this.state = {
-      posSystemData: '',  // Dataset for posystems tab
-      walletData: '',     // Dataset for wallet tab
-      countryData: '',     // Dataset for wallet tab
-      versionData: '',    // Dataset for wallet tab
-      labsData: '',       // Dataset for proposals tab
+      walletCountryList: '',  // Dataset for posystems tab
 
       // States that can be set by queries 
-      project: props.project,
-      kpi: props.kpi,
-      showPosChart: typeof props.chart == "undefined" ? 'Transactions' : props.chart,
-      showWalletChart: typeof props.chart == "undefined" ? 'type' : props.chart,
-      showWalletType: 'All',
-      showWalletCountry: props.country,
 
       // Booleans for POS systems
-      showAnypay: true,
-      showPaylive: true,
-      showDashRetail: true,
 
       // Booleans for Wallets
-      showDashCore: true,
-      showElectrum: true,
-      showCoreAndroid: true,
-      showCoreiOS: true,
 
       activeTab: props.tab,
       url: '/labs',
@@ -185,18 +140,15 @@ class Labs extends React.Component {
         this.setState(event.state)
       }
     }
-    var labsPreparedData = Promise.resolve(getLabsPreparedData());
-    var labsAllData = Promise.resolve(getLabsAllData());
+    var wCountryListPromise = Promise.resolve(getWalletCountryList())
 
-    Promise.all([labsAllData, labsPreparedData]).then(data => {
+    Promise.all([wCountryListPromise]).then(data => {
+      var wCountryListData = data[0]
+      
       this.setState({
-        labsData: data[0],
-        posSystemData: data[1].pos_system_data,
-        walletData: data[1].wallet_data,
-        countryData: data[1].country_data,
-        versionData: data[1].version_data,
+          walletCountryList: wCountryListData,
       })
-    }).then(history.replaceState(this.state, '', `${this.state.as}`))
+  }).then(history.replaceState(this.state, '', `${this.state.as}`))
     trackPage(`/labs`)  // Track Pageview in Analytics
   }
 
@@ -209,11 +161,7 @@ class Labs extends React.Component {
 
   render() {
     const { // Declare data arrays used in class
-      posSystemData,
-      walletData,
-      countryData,
-      versionData,
-      labsData,
+      walletCountryList,
       activeTab,
     } = this.state
 
@@ -222,6 +170,7 @@ class Labs extends React.Component {
         marginTop: '20px',
       }}>
         <Header></Header>
+        <Container>
         <Menu>
         <Menu.Item
         name='overview'
@@ -239,25 +188,24 @@ class Labs extends React.Component {
         </Menu.Item>
         </Menu>
         {
+                   (walletCountryList.length !== 0 ) && (
+                   <section>
+        {
           activeTab == 'overview' &&
-          <LabsOverview></LabsOverview>
+          <LabsOverview
+          walletCountryList2={walletCountryList}
+          />
         }
         {
           activeTab == 'wallets' &&
         <Wallets
-          walletData={walletData}
-          countryData={countryData}
-          versionData={versionData}
-          queryFunction={this.handleQueries}
-          showDashCore={this.state.showDashCore}
-          showElectrum={this.state.showElectrum}
-          showCoreAndroid={this.state.showCoreAndroid}
-          showCoreiOS={this.state.showCoreiOS}
-          showWalletChart={this.state.showWalletChart}
-          showWalletType={this.state.showWalletType}
-          showWalletCountry={this.state.showWalletCountry}
+        walletCountryList={walletCountryList}
         />
         }
+        </section>  
+        ) || (<Segment loading />)
+      }
+        </Container>
       </main>
     )
   }

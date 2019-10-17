@@ -37,266 +37,39 @@ const getLabsCountryData = () => {
     )
   }
 
-function dbCall(userFunc) {
-    const client = redis.createClient(redisOptions)
-    userFunc(client, () => { client.quit(); })
+  const getWalletCountryList = () => {
+    return (
+      new Promise((resolve) => {
+        fetch(`/api/dataset/labsWalletCountryList`)
+          .then((res) => res.json()
+            .then((res) => {              
+                resolve(res)
+            })
+          )
+      })
+    )
+  }
 
-    // Log any errors
-    client.on('error', function (error) {
-        //console.log(error)
+function createDropdownList(countryObject) {
+    try {
+    var dropdownList = []
+    Object.values(countryObject).map((item) => {
+        dropdownList.push({
+            key: item.unique_id,
+            value: item.country_code,
+            flag: item.flag,
+            text: item.country_name,
+        })
     })
-}
-
-const buildContent = (labsData, queries) => {
-    try {
-        var totalDownloads = []
-        var desktopDownloads = []
-        var mobileDownloads = []
-        {
-            queries.showDashCore ? (
-                totalDownloads.push({
-                    label: labsData[0].wallet_name,
-                    fill: false,
-                    borderColor: 'blue',
-                    data: labsData[0].total_downloads,
-                }),
-                desktopDownloads.push({
-                    label: labsData[0].wallet_name,
-                    fill: false,
-                    borderColor: 'blue',
-                    data: labsData[0].desktop_downloads,
-                }),
-                mobileDownloads.push({
-                    label: labsData[0].wallet_name,
-                    fill: false,
-                    borderColor: 'blue',
-                    data: labsData[0].mobile_downloads,
-                })
-            ) : (
-                    null
-                )
-        }
-        {
-            queries.showElectrum ? (
-                totalDownloads.push({
-                    label: labsData[1].wallet_name,
-                    fill: false,
-                    borderColor: 'purple',
-                    data: labsData[1].total_downloads,
-                }),
-                desktopDownloads.push({
-                    label: labsData[1].wallet_name,
-                    fill: false,
-                    borderColor: 'purple',
-                    data: labsData[1].desktop_downloads,
-                }),
-                mobileDownloads.push({
-                    label: labsData[1].wallet_name,
-                    fill: false,
-                    borderColor: 'purple',
-                    data: labsData[1].mobile_downloads,
-                })
-            ) : (
-                    null
-                )
-        }
-        {
-            queries.showCoreAndroid ? (
-                totalDownloads.push({
-                    label: labsData[2].wallet_name,
-                    fill: false,
-                    borderColor: 'green',
-                    data: labsData[2].total_downloads,
-                }),
-                desktopDownloads.push({
-                    label: labsData[2].wallet_name,
-                    fill: false,
-                    borderColor: 'green',
-                    data: labsData[2].desktop_downloads,
-                }),
-                mobileDownloads.push({
-                    label: labsData[2].wallet_name,
-                    fill: false,
-                    borderColor: 'green',
-                    data: labsData[2].mobile_downloads,
-                })
-            ) : (
-                    null
-                )
-        }
-        {
-            queries.showCoreiOS ? (
-                totalDownloads.push({
-                    label: 'Core iOS',
-                    fill: false,
-                    borderColor: '#FF3824',
-                    data: labsData[3].total_downloads,
-                }),
-                desktopDownloads.push({
-                    label: 'Core iOS',
-                    fill: false,
-                    borderColor: '#FF3824',
-                    data: labsData[3].desktop_downloads,
-                }),
-                mobileDownloads.push({
-                    label: 'Core iOS',
-                    fill: false,
-                    borderColor: '#FF3824',
-                    data: labsData[3].mobile_downloads,
-                })
-            ) : (
-                    null
-                )
-        }
-
-        // Set chart options
-        const options = {
-            scales: {
-                xAxes: [{
-                    type: 'time',
-                    time: {
-                        unit: 'month'
-                    },
-                    distribution: "series",
-                }],
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true,
-                    },
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'Downloads per Month'
-                    },
-                }]
-            }
-        }
-
-        // Set Dropdown name
-        if (queries.showChart == 'type') {
-            var dropdownName = "Wallet type"
-        } else if (queries.showChart == 'country') {
-            var dropdownName = "Installs by country"
-        } else if (queries.showChart == 'version') {
-            var dropdownName = "Downloads by version"
-        } else {
-            var dropdownName = "Select chart type"
-        }
-
-        const pageContent = {   // Elements that are used in page rendering
-            proposalOwnerLink:
-                <div>
-                    <p className="labsText">
-                        <a id="Proposal Owner Link" href={`/proposals?search=${labsData[1].wallet_proposal_owner}`} target="" >Link to Proposal Owner {labsData[1].wallet_name}</a>
-                    </p>
-                </div>,
-            dropdownMenuString: dropdownName,
-        }
-        
-        // Set the requested dataset as chartdata
-        if (queries.showType == 'All') {
-            var chartData = { datasets: totalDownloads }
-        } else if (queries.showType == 'Desktop') {
-            var chartData = { datasets: desktopDownloads }
-        } else if (queries.showType == 'Mobile') {
-            var chartData = { datasets: mobileDownloads }
-        } else {
-            var chartData = { datasets: totalDownloads }
-        }
-        return {
-            chartData: chartData,
-            options: options,
-            pageContent: pageContent,
-        }
-    } catch (e) {
-        // Set Dropdown name
-        if (queries.showChart == 'type') {
-            var dropdownName = "Wallet type"
-        } else if (queries.showChart == 'country') {
-            var dropdownName = "Installs by country"
-        } else if (queries.showChart == 'version') {
-            var dropdownName = "Downloads by version"
-        } else {
-            var dropdownName = "Select chart type"
-        }
-
-        const pageContent = {   // Elements that are used in page rendering
-            proposalOwnerLink: <div></div>,
-            dropdownMenuString: dropdownName,
-        }
-        return {
-            chartData: { datasets: [] },
-            options: {},
-            pageContent: pageContent,
-        }
+    return dropdownList
+} catch (e) {
+    return {
+        key: 'error',
+        value: '',
+        flag: '',
+        text: 'Something went wrong',
     }
 }
-
-const buildCountryContent = (countryData, queries) => {
-    try {
-        var country = queries.showCountry
-        var activeDevices = [
-            {
-                label: country,
-                fill: false,
-                borderColor: 'blue',
-                data: countryData[country].active_devices,
-            }
-        ]
-
-        const options = {
-            scales: {
-                xAxes: [{
-                    type: 'time',
-                    time: {
-                        unit: 'month'
-                    },
-                    distribution: "series",
-                }],
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true,
-                    },
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'Active Andriod devices with wallet installed'
-                    },
-                }]
-            }
-        }
-
-        return {
-            countryChart: { datasets: activeDevices },
-            countryOptions: options,
-        }
-    } catch (e) {
-        return {
-            countryChart: { datasets: [] },
-            countryOptions: {},
-        }
-    }
-}
-
-const chartFunction = (chartData, options, redrawState) => {
-    try {
-        var chartObject =
-            <div>
-                <Line
-                    data={chartData}
-                    options={options}
-                    redraw={redrawState}
-                />
-            </div>
-
-        return chartObject
-    }
-    catch (error) {
-        var chartObject =
-            <div>
-                Please select a valid dataset
-            </div>
-
-        return chartObject
-    }
 }
 
 class Wallets extends React.Component {
@@ -311,8 +84,8 @@ class Wallets extends React.Component {
             shouldRedraw: false,        // Toggle redraw of charts
             country: new Set(),
             countryData: '',
+            walletCountryList: '',
             chartData: '',
-            countryData2: [],
             semanticDropdown: 'Select a Country',
         }
 
@@ -420,22 +193,22 @@ class Wallets extends React.Component {
 
     handleChange = (e, { value, flag, text }) => {
         var chartData = []
-        var countryList = new Set(value)
+        var requestedCountries = new Set(value)
         var countryData = this.state.countryData
+        var countryList = this.state.walletCountryList
         var i = 0
         
         // Iterate through set of countries selecting datasets
-        countryList.forEach(function (country) {
+        requestedCountries.forEach(function (country) {
             chartData.push({
-                label: country,
+                label: countryList[country].country_name,
                 fill: false,
                 borderColor: colors[i % 4],
                 data: countryData[country]
             })
             i = i + 1;      // Iterator for chart colors
         })
-        
-        var countryList = new Set(value)
+
         this.setState({
             semanticDropdown: value,
             country: new Set(value),
@@ -448,8 +221,13 @@ class Wallets extends React.Component {
 
     componentDidMount() {
         window.addEventListener('mousedown', this.handleClick);     // Handles closing of dropdown menu        
-        Promise.resolve(getLabsCountryData()).then(data => {
-            const activeDevices = data.active_installs
+        
+        var wCountryDataPromise =  Promise.resolve(getLabsCountryData())
+        var wCountryListPromise = Promise.resolve(getWalletCountryList())
+
+        Promise.all([wCountryDataPromise, wCountryListPromise]).then(data => {
+            const activeDevices = data[0].active_installs
+            const wCountryListData = data[1]
             
             var chartData = []
             var countrySet = this.state.country
@@ -467,9 +245,7 @@ class Wallets extends React.Component {
             })
             this.setState({
                 countryData: activeDevices,
-                chartData: {
-                    datasets: chartData
-                }
+                walletCountryList: wCountryListData,
             })
         })
     }
@@ -482,16 +258,9 @@ class Wallets extends React.Component {
 
     render() {
         const { // Declare data arrays used in class
-            walletData,
-            countryData,
-            versionData,
-        } = this.props
-
-        var activeDevices = { 
-            datasets: this.state.countryData        
-        }
-
-        //console.log(this.state.countryData)
+            chartData,
+            walletCountryList,
+        } = this.state
 
         const options = {
             scales: {
@@ -514,34 +283,8 @@ class Wallets extends React.Component {
             }
         }
 
-        //console.log(this.state.countryData)
-        //console.log(this.state.countryData2)
-
-        const tabQueries = {
-            showChart: this.props.showWalletChart,              // Dataset to look at: 'all', 'country', 'version'
-            showType: this.props.showWalletType,
-            showCountry: this.props.showWalletCountry,          // Sets the country sub chart
-            showDashCore: this.props.showDashCore,
-            showElectrum: this.props.showElectrum,
-            showCoreAndroid: this.props.showCoreAndroid,
-            showCoreiOS: this.props.showCoreiOS,
-        }
-
-        const content = buildContent(walletData, tabQueries)
-        const country_content = buildCountryContent(countryData, tabQueries)
-
-        const {
-            chartData,
-            pageContent,
-        } = content
-
-        const {
-            countryChart,
-            countryOptions,
-        } = country_content
-
         //var chartObject = chartFunction(chartData, options, this.state.shouldRedraw)
-        const dropdownOptions = country_list;
+        const dropdownOptions = createDropdownList(walletCountryList)
 
         return (
             <main>
@@ -557,9 +300,9 @@ class Wallets extends React.Component {
                     onChange={this.handleChange}
                 /> 
                 {
-                   this.state.chartData.length !== 0 &&                               
+                   chartData.length !== 0 &&                               
                 <Line
-                    data={this.state.chartData}
+                    data={chartData}
                     options={options}
                 />  
                 }              

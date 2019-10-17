@@ -104,15 +104,21 @@ const getWalletTopLists = () => {
             deltaWalletInstalls,
             walletCountryList,
         } = this.state
+
+        const { // Declare data arrays used in class
+            walletCountryList2,
+        } = this.props
+
+        console.log(walletCountryList2['VE'])
         return (
-    <Container>
+    <main>
                     <h1>Wallet Metrics</h1>
-                    <h2>{this.state.walletListsDate}</h2>
+                    <Label ribbon>{this.state.walletListsDate}</Label>
     <Grid>
-    <Grid.Column width={6}>
+    <Grid.Column width={4}>
     {
-                   this.state.activeWalletDevices.length !== 0 && 
-                    <Table selectable>
+                   (activeWalletDevices.length !== 0 ) && 
+                    <Table selectable singleLine fixed>
                         <Table.Header>
                         <Table.Row>
                             <Table.HeaderCell>Country</Table.HeaderCell>
@@ -123,7 +129,7 @@ const getWalletTopLists = () => {
                         <Table.Body>
                         {activeWalletDevices.slice(0,6).map((row) =>
                         <Table.Row key={row.id}>
-                            <Table.Cell><Flag name = {walletCountryList[row.country].flag} />{walletCountryList[row.country].country_name}</Table.Cell>
+                            <Table.Cell><Flag name = {walletCountryList2[row.country].flag} />{walletCountryList2[row.country].country_name}</Table.Cell>
                             <Table.Cell>{row.active_devices}</Table.Cell>
                         </Table.Row>
                         )}
@@ -134,7 +140,7 @@ const getWalletTopLists = () => {
     
     {
                    this.state.deltaWalletInstalls.length !== 0 && (
-                    <Grid.Column width={6}>
+                    <Grid.Column width={4}>
                     <Table selectable>
                         <Table.Header>
                         <Table.Row>
@@ -146,19 +152,19 @@ const getWalletTopLists = () => {
                         <Table.Body>
                         {deltaWalletInstalls.slice(0,6).map((row) =>
                         <Table.Row key={row.id}>
-                            <Table.Cell><Flag name = {walletCountryList[row.country].flag} />{walletCountryList[row.country].country_name}</Table.Cell>
+                            <Table.Cell><Flag name = {walletCountryList2[row.country].flag} />{walletCountryList2[row.country].country_name}</Table.Cell>
                             <Table.Cell>{row.delta_installs}</Table.Cell>
                         </Table.Row>
                         )}
                         </Table.Body>
                     </Table>
                     </Grid.Column>
-                   ) || (<Grid.Column></Grid.Column>)}
+                   ) || (<Grid.Column></Grid.Column>)
+                }
     
-    <Grid.Column width={6}>Right</Grid.Column>
+    <Grid.Column width={4}>Right</Grid.Column>
   </Grid>
-  </Container>
-            
+  </main>      
         )
     }
 }
