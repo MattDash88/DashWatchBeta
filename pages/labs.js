@@ -14,6 +14,8 @@ import {
   Dimmer,
   Tab,
   Menu,
+  Sidebar,
+  Grid,
 } from 'semantic-ui-react';
 
 
@@ -33,8 +35,8 @@ const getWalletCountryList = () => {
     new Promise((resolve) => {
       fetch(`/api/dataset/labsWalletCountryList`)
         .then((res) => res.json()
-          .then((res) => {              
-              resolve(res)
+          .then((res) => {
+            resolve(res)
           })
         )
     })
@@ -60,6 +62,8 @@ class Labs extends React.Component {
 
     this.state = {
       walletCountryList: '',  // Dataset for posystems tab
+      view: 'largeScreen',
+      showSidebar: false,
 
       // States that can be set by queries 
 
@@ -74,17 +78,25 @@ class Labs extends React.Component {
 
     // Binding functions in this class
     this.handleSelectTab = this.handleSelectTab.bind(this);
+    this.toggleSidebar = this.toggleSidebar.bind(this);
     this.handleQueries = this.handleQueries.bind(this);
   }
 
   handleSelectTab(event, { name }) {
     event.preventDefault();
-    console.log(name)
     this.setState({
       activeTab: name,
       as: `/labs?tab=${name}`,
     })
     history.pushState(this.state, '', `/labs?tab=${name}`)                    // Push State to history
+    trackEvent('Labs Page', `Changed Tab to ${name}`)                 // Track Event on Google Analytics
+  }
+
+  toggleSidebar(event) {
+    event.preventDefault();
+    this.setState({
+      showSidebar: !this.state.showSidebar,
+    })
     trackEvent('Labs Page', `Changed Tab to ${name}`)                 // Track Event on Google Analytics
   }
 
@@ -144,11 +156,11 @@ class Labs extends React.Component {
 
     Promise.all([wCountryListPromise]).then(data => {
       var wCountryListData = data[0]
-      
+
       this.setState({
-          walletCountryList: wCountryListData,
+        walletCountryList: wCountryListData,
       })
-  }).then(history.replaceState(this.state, '', `${this.state.as}`))
+    }).then(history.replaceState(this.state, '', `${this.state.as}`))
     trackPage(`/labs`)  // Track Pageview in Analytics
   }
 
@@ -161,51 +173,142 @@ class Labs extends React.Component {
 
   render() {
     const { // Declare data arrays used in class
+      view,
+      showSidebar,
       walletCountryList,
       activeTab,
     } = this.state
 
     return (
-      <main className="ui container" style={{
+      <main style={{
         marginTop: '20px',
       }}>
         <Header></Header>
-        <Container>
-        <Menu>
-        <Menu.Item
-        name='overview'
-        active={activeTab === 'overview'}
-        onClick={this.handleSelectTab}
-        >
-          Overview
+          {
+            (view == 'mobile') &&
+            <section>
+              <Grid>
+                <Grid.Column width = {2}>
+              <Menu fluid
+              vertical
+              >
+              <Menu.Item
+                  active={showSidebar}
+                  onClick={this.toggleSidebar}                  
+                  >Labs Menu
+                  </Menu.Item>
+              </Menu>
+              </Grid.Column>
+              </Grid>
+            
+              <Sidebar.Pushable >                
+                <Sidebar 
+                  as={Menu}
+                  animation='overlay'
+                  icon='labeled'
+                  onHide={() => this.setState({
+                    showSidebar: false,
+                  })}
+                  vertical
+                  visible={this.state.showSidebar}
+                  width={4}
+                >
+                  <Menu.Item as='a'
+                    onClick={this.toggleSidebar}
+                  >Close Menu
+                  </Menu.Item>
+                  <Menu.Item as='a'
+                    name='overview'
+                    active={activeTab === 'overview'}
+                    onClick={this.handleSelectTab}
+                  >
+                    Overview
+                  </Menu.Item>
+                  <Menu.Item as='a'
+                    name='wallets'
+                    active={activeTab === 'wallets'}
+                    onClick={this.handleSelectTab}
+                  >
+                    Wallets
+                        </Menu.Item>
+                        <Menu.Item as='a'
+                    name='websites'
+                    active={activeTab === 'websites'}
+                  >
+                    Websites
+                        </Menu.Item>
+                </Sidebar>
+
+                <Sidebar.Pusher>
+                  <Segment basic>
+                    {
+                      (walletCountryList.length !== 0) && (
+                        <section>
+                          {
+                            activeTab == 'overview' &&
+                            <LabsOverview
+                              walletCountryList2={walletCountryList}
+                            />
+                          }
+                          {
+                            activeTab == 'wallets' &&
+                            <Wallets
+                              walletCountryList={walletCountryList}
+                            />
+                          }
+                        </section>
+                      ) || (<Segment loading />)
+                    }
+                  </Segment>
+                </Sidebar.Pusher>
+              </Sidebar.Pushable>
+              </section>
+          }
+
+          {
+            (view == 'largeScreen') &&
+            <section style={{
+              marginLeft: '20px',
+              marginRight: '20px',
+            }}>
+            <Menu>
+              <Menu.Item
+                name='overview'
+                active={activeTab === 'overview'}
+                onClick={this.handleSelectTab}
+              >
+                Overview
         </Menu.Item>
-        <Menu.Item
-        name='wallets'
-        active={activeTab === 'wallets'}
-        onClick={this.handleSelectTab}
-        >
-          Wallets
-        </Menu.Item>
-        </Menu>
-        {
-                   (walletCountryList.length !== 0 ) && (
-                   <section>
-        {
-          activeTab == 'overview' &&
-          <LabsOverview
-          walletCountryList2={walletCountryList}
-          />
-        }
-        {
-          activeTab == 'wallets' &&
-        <Wallets
-        walletCountryList={walletCountryList}
-        />
-        }
-        </section>  
-        ) || (<Segment loading />)
-      }
-        </Container>
+              <Menu.Item
+                name='wallets'
+                active={activeTab === 'wallets'}
+                onClick={this.handleSelectTab}
+              >
+                Wallets
+              </Menu.Item>
+            </Menu>
+             {
+              (walletCountryList.length !== 0 && view == 'largeScreen') && (
+                <section>
+                  {
+                    activeTab == 'overview' &&
+                    <LabsOverview
+                      walletCountryList2={walletCountryList}
+                    />
+                  }
+                  {
+                    activeTab == 'wallets' &&
+                    <Wallets
+                      walletCountryList={walletCountryList}
+                    />
+                  }
+                </section>
+              ) || (<Segment loading height={20}/>)
+            }
+          </section>
+          }
+
+         
       </main>
     )
   }

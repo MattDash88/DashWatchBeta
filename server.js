@@ -32,7 +32,7 @@ var labsElemRetrievalFunctions = require('./server_components/routingFunctions')
 const getAirtableData = (refreshCache) => {
   return new Promise((resolve, reject) => {
     // Read cache for this function
-    cache.get('airtableData', function (error, data) {
+    cache.redisRetrieve('airtableData', function (error, data) {
       // Connection with redis fails, for back to direct Airtable retrieval
       var redisConnectionFailure;
       if (error) redisConnectionFailure = true;
@@ -84,7 +84,7 @@ const getAirtableData = (refreshCache) => {
 
           // Store results in Redis cache, cache expire time is defined in .env
           if (!redisConnectionFailure) {
-            cache.setex('airtableData', cacheExpirationTime, JSON.stringify(storeAirtablePosts))
+            cache.redisStore('airtableData', storeAirtablePosts)
           }
 
           // Finish
@@ -102,7 +102,7 @@ const getAirtableData = (refreshCache) => {
 const getMonthListData = (refreshCache) => {
   return new Promise((resolve, reject) => {
     // Read cache for this function
-    cache.get('monthListData', function (error, data) {
+    cache.redisRetrieve('monthListData', function (error, data) {
       // Connection with redis fails, for back to direct Airtable retrieval
       var redisConnectionFailure;
       if (error) redisConnectionFailure = true;
@@ -119,7 +119,7 @@ const getMonthListData = (refreshCache) => {
 
           if (!redisConnectionFailure) {
           // Store results in Redis cache, cache expire time is defined in .env
-            cache.setex('monthListData', cacheExpirationTime, JSON.stringify(reportListPosts))
+            cache.redisStore('monthListData', reportListPosts)
           }
           
           resolve(reportListPosts)
@@ -136,7 +136,7 @@ const getMonthListData = (refreshCache) => {
 const getOldListData = (refreshCache) => {
   return new Promise((resolve, reject) => {
     // Read cache for this function
-    cache.get('oldListData', function (error, data) {
+    cache.redisRetrieve('oldListData', function (error, data) {
       // Connection with redis fails, for back to direct Airtable retrieval
       var redisConnectionFailure;
       if (error) redisConnectionFailure = true;
@@ -174,7 +174,7 @@ const getOldListData = (refreshCache) => {
 
           if (!redisConnectionFailure) {
             // Store results in Redis cache, cache expire time is defined in .env
-            cache.setex('oldListData', cacheExpirationTime, JSON.stringify(reportListPosts))
+            cache.redisStore('oldListData', reportListPosts)
           }
           resolve(reportListPosts)
         }).catch((error) => {
@@ -190,7 +190,7 @@ const getOldListData = (refreshCache) => {
 const getProposalListData = (refreshCache) => {
   return new Promise((resolve, reject) => {
     // Read cache for this function
-    cache.get('proposalListData', function (error, data) {
+    cache.redisRetrieve('proposalListData', function (error, data) {
       // Connection with redis fails, for back to direct Airtable retrieval
       var redisConnectionFailure;
       if (error) redisConnectionFailure = true;
@@ -228,7 +228,7 @@ const getProposalListData = (refreshCache) => {
 
           if (!redisConnectionFailure) {
             // Store results in Redis cache, cache expire time is defined in .env
-          cache.setex('proposalListData', cacheExpirationTime, JSON.stringify(storeAirtablePosts))
+          cache.redisStore('proposalListData', storeAirtablePosts)
           }
 
           // Finish
@@ -246,7 +246,7 @@ const getProposalListData = (refreshCache) => {
 const getMerchantKpiData = () => {
   return new Promise((resolve, reject) => {
     // Read cache for this function
-    cache.get('peytonsKpiData', function (error, data) {
+    cache.redisRetrieve('peytonsKpiData', function (error, data) {
       if (error) throw error
 
       if (!!data) {   // If value was already retrieved recently, grab from cache
@@ -278,7 +278,7 @@ const getMerchantKpiData = () => {
           })
           if (!redisConnectionFailure) {
             // Store results in Redis cache, cache expire time is defined in .env
-          cache.setex('peytonsKpiData', cacheExpirationTime, JSON.stringify(storeAirtablePosts))
+          cache.redisStore('peytonsKpiData', storeAirtablePosts)
           }
           resolve(storeAirtablePosts)
         }).catch((error) => {
@@ -294,7 +294,7 @@ const getMerchantKpiData = () => {
 const getElectionsData = (refreshCache) => {
   return new Promise((resolve, reject) => {
     // Read cache for this function
-    cache.get('ElectionsData', function (error, data) {
+    cache.redisRetrieve('ElectionsData', function (error, data) {
       // Connection with redis fails, for back to direct Airtable retrieval
       var redisConnectionFailure;
       if (error) redisConnectionFailure = true;
@@ -387,7 +387,7 @@ const getElectionsData = (refreshCache) => {
           }
           if (!redisConnectionFailure) {
             // Store results in Redis cache, cache expire time is defined in .env
-          cache.setex('ElectionsData', cacheExpirationTime, JSON.stringify(electionsAllData))
+          cache.redisStore('ElectionsData', electionsAllData)
           }
           
           // Finish
@@ -405,7 +405,7 @@ const getElectionsData = (refreshCache) => {
 const getLabsPreparedData = (refreshCache) => {
   return new Promise((resolve, reject) => {
     // Read cache for this function
-    cache.get('labsPreparedData', function (error, data) {
+    cache.redisRetrieve('labsPreparedData', function (error, data) {
       // Connection with redis fails, for back to direct Airtable retrieval
       var redisConnectionFailure;
       if (error) redisConnectionFailure = true;
@@ -439,7 +439,7 @@ const getLabsPreparedData = (refreshCache) => {
 
           if (!redisConnectionFailure) {
             // Store results in Redis cache, cache expire time is defined in .env
-          cache.setex('labsPreparedData', cacheExpirationTime, JSON.stringify(storeAirtablePosts))
+          cache.redisStore('labsPreparedData', storeAirtablePosts)
           }
           
           // Finish
@@ -459,7 +459,7 @@ const getLabsPreparedData = (refreshCache) => {
 const getLabsAllData = (refreshCache) => {
   return new Promise((resolve, reject) => {
     // Read cache for this function
-    cache.get('AllLabsData', function (error, data) {
+    cache.redisRetrieve('AllLabsData', function (error, data) {
       // Connection with redis fails, for back to direct Airtable retrieval
       var redisConnectionFailure;
       if (error) redisConnectionFailure = true;
@@ -486,7 +486,7 @@ const getLabsAllData = (refreshCache) => {
 
           if (!redisConnectionFailure) {
             // Store results in Redis cache, cache expire time is defined in .env
-          cache.setex('AllLabsData', cacheExpirationTime, JSON.stringify(labsAllData))
+          cache.redisStore('AllLabsData', labsAllData)
           }
           
           // Finish
@@ -699,7 +699,17 @@ app.prepare()
     // API call to get labs Wallet data
     server.get('/api/dataset/labsWalletData', (req, res) => {
       var refreshCache = true   // Request cache refresh
-      Promise.resolve(labsFunctions.getLabsCountryData(refreshCache)).then(function (results) {
+      Promise.resolve(labsFunctions.getLabsWalletsCountryData(refreshCache)).then(function (results) {
+        res.status(200).send(results);
+      }).catch((error) => {                                                           // Run this if the retrieving functions returns an error
+        res.status(200).send(serialize(error))
+      })
+    })
+
+    // API call to get labs Wallet data
+    server.get('/api/dataset/labsWalletAndroidGlobalData', (req, res) => {
+      var refreshCache = true   // Request cache refresh
+      Promise.resolve(labsFunctions.getLabsWalletAndroidGlobalData(refreshCache)).then(function (results) {
         res.status(200).send(results);
       }).catch((error) => {                                                           // Run this if the retrieving functions returns an error
         res.status(200).send(serialize(error))

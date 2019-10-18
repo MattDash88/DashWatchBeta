@@ -3,6 +3,7 @@ import {
     Container,
     Dropdown,
     Label,
+    Icon,
     Form,
     Checkbox,
     Segment,
@@ -16,6 +17,7 @@ import {
     Flag,
     Image,
     Grid,
+    Header,
 } from 'semantic-ui-react';
 
 // Analytics
@@ -25,42 +27,43 @@ var monthsList = [
     'January', 'February', 'March', 'April', 'May',
     'June', 'July', 'August', 'September',
     'October', 'November', 'December'
-    ];
+];
 
 // API query requesting Trust Protector Candidate List data
 const getWalletTopLists = () => {
     return (
-      new Promise((resolve) => {
-        fetch(`/api/dataset/labsWalletTopLists`)
-          .then((res) => res.json()
-            .then((res) => {              
-                resolve(res)
-            })
-          )
-      })
+        new Promise((resolve) => {
+            fetch(`/api/dataset/labsWalletTopLists`)
+                .then((res) => res.json()
+                    .then((res) => {
+                        resolve(res)
+                    })
+                )
+        })
     )
-  }
+}
 
-  const getWalletCountryList = () => {
+const getWalletCountryList = () => {
     return (
-      new Promise((resolve) => {
-        fetch(`/api/dataset/labsWalletCountryList`)
-          .then((res) => res.json()
-            .then((res) => {              
-                resolve(res)
-            })
-          )
-      })
+        new Promise((resolve) => {
+            fetch(`/api/dataset/labsWalletCountryList`)
+                .then((res) => res.json()
+                    .then((res) => {
+                        resolve(res)
+                    })
+                )
+        })
     )
-  }
+}
 
-  class LabsOverview extends React.Component {
+class LabsOverview extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
             activeWalletDevices: '',
             deltaWalletInstalls: '',
+            globalWalletData: '',
             walletCountryList: '',
             walletListsDate: '',
         }
@@ -78,20 +81,21 @@ const getWalletTopLists = () => {
 
     componentDidMount() {
         window.addEventListener('mousedown', this.handleClick);     // Handles closing of dropdown menu        
-        
-        var wTopListPromise =  Promise.resolve(getWalletTopLists())
+
+        var wTopListPromise = Promise.resolve(getWalletTopLists())
         var wCountryListPromise = Promise.resolve(getWalletCountryList())
-        
+
         Promise.all([wTopListPromise, wCountryListPromise]).then(data => {
             var walletListData = data[0]
             var wCountryListData = data[1]
-            
-            var year = walletListData.top_active_devices[0].date.slice(0,4)
-            var month = Number(walletListData.top_active_devices[0].date.slice(5,7)-1)
+
+            var year = walletListData.top_active_devices[0].date.slice(0, 4)
+            var month = Number(walletListData.top_active_devices[0].date.slice(5, 7) - 1)
             var walletdateString = `${monthsList[month]} ${year}`
             this.setState({
                 activeWalletDevices: walletListData.top_active_devices,
-                deltaWalletInstalls: walletListData.delta_active_devices,
+                deltaWalletInstalls: walletListData.delta_active_installs,
+                globalWalletData: walletListData.global_active_devices,
                 walletCountryList: wCountryListData,
                 walletListsDate: walletdateString,
             })
@@ -102,6 +106,7 @@ const getWalletTopLists = () => {
         const { // Declare data arrays used in class
             activeWalletDevices,
             deltaWalletInstalls,
+            globalWalletData,
             walletCountryList,
         } = this.state
 
@@ -109,62 +114,100 @@ const getWalletTopLists = () => {
             walletCountryList2,
         } = this.props
 
-        console.log(walletCountryList2['VE'])
         return (
-    <main>
-                    <h1>Wallet Metrics</h1>
-                    <Label ribbon>{this.state.walletListsDate}</Label>
-    <Grid>
-    <Grid.Column width={4}>
-    {
-                   (activeWalletDevices.length !== 0 ) && 
-                    <Table selectable singleLine fixed>
-                        <Table.Header>
-                        <Table.Row>
-                            <Table.HeaderCell>Country</Table.HeaderCell>
-                            <Table.HeaderCell>Active Installs</Table.HeaderCell>
-                        </Table.Row>
-                        </Table.Header>
+            <Container>
+                <Segment>
+                    <Label ribbon>Android Wallet Metrics</Label>
+                    <h4>Month: {this.state.walletListsDate}</h4>
+                    <Grid stackable>
+                        <Grid.Row width={15}>
+                            <Grid.Column width={5}>
+                                {
+                                    (activeWalletDevices.length !== 0) &&
+                                    <Table selectable singleLine unstackable fixed>
+                                        <Table.Header>
+                                            <Table.Row singleLine>
+                                                <Table.HeaderCell>Country</Table.HeaderCell>
+                                                <Table.HeaderCell textAlign='right'>Active Installs</Table.HeaderCell>
+                                            </Table.Row>
+                                        </Table.Header>
 
-                        <Table.Body>
-                        {activeWalletDevices.slice(0,6).map((row) =>
-                        <Table.Row key={row.id}>
-                            <Table.Cell><Flag name = {walletCountryList2[row.country].flag} />{walletCountryList2[row.country].country_name}</Table.Cell>
-                            <Table.Cell>{row.active_devices}</Table.Cell>
-                        </Table.Row>
-                        )}
-                        </Table.Body>
-                    </Table>
-                }
-    </Grid.Column>
-    
-    {
-                   this.state.deltaWalletInstalls.length !== 0 && (
-                    <Grid.Column width={4}>
-                    <Table selectable>
-                        <Table.Header>
-                        <Table.Row>
-                            <Table.HeaderCell>Country</Table.HeaderCell>
-                            <Table.HeaderCell>Delta Installs</Table.HeaderCell>
-                        </Table.Row>
-                        </Table.Header>
+                                        <Table.Body>
+                                            {activeWalletDevices.slice(0, 6).map((row) =>
+                                                <Table.Row key={row.id}>
+                                                    <Table.Cell><Flag name={walletCountryList2[row.country].flag} />{walletCountryList2[row.country].country_name.toLocaleString('en')}</Table.Cell>
+                                                    <Table.Cell textAlign='right'>{row.active_devices.toLocaleString('en')}</Table.Cell>
+                                                </Table.Row>
+                                            )}
+                                            <Table.Row>
+                                                <Table.Cell><b>All countries</b></Table.Cell>
+                                                <Table.Cell textAlign='right'><b>{globalWalletData.active_device_installs.toLocaleString('en')}</b></Table.Cell>
+                                            </Table.Row>
+                                        </Table.Body>
+                                    </Table>
+                                }
+                            </Grid.Column>
 
-                        <Table.Body>
-                        {deltaWalletInstalls.slice(0,6).map((row) =>
-                        <Table.Row key={row.id}>
-                            <Table.Cell><Flag name = {walletCountryList2[row.country].flag} />{walletCountryList2[row.country].country_name}</Table.Cell>
-                            <Table.Cell>{row.delta_installs}</Table.Cell>
-                        </Table.Row>
-                        )}
-                        </Table.Body>
-                    </Table>
-                    </Grid.Column>
-                   ) || (<Grid.Column></Grid.Column>)
-                }
-    
-    <Grid.Column width={4}>Right</Grid.Column>
-  </Grid>
-  </main>      
+                            {
+                                this.state.deltaWalletInstalls.length !== 0 && (
+                                    <Grid.Column width={5}>
+                                        <Table selectable singleLine unstackable fixed>
+                                            <Table.Header>
+                                                <Table.Row>
+                                                    <Table.HeaderCell>Country</Table.HeaderCell>
+                                                    <Table.HeaderCell textAlign='right'>New Installs</Table.HeaderCell>
+                                                </Table.Row>
+                                            </Table.Header>
+
+                                            <Table.Body>
+                                                {deltaWalletInstalls.slice(0, 6).map((row) =>
+                                                    <Table.Row key={row.id}>
+                                                        <Table.Cell><Flag name={walletCountryList2[row.country].flag} />{walletCountryList2[row.country].country_name}</Table.Cell>
+                                                        <Table.Cell textAlign='right'>{row.delta_installs.toLocaleString('en')}</Table.Cell>
+                                                    </Table.Row>
+                                                )}
+
+                                                <Table.Row>
+                                                    <Table.Cell><b>All countries</b></Table.Cell>
+                                                    <Table.Cell textAlign='right'><b>{globalWalletData.delta_active_installs.toLocaleString('en')}</b></Table.Cell>
+                                                </Table.Row>
+                                            </Table.Body>
+                                        </Table>
+                                    </Grid.Column>
+                                ) || (<Grid.Column></Grid.Column>)
+                            }
+                            {
+                                this.state.deltaWalletInstalls.length !== 0 && (
+                                    <Grid.Column width={5}>
+                                        <Table selectable singleLine unstackable fixed>
+                                            <Table.Header>
+                                                <Table.Row>
+                                                    <Table.HeaderCell>Country</Table.HeaderCell>
+                                                    <Table.HeaderCell textAlign='right'>% Change</Table.HeaderCell>
+                                                </Table.Row>
+                                            </Table.Header>
+
+                                            <Table.Body>
+                                                {deltaWalletInstalls.slice(0, 6).map((row) =>
+                                                    <Table.Row key={row.id}>
+                                                        <Table.Cell>Placeholder</Table.Cell>
+                                                        <Table.Cell textAlign='right'>Placeholder</Table.Cell>
+                                                    </Table.Row>
+                                                )}
+
+                                                <Table.Row>
+                                                    <Table.Cell><b>All countries</b></Table.Cell>
+                                                    <Table.Cell textAlign='right'><b>{globalWalletData.percentage_delta_installs}%</b></Table.Cell>
+                                                </Table.Row>
+                                            </Table.Body>
+                                        </Table>
+                                    </Grid.Column>
+                                ) || (<Grid.Column></Grid.Column>)
+                            }
+                        </Grid.Row>
+                    </Grid>
+                </Segment>
+            </Container>
         )
     }
 }

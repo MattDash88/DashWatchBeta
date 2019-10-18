@@ -23,10 +23,24 @@ var retrieveWalletCountryList = function retrieveCountryListFunction() {
 }
 
 // Function to retrieve all votes from database
-var retrieveWalletData = function retrieveWalletDataFunction() {
+var retrieveWalletCountryData = function retrieveWalletDataFunction() {
     return new Promise((resolve, reject) => {
         pool.query(`SELECT * 
                     FROM android_work_table`, 
+                    function (err, results) {
+            if (err) reject(err);
+            else {
+                resolve(results.rows);
+            }
+        })
+    })
+}
+
+// Function to retrieve all votes from database
+var retrieveAndroidGlobalData = function retrieveAndroidGlobaFunction() {
+    return new Promise((resolve, reject) => {
+        pool.query(`SELECT * 
+                    FROM android_global_table`, 
                     function (err, results) {
             if (err) reject(err);
             else {
@@ -53,6 +67,7 @@ var retrieveTopList = function retrieveWalletDataFunction(element) {
                         country: item.country_code,
                         active_devices: item.active_device_installs,
                         delta_installs: item.delta_active_installs,
+                        percentage_delta_installs: item.percentage_delta_installs,
                         id: item.unique_id,
                     }) 
                 })
@@ -65,5 +80,6 @@ var retrieveTopList = function retrieveWalletDataFunction(element) {
 module.exports = {
     retrieveTopList,
     retrieveWalletCountryList,
-    retrieveWalletData,
+    retrieveAndroidGlobalData,
+    retrieveWalletCountryData,
 }
