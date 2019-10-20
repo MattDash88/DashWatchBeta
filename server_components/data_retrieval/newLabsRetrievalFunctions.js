@@ -55,6 +55,7 @@ var retrieveTopList = function retrieveWalletDataFunction(element) {
     return new Promise((resolve, reject) => {
         pool.query(`SELECT * 
                     FROM android_work_table 
+                    WHERE active_device_installs >= 100
                     ORDER BY date DESC, ${element} DESC 
                     LIMIT 100`, 
                     function (err, results) {

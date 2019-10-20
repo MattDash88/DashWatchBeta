@@ -63,6 +63,7 @@ class LabsOverview extends React.Component {
         this.state = {
             activeWalletDevices: '',
             deltaWalletInstalls: '',
+            percentageWalletInstalls: '',
             globalWalletData: '',
             walletCountryList: '',
             walletListsDate: '',
@@ -95,6 +96,7 @@ class LabsOverview extends React.Component {
             this.setState({
                 activeWalletDevices: walletListData.top_active_devices,
                 deltaWalletInstalls: walletListData.delta_active_installs,
+                percentageWalletInstalls: walletListData.percentage_delta_installs,
                 globalWalletData: walletListData.global_active_devices,
                 walletCountryList: wCountryListData,
                 walletListsDate: walletdateString,
@@ -106,6 +108,7 @@ class LabsOverview extends React.Component {
         const { // Declare data arrays used in class
             activeWalletDevices,
             deltaWalletInstalls,
+            percentageWalletInstalls,
             globalWalletData,
             walletCountryList,
         } = this.state
@@ -177,7 +180,7 @@ class LabsOverview extends React.Component {
                                 ) || (<Grid.Column></Grid.Column>)
                             }
                             {
-                                this.state.deltaWalletInstalls.length !== 0 && (
+                                this.state.percentageWalletInstalls.length !== 0 && (
                                     <Grid.Column width={5}>
                                         <Table selectable singleLine unstackable fixed>
                                             <Table.Header>
@@ -188,10 +191,10 @@ class LabsOverview extends React.Component {
                                             </Table.Header>
 
                                             <Table.Body>
-                                                {deltaWalletInstalls.slice(0, 6).map((row) =>
+                                                {percentageWalletInstalls.slice(0, 6).map((row) =>
                                                     <Table.Row key={row.id}>
-                                                        <Table.Cell>Placeholder</Table.Cell>
-                                                        <Table.Cell textAlign='right'>Placeholder</Table.Cell>
+                                                        <Table.Cell><Flag name={walletCountryList2[row.country].flag} />{walletCountryList2[row.country].country_name}</Table.Cell>
+                                                        <Table.Cell textAlign='right'>{row.percentage_delta_installs}%</Table.Cell>
                                                     </Table.Row>
                                                 )}
 

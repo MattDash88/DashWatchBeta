@@ -316,6 +316,8 @@ class Wallets extends React.Component {
                                 <br></br>
                                 <Dropdown
                                     placeholder='Select a country'
+                                    scrolling
+                                    fluid
                                     search
                                     clearable
                                     multiple
