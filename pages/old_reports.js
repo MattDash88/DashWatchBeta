@@ -100,7 +100,7 @@ class Month extends React.Component {
             as: `/oldreports?month=${event.currentTarget.value}&year=${this.state.yearId}`,
         })
 
-        history.pushState(this.state, '', `/oldreports?year=${this.state.yearId}&month=${event.currentTarget.value}`)   // Push State to history
+        //history.pushState(this.state, '', `/oldreports?year=${this.state.yearId}&month=${event.currentTarget.value}`)   // Push State to history
         trackEvent('Old Reports Page', `Changed Month to ${event.currentTarget.value} ${this.state.yearId}`)                 // Track Event on Google Analytics    
     }
 
@@ -136,14 +136,14 @@ class Month extends React.Component {
                 monthListData: data.report_list,
                 optOutListData: data.opted_out_list,
             })
-        }).then(history.replaceState(this.state, '', `${this.state.as}`))
+        })//.then(history.replaceState(this.state, '', `${this.state.as}`))
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        if (prevState.monthId !== this.state.monthId) {// Just a history state update because it doesn't always work as desired in functions
-            history.replaceState(this.state, '', `${this.state.as}`)
-        }
-    }
+    //componentDidUpdate(prevProps, prevState) {
+    //    if (prevState.monthId !== this.state.monthId) {// Just a history state update because it doesn't always work as desired in functions
+    //        history.replaceState(this.state, '', `${this.state.as}`)
+    //    }
+    //}
 
     componentWillUnmount() {
         // Stop event listener when modal is unloaded
@@ -209,6 +209,9 @@ class Month extends React.Component {
                                         <button id="dropdownMenu" value="November" className="dropdownItem"  onClick={this.handleSelectMonth}>November {this.state.yearId}</button>
                                         <button id="dropdownMenu" value="October" className="dropdownItem"  onClick={this.handleSelectMonth}>October {this.state.yearId}</button>
                                         <button id="dropdownMenu" value="September" className="dropdownItem"  onClick={this.handleSelectMonth}>September {this.state.yearId}</button>
+                                        <button id="dropdownMenu" value="August" className="dropdownItem"  onClick={this.handleSelectMonth}>August {this.state.yearId}</button>
+                                        <button id="dropdownMenu" value="July" className="dropdownItem"  onClick={this.handleSelectMonth}>July {this.state.yearId}</button>
+                                        <button id="dropdownMenu" value="June" className="dropdownItem"  onClick={this.handleSelectMonth}>June {this.state.yearId}</button>
                                    </div>
                                     ) : (
                                         this.state.yearId == "2019" ? (  
@@ -218,6 +221,7 @@ class Month extends React.Component {
                                                 <button id="dropdownMenu" value="March" className="dropdownItem"  onClick={this.handleSelectMonth}>March {this.state.yearId}</button>
                                                 <button id="dropdownMenu" value="April" className="dropdownItem"  onClick={this.handleSelectMonth}>April {this.state.yearId}</button>
                                                 <button id="dropdownMenu" value="May" className="dropdownItem"  onClick={this.handleSelectMonth}>May {this.state.yearId}</button>
+                                                <button id="dropdownMenu" value="June" className="dropdownItem"  onClick={this.handleSelectMonth}>June {this.state.yearId}</button>
                                             </div>
                                         ) : (
                                             <div className="dropdownMenu" id="dropdownMenu">
