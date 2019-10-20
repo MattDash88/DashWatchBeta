@@ -49,7 +49,7 @@ const MainProposalPosts = function getMainProposalPosts(tableId) {
                     funding_received_dash: record.get('Funding Received (Dash)'),
                     funding_received_usd: record.get('Funding Received (USD)'),
                     payment_address: record.get('Payment Address'),
-                    escrow_agent: record.get('Ecrow Agent'),                                    
+                    escrow_agent: record.get('Escrow Agent'),                                    
                 }
 
                 // Handling for proposals that received zero payments, because Airtable gives an object as output

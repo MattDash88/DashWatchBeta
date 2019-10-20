@@ -48,7 +48,6 @@ class Month extends React.Component {
         super(props);
 
         this.state = {
-            tabId: '2018',
             monthId: props.month,
             yearId: props.year,
             monthListData: '',
@@ -101,7 +100,7 @@ class Month extends React.Component {
             as: `/oldreports?month=${event.currentTarget.value}&year=${this.state.yearId}`,
         })
 
-        history.pushState(this.state, '', `/oldreports?year=${this.state.yearId}&month=${event.currentTarget.value}`)   // Push State to history
+        //history.pushState(this.state, '', `/oldreports?year=${this.state.yearId}&month=${event.currentTarget.value}`)   // Push State to history
         trackEvent('Old Reports Page', `Changed Month to ${event.currentTarget.value} ${this.state.yearId}`)                 // Track Event on Google Analytics    
     }
 
@@ -122,11 +121,11 @@ class Month extends React.Component {
 
     componentDidMount() {
         // To handle calls from history (forward and back buttons)
-        onpopstate = event => {
-            if (event.state) {
-                this.setState(event.state)
-            }
-        }
+        //onpopstate = event => {
+        //    if (event.state) {
+        //        this.setState(event.state)
+        //    }
+        //}
 
         trackPage(`/old_reports`) // Track Pageview in Analytics
         window.addEventListener('mousedown', this.handleClick);     // Handles closing of dropdown menu
@@ -137,14 +136,14 @@ class Month extends React.Component {
                 monthListData: data.report_list,
                 optOutListData: data.opted_out_list,
             })
-        }).then(history.replaceState(this.state, '', `${this.state.as}`))
+        })//.then(history.replaceState(this.state, '', `${this.state.as}`))
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        if (prevState.monthId !== this.state.monthId) {// Just a history state update because it doesn't always work as desired in functions
-            history.replaceState(this.state, '', `${this.state.as}`)
-        }
-    }
+    //componentDidUpdate(prevProps, prevState) {
+    //    if (prevState.monthId !== this.state.monthId) {// Just a history state update because it doesn't always work as desired in functions
+    //        history.replaceState(this.state, '', `${this.state.as}`)
+    //    }
+    //}
 
     componentWillUnmount() {
         // Stop event listener when modal is unloaded
@@ -220,6 +219,9 @@ class Month extends React.Component {
                                                 <button id="dropdownMenu" value="January" className="dropdownItem"  onClick={this.handleSelectMonth}>January {this.state.yearId}</button>
                                                 <button id="dropdownMenu" value="February" className="dropdownItem"  onClick={this.handleSelectMonth}>February {this.state.yearId}</button>
                                                 <button id="dropdownMenu" value="March" className="dropdownItem"  onClick={this.handleSelectMonth}>March {this.state.yearId}</button>
+                                                <button id="dropdownMenu" value="April" className="dropdownItem"  onClick={this.handleSelectMonth}>April {this.state.yearId}</button>
+                                                <button id="dropdownMenu" value="May" className="dropdownItem"  onClick={this.handleSelectMonth}>May {this.state.yearId}</button>
+                                                <button id="dropdownMenu" value="June" className="dropdownItem"  onClick={this.handleSelectMonth}>June {this.state.yearId}</button>
                                             </div>
                                         ) : (
                                             <div className="dropdownMenu" id="dropdownMenu">
