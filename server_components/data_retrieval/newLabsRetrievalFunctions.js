@@ -26,7 +26,8 @@ var retrieveWalletCountryList = function retrieveCountryListFunction() {
 var retrieveWalletCountryData = function retrieveWalletDataFunction() {
     return new Promise((resolve, reject) => {
         pool.query(`SELECT * 
-                    FROM android_work_table`, 
+                    FROM android_work_table
+                    ORDER BY date ASC`, 
                     function (err, results) {
             if (err) reject(err);
             else {
@@ -40,7 +41,8 @@ var retrieveWalletCountryData = function retrieveWalletDataFunction() {
 var retrieveAndroidGlobalData = function retrieveAndroidGlobaFunction() {
     return new Promise((resolve, reject) => {
         pool.query(`SELECT * 
-                    FROM android_global_table`, 
+                    FROM android_global_table
+                    ORDER BY date ASC`, 
                     function (err, results) {
             if (err) reject(err);
             else {
