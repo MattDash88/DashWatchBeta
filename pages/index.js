@@ -166,7 +166,7 @@ class Month extends React.Component {
                         "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">August 2019</p></div>
                         <div className="monthTab" id='Sep19' value={this.state.monthId == 'Sep19' ? "Active" :
                         "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">September 2019</p></div>
-                        <div className="monthTab" id='Sep19' value={this.state.monthId == 'Oct19' ? "Active" :
+                        <div className="monthTab" id='Oct19' value={this.state.monthId == 'Oct19' ? "Active" :
                         "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">October 2019</p></div>
                     <div className="monthPageWrapper">
                         <div className="monthHeaderWrapper">
