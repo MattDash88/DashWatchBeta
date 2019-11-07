@@ -573,7 +573,7 @@ body {
   font-size: 14px;
   line-height: 1.4285em;
   color: rgba(0, 0, 0, 0.87);
-  font-smoothing: antialiased;
+  -webkit-font-smooth: antialiased;
 }
 
 /*******************************
@@ -5571,7 +5571,7 @@ i.flag:not(.icon) {
   margin: 0em 0.5em 0em 0em;
   text-decoration: inherit;
   speak: none;
-  font-smoothing: antialiased;
+  -webkit-font-smoothing: antialiased;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
 }
@@ -7689,7 +7689,7 @@ i.icon {
   text-decoration: inherit;
   text-align: center;
   speak: none;
-  font-smoothing: antialiased;
+  -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   -webkit-backface-visibility: hidden;
@@ -15085,7 +15085,7 @@ a.ui.label {
 
 .ui.card .image > .ui.ribbon.label,
 .ui.image > .ui.ribbon.label {
-  left: calc(--0.05rem - 1.2em);
+  left: calc(-0.05rem - 1.2em);
 }
 
 .ui.card .image > .ui[class*="right ribbon"].label,
@@ -19849,9 +19849,9 @@ ol.ui.horizontal.list li:before,
 /* Top */
 
 .ui.attached.steps {
-  width: calc(100% + (--1px * 2)) !important;
+  width: calc(100% + (-1px * 2)) !important;
   margin: 0em -1px 0;
-  max-width: calc(100% + (--1px * 2));
+  max-width: calc(100% + (-1px * 2));
   border-radius: 0.28571429rem 0.28571429rem 0em 0em;
 }
 
@@ -20238,7 +20238,7 @@ ol.ui.horizontal.list li:before,
   margin: 0em;
   outline: none;
   -webkit-appearance: none;
-  tap-highlight-color: rgba(255, 255, 255, 0);
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
   line-height: 1.21428571em;
   padding: 0.67857143em 1em;
   font-size: 1em;
@@ -20257,7 +20257,7 @@ ol.ui.horizontal.list li:before,
 .ui.form textarea {
   margin: 0em;
   -webkit-appearance: none;
-  tap-highlight-color: rgba(255, 255, 255, 0);
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
   padding: 0.78571429em 1em;
   background: #FFFFFF;
   border: 1px solid rgba(34, 36, 38, 0.15);
@@ -23845,7 +23845,7 @@ ol.ui.horizontal.list li:before,
 
 .ui.menu .item > i.dropdown.icon {
   padding: 0em;
-  float: right;
+  float: left;
   margin: 0em 0em 0em 1em;
 }
 
@@ -26167,7 +26167,6 @@ Floated Menu / Item
   flex: 0 0 auto;
   width: auto;
   line-height: 1;
-  vertical-align: middle;
   font-size: 3em;
   opacity: 0.8;
 }
@@ -26177,7 +26176,6 @@ Floated Menu / Item
   -webkit-box-flex: 1;
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
-  vertical-align: middle;
 }
 
 .ui.icon.message .icon:not(.close) + .content {
@@ -32715,7 +32713,7 @@ select.ui.dropdown {
 /* Search Selection */
 
 .ui.search.dropdown {
-  min-width: '';
+  min-width: auto;
 }
 
 /* Search Dropdown */
@@ -32743,6 +32741,7 @@ select.ui.dropdown {
 
 .ui.search.dropdown > .text {
   cursor: text;
+  opacity: 0.8; /* Added to fix visibility of searchbox input */
   position: relative;
   left: 1px;
   z-index: 3;
@@ -33376,6 +33375,7 @@ select.ui.dropdown {
 @media only screen and (max-width: 767px) {
   .ui.scrolling.dropdown .menu,
   .ui.dropdown .scrolling.menu {
+    height: auto; /* Added to fix dropdown menu sizing in build version */
     max-height: 10.28571429rem;
   }
 }
@@ -33383,6 +33383,7 @@ select.ui.dropdown {
 @media only screen and (min-width: 768px) {
   .ui.scrolling.dropdown .menu,
   .ui.dropdown .scrolling.menu {
+    height: auto;   /* Added to fix dropdown menu sizing in build version */
     max-height: 15.42857143rem;
   }
 }
@@ -33390,6 +33391,7 @@ select.ui.dropdown {
 @media only screen and (min-width: 992px) {
   .ui.scrolling.dropdown .menu,
   .ui.dropdown .scrolling.menu {
+    height: auto;   /* Added to fix dropdown menu sizing in build version */
     max-height: 20.57142857rem;
   }
 }
@@ -33397,6 +33399,7 @@ select.ui.dropdown {
 @media only screen and (min-width: 1920px) {
   .ui.scrolling.dropdown .menu,
   .ui.dropdown .scrolling.menu {
+    height: auto;   /* Added to fix dropdown menu sizing in build version */
     max-height: 20.57142857rem;
   }
 }
