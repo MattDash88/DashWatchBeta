@@ -38,10 +38,26 @@ var retrieveWalletCountryData = function retrieveWalletDataFunction() {
 }
 
 // Function to retrieve all votes from database
-var retrieveAndroidGlobalData = function retrieveAndroidGlobaFunction() {
+var retrieveAndroidGlobalData = function retrieveAndroidGlobalFunction() {
     return new Promise((resolve, reject) => {
         pool.query(`SELECT * 
                     FROM android_global_table
+                    ORDER BY date ASC`, 
+                    function (err, results) {
+            if (err) reject(err);
+            else {
+                resolve(results.rows);
+            }
+        })
+    })
+}
+
+// Function to retrieve all votes from database
+var retrieveOtherWalletData = function retrieveOtherWalletFunction(walletType) {
+    return new Promise((resolve, reject) => {
+        pool.query(`SELECT * 
+                    FROM other_wallet_table
+                    WHERE wallet_id = '${walletType}'
                     ORDER BY date ASC`, 
                     function (err, results) {
             if (err) reject(err);
@@ -85,4 +101,5 @@ module.exports = {
     retrieveWalletCountryList,
     retrieveAndroidGlobalData,
     retrieveWalletCountryData,
+    retrieveOtherWalletData,
 }

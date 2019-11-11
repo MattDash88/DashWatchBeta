@@ -697,7 +697,7 @@ app.prepare()
     })
 
     // API call to get labs Wallet data
-    server.get('/api/dataset/labsWalletData', (req, res) => {
+    server.get('/api/dataset/labsCounryWalletData', (req, res) => {
       var refreshCache = true   // Request cache refresh
       Promise.resolve(labsFunctions.getLabsWalletsCountryData(refreshCache)).then(function (results) {
         res.status(200).send(results);
@@ -710,6 +710,16 @@ app.prepare()
     server.get('/api/dataset/labsWalletAndroidGlobalData', (req, res) => {
       var refreshCache = true   // Request cache refresh
       Promise.resolve(labsFunctions.getLabsWalletAndroidGlobalData(refreshCache)).then(function (results) {
+        res.status(200).send(results);
+      }).catch((error) => {                                                           // Run this if the retrieving functions returns an error
+        res.status(200).send(serialize(error))
+      })
+    })
+
+    // API call to get labs Wallet data
+    server.get('/api/dataset/labsOtherWalletData', (req, res) => {
+      var refreshCache = true   // Request cache refresh
+      Promise.resolve(labsFunctions.getLabsOtherWalletsData(refreshCache)).then(function (results) {
         res.status(200).send(results);
       }).catch((error) => {                                                           // Run this if the retrieving functions returns an error
         res.status(200).send(serialize(error))

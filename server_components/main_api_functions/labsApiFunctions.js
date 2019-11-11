@@ -171,6 +171,55 @@ const getLabsWalletAndroidGlobalData = (refreshCache) => {
 }
 
 // Function to prepare data for the Prepared Datasets for Labs (Wallets and POS systems)
+const getLabsOtherWalletsData = (refreshCache) => {
+    return new Promise((resolve, reject) => {
+        // Read cache for this function
+        cache.redisRetrieve('testlabsOtherWalletsData', function (error, data) {
+            // Connection with redis fails, for back to direct Airtable retrieval
+            var redisConnectionFailure;
+            if (error) redisConnectionFailure = true;
+
+            // If data is available in cache and a cache refresh is not requested, load from cache
+            if (!!data && refreshCache == false) {
+                resolve(JSON.parse(data))
+            }
+
+            // If cache is empty or a cache refresh is requested, retrieve from Airtable
+            else {
+                var walletDashCorePromise = Promise.resolve(newLabsRetrievalFunctions.retrieveOtherWalletData('dash_core'));
+                var walletDashElectrumPromise = Promise.resolve(newLabsRetrievalFunctions.retrieveOtherWalletData('dash_electrum'));
+
+                Promise.all([walletDashCorePromise, walletDashElectrumPromise]).then(function (valArray) {
+                    // Sorting out all valArray items
+                    dashcoreData = valArray[0]
+                    dashelectrumData = valArray[1]
+                    console.log(dashcoreData)
+
+                    const dashCoreDataset = newLabsProcessingFunctions.processOtherWalletDataData(dashcoreData)
+                    const dashElectrumDataset = newLabsProcessingFunctions.processOtherWalletDataData(dashelectrumData)
+
+                    const storeWalletData = {
+                        dash_core: dashCoreDataset,
+                        dash_electrum: dashElectrumDataset,
+                    } 
+
+                    if (!redisConnectionFailure) {
+                        // Store results in Redis cache, cache expire time is defined in .env
+                        cache.redisStore('testlabsOtherWalletsData', storeWalletData)
+                    }
+
+                    // Finish
+                    resolve(storeWalletData)
+                }).catch((error) => {
+                    reject({ error })
+                    console.log(error)
+                })
+            }
+        })
+    })
+}
+
+// Function to prepare data for the Prepared Datasets for Labs (Wallets and POS systems)
 const getLabsWalletCountryList = (refreshCache) => {
     return new Promise((resolve, reject) => {
         // Read cache for this function
@@ -218,5 +267,6 @@ module.exports = {
     getLabsTopWalletList,
     getLabsWalletsCountryData,
     getLabsWalletAndroidGlobalData,
+    getLabsOtherWalletsData,
     getLabsWalletCountryList,
 }

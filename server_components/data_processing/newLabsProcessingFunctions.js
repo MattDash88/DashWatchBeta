@@ -45,6 +45,37 @@ var processCountryWalletData = function mainWalletFunction(countryList, walletDa
 }
 
 // Processing wallet metrics over time data
+var processOtherWalletDataData = function mainTopListGlobalFunction(walletData) {
+    // Declaring elements 
+    var totalInstalls = []
+    var desktopInstalls = []
+    var mobileInstalls = []
+
+    Object.values(walletData).map((item) => {   //Go through list of countries           
+        var dateString = item.date.toISOString().substring(0, 7)  // Cut of day and timezone from string
+        totalInstalls.push({
+            x: dateString,
+            y: item.total_installs,
+        })
+        desktopInstalls.push({
+            x: dateString,
+            y: item.desktop_installs,
+        })
+        mobileInstalls.push({
+            x: dateString,
+            y: item.mobile_installs,
+        })
+    })
+
+    const walletDataset = {
+        total_installs: totalInstalls,
+        desktop_installs: desktopInstalls,
+        mobile_installs: mobileInstalls,
+    }
+    return (walletDataset)
+}
+
+// Processing wallet metrics over time data
 var processTopListGlobalData = function mainTopListGlobalFunction(globalData, targetDate) {
     // Declaring elements 
     var topListGlobalData = []
@@ -60,4 +91,5 @@ var processTopListGlobalData = function mainTopListGlobalFunction(globalData, ta
 module.exports = {
     processCountryWalletData,
     processTopListGlobalData,
+    processOtherWalletDataData
 }

@@ -32736,12 +32736,12 @@ select.ui.dropdown {
 
 .ui.search.dropdown > input.search {
   position: absolute;
+  opacity: 0.8; /* Added to fix visibility of searchbox input */
   z-index: 2;
 }
 
 .ui.search.dropdown > .text {
   cursor: text;
-  opacity: 0.8; /* Added to fix visibility of searchbox input */
   position: relative;
   left: 1px;
   z-index: 3;
