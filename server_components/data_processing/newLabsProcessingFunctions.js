@@ -1,3 +1,7 @@
+//  **********************
+// Processing functions for wallet metrics
+//  **********************
+
 // Processing wallet metrics over time data
 var processCountryWalletData = function mainWalletFunction(countryList, walletData) {
     // Declaring elements 
@@ -25,7 +29,7 @@ var processCountryWalletData = function mainWalletFunction(countryList, walletDa
                     })
                     percentageDeltaArray.push({
                         x: dateString,
-                        y: 100*(item.delta_active_installs / (item.active_device_installs - item.delta_active_installs)),
+                        y: item.percentage_delta_installs,
                     })
                 }
             }
@@ -75,6 +79,58 @@ var processOtherWalletDataData = function mainTopListGlobalFunction(walletData) 
     return (walletDataset)
 }
 
+//  **********************
+// Processing functions for website metrics
+//  **********************
+
+// Processing wallet metrics over time data
+var processCountryWebsiteData = function countryWebsiteFunction(countryList, websiteData) {
+    // Declaring elements 
+    usersData = {}
+    sessionsData = {}
+    bounceRateData = {}
+
+    Object.values(countryList).map((country) => {       // Go through list of countries
+        var countryCode = country.country_code
+        usersArray = []
+        sessionsArray = []
+        bounceRateArray = []
+        Object.values(websiteData).map((item) => {      // Go through full Android wallet SQL dataset            
+            if (item.country_code == countryCode) {     // Match country code with SQL entry, datasets will be built up by country
+                var dateString = item.date.toISOString().substring(0, 7)  // Cut of day and timezone from string
+                // Prepare datasets for charts
+                usersArray.push({
+                    x: dateString,
+                    y: item.users,
+                })
+                sessionsArray.push({
+                    x: dateString,
+                    y: item.sessions,
+                })
+                bounceRateArray.push({
+                    x: dateString,
+                    y: item.bounce_rate,
+                })
+            }
+        })
+        // Put full dataset in their respective sub object
+        usersData[countryCode] = usersArray
+        sessionsData[countryCode] = sessionsArray
+        bounceRateData[countryCode] = bounceRateArray
+    })
+    // Combine all the data objects into one master object to return
+    const outputObject = {
+        users: usersData,
+        sessions: sessionsData,
+        bounce_rate: bounceRateData,
+    }
+    return (outputObject)
+}
+
+//  **********************
+// Processing functions for best of lists
+//  **********************
+
 // Processing wallet metrics over time data
 var processTopListGlobalData = function mainTopListGlobalFunction(globalData, targetDate) {
     // Declaring elements 
@@ -89,7 +145,11 @@ var processTopListGlobalData = function mainTopListGlobalFunction(globalData, ta
 
 // Export the Airtable functions to be imported in server.js
 module.exports = {
-    processCountryWalletData,
+    // Wallet functions
+    processCountryWalletData,    
+    processOtherWalletDataData,
+    // Website functions
+    processCountryWebsiteData,
+    // Best of list functions
     processTopListGlobalData,
-    processOtherWalletDataData
 }

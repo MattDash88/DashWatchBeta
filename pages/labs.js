@@ -29,11 +29,12 @@ import Header from '../components/headers/LabsHeader';
 
 import LabsOverview from "../components/labs_content/Overview";
 import Wallets from "../components/labs_content/Wallets";
+import Websites from "../components/labs_content/Websites";
 
-const getWalletCountryList = () => {
+const getCountryList = () => {
   return (
     new Promise((resolve) => {
-      fetch(`/api/dataset/labsWalletCountryList`)
+      fetch(`/api/dataset/labsCountryList`)
         .then((res) => res.json()
           .then((res) => {
             resolve(res)
@@ -61,7 +62,7 @@ class Labs extends React.Component {
     super(props)
 
     this.state = {
-      walletCountryList: '',  // Dataset for posystems tab
+      countryList: '',  
       view: 'largeScreen',
       showSidebar: false,
 
@@ -152,13 +153,13 @@ class Labs extends React.Component {
         this.setState(event.state)
       }
     }
-    var wCountryListPromise = Promise.resolve(getWalletCountryList())
+    var countryListPromise = Promise.resolve(getCountryList())
 
-    Promise.all([wCountryListPromise]).then(data => {
-      var wCountryListData = data[0]
+    Promise.all([countryListPromise]).then(data => {
+      var countryListData = data[0]
 
       this.setState({
-        walletCountryList: wCountryListData,
+        countryList: countryListData,
       })
     }).then(history.replaceState(this.state, '', `${this.state.as}`))
     trackPage(`/labs`)  // Track Pageview in Analytics
@@ -175,7 +176,7 @@ class Labs extends React.Component {
     const { // Declare data arrays used in class
       view,
       showSidebar,
-      walletCountryList,
+      countryList,
       activeTab,
     } = this.state
 
@@ -242,18 +243,18 @@ class Labs extends React.Component {
                 <Sidebar.Pusher>
                   <Segment basic>
                     {
-                      (walletCountryList.length !== 0) && (
+                      (countryList.length !== 0) && (
                         <section>
                           {
                             activeTab == 'overview' &&
                             <LabsOverview
-                              walletCountryList2={walletCountryList}
+                            countryList={countryList}
                             />
                           }
                           {
                             activeTab == 'wallets' &&
                             <Wallets
-                              walletCountryList={walletCountryList}
+                              countryList={countryList}
                             />
                           }
                         </section>
@@ -286,20 +287,33 @@ class Labs extends React.Component {
               >
                 Wallets
               </Menu.Item>
+              <Menu.Item
+                name='websites'
+                active={activeTab === 'websites'}
+                onClick={this.handleSelectTab}
+              >
+                Websites
+              </Menu.Item>
             </Menu>
              {
-              (walletCountryList.length !== 0 && view == 'largeScreen') && (
+              (countryList.length !== 0 && view == 'largeScreen') && (
                 <section>
                   {
                     activeTab == 'overview' &&
                     <LabsOverview
-                      walletCountryList2={walletCountryList}
+                    countryList={countryList}
                     />
                   }
                   {
                     activeTab == 'wallets' &&
                     <Wallets
-                      walletCountryList={walletCountryList}
+                      countryList={countryList}
+                    />
+                  }
+                  {
+                    activeTab == 'websites' &&
+                    <Websites
+                      countryList={countryList}
                     />
                   }
                 </section>

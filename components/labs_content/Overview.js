@@ -46,7 +46,7 @@ const getWalletTopLists = () => {
 const getWalletCountryList = () => {
     return (
         new Promise((resolve) => {
-            fetch(`/api/dataset/labsWalletCountryList`)
+            fetch(`/api/dataset/labsCountryList`)
                 .then((res) => res.json()
                     .then((res) => {
                         resolve(res)
@@ -110,11 +110,10 @@ class LabsOverview extends React.Component {
             deltaWalletInstalls,
             percentageWalletInstalls,
             globalWalletData,
-            walletCountryList,
         } = this.state
 
         const { // Declare data arrays used in class
-            walletCountryList2,
+            countryList,
         } = this.props
 
         return (
@@ -138,7 +137,7 @@ class LabsOverview extends React.Component {
                                         <Table.Body>
                                             {activeWalletDevices.slice(0, 6).map((row) =>
                                                 <Table.Row key={row.id}>
-                                                    <Table.Cell><Flag name={walletCountryList2[row.country].flag} />{walletCountryList2[row.country].country_name.toLocaleString('en')}</Table.Cell>
+                                                    <Table.Cell><Flag name={countryList[row.country].flag} />{countryList[row.country].country_name.toLocaleString('en')}</Table.Cell>
                                                     <Table.Cell textAlign='right'>{row.active_devices.toLocaleString('en')}</Table.Cell>
                                                 </Table.Row>
                                             )}
@@ -165,7 +164,7 @@ class LabsOverview extends React.Component {
                                             <Table.Body>
                                                 {deltaWalletInstalls.slice(0, 6).map((row) =>
                                                     <Table.Row key={row.id}>
-                                                        <Table.Cell><Flag name={walletCountryList2[row.country].flag} />{walletCountryList2[row.country].country_name}</Table.Cell>
+                                                        <Table.Cell><Flag name={countryList[row.country].flag} />{countryList[row.country].country_name}</Table.Cell>
                                                         <Table.Cell textAlign='right'>{row.delta_installs.toLocaleString('en')}</Table.Cell>
                                                     </Table.Row>
                                                 )}
@@ -193,7 +192,7 @@ class LabsOverview extends React.Component {
                                             <Table.Body>
                                                 {percentageWalletInstalls.slice(0, 6).map((row) =>
                                                     <Table.Row key={row.id}>
-                                                        <Table.Cell><Flag name={walletCountryList2[row.country].flag} />{walletCountryList2[row.country].country_name}</Table.Cell>
+                                                        <Table.Cell><Flag name={countryList[row.country].flag} />{countryList[row.country].country_name}</Table.Cell>
                                                         <Table.Cell textAlign='right'>{row.percentage_delta_installs}%</Table.Cell>
                                                     </Table.Row>
                                                 )}

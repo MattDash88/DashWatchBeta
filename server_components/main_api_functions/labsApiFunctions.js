@@ -11,10 +11,10 @@ var newLabsRetrievalFunctions = require('../data_retrieval/newLabsRetrievalFunct
 var newLabsProcessingFunctions = require('../data_processing/newLabsProcessingFunctions');
 
 // Function to prepare data for the Prepared Datasets for Labs (Wallets and POS systems)
-const getLabsTopWalletList = (refreshCache) => {
+const getLabsCountryList = (refreshCache) => {
     return new Promise((resolve, reject) => {
         // Read cache for this function
-        cache.redisRetrieve('labsTopWalletList', function (error, data) {
+        cache.redisRetrieve('testlabsCountryList', function (error, data) {
             // Connection with redis fails, for back to direct Airtable retrieval
             var redisConnectionFailure;
             if (error) redisConnectionFailure = true;
@@ -26,35 +26,25 @@ const getLabsTopWalletList = (refreshCache) => {
 
             // If cache is empty or a cache refresh is requested, retrieve from Airtable
             else {
-                var activeDevicesListPromise = Promise.resolve(newLabsRetrievalFunctions.retrieveTopList('active_device_installs'));
-                var deltaDevicesListPromise = Promise.resolve(newLabsRetrievalFunctions.retrieveTopList('delta_active_installs'));
-                var percentageDevicesListPromise = Promise.resolve(newLabsRetrievalFunctions.retrieveTopList('percentage_delta_installs'));
-                var walletAndroidGlobalPromise = Promise.resolve(newLabsRetrievalFunctions.retrieveAndroidGlobalData());
+                var countryListPromise = Promise.resolve(newLabsRetrievalFunctions.retrieveCountryList());
 
-                Promise.all([activeDevicesListPromise, deltaDevicesListPromise, percentageDevicesListPromise, walletAndroidGlobalPromise]).then(function (valArray) {
+                Promise.resolve(countryListPromise).then(function (valArray) {
                     // Sorting out all valArray items
-                    topActiveDevicesList = valArray[0]
-                    topDeltaDevicesList = valArray[1]
-                    topPercentageDevicesList = valArray[2]
-                    globalAndroidList = valArray[3]
+                    var countryList = valArray
+                    storeCountryData = {}
 
-                    var mostRecentDate = topActiveDevicesList[0].date
-                    var topGlobalAndroidList = newLabsProcessingFunctions.processTopListGlobalData(globalAndroidList, mostRecentDate)
-
-                    const storeTopListData = {
-                        top_active_devices: topActiveDevicesList,
-                        delta_active_installs: topDeltaDevicesList,
-                        percentage_delta_installs: topPercentageDevicesList,
-                        global_active_devices: topGlobalAndroidList,
-                    }
+                    Object.values(countryList).map((item) => {
+                        var countryCode = item.country_code
+                        storeCountryData[countryCode] = item
+                    })
 
                     if (!redisConnectionFailure) {
                         // Store results in Redis cache, cache expire time is defined in .env
-                        cache.redisStore('labsTopWalletList', storeTopListData)
+                        cache.redisStore('testlabsCountryList', storeCountryData)
                     }
 
                     // Finish
-                    resolve(storeTopListData)
+                    resolve(storeCountryData)
                 }).catch((error) => {
                     reject({ error })
                     console.log(error)
@@ -63,6 +53,10 @@ const getLabsTopWalletList = (refreshCache) => {
         })
     })
 }
+
+//  **********************
+// API functions for wallet metrics
+//  **********************
 
 // Function to get and process Android wallet data per country
 const getLabsWalletsCountryData = (refreshCache) => {
@@ -80,7 +74,7 @@ const getLabsWalletsCountryData = (refreshCache) => {
 
             // If cache is empty or a cache refresh is requested, retrieve from Airtable
             else {
-                var countryListPromise = Promise.resolve(newLabsRetrievalFunctions.retrieveWalletCountryList());
+                var countryListPromise = Promise.resolve(newLabsRetrievalFunctions.retrieveCountryList());
                 var countryDataPromise = Promise.resolve(newLabsRetrievalFunctions.retrieveWalletCountryData());
 
                 Promise.all([countryListPromise, countryDataPromise]).then(function (valArray) {
@@ -193,7 +187,6 @@ const getLabsOtherWalletsData = (refreshCache) => {
                     // Sorting out all valArray items
                     dashcoreData = valArray[0]
                     dashelectrumData = valArray[1]
-                    console.log(dashcoreData)
 
                     const dashCoreDataset = newLabsProcessingFunctions.processOtherWalletDataData(dashcoreData)
                     const dashElectrumDataset = newLabsProcessingFunctions.processOtherWalletDataData(dashelectrumData)
@@ -219,11 +212,15 @@ const getLabsOtherWalletsData = (refreshCache) => {
     })
 }
 
-// Function to prepare data for the Prepared Datasets for Labs (Wallets and POS systems)
-const getLabsWalletCountryList = (refreshCache) => {
+//  **********************
+// API functions for website metrics
+//  **********************
+
+// Function to get and process Android wallet data per country
+const getLabsWebsiteCountryData = (refreshCache) => {
     return new Promise((resolve, reject) => {
         // Read cache for this function
-        cache.redisRetrieve('testlabsWalletCountryList', function (error, data) {
+        cache.redisRetrieve('testlabsWebsiteCountryData', function (error, data) {
             // Connection with redis fails, for back to direct Airtable retrieval
             var redisConnectionFailure;
             if (error) redisConnectionFailure = true;
@@ -235,25 +232,23 @@ const getLabsWalletCountryList = (refreshCache) => {
 
             // If cache is empty or a cache refresh is requested, retrieve from Airtable
             else {
-                var countryListPromise = Promise.resolve(newLabsRetrievalFunctions.retrieveWalletCountryList());
+                var countryListPromise = Promise.resolve(newLabsRetrievalFunctions.retrieveCountryList());
+                var countryDataPromise = Promise.resolve(newLabsRetrievalFunctions.retrieveWebsiteCountryData());
 
-                Promise.resolve(countryListPromise).then(function (valArray) {
+                Promise.all([countryListPromise, countryDataPromise]).then(function (valArray) {
                     // Sorting out all valArray items
-                    var countryList = valArray
-                    storeCountryData = {}
+                    countryListData = valArray[0]
+                    countryWebsiteData = valArray[1]
 
-                    Object.values(countryList).map((item) => {
-                        var countryCode = item.country_code
-                        storeCountryData[countryCode] = item
-                    })
+                    var storeWebsiteData = newLabsProcessingFunctions.processCountryWebsiteData(countryListData, countryWebsiteData)
 
                     if (!redisConnectionFailure) {
                         // Store results in Redis cache, cache expire time is defined in .env
-                        cache.redisStore('testlabsCountryData', storeCountryData)
+                        cache.redisStore('testlabsWebsiteCountryData', storeWebsiteData)
                     }
 
                     // Finish
-                    resolve(storeCountryData)
+                    resolve(storeWebsiteData)
                 }).catch((error) => {
                     reject({ error })
                     console.log(error)
@@ -263,10 +258,73 @@ const getLabsWalletCountryList = (refreshCache) => {
     })
 }
 
+//  **********************
+// API functions for best of lists
+//  **********************
+
+// Function to prepare data for the Prepared Datasets for Labs (Wallets and POS systems)
+const getLabsTopWalletList = (refreshCache) => {
+    return new Promise((resolve, reject) => {
+        // Read cache for this function
+        cache.redisRetrieve('labsTopWalletList', function (error, data) {
+            // Connection with redis fails, for back to direct Airtable retrieval
+            var redisConnectionFailure;
+            if (error) redisConnectionFailure = true;
+
+            // If data is available in cache and a cache refresh is not requested, load from cache
+            if (!!data && refreshCache == false) {
+                resolve(JSON.parse(data))
+            }
+
+            // If cache is empty or a cache refresh is requested, retrieve from Airtable
+            else {
+                var activeDevicesListPromise = Promise.resolve(newLabsRetrievalFunctions.retrieveTopList('active_device_installs'));
+                var deltaDevicesListPromise = Promise.resolve(newLabsRetrievalFunctions.retrieveTopList('delta_active_installs'));
+                var percentageDevicesListPromise = Promise.resolve(newLabsRetrievalFunctions.retrieveTopList('percentage_delta_installs'));
+                var walletAndroidGlobalPromise = Promise.resolve(newLabsRetrievalFunctions.retrieveAndroidGlobalData());
+
+                Promise.all([activeDevicesListPromise, deltaDevicesListPromise, percentageDevicesListPromise, walletAndroidGlobalPromise]).then(function (valArray) {
+                    // Sorting out all valArray items
+                    topActiveDevicesList = valArray[0]
+                    topDeltaDevicesList = valArray[1]
+                    topPercentageDevicesList = valArray[2]
+                    globalAndroidList = valArray[3]
+
+                    var mostRecentDate = topActiveDevicesList[0].date
+                    var topGlobalAndroidList = newLabsProcessingFunctions.processTopListGlobalData(globalAndroidList, mostRecentDate)
+
+                    const storeTopListData = {
+                        top_active_devices: topActiveDevicesList,
+                        delta_active_installs: topDeltaDevicesList,
+                        percentage_delta_installs: topPercentageDevicesList,
+                        global_active_devices: topGlobalAndroidList,
+                    }
+
+                    if (!redisConnectionFailure) {
+                        // Store results in Redis cache, cache expire time is defined in .env
+                        cache.redisStore('labsTopWalletList', storeTopListData)
+                    }
+
+                    // Finish
+                    resolve(storeTopListData)
+                }).catch((error) => {
+                    reject({ error })
+                    console.log(error)
+                })
+            }
+        })
+    })
+}
+
+
 module.exports = {
-    getLabsTopWalletList,
+    getLabsCountryList,
+    // Wallet functions
     getLabsWalletsCountryData,
     getLabsWalletAndroidGlobalData,
     getLabsOtherWalletsData,
-    getLabsWalletCountryList,
+    // Website functions
+    getLabsWebsiteCountryData,
+    // Best of list functions
+    getLabsTopWalletList,
 }

@@ -697,7 +697,7 @@ app.prepare()
     })
 
     // API call to get labs Wallet data
-    server.get('/api/dataset/labsCounryWalletData', (req, res) => {
+    server.get('/api/dataset/labsCountryWalletData', (req, res) => {
       var refreshCache = true   // Request cache refresh
       Promise.resolve(labsFunctions.getLabsWalletsCountryData(refreshCache)).then(function (results) {
         res.status(200).send(results);
@@ -727,9 +727,19 @@ app.prepare()
     })
 
     // API call to get labs Wallet data
-    server.get('/api/dataset/labsWalletCountryList', (req, res) => {
+    server.get('/api/dataset/labsCountryList', (req, res) => {
       var refreshCache = true   // Request cache refresh
-      Promise.resolve(labsFunctions.getLabsWalletCountryList(refreshCache)).then(function (results) {
+      Promise.resolve(labsFunctions.getLabsCountryList(refreshCache)).then(function (results) {
+        res.status(200).send(results);
+      }).catch((error) => {                                                           // Run this if the retrieving functions returns an error
+        res.status(200).send(serialize(error))
+      })
+    })
+
+    // API call to get labs Wallet data
+    server.get('/api/dataset/labsWebsiteCountryData', (req, res) => {
+      var refreshCache = true   // Request cache refresh
+      Promise.resolve(labsFunctions.getLabsWebsiteCountryData(refreshCache)).then(function (results) {
         res.status(200).send(results);
       }).catch((error) => {                                                           // Run this if the retrieving functions returns an error
         res.status(200).send(serialize(error))

@@ -8,8 +8,8 @@ const pool = new Pool({
     port: process.env.PG_PORT,
 });
 
-// Function to retrieve all votes from database
-var retrieveWalletCountryList = function retrieveCountryListFunction() {
+// Function to retrieve list of countries from database
+var retrieveCountryList = function retrieveCountryListFunction() {
     return new Promise((resolve, reject) => {
         pool.query(`SELECT * 
                     FROM countryList`, 
@@ -22,7 +22,11 @@ var retrieveWalletCountryList = function retrieveCountryListFunction() {
     })
 }
 
-// Function to retrieve all votes from database
+//  **********************
+// Database Retrieval functions for wallet metrics
+//  **********************
+
+// Function to retrieve Android wallet data per country from database
 var retrieveWalletCountryData = function retrieveWalletDataFunction() {
     return new Promise((resolve, reject) => {
         pool.query(`SELECT * 
@@ -37,7 +41,7 @@ var retrieveWalletCountryData = function retrieveWalletDataFunction() {
     })
 }
 
-// Function to retrieve all votes from database
+// Function to retrieve Android wallet data for world from database
 var retrieveAndroidGlobalData = function retrieveAndroidGlobalFunction() {
     return new Promise((resolve, reject) => {
         pool.query(`SELECT * 
@@ -52,7 +56,7 @@ var retrieveAndroidGlobalData = function retrieveAndroidGlobalFunction() {
     })
 }
 
-// Function to retrieve all votes from database
+// Function to retrieve data for other wallets from database
 var retrieveOtherWalletData = function retrieveOtherWalletFunction(walletType) {
     return new Promise((resolve, reject) => {
         pool.query(`SELECT * 
@@ -67,6 +71,29 @@ var retrieveOtherWalletData = function retrieveOtherWalletFunction(walletType) {
         })
     })
 }
+
+//  **********************
+// Database Retrieval functions for Website metrics
+//  **********************
+
+// Function to retrieve data for dash.org from database
+var retrieveWebsiteCountryData = function retrieveWebsiteCountryFunction() {
+    return new Promise((resolve, reject) => {
+        pool.query(`SELECT * 
+                    FROM dash_org_website
+                    ORDER BY date ASC`, 
+                    function (err, results) {
+            if (err) reject(err);
+            else {
+                resolve(results.rows);
+            }
+        })
+    })
+}
+
+//  **********************
+// Database Retrieval functions for best of lists
+//  **********************
 
 // Function to retrieve all votes from database
 var retrieveTopList = function retrieveWalletDataFunction(element) {
@@ -97,9 +124,13 @@ var retrieveTopList = function retrieveWalletDataFunction(element) {
 }
 
 module.exports = {
-    retrieveTopList,
-    retrieveWalletCountryList,
+    retrieveCountryList,
+    // Wallet functions    
     retrieveAndroidGlobalData,
     retrieveWalletCountryData,
     retrieveOtherWalletData,
+    // Website functions
+    retrieveWebsiteCountryData,
+    // Best of list functions
+    retrieveTopList,
 }

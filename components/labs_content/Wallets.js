@@ -30,20 +30,7 @@ import chartFunctions from './labs_functions/chartFunctions';
 const getLabsCountryData = () => {
     return (
         new Promise((resolve) => {
-            fetch(`/api/dataset/labsCounryWalletData`)
-                .then((res) => res.json()
-                    .then((res) => {
-                        resolve(res)
-                    })
-                )
-        })
-    )
-}
-
-const getWalletCountryList = () => {
-    return (
-        new Promise((resolve) => {
-            fetch(`/api/dataset/labsWalletCountryList`)
+            fetch(`/api/dataset/labsCountryWalletData`)
                 .then((res) => res.json()
                     .then((res) => {
                         resolve(res)
@@ -81,6 +68,9 @@ const getOtherWalletData = () => {
 
 class Wallets extends React.Component {
     render() {
+        const {
+            countryList,
+        } = this.props
         return (
             <Container fluid style={{
                 marginLeft: '20px',
@@ -88,7 +78,9 @@ class Wallets extends React.Component {
                 <Grid stackable columns='three'>
                     <Grid.Row stretched>
                         <Grid.Column width={8}>
-                            <AndroidCountryChart />
+                            <AndroidCountryChart
+                                countryList={countryList}
+                            />
                         </Grid.Column>
                         <Grid.Column width={8}>
                             <AndroidGlobalChart />
@@ -115,13 +107,13 @@ class AndroidCountryChart extends React.Component {
             semanticDropdown: 'Select a Country',
             activeCountryTab: 'activeDevices',
             country: new Set(),
-            walletCountryList: '',      // Full dataset of country list
-            
+            countryList: props.countryList,      // Full dataset of country list
+
             // States containing full datasets
             wCountryActiveData: '',
             wCountryDeltaData: '',
-            wCountryPercentageData: '',   
-            
+            wCountryPercentageData: '',
+
             // States containing datasets for plotting
             countryActiveDevicesChartData: '',
             countryDeltaInstallsChartData: '',
@@ -164,7 +156,7 @@ class AndroidCountryChart extends React.Component {
         var activeDevicesData = this.state.wCountryActiveData
         var deltaInstallsData = this.state.wCountryDeltaData
         var percentageInstallsData = this.state.wCountryPercentageData
-        var countryList = this.state.walletCountryList
+        var countryList = this.state.countryList
         var i = 0
 
         // Iterate through set of countries selecting datasets
@@ -202,19 +194,16 @@ class AndroidCountryChart extends React.Component {
         window.addEventListener('mousedown', this.handleClick);     // Handles closing of dropdown menu        
 
         var wCountryDataPromise = Promise.resolve(getLabsCountryData())
-        var wCountryListPromise = Promise.resolve(getWalletCountryList())
 
-        Promise.all([wCountryDataPromise, wCountryListPromise]).then(data => {
+        Promise.all([wCountryDataPromise]).then(data => {
             const fullCountryActiveDevices = data[0].active_installs
             const fullCountryDeltaInstalls = data[0].delta_installs
             const fullCountryPercentageInstalls = data[0].percentage_delta
-            const wCountryListData = data[1]
 
             this.setState({
                 wCountryActiveData: fullCountryActiveDevices,
                 wCountryDeltaData: fullCountryDeltaInstalls,
                 wCountryPercentageData: fullCountryPercentageInstalls,
-                walletCountryList: wCountryListData,
             })
         })
     }
@@ -230,31 +219,33 @@ class AndroidCountryChart extends React.Component {
             countryActiveDevicesChartData,
             countryDeltaInstallsChartData,
             countryPercentageInstallsChartData,
-            walletCountryList,
+            countryList,
         } = this.state
-        
+
         // Set formatting of chart and axes
         const countryActiveDevicesOptions = chartFunctions.buildChartOptions('Active Android devices with wallet installed')
         const countryDeltaInstallsOptions = chartFunctions.buildChartOptions('Change in Active Android Devices')
         const countryPercentageInstallsOptions = chartFunctions.buildChartOptions('Percentage Change in Active Android Devices')
-        
+
         // Create country list for dropdown menu
-        const dropdownOptions = chartFunctions.createDropdownList(walletCountryList)
+        const dropdownOptions = chartFunctions.createDropdownList(countryList)
         return (
-            <main><Segment attached='top'>
+            <main>
+                <Segment attached='top'>
                 <Label ribbon>Android Wallet Metrics per Country</Label>
                 <br></br>
-                                <Dropdown
-                                    placeholder='Select a country'
-                                    scrolling
-                                    fluid
-                                    search
-                                    clearable
-                                    multiple
-                                    selection
-                                    options={dropdownOptions}
-                                    onChange={this.handleCountryChange}
-                                />
+                <br></br>
+                <Dropdown
+                    placeholder='Select a country'
+                    scrolling
+                    fluid
+                    search
+                    clearable
+                    multiple
+                    selection
+                    options={dropdownOptions}
+                    onChange={this.handleCountryChange}
+                />
                 {
                     countryActiveDevicesChartData.length !== 0 && (
                         <section>
@@ -290,7 +281,12 @@ class AndroidCountryChart extends React.Component {
                                 Select a country in the menu above
                         </Header>
                         </Segment>
-                )}
+                    )}
+                <Message>
+                    <p>
+                        Google Play Store metrics provided by Dash Core Group. <a id="dashorgRawLink" href="/api/dataset/labsCountryWalletData"> CLICK HERE FOR THE RAW DATA</a>
+                    </p>
+                </Message>
             </Segment>
                 <Menu attached='bottom' tabular fitted='vertically'>
                     <Menu.Item
@@ -314,7 +310,8 @@ class AndroidCountryChart extends React.Component {
                     >
                         Percentage Delta Installs
                     </Menu.Item>
-                </Menu></main>
+                </Menu>
+                </main>
         )
     }
 }
@@ -325,11 +322,11 @@ class AndroidGlobalChart extends React.Component {
         this.state = {
             shouldRedraw: false,    // Toggle redraw for charts
             activeGlobalTab: 'activeDevices',
-            
+
             // States for Global datasets
             globalActiveDevicesChartData: '',
             globalDeltaInstallsChartData: '',
-            globalPercentageInstallsChartData: '',            
+            globalPercentageInstallsChartData: '',
         }
         // Binding functions used in this Class
         this.handleGlobalTab = this.handleGlobalTab.bind(this)
@@ -353,7 +350,7 @@ class AndroidGlobalChart extends React.Component {
             const globalActiveDevicesChartData = chartFunctions.buildChartDataset(fullAndroidGlobalData.active_devices, 'Total Active Devices', 0)
             const globalDeltaInstallsChartData = chartFunctions.buildChartDataset(fullAndroidGlobalData.delta_active_installs, 'Delta Active Devices', 0)
             const globalPercentageInstallsChartData = chartFunctions.buildChartDataset(fullAndroidGlobalData.percentage_delta_installs, 'Percentage Delta Devices', 0)
-            
+
             this.setState({
                 globalActiveDevicesChartData: {
                     datasets: [globalActiveDevicesChartData],
@@ -371,19 +368,18 @@ class AndroidGlobalChart extends React.Component {
         const {
             activeGlobalTab,
             shouldRedraw,
-
-            // States containing datasets for plotting
             globalActiveDevicesChartData,
             globalDeltaInstallsChartData,
-            globalPercentageInstallsChartData,            
+            globalPercentageInstallsChartData,
         } = this.state
-        
+
         const globalActiveDevicesOptions = chartFunctions.buildChartOptions('Active Android devices with wallet installed')
         const globalDeltaInstallsOptions = chartFunctions.buildChartOptions('Change in Active Android Devices')
         const globalPercentageInstallsOptions = chartFunctions.buildChartOptions('Percentage Change in Active Android Devices')
 
         return (
-            <main><Segment attached='top'>
+            <main>
+                <Segment attached='top'>
                 <Label ribbon>Android Wallet Metrics global</Label>
                 {
                     globalActiveDevicesChartData.length !== 0 && (
@@ -416,6 +412,11 @@ class AndroidGlobalChart extends React.Component {
                     )
 
                 }
+                <Message>
+                    <p>
+                        Google Play Store metrics provided by Dash Core Group. <a id="dashorgRawLink" href="/api/dataset/labsWalletAndroidGlobalData"> CLICK HERE FOR THE RAW DATA</a>
+                    </p>
+                </Message>
             </Segment>
                 <Menu attached='bottom' tabular fitted='vertically'>
                     <Menu.Item
@@ -439,7 +440,8 @@ class AndroidGlobalChart extends React.Component {
                     >
                         Percentage Delta Installs
                     </Menu.Item>
-                </Menu></main>
+                </Menu>
+                </main>
         )
     }
 }
@@ -503,14 +505,15 @@ class OtherWalletsChart extends React.Component {
             shouldRedraw,
             wOtherTotalInstalls,
             wOtherDesktopInstalls,
-            wOtherMobileInstalls,           
+            wOtherMobileInstalls,
         } = this.state
-        
+
         const otherWalletChartOptions = chartFunctions.buildChartOptions('Wallets installs in month')
 
         return (
-            <main><Segment attached='top'>
-                <Label ribbon>Wallet Metrics</Label>
+            <main>
+                <Segment attached='top'>
+                <Label ribbon>Other Wallet Metrics</Label>
                 {
                     wOtherTotalInstalls.length !== 0 && (
                         <section>
@@ -542,6 +545,9 @@ class OtherWalletsChart extends React.Component {
                     )
 
                 }
+                <Message>
+                    <p>Dash Core and Dash Electrum download metrics collected by Dash Watch using the GitHub API. <a id="dashorgRawLink" href="/api/dataset/labsOtherWalletData"> CLICK HERE FOR THE RAW DATA</a></p>
+                </Message>
             </Segment>
                 <Menu attached='bottom' tabular fitted='vertically'>
                     <Menu.Item
@@ -565,10 +571,10 @@ class OtherWalletsChart extends React.Component {
                     >
                         Mobile Installs Only
                     </Menu.Item>
-                </Menu></main>
+                </Menu>
+                </main>
         )
     }
 }
-
 
 export default Wallets
