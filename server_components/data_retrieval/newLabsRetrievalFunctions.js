@@ -91,12 +91,27 @@ var retrieveWebsiteCountryData = function retrieveWebsiteCountryFunction() {
     })
 }
 
+// Function to retrieve dash.org data for world from database
+var retrieveWebsiteGlobalData = function retrieveWebsiteGlobalFunction() {
+    return new Promise((resolve, reject) => {
+        pool.query(`SELECT * 
+                    FROM website_global_table
+                    ORDER BY date ASC`, 
+                    function (err, results) {
+            if (err) reject(err);
+            else {
+                resolve(results.rows);
+            }
+        })
+    })
+}
+
 //  **********************
 // Database Retrieval functions for best of lists
 //  **********************
 
 // Function to retrieve all votes from database
-var retrieveTopList = function retrieveWalletDataFunction(element) {
+var retrieveWalletTopList = function retrieveWalletListFunction(element) {
     return new Promise((resolve, reject) => {
         pool.query(`SELECT * 
                     FROM android_work_table 
@@ -112,8 +127,36 @@ var retrieveTopList = function retrieveWalletDataFunction(element) {
                         date: item.date,
                         country: item.country_code,
                         active_devices: item.active_device_installs,
-                        delta_installs: item.delta_active_installs,
+                        delta_active_installs: item.delta_active_installs,
                         percentage_delta_installs: item.percentage_delta_installs,
+                        id: item.unique_id,
+                    }) 
+                })
+                resolve(storeMainData);
+            }
+        })
+    })
+}
+
+// Function to retrieve all votes from database
+var retrieveWebsiteTopList = function retrieveWebsiterListFunction(element) {
+    return new Promise((resolve, reject) => {
+        pool.query(`SELECT * 
+                    FROM dash_org_website 
+                    WHERE users >= 100
+                    ORDER BY date DESC, ${element} DESC 
+                    LIMIT 100`, 
+                    function (err, results) {
+            if (err) reject(err);
+            else {
+                storeMainData = [] 
+                Object.values(results.rows).map((item) => {
+                    storeMainData.push({
+                        date: item.date,
+                        country: item.country_code,
+                        users: item.users,
+                        delta_users: item.delta_users,
+                        percentage_delta_users: item.percentage_delta_users,
                         id: item.unique_id,
                     }) 
                 })
@@ -131,6 +174,8 @@ module.exports = {
     retrieveOtherWalletData,
     // Website functions
     retrieveWebsiteCountryData,
+    retrieveWebsiteGlobalData,
     // Best of list functions
-    retrieveTopList,
+    retrieveWalletTopList,
+    retrieveWebsiteTopList,
 }

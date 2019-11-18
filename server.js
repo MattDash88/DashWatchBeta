@@ -696,6 +696,16 @@ app.prepare()
       })
     })
 
+    // API call to get labs Wallet top lists
+    server.get('/api/dataset/labsWebsiteTopLists', (req, res) => {
+      var refreshCache = true   // Request cache refresh
+      Promise.resolve(labsFunctions.getLabsTopWebsiteList(refreshCache)).then(function (results) {
+        res.status(200).send(results);
+      }).catch((error) => {                                                           // Run this if the retrieving functions returns an error
+        res.status(200).send(serialize(error))
+      })
+    })
+
     // API call to get labs Wallet data
     server.get('/api/dataset/labsCountryWalletData', (req, res) => {
       var refreshCache = true   // Request cache refresh
@@ -736,10 +746,20 @@ app.prepare()
       })
     })
 
-    // API call to get labs Wallet data
+    // API call to get labs Website data per country
     server.get('/api/dataset/labsWebsiteCountryData', (req, res) => {
       var refreshCache = true   // Request cache refresh
       Promise.resolve(labsFunctions.getLabsWebsiteCountryData(refreshCache)).then(function (results) {
+        res.status(200).send(results);
+      }).catch((error) => {                                                           // Run this if the retrieving functions returns an error
+        res.status(200).send(serialize(error))
+      })
+    })
+
+    // API call to get labs Website data for world
+    server.get('/api/dataset/labsWebsiteGlobalData', (req, res) => {
+      var refreshCache = true   // Request cache refresh
+      Promise.resolve(labsFunctions.getLabsWebsiteGlobalData(refreshCache)).then(function (results) {
         res.status(200).send(results);
       }).catch((error) => {                                                           // Run this if the retrieving functions returns an error
         res.status(200).send(serialize(error))

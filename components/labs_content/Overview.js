@@ -23,11 +23,8 @@ import {
 // Analytics
 import { trackEvent } from '../functions/analytics';
 
-var monthsList = [
-    'January', 'February', 'March', 'April', 'May',
-    'June', 'July', 'August', 'September',
-    'October', 'November', 'December'
-];
+// Import functions for charts
+import tableFunctions from './labs_functions/tableFunctions';
 
 // API query requesting Trust Protector Candidate List data
 const getWalletTopLists = () => {
@@ -43,10 +40,11 @@ const getWalletTopLists = () => {
     )
 }
 
-const getWalletCountryList = () => {
+// API query requesting Trust Protector Candidate List data
+const getWebsiteTopLists = () => {
     return (
         new Promise((resolve) => {
-            fetch(`/api/dataset/labsCountryList`)
+            fetch(`/api/dataset/labsWebsiteTopLists`)
                 .then((res) => res.json()
                     .then((res) => {
                         resolve(res)
@@ -57,48 +55,50 @@ const getWalletCountryList = () => {
 }
 
 class LabsOverview extends React.Component {
+    render() {
+        const { // Declare data arrays used in class
+            countryList,
+        } = this.props
+
+        return (
+            <Container>
+                <WalletTableRow
+                    countryList={countryList}
+                />
+                <WebsiteTableRow
+                    countryList={countryList}
+                />
+            </Container>
+        )
+    }
+}
+
+class WalletTableRow extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            activeWalletDevices: '',
+            walletActiveDevices: '',
             deltaWalletInstalls: '',
             percentageWalletInstalls: '',
             globalWalletData: '',
-            walletCountryList: '',
             walletListsDate: '',
-        }
-
-        // Binding functions used in this Class
-        this.handleClick = this.handleClick.bind(this);
-    }
-
-    // Function ran when the eventlistener is activated. Close dropdown menu if clicked outside of it
-    handleClick = (event) => {
-        if (event.target.id !== "dropdownMenu") {
-            trackEvent('Labs Page', `Clicked on Labs Wallets page`)
         }
     }
 
     componentDidMount() {
-        window.addEventListener('mousedown', this.handleClick);     // Handles closing of dropdown menu        
-
         var wTopListPromise = Promise.resolve(getWalletTopLists())
-        var wCountryListPromise = Promise.resolve(getWalletCountryList())
 
-        Promise.all([wTopListPromise, wCountryListPromise]).then(data => {
+        Promise.all([wTopListPromise]).then(data => {
             var walletListData = data[0]
-            var wCountryListData = data[1]
 
-            var year = walletListData.top_active_devices[0].date.slice(0, 4)
-            var month = Number(walletListData.top_active_devices[0].date.slice(5, 7) - 1)
-            var walletdateString = `${monthsList[month]} ${year}`
+            // Create header string with date
+            var walletdateString = tableFunctions.createListDateString(walletListData.top_active_devices[0].date)
             this.setState({
-                activeWalletDevices: walletListData.top_active_devices,
+                walletActiveDevices: walletListData.top_active_devices,
                 deltaWalletInstalls: walletListData.delta_active_installs,
                 percentageWalletInstalls: walletListData.percentage_delta_installs,
                 globalWalletData: walletListData.global_active_devices,
-                walletCountryList: wCountryListData,
                 walletListsDate: walletdateString,
             })
         })
@@ -106,110 +106,200 @@ class LabsOverview extends React.Component {
 
     render() {
         const { // Declare data arrays used in class
-            activeWalletDevices,
+            walletActiveDevices,
             deltaWalletInstalls,
             percentageWalletInstalls,
             globalWalletData,
+            walletListsDate
         } = this.state
 
         const { // Declare data arrays used in class
             countryList,
         } = this.props
-
         return (
-            <Container>
+            <main>
                 <Segment>
                     <Label ribbon>Android Wallet Metrics</Label>
-                    <h4>Month: {this.state.walletListsDate}</h4>
+                    <h4>Month: {walletListsDate}</h4>
                     <Grid stackable>
                         <Grid.Row width={15}>
                             <Grid.Column width={5}>
                                 {
-                                    (activeWalletDevices.length !== 0) &&
-                                    <Table selectable singleLine unstackable fixed>
-                                        <Table.Header>
-                                            <Table.Row singleLine>
-                                                <Table.HeaderCell>Country</Table.HeaderCell>
-                                                <Table.HeaderCell textAlign='right'>Active Installs</Table.HeaderCell>
-                                            </Table.Row>
-                                        </Table.Header>
-
-                                        <Table.Body>
-                                            {activeWalletDevices.slice(0, 6).map((row) =>
-                                                <Table.Row key={row.id}>
-                                                    <Table.Cell><Flag name={countryList[row.country].flag} />{countryList[row.country].country_name.toLocaleString('en')}</Table.Cell>
-                                                    <Table.Cell textAlign='right'>{row.active_devices.toLocaleString('en')}</Table.Cell>
-                                                </Table.Row>
-                                            )}
-                                            <Table.Row>
-                                                <Table.Cell><b>All countries</b></Table.Cell>
-                                                <Table.Cell textAlign='right'><b>{globalWalletData.active_device_installs.toLocaleString('en')}</b></Table.Cell>
-                                            </Table.Row>
-                                        </Table.Body>
-                                    </Table>
+                                    (walletActiveDevices.length !== 0) && (
+                                        <OverviewTable
+                                            listData={walletActiveDevices}
+                                            countryList={countryList}
+                                            globalDataPoint={globalWalletData.active_device_installs}
+                                            dataColumnLabel={'Active Devices'}
+                                            dataLabel={'active_devices'}
+                                        />
+                                    )
                                 }
                             </Grid.Column>
-
-                            {
-                                this.state.deltaWalletInstalls.length !== 0 && (
-                                    <Grid.Column width={5}>
-                                        <Table selectable singleLine unstackable fixed>
-                                            <Table.Header>
-                                                <Table.Row>
-                                                    <Table.HeaderCell>Country</Table.HeaderCell>
-                                                    <Table.HeaderCell textAlign='right'>New Installs</Table.HeaderCell>
-                                                </Table.Row>
-                                            </Table.Header>
-
-                                            <Table.Body>
-                                                {deltaWalletInstalls.slice(0, 6).map((row) =>
-                                                    <Table.Row key={row.id}>
-                                                        <Table.Cell><Flag name={countryList[row.country].flag} />{countryList[row.country].country_name}</Table.Cell>
-                                                        <Table.Cell textAlign='right'>{row.delta_installs.toLocaleString('en')}</Table.Cell>
-                                                    </Table.Row>
-                                                )}
-
-                                                <Table.Row>
-                                                    <Table.Cell><b>All countries</b></Table.Cell>
-                                                    <Table.Cell textAlign='right'><b>{globalWalletData.delta_active_installs.toLocaleString('en')}</b></Table.Cell>
-                                                </Table.Row>
-                                            </Table.Body>
-                                        </Table>
-                                    </Grid.Column>
-                                ) || (<Grid.Column></Grid.Column>)
-                            }
-                            {
-                                this.state.percentageWalletInstalls.length !== 0 && (
-                                    <Grid.Column width={5}>
-                                        <Table selectable singleLine unstackable fixed>
-                                            <Table.Header>
-                                                <Table.Row>
-                                                    <Table.HeaderCell>Country</Table.HeaderCell>
-                                                    <Table.HeaderCell textAlign='right'>% Change</Table.HeaderCell>
-                                                </Table.Row>
-                                            </Table.Header>
-
-                                            <Table.Body>
-                                                {percentageWalletInstalls.slice(0, 6).map((row) =>
-                                                    <Table.Row key={row.id}>
-                                                        <Table.Cell><Flag name={countryList[row.country].flag} />{countryList[row.country].country_name}</Table.Cell>
-                                                        <Table.Cell textAlign='right'>{row.percentage_delta_installs}%</Table.Cell>
-                                                    </Table.Row>
-                                                )}
-
-                                                <Table.Row>
-                                                    <Table.Cell><b>All countries</b></Table.Cell>
-                                                    <Table.Cell textAlign='right'><b>{globalWalletData.percentage_delta_installs}%</b></Table.Cell>
-                                                </Table.Row>
-                                            </Table.Body>
-                                        </Table>
-                                    </Grid.Column>
-                                ) || (<Grid.Column></Grid.Column>)
-                            }
+                            <Grid.Column width={5}>
+                                {
+                                    (deltaWalletInstalls.length !== 0) && (
+                                        <OverviewTable
+                                            listData={deltaWalletInstalls}
+                                            countryList={countryList}
+                                            globalDataPoint={globalWalletData.delta_active_installs}
+                                            dataColumnLabel={'New Installs'}
+                                            dataLabel={'delta_active_installs'}
+                                        />
+                                    )
+                                }
+                            </Grid.Column>
+                            <Grid.Column width={5}>
+                                {
+                                    (percentageWalletInstalls.length !== 0) && (
+                                        <OverviewTable
+                                            listData={percentageWalletInstalls}
+                                            countryList={countryList}
+                                            globalDataPoint={globalWalletData.percentage_delta_installs}
+                                            dataColumnLabel={'% Change'}
+                                            dataLabel={'percentage_delta_installs'}
+                                        />
+                                    )
+                                }
+                            </Grid.Column>
                         </Grid.Row>
                     </Grid>
                 </Segment>
-            </Container>
+            </main>
+        )
+    }
+}
+
+class WebsiteTableRow extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            websiteUsers: '',
+            websiteDeltaUsers: '',
+            websitePercentageUsers: '',
+            globalWebsiteData: '',
+            websiteListsDate: '',
+        }
+    }
+
+    componentDidMount() {
+        var webTopListPromise = Promise.resolve(getWebsiteTopLists())
+
+        Promise.all([webTopListPromise]).then(data => {
+            var websitesListData = data[0]
+
+            // Create header string with date
+            var websitedateString = tableFunctions.createListDateString(websitesListData.users[0].date)
+            this.setState({
+                websiteUsers: websitesListData.users,
+                websiteDeltaUsers: websitesListData.delta_users,
+                websitePercentageUsers: websitesListData.percentage_delta_users,
+                globalWebsiteData: websitesListData.global_users,
+                websiteListsDate: websitedateString,
+            })
+        })
+    }
+
+    render() {
+        const { // Declare data arrays used in class
+            websiteUsers,
+            websiteDeltaUsers,
+            websitePercentageUsers,
+            globalWebsiteData,
+            websiteListsDate
+        } = this.state
+
+        const { // Declare data arrays used in class
+            countryList,
+        } = this.props
+        return (
+            <main>
+                <Segment>
+                    <Label ribbon>Dash.org Metrics</Label>
+                    <h4>Month: {websiteListsDate}</h4>
+                    <Grid stackable>
+                        <Grid.Row width={15}>
+                            <Grid.Column width={5}>
+                                {
+                                    (websiteUsers.length !== 0) && (
+                                        <OverviewTable
+                                            listData={websiteUsers}
+                                            countryList={countryList}
+                                            globalDataPoint={globalWebsiteData.users}
+                                            dataColumnLabel={'Users'}
+                                            dataLabel={'users'}
+                                        />
+                                    )
+                                }
+                            </Grid.Column>
+                            <Grid.Column width={5}>
+                                {
+                                    (websiteDeltaUsers.length !== 0) && (
+                                        <OverviewTable
+                                            listData={websiteDeltaUsers}
+                                            countryList={countryList}
+                                            globalDataPoint={globalWebsiteData.delta_users}
+                                            dataColumnLabel={'Delta Users'}
+                                            dataLabel={'delta_users'}
+                                        />
+                                    )
+                                }
+                            </Grid.Column>
+                            <Grid.Column width={5}>
+                                {
+                                    (websitePercentageUsers.length !== 0) && (
+                                        <OverviewTable
+                                            listData={websitePercentageUsers}
+                                            countryList={countryList}
+                                            globalDataPoint={globalWebsiteData.percentage_delta_users}
+                                            dataColumnLabel={'% Change'}
+                                            dataLabel={'percentage_delta_users'}
+                                        />
+                                    )
+                                }
+                            </Grid.Column>
+                        </Grid.Row>
+                    </Grid>
+                </Segment>
+            </main>
+        )
+    }
+}
+
+class OverviewTable extends React.Component {
+    render() {
+        const {
+            listData,
+            countryList,
+            globalDataPoint,
+            dataColumnLabel,
+            dataLabel,
+        } = this.props
+        console.log(listData)
+
+        return (
+            <Table selectable singleLine unstackable fixed>
+                <Table.Header>
+                    <Table.Row singleLine>
+                        <Table.HeaderCell>Country</Table.HeaderCell>
+                        <Table.HeaderCell textAlign='right'>{dataColumnLabel}</Table.HeaderCell>
+                    </Table.Row>
+                </Table.Header>
+
+                <Table.Body>
+                    {listData.slice(0, 6).map((row) =>
+                        <Table.Row key={row.id}>
+                            <Table.Cell><Flag name={countryList[row.country].flag} />{countryList[row.country].country_name.toLocaleString('en')}</Table.Cell>
+                            <Table.Cell textAlign='right'>{row[dataLabel].toLocaleString('en')}</Table.Cell>
+                        </Table.Row>
+                    )}
+                    <Table.Row>
+                        <Table.Cell><b>All countries</b></Table.Cell>
+                        <Table.Cell textAlign='right'><b>{globalDataPoint.toLocaleString('en')}</b></Table.Cell>
+                    </Table.Row>
+                </Table.Body>
+            </Table>
         )
     }
 }

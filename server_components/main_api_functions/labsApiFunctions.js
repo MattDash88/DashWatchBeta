@@ -258,11 +258,87 @@ const getLabsWebsiteCountryData = (refreshCache) => {
     })
 }
 
+// Function to prepare data for the Prepared Datasets for Labs (Wallets and POS systems)
+const getLabsWebsiteGlobalData = (refreshCache) => {
+    return new Promise((resolve, reject) => {
+        // Read cache for this function
+        cache.redisRetrieve('testlabsWebsiteGlobalData', function (error, data) {
+            // Connection with redis fails, for back to direct Airtable retrieval
+            var redisConnectionFailure;
+            if (error) redisConnectionFailure = true;
+
+            // If data is available in cache and a cache refresh is not requested, load from cache
+            if (!!data && refreshCache == false) {
+                resolve(JSON.parse(data))
+            }
+
+            // If cache is empty or a cache refresh is requested, retrieve from Airtable
+            else {
+                var websiteGlobalPromise = Promise.resolve(newLabsRetrievalFunctions.retrieveWebsiteGlobalData());
+
+                Promise.all([websiteGlobalPromise]).then(function (valArray) {
+                    // Sorting out all valArray items
+                    websiteGlobalData = valArray[0]
+
+                    var users = []
+                    var sessions = []
+                    var bounceRate = []
+                    var deltaUsers = []
+                    var percentageDelta = []
+
+                    Object.values(websiteGlobalData).map((item) => {
+                        var dateString = item.date.toISOString().substring(0,7)  // Cut of day and timezone from string
+                        users.push({
+                            x: dateString,
+                            y: item.users,
+                        })
+                        sessions.push({
+                            x: dateString,
+                            y: item.sessions,
+                        })
+                        bounceRate.push({
+                            x: dateString,
+                            y: item.bounce_rate,
+                        })
+                        deltaUsers.push({
+                            x: dateString,
+                            y: item.delta_users,
+                        })
+                        percentageDelta.push({
+                            x: dateString,
+                            y: item.percentage_delta_users,
+                        })
+                    })
+
+                    const storeWalletData = {
+                        users: users,
+                        sessions: sessions,
+                        bounce_rate: bounceRate,
+                        delta_users: deltaUsers,
+                        percentage_delta_users: percentageDelta,
+                    } 
+
+                    if (!redisConnectionFailure) {
+                        // Store results in Redis cache, cache expire time is defined in .env
+                        cache.redisStore('testlabsWebsiteGlobalData', storeWalletData)
+                    }
+
+                    // Finish
+                    resolve(storeWalletData)
+                }).catch((error) => {
+                    reject({ error })
+                    console.log(error)
+                })
+            }
+        })
+    })
+}
+
 //  **********************
 // API functions for best of lists
 //  **********************
 
-// Function to prepare data for the Prepared Datasets for Labs (Wallets and POS systems)
+// Function to prepare data for the Android Wallet Top lists
 const getLabsTopWalletList = (refreshCache) => {
     return new Promise((resolve, reject) => {
         // Read cache for this function
@@ -278,9 +354,9 @@ const getLabsTopWalletList = (refreshCache) => {
 
             // If cache is empty or a cache refresh is requested, retrieve from Airtable
             else {
-                var activeDevicesListPromise = Promise.resolve(newLabsRetrievalFunctions.retrieveTopList('active_device_installs'));
-                var deltaDevicesListPromise = Promise.resolve(newLabsRetrievalFunctions.retrieveTopList('delta_active_installs'));
-                var percentageDevicesListPromise = Promise.resolve(newLabsRetrievalFunctions.retrieveTopList('percentage_delta_installs'));
+                var activeDevicesListPromise = Promise.resolve(newLabsRetrievalFunctions.retrieveWalletTopList('active_device_installs'));
+                var deltaDevicesListPromise = Promise.resolve(newLabsRetrievalFunctions.retrieveWalletTopList('delta_active_installs'));
+                var percentageDevicesListPromise = Promise.resolve(newLabsRetrievalFunctions.retrieveWalletTopList('percentage_delta_installs'));
                 var walletAndroidGlobalPromise = Promise.resolve(newLabsRetrievalFunctions.retrieveAndroidGlobalData());
 
                 Promise.all([activeDevicesListPromise, deltaDevicesListPromise, percentageDevicesListPromise, walletAndroidGlobalPromise]).then(function (valArray) {
@@ -316,6 +392,66 @@ const getLabsTopWalletList = (refreshCache) => {
     })
 }
 
+// Function to prepare data for the Prepared Datasets for Labs (Wallets and POS systems)
+const getLabsTopWebsiteList = (refreshCache) => {
+    return new Promise((resolve, reject) => {
+        // Read cache for this function
+        cache.redisRetrieve('labsTopWebsitesList', function (error, data) {
+            // Connection with redis fails, for back to direct Airtable retrieval
+            var redisConnectionFailure;
+            if (error) redisConnectionFailure = true;
+
+            // If data is available in cache and a cache refresh is not requested, load from cache
+            if (!!data && refreshCache == false) {
+                resolve(JSON.parse(data))
+            }
+
+            // If cache is empty or a cache refresh is requested, retrieve from Airtable
+            else {
+                var usersListPromise = Promise.resolve(newLabsRetrievalFunctions.retrieveWebsiteTopList('users'));
+                var deltaUsersListPromise = Promise.resolve(newLabsRetrievalFunctions.retrieveWebsiteTopList('delta_users'));
+                var percentageDevicesListPromise = Promise.resolve(newLabsRetrievalFunctions.retrieveWebsiteTopList('percentage_delta_users'));
+                var walletAndroidGlobalPromise = Promise.resolve(newLabsRetrievalFunctions.retrieveWebsiteGlobalData());
+
+                Promise.all([
+                    usersListPromise, 
+                    deltaUsersListPromise, 
+                    percentageDevicesListPromise, 
+                    walletAndroidGlobalPromise
+                ]).then(function (valArray) {
+
+                    // Sorting out all valArray items
+                    topUsersList = valArray[0]
+                    topDeltaUsersList = valArray[1]
+                    topPercentageUsersList = valArray[2]
+                    globalWebsiteList = valArray[3]
+                    
+                    var mostRecentDate = topUsersList[0].date
+                    var topGlobalWebsiteList = newLabsProcessingFunctions.processTopListGlobalData(globalWebsiteList, mostRecentDate)
+
+                    const storeTopListData = {
+                        users: topUsersList,
+                        delta_users: topDeltaUsersList,
+                        percentage_delta_users: topPercentageUsersList,
+                        global_users: topGlobalWebsiteList,
+                    }
+
+                    if (!redisConnectionFailure) {
+                        // Store results in Redis cache, cache expire time is defined in .env
+                        cache.redisStore('labsTopWebsitesList', storeTopListData)
+                    }
+
+                    // Finish
+                    resolve(storeTopListData)
+                }).catch((error) => {
+                    reject({ error })
+                    console.log(error)
+                })
+            }
+        })
+    })
+}
+
 
 module.exports = {
     getLabsCountryList,
@@ -325,6 +461,8 @@ module.exports = {
     getLabsOtherWalletsData,
     // Website functions
     getLabsWebsiteCountryData,
+    getLabsWebsiteGlobalData,
     // Best of list functions
     getLabsTopWalletList,
+    getLabsTopWebsiteList,
 }

@@ -87,12 +87,15 @@ var processOtherWalletDataData = function mainTopListGlobalFunction(walletData) 
 var processCountryWebsiteData = function countryWebsiteFunction(countryList, websiteData) {
     // Declaring elements 
     usersData = {}
+    deltaUsersData = {}
     sessionsData = {}
     bounceRateData = {}
 
     Object.values(countryList).map((country) => {       // Go through list of countries
         var countryCode = country.country_code
         usersArray = []
+        deltaUsersArray = []
+        percentageDeltaArray = []
         sessionsArray = []
         bounceRateArray = []
         Object.values(websiteData).map((item) => {      // Go through full Android wallet SQL dataset            
@@ -102,6 +105,14 @@ var processCountryWebsiteData = function countryWebsiteFunction(countryList, web
                 usersArray.push({
                     x: dateString,
                     y: item.users,
+                })
+                deltaUsersArray.push({
+                    x: dateString,
+                    y: item.delta_users,
+                })
+                percentageDeltaArray.push({
+                    x: dateString,
+                    y: item.percentage_delta_users,
                 })
                 sessionsArray.push({
                     x: dateString,
@@ -115,12 +126,16 @@ var processCountryWebsiteData = function countryWebsiteFunction(countryList, web
         })
         // Put full dataset in their respective sub object
         usersData[countryCode] = usersArray
+        deltaUsersData[countryCode] = deltaUsersArray
+        percentageDeltaUsersData[countryCode] = percentageDeltaArray
         sessionsData[countryCode] = sessionsArray
         bounceRateData[countryCode] = bounceRateArray
     })
     // Combine all the data objects into one master object to return
     const outputObject = {
         users: usersData,
+        delta_users: deltaUsersData,
+        percentage_delta: percentageDeltaUsersData,
         sessions: sessionsData,
         bounce_rate: bounceRateData,
     }
@@ -135,7 +150,7 @@ var processCountryWebsiteData = function countryWebsiteFunction(countryList, web
 var processTopListGlobalData = function mainTopListGlobalFunction(globalData, targetDate) {
     // Declaring elements 
     var topListGlobalData = []
-    Object.values(globalData).map((item) => {   //Go through list of countries           
+    Object.values(globalData).map((item) => {   //Go through list of countries        
         if (item.date.toISOString() == targetDate.toISOString()) { // Match date with SQL date of SQL entry
             topListGlobalData = item
         }
