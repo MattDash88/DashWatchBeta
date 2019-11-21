@@ -88,6 +88,7 @@ var processCountryWebsiteData = function countryWebsiteFunction(countryList, web
     // Declaring elements 
     usersData = {}
     deltaUsersData = {}
+    percentageDeltaUsersData = {}
     sessionsData = {}
     bounceRateData = {}
 
@@ -143,6 +144,26 @@ var processCountryWebsiteData = function countryWebsiteFunction(countryList, web
 }
 
 //  **********************
+// Processing functions for KPI explorer
+//  **********************
+
+// Processing wallet metrics over time data
+var processKpiValueData = function proposalKpisFunction(kpiData) {
+    // Declaring elements 
+    const outputArray = []
+
+    Object.values(kpiData).map((item) => {       // Go through list of countries     
+        var dateString = item.date.toISOString().substring(0, 7)  // Cut of day and timezone from string
+        // Prepare datasets for charts
+        outputArray.push({
+            x: dateString,
+            y: item.value,
+        })
+    })
+    return (outputArray)
+}
+
+//  **********************
 // Processing functions for best of lists
 //  **********************
 
@@ -165,6 +186,8 @@ module.exports = {
     processOtherWalletDataData,
     // Website functions
     processCountryWebsiteData,
+    // Proposal KPIs functions
+    processKpiValueData,
     // Best of list functions
     processTopListGlobalData,
 }

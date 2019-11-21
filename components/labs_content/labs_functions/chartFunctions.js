@@ -34,7 +34,7 @@ function buildChartOptions(chartLabel) {
     return (chartDataset)
 }
 
-function createDropdownList(countryObject) {
+function createCountryDropdownList(countryObject) {
     try {
         var dropdownList = []
         Object.values(countryObject).map((item) => {
@@ -56,4 +56,44 @@ function createDropdownList(countryObject) {
     }
 }
 
-export default { buildChartDataset, buildChartOptions, createDropdownList }
+function createProposalDropdownList(proposalObject) {
+    try {
+        var dropdownList = []
+        Object.values(proposalObject).map((item) => {
+            dropdownList.push({
+                key: item.unique_id,
+                value: item.first_proposal_hash,
+                text: item.project_name,
+            })
+        })
+        return dropdownList
+    } catch (e) {
+        return {
+            key: 'error',
+            value: '',
+            text: 'Something went wrong',
+        }
+    }
+}
+
+function createKpiDropdownList(kpiObject) {
+    try {
+        var dropdownList = []
+        Object.values(kpiObject).map((item) => {
+            dropdownList.push({
+                key: item.unique_id,
+                value: item.unique_id,
+                text: item.kpi_name,
+            })
+        })
+        return dropdownList
+    } catch (e) {
+        return {
+            key: 'error',
+            value: '',
+            text: 'Something went wrong',
+        }
+    }
+}
+
+export default { buildChartDataset, buildChartOptions, createCountryDropdownList, createProposalDropdownList, createKpiDropdownList }

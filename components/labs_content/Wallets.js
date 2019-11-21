@@ -228,7 +228,7 @@ class AndroidCountryChart extends React.Component {
         const countryPercentageInstallsOptions = chartFunctions.buildChartOptions('Percentage Change in Active Android Devices')
 
         // Create country list for dropdown menu
-        const dropdownOptions = chartFunctions.createDropdownList(countryList)
+        const dropdownOptions = chartFunctions.createCountryDropdownList(countryList)
         return (
             <main>
                 <Segment attached='top'>

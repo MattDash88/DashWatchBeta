@@ -107,6 +107,73 @@ var retrieveWebsiteGlobalData = function retrieveWebsiteGlobalFunction() {
 }
 
 //  **********************
+// Database Retrieval functions for Proposal KPIs
+//  **********************
+
+// Function to retrieve dash.org data for world from database
+var retrieveKpiProjectList = function retrieveKpiProjectFunction() {
+    return new Promise((resolve, reject) => {
+        pool.query(`SELECT * 
+                    FROM proposals.proposal_table
+                    ORDER BY project_name ASC`, 
+                    function (err, results) {
+            if (err) reject(err);
+            else {
+                resolve(results.rows);
+            }
+        })
+    })
+}
+
+// Function to retrieve dash.org data for world from database
+var retrieveListOfKpis = function retrieveListOfKpisFunction(proposalID) {
+    return new Promise((resolve, reject) => {
+        pool.query(`SELECT * 
+                    FROM proposals.list_of_kpis
+                    WHERE first_proposal_hash = '${proposalID}'
+                    ORDER BY project_name ASC`, 
+                    function (err, results) {
+            if (err) reject(err);
+            else {
+                resolve(results.rows);
+            }
+        })
+    })
+}
+
+// Function to retrieve dash.org data for world from database
+var retrieveSingleKpi = function retrieveSingleKpiFunction(kpiID) {
+    return new Promise((resolve, reject) => {
+        pool.query(`SELECT * 
+                    FROM proposals.list_of_kpis
+                    WHERE unique_id = '${kpiID}'
+                    LIMIT 1`,
+                    function (err, results) {
+            if (err) reject(err);
+            else {
+                resolve(results.rows);
+            }
+        })
+    })
+}
+
+// Function to retrieve dash.org data for world from database
+var retrieveKpiValues = function retrieveKpiValuesFunction(kpiID) {
+    return new Promise((resolve, reject) => {
+        pool.query(`SELECT * 
+                    FROM proposals.kpi_values_table
+                    WHERE kpi_id = '${kpiID}'
+                    ORDER BY date ASC`, 
+                    function (err, results) {
+            if (err) reject(err);
+            else {
+                resolve(results.rows);
+            }
+        })
+    })
+}
+
+//  **********************
 // Database Retrieval functions for best of lists
 //  **********************
 
@@ -175,6 +242,11 @@ module.exports = {
     // Website functions
     retrieveWebsiteCountryData,
     retrieveWebsiteGlobalData,
+    // Proposal KPIs functions
+    retrieveKpiProjectList,
+    retrieveListOfKpis,
+    retrieveSingleKpi,
+    retrieveKpiValues,
     // Best of list functions
     retrieveWalletTopList,
     retrieveWebsiteTopList,

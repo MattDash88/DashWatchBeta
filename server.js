@@ -19,8 +19,9 @@ var cacheExpirationTime = process.env.CACHEEXPIRATION;  //Time until cache expir
 var airtableFunctions = require('./server_components/airtableFunctions');
 var labsFunctions = require('./server_components/main_api_functions/labsApiFunctions');
 var datasetBuildingFunctions = require('./server_components/datasetBuildingFunctions');
-var databaseFunctions = require('./server_components/db_functions');
+//var databaseFunctions = require('./server_components/db_functions');
 var labsAirtableFunctions = require('./server_components/labsAirtableFunctions');
+//var labsSyncingFunctions = require('./server_components/data_retrieval/newLabsSyncingFunctions');
 var processingFunctions = require('./server_components/dataProcessingFunctions');
 var labsProcessingFunctions = require('./server_components/labsProcessingFunctions');
 var filterFunctions = require('./server_components/filterFunctions');
@@ -687,6 +688,26 @@ app.prepare()
     })
 
     // API call to get labs Wallet top lists
+    server.get('/api/list/labsProjectsWithKpis', (req, res) => {
+      var refreshCache = true   // Request cache refresh
+      Promise.resolve(labsFunctions.getLabsKpiProjectList(refreshCache)).then(function (results) {
+        res.status(200).send(results);
+      }).catch((error) => {                                                           // Run this if the retrieving functions returns an error
+        res.status(200).send(serialize(error))
+      })
+    })
+
+    // API call to get labs Wallet top lists
+    server.get('/api/list/ListOfKpis', (req, res) => {
+      var project = req.query.hash 
+      Promise.resolve(labsFunctions.getLabsListOfKpis(project)).then(function (results) {
+        res.status(200).send(results);
+      }).catch((error) => {                                                           // Run this if the retrieving functions returns an error
+        res.status(200).send(serialize(error))
+      })
+    })
+
+    // API call to get labs Wallet top lists
     server.get('/api/dataset/labsWalletTopLists', (req, res) => {
       var refreshCache = true   // Request cache refresh
       Promise.resolve(labsFunctions.getLabsTopWalletList(refreshCache)).then(function (results) {
@@ -760,6 +781,16 @@ app.prepare()
     server.get('/api/dataset/labsWebsiteGlobalData', (req, res) => {
       var refreshCache = true   // Request cache refresh
       Promise.resolve(labsFunctions.getLabsWebsiteGlobalData(refreshCache)).then(function (results) {
+        res.status(200).send(results);
+      }).catch((error) => {                                                           // Run this if the retrieving functions returns an error
+        res.status(200).send(serialize(error))
+      })
+    })
+
+    // API call to get labs Website data for world
+    server.get('/api/dataset/labsKpiData', (req, res) => {
+      var kpiID = req.query.kpi 
+      Promise.resolve(labsFunctions.getLabsKpiValuesDataset(kpiID)).then(function (results) {
         res.status(200).send(results);
       }).catch((error) => {                                                           // Run this if the retrieving functions returns an error
         res.status(200).send(serialize(error))
@@ -876,15 +907,15 @@ app.prepare()
     })
 
     // Routing for reports for /r
-    server.get('/database/test', (req, res) => {
-      var refreshCache = true   // Request cache refresh
-      Promise.resolve(labsFunctions.getLabsTopWalletList(refreshCache)).then(function (results) {
+    //server.get('/database/sync', (req, res) => {
+    //  var refreshCache = true   // Request cache refresh
+    //  Promise.resolve(labsSyncingFunctions.KpiProjects()).then(function (results) {
         //console.log(results)
-        res.status(200).send(results);
-      }).catch((error) => {                                                           // Run this if the retrieving functions returns an error
-        res.status(200).send(serialize(error))
-      })
-    })
+    //    res.status(200).send(results);
+    //  }).catch((error) => {                                                           // Run this if the retrieving functions returns an error
+    //    res.status(200).send(serialize(error))
+    //  })
+    //})
 
     // Routing for reports for /r
     server.get('/database/test2', (req, res) => {

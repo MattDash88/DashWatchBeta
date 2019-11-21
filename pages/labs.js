@@ -30,6 +30,7 @@ import Header from '../components/headers/LabsHeader';
 import LabsOverview from "../components/labs_content/Overview";
 import Wallets from "../components/labs_content/Wallets";
 import Websites from "../components/labs_content/Websites";
+import KpiExplorer from "../components/labs_content/KpiExplorer";
 
 const getCountryList = () => {
   return (
@@ -294,6 +295,13 @@ class Labs extends React.Component {
               >
                 Websites
               </Menu.Item>
+              <Menu.Item
+                name='kpiExplorer'
+                active={activeTab === 'kpiExplorer'}
+                onClick={this.handleSelectTab}
+              >
+                KPI Explorer
+              </Menu.Item>
             </Menu>
              {
               (countryList.length !== 0 && view == 'largeScreen') && (
@@ -313,6 +321,12 @@ class Labs extends React.Component {
                   {
                     activeTab == 'websites' &&
                     <Websites
+                      countryList={countryList}
+                    />
+                  }
+                  {
+                    activeTab == 'kpiExplorer' &&
+                    <KpiExplorer
                       countryList={countryList}
                     />
                   }

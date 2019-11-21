@@ -216,7 +216,7 @@ class WebsitesCountryChart extends React.Component {
         const countryBounceRateOptions = chartFunctions.buildChartOptions('Website bounce rate')
 
         // Create country list for dropdown menu
-        const dropdownOptions = chartFunctions.createDropdownList(countryList)
+        const dropdownOptions = chartFunctions.createCountryDropdownList(countryList)
         return (
             <main>
                 <Segment attached='top'>

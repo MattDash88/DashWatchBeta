@@ -335,6 +335,85 @@ const getLabsWebsiteGlobalData = (refreshCache) => {
 }
 
 //  **********************
+// API functions for Proposal KPIs
+//  **********************
+
+// Function to prepare data for the Prepared Datasets for Labs (Wallets and POS systems)
+const getLabsKpiProjectList = (refreshCache) => {
+    return new Promise((resolve, reject) => {
+        // Read cache for this function
+        cache.redisRetrieve('testlabsKpiProjectList', function (error, data) {
+            // Connection with redis fails, for back to direct Airtable retrieval
+            var redisConnectionFailure;
+            if (error) redisConnectionFailure = true;
+
+            // If data is available in cache and a cache refresh is not requested, load from cache
+            if (!!data && refreshCache == false) {
+                resolve(JSON.parse(data))
+            }
+
+            // If cache is empty or a cache refresh is requested, retrieve from Airtable
+            else {
+                Promise.resolve(newLabsRetrievalFunctions.retrieveKpiProjectList()).then(function (result) {
+                    // Sorting out Promise result
+                    var projectListData = result
+
+                    if (!redisConnectionFailure) {
+                        // Store results in Redis cache, cache expire time is defined in .env
+                        cache.redisStore('testlabsKpiProjectList', projectListData)
+                    }
+
+                    // Finish
+                    resolve(projectListData)
+                }).catch((error) => {
+                    reject({ error })
+                    console.log(error)
+                })
+            }
+        })
+    })
+}
+
+// Function to prepare data for the Prepared Datasets for Labs (Wallets and POS systems)
+const getLabsListOfKpis = (projectID) => {
+    return new Promise((resolve, reject) => {
+        
+        Promise.resolve(newLabsRetrievalFunctions.retrieveListOfKpis(projectID)).then(function (result) {
+            resolve(result)
+        }).catch((error) => {
+            reject({ error })
+            console.log(error)
+        })
+
+    })
+}
+
+// Function to prepare data for the Prepared Datasets for Labs (Wallets and POS systems)
+const getLabsKpiValuesDataset = (kpiID) => {
+    return new Promise((resolve, reject) => {
+        var kpiDetailPromise = Promise.resolve(newLabsRetrievalFunctions.retrieveSingleKpi(kpiID));
+        var kpiValuesPromise = Promise.resolve(newLabsRetrievalFunctions.retrieveKpiValues(kpiID));
+        Promise.all([kpiDetailPromise, kpiValuesPromise]).then(function (data) {
+            var kpiDetails = data[0][0]
+            var kpiData = data[1]
+
+            var kpiDataset = newLabsProcessingFunctions.processKpiValueData(kpiData)
+
+            const kpiValueOutput = {
+                info: kpiDetails,
+                dataset: kpiDataset,
+            }
+            
+            resolve(kpiValueOutput)
+        }).catch((error) => {
+            reject({ error })
+            console.log(error)
+        })
+
+    })
+}
+
+//  **********************
 // API functions for best of lists
 //  **********************
 
@@ -462,6 +541,10 @@ module.exports = {
     // Website functions
     getLabsWebsiteCountryData,
     getLabsWebsiteGlobalData,
+    // Proposal KPIs functions
+    getLabsKpiProjectList,
+    getLabsListOfKpis,
+    getLabsKpiValuesDataset,
     // Best of list functions
     getLabsTopWalletList,
     getLabsTopWebsiteList,
