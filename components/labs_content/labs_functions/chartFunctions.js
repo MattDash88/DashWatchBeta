@@ -96,4 +96,34 @@ function createKpiDropdownList(kpiObject) {
     }
 }
 
-export default { buildChartDataset, buildChartOptions, createCountryDropdownList, createProposalDropdownList, createKpiDropdownList }
+function createBlankDataset() {
+    const blankDataset = {
+        labels: [],
+        datasets: [
+          {
+            label: 'Please select a proposal and KPI',
+            data: []
+          }
+        ]
+    };
+    return (blankDataset)
+}
+
+const blankDataset = {
+    labels: [],
+    datasets: [
+      {
+        label: 'Please select a proposal and KPI',
+        data: []
+      }
+    ]
+  };
+
+export default { 
+    buildChartDataset, 
+    buildChartOptions, 
+    createCountryDropdownList, 
+    createProposalDropdownList, 
+    createKpiDropdownList,
+    createBlankDataset,
+}

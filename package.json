@@ -15,10 +15,8 @@
     "url": "https://github.com/MattDash88/DashWatchBeta.git"
   },
   "dependencies": {
-    "@nivo/bar": "^0.59.2",
-    "@nivo/line": "^0.59.3",
     "@zeit/next-css": "^1.0.1",
-    "airtable": "^0.7.0",
+    "airtable": "^0.7.2",
     "babel-plugin-styled-components": "^1.10.0",
     "chart.js": "^2.8.0",
     "dotenv": "^8.0.0",
@@ -34,7 +32,6 @@
     "redis": "^2.8.0",
     "semantic-ui-react": "^0.87.2",
     "shortid": "^2.2.14",
-    "styled-components": "^4.2.0",
-    "victory": "^32.3.3"
+    "styled-components": "^4.2.0"
   }
 }
