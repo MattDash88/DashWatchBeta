@@ -72,27 +72,23 @@ class Wallets extends React.Component {
             countryList,
         } = this.props
         return (
-            <Container fluid style={{
-                marginLeft: '20px',
-            }}>
-                <Grid stackable columns='three'>
+            <main>
+                <Grid stackable centered columns={3}>
                     <Grid.Row stretched>
-                        <Grid.Column width={8}>
+                        <Grid.Column mobile={16} tablet={8} computer={8} widescreen={5}>
                             <AndroidCountryChart
                                 countryList={countryList}
                             />
                         </Grid.Column>
-                        <Grid.Column width={8}>
+                        <Grid.Column mobile={16} tablet={8} computer={8} widescreen={5}>
                             <AndroidGlobalChart />
                         </Grid.Column>
-                    </Grid.Row>
-                    <Grid.Row>
-                        <Grid.Column width={8}>
+                        <Grid.Column mobile={16} tablet={8} computer={8} widescreen={5}>
                             <OtherWalletsChart />
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>
-            </Container>
+            </main>
         )
     }
 }

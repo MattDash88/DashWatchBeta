@@ -44,34 +44,43 @@ class KpiExplorer extends React.Component {
         }
 
         // Bind functions used in class
+        this.onRemoveChart = this.onRemoveChart.bind(this);
         this.onChartChange = this.onChartChange.bind(this);
     }
 
+    // Function to add a new chart component
     onAddChart = (e, { }) => {
+        event.preventDefault();
         let stateObject = this.state.segmentSet;
-        var uuid = uuidv4()
+        var uuid = uuidv4()     // Generate a unique uuid for the chart component that will be rendered
+
+        // Create an element for the new chart in the Array of chart object
         stateObject[uuid] = {
             proposalID: '',
             kpiID: '',
             id: uuid,
         };
 
+        // Push the new array (that now includes the new chart object) to state
         this.setState({
             segmentSet: stateObject,
         })
     }
 
-    onRemoveChart = (e, { value }) => {
-        let stateObject = this.state.segmentSet;
+    // Function to remove a chart component
+    onRemoveChart(value) {
+        let stateObject = this.state.segmentSet;    // Read the array of chart objects from state
+        delete stateObject[value]                   // Remove the closed chart objects from the array
 
-        delete stateObject[value]
-
+        // Push the new array (without the closed chart object) to state
         this.setState({
             segmentSet: stateObject,
         })
     }
 
+    // Function to process state changes when changes are made in a chart component
     onChartChange(proposalID, kpiID, uuid) {
+        event.preventDefault();
         let stateObject = this.state.segmentSet;
 
         const newState = {
@@ -120,35 +129,42 @@ class KpiExplorer extends React.Component {
             <Container fluid style={{
                 marginLeft: '20px',
             }}>
-                {
+                {   // Show Add chart button if all Chart components have been removed
+                    (Object.keys(segmentSet).length == 0) && (
+                        <section>
+                            <Grid columns={3} centered stackable>
+                                <Grid.Column key={'button'} mobile={16} tablet={8} computer={8} widescreen={5}>
+                                    <Button primary onClick={this.onAddChart}>
+                                        Add Chart
+                                    </Button>
+                                </Grid.Column>
+                            </Grid>
+                        </section>
+                    )
+                }                
+                {   // Render a grid of chart components
                     (Object.keys(segmentSet).length !== 0) && (
                         <section>
-                            <Grid columns={3} stackable>
+                            <Grid columns={3} centered stackable>
                                 {Object.values(segmentSet).map((item) =>
-                                    <Grid.Column key={item.id} mobile={16} tablet={8} computer={5}>
+                                    <Grid.Column key={item.id} mobile={16} tablet={8} computer={8} widescreen={5}>
                                         <ProposalKpiChart
                                             proposalID={item.proposalID}
                                             kpiID={item.kpiID}
                                             projectList={projectList}
                                             segmentID={item.id}
-
+                                            onRemoveChart={this.onRemoveChart}
                                             onChartChange={this.onChartChange}
                                         />
-                                        <Button
-                                            onClick={this.onRemoveChart}
-                                            value={item.id}
-                                        >
-                                            Remove Item
-                                        </Button>
                                     </Grid.Column>
                                 )}
-                                {
+                                {   // Show add chart button if there are fewer than 11 charts
                                     (Object.keys(segmentSet).length < 12) && (
-                                    <Grid.Column key={'button'} mobile={16} tablet={8} computer={5}>
-                                            <Button onClick={this.onAddChart}>
-                                                Add Item
+                                        <Grid.Column key={'button'} mobile={16} tablet={8} computer={8} widescreen={5}>
+                                            <Button primary onClick={this.onAddChart}>
+                                                Add Chart
                                             </Button>
-                                    </Grid.Column>
+                                        </Grid.Column>
                                     )}
                             </Grid>
                         </section>
@@ -162,11 +178,11 @@ class ProposalKpiChart extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            shouldRedraw: false,    // Toggle redraw for charts
-            proposalName: 'None Selected',
-            segmentID: props.segmentID,
-            proposalID: props.proposalID,
-            kpiID: props.kpiID,
+            shouldRedraw: false,            // Toggle redraw for charts
+            proposalName: 'None Selected',  // Display state for readable proposal name
+            segmentID: props.segmentID,     // ID of this component, given upon creation in kpiExplorer component
+            proposalID: props.proposalID,   // GUUID of the proposal, read from database
+            kpiID: props.kpiID,             // GUUID of the kpi, read from database
 
             kpiList: '',
             kpiDetails: '',
@@ -175,8 +191,10 @@ class ProposalKpiChart extends React.Component {
         // Binding functions used in this Class
         this.handleProposalChange = this.handleProposalChange.bind(this)
         this.handleKpiChange = this.handleKpiChange.bind(this)
+        this.handleCloseChart = this.handleCloseChart.bind(this)
     }
 
+    // Function to handle the selection of a new proposal from dropdown
     handleProposalChange(e, { key, value, text }) {
         this.props.onChartChange(value, '', this.state.segmentID)
 
@@ -186,12 +204,18 @@ class ProposalKpiChart extends React.Component {
         })
     }
 
+    // Function to handle the selection of a new KPI from dropdown
     handleKpiChange(e, { key, value, text }) {
         this.props.onChartChange(this.state.proposalID, value, this.state.segmentID)
 
         this.setState({
             kpiID: value,
         })
+    }
+
+    // Function to handle closing the chart
+    handleCloseChart(e, { key, value, text }) {
+        this.props.onRemoveChart(value)
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -236,8 +260,8 @@ class ProposalKpiChart extends React.Component {
     render() {
         const {
             proposalName,
-            proposalID,
-            kpiID,
+            segmentID,
+
             kpiList,
             kpiDetails,
             kpiChartData,
@@ -259,6 +283,14 @@ class ProposalKpiChart extends React.Component {
                     attached='top'
                 >
                     <Label ribbon>KPI Metrics for {proposalName}</Label>
+                    <Button
+                        onClick={this.handleCloseChart}
+                        floated='right'
+                        value={segmentID}
+                    >
+                        <Icon name='close' />Close chart
+                    </Button>
+                    <Divider hidden />
                     {
                         (projectList.length !== 0) && (
                             <Dropdown

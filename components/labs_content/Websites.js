@@ -63,19 +63,19 @@ class Websites extends React.Component {
             <Container fluid style={{
                 marginLeft: '20px',
             }}>
-                <Grid stackable columns='three'>
+                <Grid stackable centered columns={3}>
                     <Grid.Row stretched>
-                        <Grid.Column width={8}>
+                        <Grid.Column mobile={16} tablet={8} computer={8} widescreen={5}>
                             <WebsitesCountryChart
                                 countryList={countryList}
                             />
                         </Grid.Column>
-                        <Grid.Column width={8}>
+                        <Grid.Column mobile={16} tablet={8} computer={8} widescreen={5}>
                             <WebsitesGlobalChart />
                         </Grid.Column>
                     </Grid.Row>
                     <Grid.Row>
-                        <Grid.Column width={8}>
+                        <Grid.Column mobile={16} tablet={8} computer={8} widescreen={5}>
 
                         </Grid.Column>
                     </Grid.Row>

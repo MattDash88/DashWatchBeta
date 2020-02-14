@@ -122,8 +122,8 @@ class WalletTableRow extends React.Component {
                     <Label ribbon>Android Wallet Metrics</Label>
                     <h4>Month: {walletListsDate}</h4>
                     <Grid stackable>
-                        <Grid.Row width={15}>
-                            <Grid.Column width={5}>
+                        <Grid.Row width={16}>
+                            <Grid.Column mobile={16} tablet={5} computer={5} widescreen={5}>
                                 {
                                     (walletActiveDevices.length !== 0) && (
                                         <OverviewTable
@@ -136,7 +136,7 @@ class WalletTableRow extends React.Component {
                                     )
                                 }
                             </Grid.Column>
-                            <Grid.Column width={5}>
+                            <Grid.Column mobile={16} tablet={5} computer={5} widescreen={5}>
                                 {
                                     (deltaWalletInstalls.length !== 0) && (
                                         <OverviewTable
@@ -149,7 +149,7 @@ class WalletTableRow extends React.Component {
                                     )
                                 }
                             </Grid.Column>
-                            <Grid.Column width={5}>
+                            <Grid.Column mobile={16} tablet={5} computer={5} widescreen={5}>
                                 {
                                     (percentageWalletInstalls.length !== 0) && (
                                         <OverviewTable
@@ -219,8 +219,8 @@ class WebsiteTableRow extends React.Component {
                     <Label ribbon>Dash.org Metrics</Label>
                     <h4>Month: {websiteListsDate}</h4>
                     <Grid stackable>
-                        <Grid.Row width={15}>
-                            <Grid.Column width={5}>
+                        <Grid.Row width={16}>
+                            <Grid.Column mobile={16} tablet={5} computer={5} widescreen={5}>
                                 {
                                     (websiteUsers.length !== 0) && (
                                         <OverviewTable
@@ -233,7 +233,7 @@ class WebsiteTableRow extends React.Component {
                                     )
                                 }
                             </Grid.Column>
-                            <Grid.Column width={5}>
+                            <Grid.Column mobile={16} tablet={5} computer={5} widescreen={5}>
                                 {
                                     (websiteDeltaUsers.length !== 0) && (
                                         <OverviewTable
@@ -246,7 +246,7 @@ class WebsiteTableRow extends React.Component {
                                     )
                                 }
                             </Grid.Column>
-                            <Grid.Column width={5}>
+                            <Grid.Column mobile={16} tablet={5} computer={5} widescreen={5}>
                                 {
                                     (websitePercentageUsers.length !== 0) && (
                                         <OverviewTable
