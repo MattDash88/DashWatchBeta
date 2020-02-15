@@ -52,7 +52,7 @@ class NavBar extends React.Component {
             searchQuery,
         } = this.props
         return (
-            <Container fluid style={{ marginTop: '0px' }}>
+            <main fluid style={{ marginTop: '0px' }}>
                 <Menu stackable color='dark blue' inverted style={{ minHeight: 50 }} fluid>
                     <Menu.Item
                         style={{ width: '15%' }}
@@ -153,7 +153,7 @@ class NavBar extends React.Component {
                         </Dropdown.Menu>
                     </Dropdown>
                 </Menu>
-            </Container>
+            </main>
         )
     }
 }

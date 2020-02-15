@@ -62,7 +62,8 @@ class Websites extends React.Component {
         return (
             <Container fluid style={{
                 marginLeft: '20px',
-            }}>
+                marginRight: '20px',
+              }}>
                 <Grid stackable centered columns={3}>
                     <Grid.Row stretched>
                         <Grid.Column mobile={16} tablet={8} computer={8} widescreen={5}>

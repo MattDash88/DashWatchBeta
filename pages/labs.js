@@ -64,7 +64,7 @@ class Labs extends React.Component {
     super(props)
 
     this.state = {
-      countryList: '',  
+      countryList: '',
       view: 'largeScreen',
       showSidebar: false,
 
@@ -183,79 +183,77 @@ class Labs extends React.Component {
     } = this.state
 
     return (
-      <main>
+      <Container fluid>
         <Header></Header>
         <NavBar
-                    showPage="labs"
+          showPage="labs"
         />
-            <section style={{
-              marginTop: '60px',
-              marginLeft: '20px',
-              marginRight: '20px',
-            }}>
-            <Menu style={{horizon:"10em"}}>
-              <Menu.Item
-                name='overview'
-                active={activeTab === 'overview'}
-                onClick={this.handleSelectTab}
-              >
-                Overview
+        <section style={{
+          marginTop: '60px',
+        }}>
+          <Menu>
+            <Menu.Item
+              name='overview'
+              active={activeTab === 'overview'}
+              onClick={this.handleSelectTab}
+            >
+              Overview
         </Menu.Item>
-              <Menu.Item
-                name='wallets'
-                active={activeTab === 'wallets'}
-                onClick={this.handleSelectTab}
-              >
-                Wallets
+            <Menu.Item
+              name='wallets'
+              active={activeTab === 'wallets'}
+              onClick={this.handleSelectTab}
+            >
+              Wallets
               </Menu.Item>
-              <Menu.Item
-                name='websites'
-                active={activeTab === 'websites'}
-                onClick={this.handleSelectTab}
-              >
-                Websites
+            <Menu.Item
+              name='websites'
+              active={activeTab === 'websites'}
+              onClick={this.handleSelectTab}
+            >
+              Websites
               </Menu.Item>
-              <Menu.Item
-                name='kpiExplorer'
-                active={activeTab === 'kpiExplorer'}
-                onClick={this.handleSelectTab}
-                
-              >
-                KPI Explorer
+            <Menu.Item
+              name='kpiExplorer'
+              active={activeTab === 'kpiExplorer'}
+              onClick={this.handleSelectTab}
+
+            >
+              KPI Explorer
               </Menu.Item>
-            </Menu>
-             {
-              (countryList.length !== 0 && view == 'largeScreen') && (
-                <section>
-                  {
-                    activeTab == 'overview' &&
-                    <LabsOverview
+          </Menu>
+          {
+            (countryList.length !== 0 && view == 'largeScreen') && (
+              <section>
+                {
+                  activeTab == 'overview' &&
+                  <LabsOverview
                     countryList={countryList}
-                    />
-                  }
-                  {
-                    activeTab == 'wallets' &&
-                    <Wallets
-                      countryList={countryList}
-                    />
-                  }
-                  {
-                    activeTab == 'websites' &&
-                    <Websites
-                      countryList={countryList}
-                    />
-                  }
-                  {
-                    activeTab == 'kpiExplorer' &&
-                    <KpiExplorer
-                      countryList={countryList}
-                    />
-                  }
-                </section>
-              ) || (<Segment loading height={20}/>)
-            }
-          </section>         
-      </main>
+                  />
+                }
+                {
+                  activeTab == 'wallets' &&
+                  <Wallets
+                    countryList={countryList}
+                  />
+                }
+                {
+                  activeTab == 'websites' &&
+                  <Websites
+                    countryList={countryList}
+                  />
+                }
+                {
+                  activeTab == 'kpiExplorer' &&
+                  <KpiExplorer
+                    countryList={countryList}
+                  />
+                }
+              </section>
+            ) || (<Segment loading height={20} />)
+          }
+        </section>
+      </Container>
     )
   }
 }

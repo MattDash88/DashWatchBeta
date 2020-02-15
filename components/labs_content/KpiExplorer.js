@@ -126,9 +126,10 @@ class KpiExplorer extends React.Component {
         } = this.state
 
         return (
-            <Container fluid style={{
+            <main style={{
                 marginLeft: '20px',
-            }}>
+                marginRight: '20px',
+              }}>
                 {   // Show Add chart button if all Chart components have been removed
                     (Object.keys(segmentSet).length == 0) && (
                         <section>
@@ -169,7 +170,7 @@ class KpiExplorer extends React.Component {
                             </Grid>
                         </section>
                     )}
-            </Container>
+            </main>
         )
     }
 }
