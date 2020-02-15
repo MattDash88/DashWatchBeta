@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {
   Container,
   Dropdown,
@@ -26,7 +27,7 @@ import { trackPage, trackEvent } from '../components/functions/analytics';
 
 // Import other elements 
 import Header from '../components/headers/LabsHeader';
-
+import NavBar from "../components/elements/NavBarNew"
 import LabsOverview from "../components/labs_content/Overview";
 import Wallets from "../components/labs_content/Wallets";
 import Websites from "../components/labs_content/Websites";
@@ -182,98 +183,17 @@ class Labs extends React.Component {
     } = this.state
 
     return (
-      <main style={{
-        marginTop: '60px',
-      }}>
+      <main>
         <Header></Header>
-          {
-            (view == 'mobile') &&
-            <section>
-              <Grid>
-                <Grid.Column width = {2}>
-              <Menu fluid
-              vertical
-              >
-              <Menu.Item
-                  active={showSidebar}
-                  onClick={this.toggleSidebar}                  
-                  >Labs Menu
-                  </Menu.Item>
-              </Menu>
-              </Grid.Column>
-              </Grid>
-            
-              <Sidebar.Pushable >                
-                <Sidebar 
-                  as={Menu}
-                  animation='overlay'
-                  icon='labeled'
-                  onHide={() => this.setState({
-                    showSidebar: false,
-                  })}
-                  vertical
-                  visible={this.state.showSidebar}
-                  width={4}
-                >
-                  <Menu.Item as='a'
-                    onClick={this.toggleSidebar}
-                  >Close Menu
-                  </Menu.Item>
-                  <Menu.Item as='a'
-                    name='overview'
-                    active={activeTab === 'overview'}
-                    onClick={this.handleSelectTab}
-                  >
-                    Overview
-                  </Menu.Item>
-                  <Menu.Item as='a'
-                    name='wallets'
-                    active={activeTab === 'wallets'}
-                    onClick={this.handleSelectTab}
-                  >
-                    Wallets
-                        </Menu.Item>
-                        <Menu.Item as='a'
-                    name='websites'
-                    active={activeTab === 'websites'}
-                  >
-                    Websites
-                        </Menu.Item>
-                </Sidebar>
-
-                <Sidebar.Pusher>
-                  <Segment basic>
-                    {
-                      (countryList.length !== 0) && (
-                        <section>
-                          {
-                            activeTab == 'overview' &&
-                            <LabsOverview
-                            countryList={countryList}
-                            />
-                          }
-                          {
-                            activeTab == 'wallets' &&
-                            <Wallets
-                              countryList={countryList}
-                            />
-                          }
-                        </section>
-                      ) || (<Segment loading />)
-                    }
-                  </Segment>
-                </Sidebar.Pusher>
-              </Sidebar.Pushable>
-              </section>
-          }
-
-          {
-            (view == 'largeScreen') &&
+        <NavBar
+                    showPage="labs"
+        />
             <section style={{
+              marginTop: '60px',
               marginLeft: '20px',
               marginRight: '20px',
             }}>
-            <Menu>
+            <Menu style={{horizon:"10em"}}>
               <Menu.Item
                 name='overview'
                 active={activeTab === 'overview'}
@@ -299,6 +219,7 @@ class Labs extends React.Component {
                 name='kpiExplorer'
                 active={activeTab === 'kpiExplorer'}
                 onClick={this.handleSelectTab}
+                
               >
                 KPI Explorer
               </Menu.Item>
@@ -333,10 +254,7 @@ class Labs extends React.Component {
                 </section>
               ) || (<Segment loading height={20}/>)
             }
-          </section>
-          }
-
-         
+          </section>         
       </main>
     )
   }
