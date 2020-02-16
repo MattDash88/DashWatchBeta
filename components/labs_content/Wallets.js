@@ -76,18 +76,18 @@ class Wallets extends React.Component {
                 marginLeft: '20px',
                 marginRight: '20px',
               }}>
-                <Grid stackable centered columns={3}>
-                    <Grid.Row stretched>
-                        <Grid.Column mobile={16} tablet={8} computer={8} widescreen={5}>
-                            <AndroidCountryChart
-                                countryList={countryList}
-                            />
-                        </Grid.Column>
+                <Grid stackable columns={3}>
+                    <Grid.Row stretched>                        
                         <Grid.Column mobile={16} tablet={8} computer={8} widescreen={5}>
                             <AndroidGlobalChart />
                         </Grid.Column>
                         <Grid.Column mobile={16} tablet={8} computer={8} widescreen={5}>
                             <OtherWalletsChart />
+                        </Grid.Column>
+                        <Grid.Column mobile={16} tablet={8} computer={8} widescreen={5}>
+                            <AndroidCountryChart
+                                countryList={countryList}
+                            />
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>

@@ -189,7 +189,7 @@ class Labs extends React.Component {
           showPage="labs"
         />
         <section style={{
-          marginTop: '60px',
+          marginTop: '10px',
         }}>
           <Menu>
             <Menu.Item

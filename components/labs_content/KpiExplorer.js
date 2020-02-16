@@ -148,7 +148,7 @@ class KpiExplorer extends React.Component {
                         <section>
                             <Grid columns={3} centered stackable>
                                 {Object.values(segmentSet).map((item) =>
-                                    <Grid.Column key={item.id} mobile={16} tablet={8} computer={8} widescreen={5}>
+                                    <Grid.Column mobile={16} tablet={8} computer={8} widescreen={5} key={item.id} >
                                         <ProposalKpiChart
                                             proposalID={item.proposalID}
                                             kpiID={item.kpiID}

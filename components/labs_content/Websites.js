@@ -60,7 +60,7 @@ class Websites extends React.Component {
             countryList,
         } = this.props
         return (
-            <Container fluid style={{
+            <main style={{
                 marginLeft: '20px',
                 marginRight: '20px',
               }}>
@@ -81,7 +81,7 @@ class Websites extends React.Component {
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>
-            </Container>
+            </main>
         )
     }
 }
