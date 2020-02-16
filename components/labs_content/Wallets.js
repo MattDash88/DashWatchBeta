@@ -287,7 +287,7 @@ class AndroidCountryChart extends React.Component {
                     </p>
                 </Message>
             </Segment>
-                <Menu attached='bottom' tabular fitted='vertically'>
+                <Menu attached='bottom' tabular fitted='vertically' fluid widths={3}>
                     <Menu.Item
                         value='activeDevices'
                         active={activeCountryTab === 'activeDevices'}
@@ -417,7 +417,8 @@ class AndroidGlobalChart extends React.Component {
                     </p>
                 </Message>
             </Segment>
-                <Menu attached='bottom' tabular fitted='vertically'>
+                <Menu attached='bottom' tabular fitted='vertically' fluid widths={3}>
+
                     <Menu.Item
                         value='activeDevices'
                         active={activeGlobalTab === 'activeDevices'}
@@ -425,6 +426,7 @@ class AndroidGlobalChart extends React.Component {
                     >
                         Active Installs
                     </Menu.Item>
+
                     <Menu.Item
                         value='deltaInstalls'
                         active={activeGlobalTab === 'deltaInstalls'}
@@ -432,6 +434,7 @@ class AndroidGlobalChart extends React.Component {
                     >
                         Delta Active Installs
                     </Menu.Item>
+
                     <Menu.Item
                         value='percentageInstalls'
                         active={activeGlobalTab === 'percentageInstalls'}
@@ -439,6 +442,7 @@ class AndroidGlobalChart extends React.Component {
                     >
                         Percentage Delta Installs
                     </Menu.Item>
+
                 </Menu>
                 </main>
         )
@@ -548,7 +552,7 @@ class OtherWalletsChart extends React.Component {
                     <p>Dash Core and Dash Electrum download metrics collected by Dash Watch using the GitHub API. <a id="dashorgRawLink" href="/api/dataset/labsOtherWalletData"> CLICK HERE FOR THE RAW DATA</a></p>
                 </Message>
             </Segment>
-                <Menu attached='bottom' tabular fitted='vertically'>
+                <Menu attached='bottom' tabular fitted='vertically' fluid widths={3}>
                     <Menu.Item
                         value='totalInstalls'
                         active={activeWalletTab === 'totalInstalls'}

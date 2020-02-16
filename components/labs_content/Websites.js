@@ -277,7 +277,7 @@ class WebsitesCountryChart extends React.Component {
                         </p>
                     </Message>
                 </Segment>
-                <Menu attached='bottom' tabular fitted='vertically'>
+                <Menu attached='bottom' tabular fitted='vertically' fluid widths={3}>
                     <Menu.Item
                         value='users'
                         active={activeCountryTab === 'users'}
@@ -407,7 +407,7 @@ class WebsitesGlobalChart extends React.Component {
                         </p>
                     </Message>
                 </Segment>
-                <Menu attached='bottom' tabular fitted='vertically'>
+                <Menu attached='bottom' tabular fitted='vertically' fluid widths={3}>
                     <Menu.Item
                         value='users'
                         active={activeGlobalTab === 'users'}

@@ -62,6 +62,7 @@ class NavBar extends React.Component {
             showPage,
             searchQuery,
         } = this.props
+
         return (
             <main style={{ marginTop: '0px' }}>
                 <Grid>
@@ -146,8 +147,7 @@ class NavBar extends React.Component {
                             <Dropdown
                                 item
                                 floating
-                                text={<h3><Icon name='bars' size='big' />Menu</h3>}
-                                icon=''
+                                icon={<h3><Icon name='bars' size='big' />Menu</h3>}
                                 simple
                                 style={{ marginLeft: '0px' }}
                             >
