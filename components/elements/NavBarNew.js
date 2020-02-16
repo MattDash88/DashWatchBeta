@@ -63,7 +63,7 @@ class NavBar extends React.Component {
             searchQuery,
         } = this.props
         return (
-            <Sticky ref={this.contextRef} style={{ marginTop: '0px' }}>
+            <main style={{ marginTop: '0px' }}>
                 <Grid>
                     <Grid.Row only={'widescreen', 'large screen', 'computer'}>
                         <Menu stackable fluid color='blue' inverted style={{ minHeight: 50 }} >
@@ -225,7 +225,6 @@ class NavBar extends React.Component {
                                     </Dropdown.Item>
                                 </Dropdown.Menu>
                             </Dropdown>
-
                             <Menu.Item
                                 name='home'
                                 href='/' target=''
@@ -236,7 +235,7 @@ class NavBar extends React.Component {
                         </Menu>
                     </Grid.Row>
                 </Grid>
-            </Sticky>
+            </main>
         )
     }
 }
