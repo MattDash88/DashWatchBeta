@@ -1,24 +1,14 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
 import {
-    Container,
     Dropdown,
     Label,
-    Form,
-    Checkbox,
     Segment,
     Button,
     Divider,
-    TextArea,
-    Input,
     Message,
-    Dimmer,
-    Menu,
-    Header,
     Icon,
-    Loader,
     Grid,
-    Placeholder,
 } from 'semantic-ui-react';
 
 // Analytics
@@ -99,6 +89,7 @@ class KpiExplorer extends React.Component {
     componentDidMount() {
         var proposalListPromise = Promise.resolve(fetchingFunctions.getLabsListOfProjects())
 
+        // Create a list of projects to feed to chart segments
         Promise.all([proposalListPromise]).then(data => {
             const proposalList = data[0]
             this.setState({
@@ -197,11 +188,11 @@ class ProposalKpiChart extends React.Component {
 
     // Function to handle the selection of a new proposal from dropdown
     handleProposalChange(e, { key, value, text }) {
-        this.props.onChartChange(value, '', this.state.segmentID)
-
+        this.props.onChartChange(value.projectID, '', this.state.segmentID)
+        console.log(value)
         this.setState({
-            proposalName: text,
-            proposalID: value,
+            proposalName: value.projectName,
+            proposalID: value.projectID,
         })
     }
 
@@ -331,11 +322,14 @@ class ProposalKpiChart extends React.Component {
                             options={kpiChartsOptions}
                         />
                     }
-                    <Message>
-                        <p>
-                            Placeholder Message. <a id="projectKpiRawLink" href={`/api/dataset/labsKpiData?kpi=${kpiDetails.unique_id}`}> CLICK HERE FOR THE RAW DATA</a>
-                        </p>
-                    </Message>
+                    { kpiDetails !== '' && (
+                        <Message>
+                            <p>{kpiDetails.kpi_description}.</p>
+                            <p><a id="projectKpiRawLink" href={`/api/dataset/labsKpiData?kpi=${kpiDetails.unique_id}`}> CLICK HERE FOR THE RAW DATA</a></p>
+                        </Message>
+                    )
+                    }
+                   
                 </Segment>
             </main>
         )

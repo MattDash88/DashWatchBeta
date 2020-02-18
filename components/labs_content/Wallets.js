@@ -1,22 +1,13 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
 import {
-    Container,
     Dropdown,
     Label,
-    Form,
-    Checkbox,
     Segment,
-    Button,
-    Divider,
-    TextArea,
-    Input,
     Message,
-    Dimmer,
     Menu,
     Header,
     Icon,
-    Loader,
     Grid,
 } from 'semantic-ui-react';
 
@@ -282,9 +273,8 @@ class AndroidCountryChart extends React.Component {
                         </Segment>
                     )}
                 <Message>
-                    <p>
-                        Google Play Store metrics provided by Dash Core Group. <a id="dashorgRawLink" href="/api/dataset/labsCountryWalletData"> CLICK HERE FOR THE RAW DATA</a>
-                    </p>
+                    <p>Google Play Store metrics provided by Dash Core Group.</p>
+                    <p><a id="dashorgRawLink" href="/api/dataset/labsCountryWalletData"> CLICK HERE FOR THE RAW DATA</a></p>
                 </Message>
             </Segment>
                 <Menu attached='bottom' tabular fitted='vertically' fluid widths={3}>
@@ -412,9 +402,8 @@ class AndroidGlobalChart extends React.Component {
 
                 }
                 <Message>
-                    <p>
-                        Google Play Store metrics provided by Dash Core Group. <a id="dashorgRawLink" href="/api/dataset/labsWalletAndroidGlobalData"> CLICK HERE FOR THE RAW DATA</a>
-                    </p>
+                    <p>Google Play Store metrics provided by Dash Core Group. </p>
+                    <p><a id="dashorgRawLink" href="/api/dataset/labsWalletAndroidGlobalData"> CLICK HERE FOR THE RAW DATA</a></p>
                 </Message>
             </Segment>
                 <Menu attached='bottom' tabular fitted='vertically' fluid widths={3}>
@@ -549,7 +538,8 @@ class OtherWalletsChart extends React.Component {
 
                 }
                 <Message>
-                    <p>Dash Core and Dash Electrum download metrics collected by Dash Watch using the GitHub API. <a id="dashorgRawLink" href="/api/dataset/labsOtherWalletData"> CLICK HERE FOR THE RAW DATA</a></p>
+                    <p>Dash Core and Dash Electrum download metrics collected by Dash Watch using the GitHub API.</p>
+                    <p> <a id="dashorgRawLink" href="/api/dataset/labsOtherWalletData"> CLICK HERE FOR THE RAW DATA</a></p>
                 </Message>
             </Segment>
                 <Menu attached='bottom' tabular fitted='vertically' fluid widths={3}>

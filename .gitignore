@@ -19,3 +19,6 @@ Changelog.md
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+/server_components/newLabsSyncingFunctions.js
+/static/css/*

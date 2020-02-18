@@ -1,23 +1,15 @@
 import React from 'react';
 import {
     Container,
-    Dropdown,
     Label,
     Icon,
-    Form,
-    Checkbox,
     Segment,
-    Button,
-    Divider,
-    TextArea,
-    Input,
-    Message,
-    Dimmer,
     Table,
     Flag,
-    Image,
     Grid,
-    Header,
+    Accordion,
+    Divider,
+    Message,
 } from 'semantic-ui-react';
 
 // Analytics
@@ -83,8 +75,16 @@ class WalletTableRow extends React.Component {
             percentageWalletInstalls: '',
             globalWalletData: '',
             walletListsDate: '',
+            walletAccordionState: false,
         }
+
+        // Binding functions used in this Class
+        this.handleAccordionClick = this.handleAccordionClick.bind(this)
     }
+
+    handleAccordionClick() {    
+        this.setState({ walletAccordionState: !this.state.walletAccordionState })
+      }
 
     componentDidMount() {
         var wTopListPromise = Promise.resolve(getWalletTopLists())
@@ -110,7 +110,8 @@ class WalletTableRow extends React.Component {
             deltaWalletInstalls,
             percentageWalletInstalls,
             globalWalletData,
-            walletListsDate
+            walletListsDate,
+            walletAccordionState,
         } = this.state
 
         const { // Declare data arrays used in class
@@ -121,6 +122,24 @@ class WalletTableRow extends React.Component {
                 <Segment>
                     <Label ribbon>Android Wallet Metrics</Label>
                     <h4>Month: {walletListsDate}</h4>
+                    <p>The table lists the countries with the most active installations and the largest growth in new installation, both in % and absolute numbers, of the Dash Android wallet in the month of {walletListsDate}. More countries are available in the wallet section.</p>
+                    <Accordion fluid styled>
+                        <Accordion.Title
+                            active={walletAccordionState}
+                            color='grey'
+                            index={0}
+                            onClick={this.handleAccordionClick}
+                             >
+                        <Icon name='dropdown' />
+                        What are Active Devices
+                    </Accordion.Title>
+                        <Accordion.Content active={walletAccordionState}>
+                            <p>
+                            Active devices are Android devices that have the Dash Wallet app installed and have been online at least once in the past 30 days.
+                            </p>
+                        </Accordion.Content>
+                    </Accordion>    
+                    <Divider hidden fitted />                
                     <Grid stackable>
                         <Grid.Row width={16}>
                             <Grid.Column mobile={16} tablet={5} computer={5} widescreen={5}>
@@ -164,6 +183,7 @@ class WalletTableRow extends React.Component {
                             </Grid.Column>
                         </Grid.Row>
                     </Grid>
+                    <Message>Google Play Store metrics provided by Dash Core Group.</Message>
                 </Segment>
             </main>
         )
@@ -218,6 +238,8 @@ class WebsiteTableRow extends React.Component {
                 <Segment>
                     <Label ribbon>Dash.org Metrics</Label>
                     <h4>Month: {websiteListsDate}</h4>
+                    <p>The table lists the countries with the most users and the largest growth in users, both in % and absolute numbers, of the Dash.org website in the month of {websiteListsDate}. More countries are available in the Websites section.</p>
+                    <Divider fitted />
                     <Grid stackable>
                         <Grid.Row width={16}>
                             <Grid.Column mobile={16} tablet={5} computer={5} widescreen={5}>
@@ -261,6 +283,7 @@ class WebsiteTableRow extends React.Component {
                             </Grid.Column>
                         </Grid.Row>
                     </Grid>
+                    <Message>Dash.org website metrics provided by Dash Core Group.</Message>
                 </Segment>
             </main>
         )
@@ -276,7 +299,6 @@ class OverviewTable extends React.Component {
             dataColumnLabel,
             dataLabel,
         } = this.props
-        console.log(listData)
 
         return (
             <Table selectable singleLine unstackable fixed>

@@ -121,11 +121,11 @@ class Month extends React.Component {
 
     componentDidMount() {
         // To handle calls from history (forward and back buttons)
-        //onpopstate = event => {
-        //    if (event.state) {
-        //        this.setState(event.state)
-        //    }
-        //}
+        onpopstate = event => {
+            if (event.state) {
+                this.setState(event.state)
+            }
+        }
 
         trackPage(`/old_reports`) // Track Pageview in Analytics
         window.addEventListener('mousedown', this.handleClick);     // Handles closing of dropdown menu
@@ -222,6 +222,9 @@ class Month extends React.Component {
                                                 <button id="dropdownMenu" value="April" className="dropdownItem"  onClick={this.handleSelectMonth}>April {this.state.yearId}</button>
                                                 <button id="dropdownMenu" value="May" className="dropdownItem"  onClick={this.handleSelectMonth}>May {this.state.yearId}</button>
                                                 <button id="dropdownMenu" value="June" className="dropdownItem"  onClick={this.handleSelectMonth}>June {this.state.yearId}</button>
+                                                <button id="dropdownMenu" value="July" className="dropdownItem"  onClick={this.handleSelectMonth}>July {this.state.yearId}</button>
+                                                <button id="dropdownMenu" value="September" className="dropdownItem"  onClick={this.handleSelectMonth}>September {this.state.yearId}</button>
+                                                <button id="dropdownMenu" value="September" className="dropdownItem"  onClick={this.handleSelectMonth}>October {this.state.yearId}</button>
                                             </div>
                                         ) : (
                                             <div className="dropdownMenu" id="dropdownMenu">

@@ -21,7 +21,7 @@ var labsFunctions = require('./server_components/main_api_functions/labsApiFunct
 var datasetBuildingFunctions = require('./server_components/datasetBuildingFunctions');
 //var databaseFunctions = require('./server_components/db_functions');
 var labsAirtableFunctions = require('./server_components/labsAirtableFunctions');
-//var labsSyncingFunctions = require('./server_components/data_retrieval/newLabsSyncingFunctions');
+var labsSyncingFunctions = require('./server_components/data_retrieval/newLabsSyncingFunctions');
 var processingFunctions = require('./server_components/dataProcessingFunctions');
 var labsProcessingFunctions = require('./server_components/labsProcessingFunctions');
 var filterFunctions = require('./server_components/filterFunctions');
@@ -505,6 +505,8 @@ app.prepare()
   .then(() => {
     const server = express()
 
+
+
     // Internal API call to get Airtable data
     server.get('/api/get/posts', (req, res) => {
       var refreshCache = false    // Load from cache if available
@@ -909,8 +911,8 @@ app.prepare()
     // Routing for reports for /r
     //server.get('/database/sync', (req, res) => {
     //  var refreshCache = true   // Request cache refresh
-    //  Promise.resolve(labsSyncingFunctions.KpiProjects()).then(function (results) {
-        //console.log(results)
+    //  Promise.resolve(labsSyncingFunctions.KpiValues()).then(function (results) {
+    //    //console.log(results)
     //    res.status(200).send(results);
     //  }).catch((error) => {                                                           // Run this if the retrieving functions returns an error
     //    res.status(200).send(serialize(error))
@@ -920,7 +922,7 @@ app.prepare()
     // Routing for reports for /r
     server.get('/database/test2', (req, res) => {
       var refreshCache = true   // Request cache refresh
-      Promise.resolve(labsFunctions.getLabsTopWalletList(refreshCache)).then(function (results) {
+      Promise.resolve(labsSyncingFunctions.KpiTest()).then(function (results) {
         //console.log(results)
         res.status(200).send(results);
       }).catch((error) => {                                                           // Run this if the retrieving functions returns an error

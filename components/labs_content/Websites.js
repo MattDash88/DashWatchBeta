@@ -1,22 +1,13 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
 import {
-    Container,
     Dropdown,
     Label,
-    Form,
-    Checkbox,
     Segment,
-    Button,
-    Divider,
-    TextArea,
-    Input,
     Message,
-    Dimmer,
     Menu,
     Header,
     Icon,
-    Loader,
     Grid,
 } from 'semantic-ui-react';
 
@@ -272,9 +263,8 @@ class WebsitesCountryChart extends React.Component {
                             </Segment>
                         )}
                     <Message>
-                        <p>
-                            Dash.org analytics metrics provided by Dash Core Group. <a id="dashorgRawLink" href="/api/dataset/labsWebsiteCountryData"> CLICK HERE FOR THE RAW DATA</a>
-                        </p>
+                        <p>Dash.org analytics metrics provided by Dash Core Group.</p>
+                        <p><a id="dashorgRawLink" href="/api/dataset/labsWebsiteCountryData"> CLICK HERE FOR THE RAW DATA</a></p>
                     </Message>
                 </Segment>
                 <Menu attached='bottom' tabular fitted='vertically' fluid widths={3}>
@@ -402,9 +392,8 @@ class WebsitesGlobalChart extends React.Component {
 
                     }
                     <Message>
-                        <p>
-                            Dash.org analytics metrics provided by Dash Core Group. <a id="dashorgRawLink" href="/api/dataset/labsWebsiteGlobalData"> CLICK HERE FOR THE RAW DATA</a>
-                        </p>
+                        <p>Dash.org analytics metrics provided by Dash Core Group.</p>
+                        <p><a id="dashorgRawLink" href="/api/dataset/labsWebsiteGlobalData"> CLICK HERE FOR THE RAW DATA</a></p>
                     </Message>
                 </Segment>
                 <Menu attached='bottom' tabular fitted='vertically' fluid widths={3}>
