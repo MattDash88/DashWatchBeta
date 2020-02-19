@@ -909,15 +909,15 @@ app.prepare()
     })
 
     // Routing for reports for /r
-    //server.get('/database/sync', (req, res) => {
-    //  var refreshCache = true   // Request cache refresh
-    //  Promise.resolve(labsSyncingFunctions.KpiValues()).then(function (results) {
-    //    //console.log(results)
-    //    res.status(200).send(results);
-    //  }).catch((error) => {                                                           // Run this if the retrieving functions returns an error
-    //    res.status(200).send(serialize(error))
-    //  })
-    //})
+//    server.get('/database/sync', (req, res) => {
+//      var refreshCache = true   // Request cache refresh
+//      Promise.resolve(labsSyncingFunctions.KpiValues()).then(function (results) {
+//        //console.log(results)
+//        res.status(200).send(results);
+//      }).catch((error) => {                                                           // Run this if the retrieving functions returns an error
+//        res.status(200).send(serialize(error))
+//      })
+//    })
 
     // Routing for reports for /r
     server.get('/database/test2', (req, res) => {

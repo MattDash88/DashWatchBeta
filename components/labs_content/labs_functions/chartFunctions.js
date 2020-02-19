@@ -62,10 +62,7 @@ function createProposalDropdownList(proposalObject) {
         Object.values(proposalObject).map((item) => {
             dropdownList.push({
                 key: item.unique_id,
-                value: {
-                    projectID: item.first_proposal_hash,
-                    projectName: item.project_name,
-                },
+                value: item.first_proposal_hash,
                 text: item.project_name,
             })
         })

@@ -188,11 +188,10 @@ class ProposalKpiChart extends React.Component {
 
     // Function to handle the selection of a new proposal from dropdown
     handleProposalChange(e, { key, value, text }) {
-        this.props.onChartChange(value.projectID, '', this.state.segmentID)
-        console.log(value)
+        this.props.onChartChange(value, '', this.state.segmentID)
         this.setState({
-            proposalName: value.projectName,
-            proposalID: value.projectID,
+            proposalName: text,
+            proposalID: value,
         })
     }
 
@@ -220,6 +219,8 @@ class ProposalKpiChart extends React.Component {
 
                 this.setState({
                     kpiList: kpiList,
+                    kpiDetails: '',
+                    kpiChartData: '',
                 })
             })
         }
@@ -274,7 +275,7 @@ class ProposalKpiChart extends React.Component {
                 <Segment
                     attached='top'
                 >
-                    <Label ribbon>KPI Metrics for {proposalName}</Label>
+                    <Label ribbon>KPI Metrics for {kpiDetails.project_name}</Label>
                     <Button
                         onClick={this.handleCloseChart}
                         floated='right'
