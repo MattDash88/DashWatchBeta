@@ -9,6 +9,7 @@ export default class Header extends React.Component {
             <div>
                 <Head>
                     <link rel="shortcut icon" type="image/x-icon" href="/static/icons/favicon.ico" />
+                    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.3/dist/semantic.css"></link>
                     <title>Dash Watch Charts and Visualizations</title>
                     <meta property="og:title" content="Dash Watch - Charts and Visualizations" />
                     <meta property="og:type" content="website" />

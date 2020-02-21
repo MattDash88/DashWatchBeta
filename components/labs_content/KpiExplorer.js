@@ -1,308 +1,337 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
+import {
+    Dropdown,
+    Label,
+    Segment,
+    Button,
+    Divider,
+    Message,
+    Icon,
+    Grid,
+} from 'semantic-ui-react';
 
 // Analytics
-import {trackEvent} from '../functions/analytics';
+import { trackEvent } from '../functions/analytics';
 
-// Import css
-import '../css/style.css';
-import '../css/labs.css';
+// Import functions for charts
+import chartFunctions from './labs_functions/chartFunctions';
+import fetchingFunctions from './labs_functions/fetchingFunctions';
 
-// Function to build output used on page
-const buildContent = (labsData, prj, akp) => {
-    try {
-        var projectData = labsData[prj]                                  // Proposal that is active
-        var kpiData = labsData[prj].kpi_entries[akp]    // Kpi data that is active
-
-        var kpiList = []
-        // Make an array with KPIs for the active proposal
-        Object.keys(projectData.kpi_entries).map((item) =>
-            kpiList.push(projectData.kpi_entries[item])
-        )
-
-        const chartData = {
-            data: {  // Data + styling for the chart
-                datasets: [{
-                    label: projectData.project_name,
-                    fill: false,
-                    borderColor: 'blue',
-                    data: kpiData.kpi_values,
-                }]
-            },
-            options: {  // Axis Styling for the chart
-                scales: {
-                    xAxes: [{
-                        type: 'time',
-                        time: {
-                            unit: 'month'
-                        },
-                    }],
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true,
-                        },
-                        scaleLabel: {
-                            display: true,
-                            labelString: kpiData.axis_title
-                        },
-                    }]
-                }
-            }
-        }
-
-        const pageContent = {   // Elements that are used in page rendering
-            projectName: projectData.project_name,
-            kpiName: kpiData.kpi_name,
-            tooltipTitle: kpiData.kpi_name,
-            tooltipText: kpiData.kpi_description,
-            proposalOwnerLink:
-                <p className="labsText">
-                    <a id="Proposal Owner Link" href={`/proposals?search=${projectData.proposal_owner}`} target="" >Link to Proposal Owner {projectData.proposal_owner}</a>
-                </p>,
-        }
-
-        return {
-            kpiList: kpiList,
-            chartData: chartData,
-            pageContent: pageContent,
-        }
-    } catch (e) {
-        const chartData = {
-            data: {  // Data styling for the chart
-                datasets: []
-            },
-            options: {}
-        }
-
-        const kpiList = [{  // Empty kpi list
-            kpi_name: 'Select a project first',
-            id: '1',
-        }]
-
-        const pageContent = {   // Error page elements
-            projectName: 'Select a project',
-            kpiName: 'Select a Kpi',
-            tooltipTitle: 'Tooltip',
-            tooltipText: 'Select a project',
-            proposalOwnerLink: <p></p>,
-        }
-
-        return {
-            kpiList: kpiList,
-            chartData: chartData,
-            pageContent: pageContent,
-        }
-    }
-}
-
-const chartFunction = (chartData, options, redrawState) => {
-    try {
-        var chartObject = 
-            <div>
-            <Line
-                data={chartData}
-                options={options}
-                redraw={redrawState}
-            />
-            </div>
-        
-        return chartObject
-    }
-    catch (error) {
-        var chartObject = 
-            <div>
-                Please select a valid dataset
-            </div>
-        
-        return chartObject
-    }
+function uuidv4() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
 }
 
 class KpiExplorer extends React.Component {
     constructor(props) {
         super(props);
-
         this.state = {
-            // Dropdown menu toggles
-            showProjectMenu: false,     // Project Menu Toggle
-            showKpiMenu: false,         // Kpi Menu Toggle
-            showTooltip: false,         // Toggle show/hiding tooltip
-            shouldRedraw: false,        // Toggle redraw of charts
+            projectList: '',
+            segmentSet: {},
         }
 
-        // Binding functions in this class
-        this.handleProjectDropdown = this.handleProjectDropdown.bind(this);
-        this.handleKpiDropdown = this.handleKpiDropdown.bind(this);
-        this.handleSelectProject = this.handleSelectProject.bind(this);
-        this.handleSelectKpi = this.handleSelectKpi.bind(this);
-        this.handleClick = this.handleClick.bind(this);         // Function for event listener to close dropdown menus
-        this.handleTooltip = this.handleTooltip.bind(this);
-        this.handleQueries = this.handleQueries.bind(this);     // Send queries to main labs Class
+        // Bind functions used in class
+        this.onRemoveChart = this.onRemoveChart.bind(this);
+        this.onChartChange = this.onChartChange.bind(this);
     }
 
-    // Dropdown list for Projects
-    handleProjectDropdown(event) {
+    // Function to add a new chart component
+    onAddChart = (e, { }) => {
         event.preventDefault();
+        let stateObject = this.state.segmentSet;
+        var uuid = uuidv4()     // Generate a unique uuid for the chart component that will be rendered
+
+        // Create an element for the new chart in the Array of chart object
+        stateObject[uuid] = {
+            proposalID: '',
+            kpiID: '',
+            id: uuid,
+        };
+
+        // Push the new array (that now includes the new chart object) to state
         this.setState({
-            showProjectMenu: !this.state.showProjectMenu,
-            showKpiMenu: false,
-            showTooltip: false,
-            shouldRedraw: false,
+            segmentSet: stateObject,
         })
-        trackEvent('Labs Page', `Clicked Project dropdown`)
     }
 
-    // Dropdown list for KPIs
-    handleKpiDropdown(event) {
-        event.preventDefault();
+    // Function to remove a chart component
+    onRemoveChart(value) {
+        let stateObject = this.state.segmentSet;    // Read the array of chart objects from state
+        delete stateObject[value]                   // Remove the closed chart objects from the array
+
+        // Push the new array (without the closed chart object) to state
         this.setState({
-            showKpiMenu: !this.state.showKpiMenu,
-            showProjectMenu: false,
-            showTooltip: false,
-            shouldRedraw: false,
+            segmentSet: stateObject,
         })
-        trackEvent('Labs Page', `Clicked KPI dropdown`)
     }
 
-    // Function to handle selection of item from the Projects dropdown menu
-    handleSelectProject(event) {
+    // Function to process state changes when changes are made in a chart component
+    onChartChange(proposalID, kpiID, uuid) {
         event.preventDefault();
-        this.setState({
-            showProjectMenu: false,
-            showKpiMenu: false,
-            shouldRedraw: true,
-        })
-        const queries = {
-            activeProject: event.currentTarget.value,
-            activeKpi: 0,
+        let stateObject = this.state.segmentSet;
+
+        const newState = {
+            proposalID: proposalID,
+            kpiID: kpiID,
+            id: uuid,
         }
-        this.handleQueries(queries)
-        trackEvent('Labs Page', `Changed KPI Explorer Chart to ${event.currentTarget.value}`)                 // Track Event on Google Analytics    
-    }
 
-    // Function to handle selection of item from the KPI dropdown menu
-    handleSelectKpi(event) {
-        event.preventDefault();
+        stateObject[uuid] = newState
+
         this.setState({
-            showProjectMenu: false,
-            showKpiMenu: false,
-            shouldRedraw: true,
+            segmentSet: stateObject,
         })
-
-        const queries = {
-            activeProject: this.props.project,
-            activeKpi: event.currentTarget.value,
-        }
-        this.handleQueries(queries)
-        trackEvent('Labs Page', `Changed KPI Explorer Chart to ${event.currentTarget.value}`)                 // Track Event on Google Analytics    
     }
-
-    // Function to push queries to main labs Class
-    handleQueries(queries) {
-        this.props.queryFunction('explorer', queries)
-    }
-
-    // Function to show and hide tooltip on click (for mobile users that can't hover)
-    handleTooltip(event) {
-        event.preventDefault();
-        this.setState({
-            showTooltip: !this.state.showTooltip,
-            showProjectMenu: false,
-            showKpiMenu: false,
-            shouldRedraw: false,
-        })
-        trackEvent('Labs Page', `Clicked Tooltip`)
-    }
-
-    // Function ran when the eventlistener is activated. Close dropdown menu and tooltip if clicked outside of it
-    handleClick = (event) => {
-        if (event.target.id !== "dropdownMenu" && event.target.id !== "tooltip") {
-        this.setState({
-            showProjectMenu: false,
-            showKpiMenu: false,
-            showTooltip: false,
-            shouldRedraw: false,
-        }) 
-        trackEvent('Labs Page', `Clicked on Labs KPI Explorer page`)
-        }
-      }
 
     componentDidMount() {
-        window.addEventListener('mousedown', this.handleClick);     // Handles closing of dropdown menu
-    }
+        var proposalListPromise = Promise.resolve(fetchingFunctions.getLabsListOfProjects())
 
-    componentWillUnmount() {        
-        window.removeEventListener('mousedown', this.handleClick);  // Stop event listener when modal is unloaded
+        // Create a list of projects to feed to chart segments
+        Promise.all([proposalListPromise]).then(data => {
+            const proposalList = data[0]
+            this.setState({
+                projectList: proposalList,
+            })
+        })
+
+        // Make an empty object for the first chart segment
+        var uuid = uuidv4()
+        const stateObject = {}
+        stateObject[uuid] = {
+            proposalID: '',
+            kpiID: '',
+            id: uuid,
+        };
+        this.setState({
+            segmentSet: stateObject,
+        })
     }
 
     render() {
-        const { // Declare data arrays used in class
-            labsData,
-        } = this.props
+        const {
+            projectList,
+            segmentSet,
+        } = this.state
 
-        // Elements taken from queries
-        const tabQueries = {
-            activeProject: typeof this.props.project == 'undefined' ? 0 : this.props.project,
-            activeKpi: typeof this.props.kpi == 'undefined' ? 0 : this.props.kpi,
+        return (
+            <main style={{
+                marginLeft: '20px',
+                marginRight: '20px',
+              }}>
+                {   // Show Add chart button if all Chart components have been removed
+                    (Object.keys(segmentSet).length == 0) && (
+                        <section>
+                            <Grid columns={3} centered stackable>
+                                <Grid.Column key={'button'} mobile={16} tablet={8} computer={8} widescreen={5}>
+                                    <Button primary onClick={this.onAddChart}>
+                                        Add Chart
+                                    </Button>
+                                </Grid.Column>
+                            </Grid>
+                        </section>
+                    )
+                }                
+                {   // Render a grid of chart components
+                    (Object.keys(segmentSet).length !== 0) && (
+                        <section>
+                            <Grid columns={3} centered stackable>
+                                {Object.values(segmentSet).map((item) =>
+                                    <Grid.Column mobile={16} tablet={8} computer={8} widescreen={5} key={item.id} >
+                                        <ProposalKpiChart
+                                            proposalID={item.proposalID}
+                                            kpiID={item.kpiID}
+                                            projectList={projectList}
+                                            segmentID={item.id}
+                                            onRemoveChart={this.onRemoveChart}
+                                            onChartChange={this.onChartChange}
+                                        />
+                                    </Grid.Column>
+                                )}
+                                {   // Show add chart button if there are fewer than 11 charts
+                                    (Object.keys(segmentSet).length < 12) && (
+                                        <Grid.Column key={'button'} mobile={16} tablet={8} computer={8} widescreen={5}>
+                                            <Button primary onClick={this.onAddChart}>
+                                                Add Chart
+                                            </Button>
+                                        </Grid.Column>
+                                    )}
+                            </Grid>
+                        </section>
+                    )}
+            </main>
+        )
+    }
+}
+
+class ProposalKpiChart extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            shouldRedraw: false,            // Toggle redraw for charts
+            proposalName: 'None Selected',  // Display state for readable proposal name
+            segmentID: props.segmentID,     // ID of this component, given upon creation in kpiExplorer component
+            proposalID: props.proposalID,   // GUUID of the proposal, read from database
+            kpiID: props.kpiID,             // GUUID of the kpi, read from database
+
+            kpiList: '',
+            kpiDetails: '',
+            kpiChartData: '',
+        }
+        // Binding functions used in this Class
+        this.handleProposalChange = this.handleProposalChange.bind(this)
+        this.handleKpiChange = this.handleKpiChange.bind(this)
+        this.handleCloseChart = this.handleCloseChart.bind(this)
+    }
+
+    // Function to handle the selection of a new proposal from dropdown
+    handleProposalChange(e, { key, value, text }) {
+        this.props.onChartChange(value, '', this.state.segmentID)
+        this.setState({
+            proposalName: text,
+            proposalID: value,
+        })
+    }
+
+    // Function to handle the selection of a new KPI from dropdown
+    handleKpiChange(e, { key, value, text }) {
+        this.props.onChartChange(this.state.proposalID, value, this.state.segmentID)
+
+        this.setState({
+            kpiID: value,
+        })
+    }
+
+    // Function to handle closing the chart
+    handleCloseChart(e, { key, value, text }) {
+        this.props.onRemoveChart(value)
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.proposalID !== this.state.proposalID) {// Just a history state update because it doesn't always work as desired in functions
+
+            var kpiListPromise = Promise.resolve(fetchingFunctions.getLabsListOfKpis(this.state.proposalID))
+
+            Promise.all([kpiListPromise]).then(data => {
+                const kpiList = data[0]
+
+                this.setState({
+                    kpiList: kpiList,
+                    kpiDetails: '',
+                    kpiChartData: '',
+                })
+            })
         }
 
-        const content = buildContent(labsData, tabQueries.activeProject, tabQueries.activeKpi)
+        if (prevState.kpiID !== this.state.kpiID) {// Just a history state update because it doesn't always work as desired in functions
+            if (this.state.kpiID == '') {
+                this.setState({
+                    kpiDetails: '',
+                    kpiChartData: '',
+                })
+            } else {
+                var kpiDataPromise = Promise.resolve(fetchingFunctions.getLabsKpiDataset(this.state.kpiID))
+                Promise.all([kpiDataPromise]).then(data => {
+                    const kpiData = data[0].dataset
+                    const kpiDetails = data[0].info
+
+                    const kpiChartData = chartFunctions.buildChartDataset(kpiData, kpiDetails.axis_title, 0)
+
+                    this.setState({
+                        kpiDetails: kpiDetails,
+                        kpiChartData: {
+                            datasets: [kpiChartData]
+                        },
+                    })
+                })
+            }
+        }
+    }
+
+    render() {
+        const {
+            proposalName,
+            segmentID,
+
+            kpiList,
+            kpiDetails,
+            kpiChartData,
+        } = this.state
 
         const {
-            chartData,
-            kpiList,
-            pageContent,
-        } = content
+            projectList,
+        } = this.props
 
-        var chartObject = chartFunction(chartData.data, chartData.options, this.state.shouldRedraw)
+        const proposalDropdownOptions = chartFunctions.createProposalDropdownList(projectList)
+        const kpiDropdownOptions = chartFunctions.createKpiDropdownList(kpiList)
+
+        const kpiChartsOptions = chartFunctions.buildChartOptions(kpiDetails.kpi_name)
+        const placeholderDataset = chartFunctions.createBlankDataset()
 
         return (
             <main>
-                <h1 className="labsHeader">Dash Watch KPI Explorer</h1>
-                <div className="labsDropdown" id="dropdownmenu">
-                    <p className="labsText">Select a project:</p>
-                    <div id="dropdownMenu" onClick={this.handleProjectDropdown} className="labsDropbtn"><i id="dropdownMenu"></i>{pageContent.projectName}</div>
+                <Segment
+                    attached='top'
+                >
+                    <Label ribbon>KPI Metrics for {kpiDetails.project_name}</Label>
+                    <Button
+                        onClick={this.handleCloseChart}
+                        floated='right'
+                        value={segmentID}
+                    >
+                        <Icon name='close' />Close chart
+                    </Button>
+                    <Divider hidden />
                     {
-                        this.state.showProjectMenu ? (
-                            <div className="labsDropdownMenu" id="dropdownMenu">
-                                {
-                                    Object.keys(labsData).map((item) =>
-                                        <div key={labsData[item].id}>
-                                            <button id="dropdownMenu" value={item} className="labsDropdownItem" onClick={this.handleSelectProject}>{labsData[item].project_name}</button>
-                                        </div>
-                                    )}
-                            </div>
-                        ) : (
-                                null
-                            )
+                        (projectList.length !== 0) && (
+                            <Dropdown
+                                placeholder='Select a proposal'
+                                scrolling
+                                search
+                                clearable
+                                selection
+                                options={proposalDropdownOptions}
+                                onChange={this.handleProposalChange}
+                            />
+                        )
                     }
-                </div>
-                <div className="labsDropdown" id="dropdownmenu">
-                    <p className="labsText">Select a kpi:</p>
-                    <div id="dropdownMenu" onClick={this.handleKpiDropdown} className="labsDropbtn"><i id="dropdownMenu"></i>{pageContent.kpiName}</div>
                     {
-                        this.state.showKpiMenu ? (
-                            <div className="labsDropdownMenu" id="dropdownMenu">
-                                {
-                                    Object.keys(kpiList).map((item) =>
-                                        <div key={kpiList[item].id}>
-                                            <button id="dropdownMenu" value={item} className="labsDropdownItem" onClick={this.handleSelectKpi}>{kpiList[item].kpi_name}</button>
-                                        </div>
-                                    )}
-                            </div>
-                        ) : (
-                                null
-                            )
+                        (kpiList.length !== 0) && (
+                            <Dropdown
+                                placeholder='Select a proposal'
+                                scrolling
+                                search
+                                clearable
+                                selection
+                                options={kpiDropdownOptions}
+                                onChange={this.handleKpiChange}
+                            />
+                        )
                     }
-                </div>
-                <div id="tooltip" className="labsTooltip" onClick={this.handleTooltip}>{pageContent.tooltipTitle}?
-                    <span className="labsTooltipBlock" value={this.state.showTooltip ? "Active" :
-                        "Inactive"}>{pageContent.tooltipText}</span>
-                </div>
-                <section>
-                    {pageContent.proposalOwnerLink}
-                    {chartObject}
-                </section>
+                    {   // Empty chart
+                        kpiChartData.length == 0 &&
+                        <Line
+                            data={placeholderDataset}
+                        />
+                    }
+                    {   // Populated chart
+                        kpiChartData.length !== 0 &&
+                        <Line
+                            data={kpiChartData}
+                            options={kpiChartsOptions}
+                        />
+                    }
+                    { kpiDetails !== '' && (
+                        <Message>
+                            <p>{kpiDetails.kpi_description}.</p>
+                            <p><a id="projectKpiRawLink" href={`/api/dataset/labsKpiData?kpi=${kpiDetails.unique_id}`}> CLICK HERE FOR THE RAW DATA</a></p>
+                        </Message>
+                    )
+                    }
+                   
+                </Segment>
             </main>
         )
     }

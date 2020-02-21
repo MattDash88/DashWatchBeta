@@ -1,45 +1,45 @@
 import React from 'react';
-import 'semantic-ui-react'
+
+import {
+  Container,
+  Dropdown,
+  Label,
+  Form,
+  Checkbox,
+  Segment,
+  Button,
+  Divider,
+  TextArea,
+  Input,
+  Message,
+  Dimmer,
+  Tab,
+  Menu,
+  Sidebar,
+  Grid,
+} from 'semantic-ui-react';
+
 
 // Analytics
 import { trackPage, trackEvent } from '../components/functions/analytics';
 
 // Import css
-import '../components/css/style.css';
-import '../components/css/monthstyle.css';
-import '../components/css/labs.css';
-
 
 // Import other elements 
 import Header from '../components/headers/LabsHeader';
-import NavBar from "../components/elements/NavBar";
-
-import PosSystems from "../components/labs_content/PosSystems";
+import NavBar from "../components/elements/NavBarNew"
+import LabsOverview from "../components/labs_content/Overview";
 import Wallets from "../components/labs_content/Wallets";
+import Websites from "../components/labs_content/Websites";
 import KpiExplorer from "../components/labs_content/KpiExplorer";
 
-// API query requesting Trust Protector Candidate List data
-const getLabsPreparedData = () => {
+const getCountryList = () => {
   return (
     new Promise((resolve) => {
-      fetch(`/api/get/labsPreparedData`)
+      fetch(`/api/dataset/labsCountryList`)
         .then((res) => res.json()
           .then((res) => {
-            resolve(res.data)
-          })
-        )
-    })
-  )
-}
-
-// API query requesting Trust Protector Candidate List data
-const getLabsAllData = () => {
-  return (
-    new Promise((resolve) => {
-      fetch(`/api/get/labsAllData`)
-        .then((res) => res.json()
-          .then((res) => {
-            resolve(res.data)
+            resolve(res)
           })
         )
     })
@@ -49,7 +49,7 @@ const getLabsAllData = () => {
 class Labs extends React.Component {
   static async getInitialProps(ctx) {
     const props = {
-      tab: typeof ctx.query.tab == "undefined" ? "explorer" : ctx.query.tab,        // Default tab is explorer
+      tab: typeof ctx.query.tab == "undefined" ? "overview" : ctx.query.tab,        // Default tab is explorer
       project: typeof ctx.query.project == "undefined" ? 0 : ctx.query.project,     // Default project is the first in the list
       kpi: typeof ctx.query.kpi == "undefined" ? 0 : ctx.query.kpi,                 // Default kpi is the first in the list
       country: typeof ctx.query.country == "undefined" ? 'Brazil' : ctx.query.country,  // Default country is the first alphabetically
@@ -64,49 +64,43 @@ class Labs extends React.Component {
     super(props)
 
     this.state = {
-      posSystemData: '',  // Dataset for posystems tab
-      walletData: '',     // Dataset for wallet tab
-      countryData: '',     // Dataset for wallet tab
-      versionData: '',    // Dataset for wallet tab
-      labsData: '',       // Dataset for proposals tab
+      countryList: '',
+      view: 'largeScreen',
+      showSidebar: false,
 
       // States that can be set by queries 
-      project: props.project,
-      kpi: props.kpi,
-      showPosChart: typeof props.chart == "undefined" ? 'Transactions' : props.chart,
-      showWalletChart: typeof props.chart == "undefined" ? 'type' : props.chart,
-      showWalletType: 'All',
-      showWalletCountry: props.country,
 
       // Booleans for POS systems
-      showAnypay: true,
-      showPaylive: true,
-      showDashRetail: true,
 
       // Booleans for Wallets
-      showDashCore: true,
-      showElectrum: true,
-      showCoreAndroid: true,
-      showCoreiOS: true,
 
-      labsTabId: props.tab,
+      activeTab: props.tab,
       url: '/labs',
       as: props.as,
     }
 
     // Binding functions in this class
     this.handleSelectTab = this.handleSelectTab.bind(this);
+    this.toggleSidebar = this.toggleSidebar.bind(this);
     this.handleQueries = this.handleQueries.bind(this);
   }
 
-  handleSelectTab(event) {
+  handleSelectTab(event, { name }) {
     event.preventDefault();
     this.setState({
-      labsTabId: event.currentTarget.id,
-      as: `/labs?tab=${event.currentTarget.id}`,
+      activeTab: name,
+      as: `/labs?tab=${name}`,
     })
-    history.pushState(this.state, '', `/labs?tab=${event.currentTarget.id}`)                    // Push State to history
-    trackEvent('Labs Page', `Changed Tab to ${event.currentTarget.id}`)                 // Track Event on Google Analytics
+    history.pushState(this.state, '', `/labs?tab=${name}`)                    // Push State to history
+    trackEvent('Labs Page', `Changed Tab to ${name}`)                 // Track Event on Google Analytics
+  }
+
+  toggleSidebar(event) {
+    event.preventDefault();
+    this.setState({
+      showSidebar: !this.state.showSidebar,
+    })
+    trackEvent('Labs Page', `Changed Tab to ${name}`)                 // Track Event on Google Analytics
   }
 
   // Function to handle queries pushed by the sub Classes/tabs
@@ -131,7 +125,7 @@ class Labs extends React.Component {
     }
     if (tabId == 'wallets') {
       // Add an extra query for wallet type or country charts
-      if (queries.walletChart == "type") { 
+      if (queries.walletChart == "type") {
         var subChartQuery = `&type=${queries.walletType}`
       } else if (queries.walletChart == "country") {
         var subChartQuery = `&country=${queries.walletCountry}`
@@ -147,10 +141,10 @@ class Labs extends React.Component {
         showWalletType: queries.walletType,
         showWalletCountry: queries.walletCountry,
         showWalletChart: queries.walletChart,
-        as: `/labs?tab=wallets&chart=${queries.walletChart}`+subChartQuery,
+        as: `/labs?tab=wallets&chart=${queries.walletChart}` + subChartQuery,
       })
-   
-      history.pushState(this.state, '', `/labs?tab=wallets&chart=${queries.walletChart}`+subChartQuery)
+
+      history.pushState(this.state, '', `/labs?tab=wallets&chart=${queries.walletChart}` + subChartQuery)
     }
   }
 
@@ -161,116 +155,105 @@ class Labs extends React.Component {
         this.setState(event.state)
       }
     }
-    var labsPreparedData = Promise.resolve(getLabsPreparedData());
-    var labsAllData = Promise.resolve(getLabsAllData());
+    var countryListPromise = Promise.resolve(getCountryList())
 
-    Promise.all([labsAllData, labsPreparedData]).then(data => {
+    Promise.all([countryListPromise]).then(data => {
+      var countryListData = data[0]
+
       this.setState({
-        labsData: data[0],
-        posSystemData: data[1].pos_system_data,
-        walletData: data[1].wallet_data,
-        countryData: data[1].country_data,
-        versionData: data[1].version_data,
+        countryList: countryListData,
       })
     }).then(history.replaceState(this.state, '', `${this.state.as}`))
     trackPage(`/labs`)  // Track Pageview in Analytics
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.labsData !== this.state.labsData || prevState.labsTabId !== this.state.labsTabId || prevState.showPosChart !== this.state.showPosChart || prevState.showWalletChart !== this.state.showWalletChart 
-      || prevState.showWalletType !== this.state.showWalletType || prevState.showWalletCountry !== this.state.showWalletCountry ) {// Just a history state update because it doesn't always work as desired in functions
-        history.replaceState(this.state, '', `${this.state.as}`)
+    if (prevState.labsData !== this.state.labsData || prevState.labsTabId !== this.state.labsTabId || prevState.showPosChart !== this.state.showPosChart || prevState.showWalletChart !== this.state.showWalletChart
+      || prevState.showWalletType !== this.state.showWalletType || prevState.showWalletCountry !== this.state.showWalletCountry) {// Just a history state update because it doesn't always work as desired in functions
+      history.replaceState(this.state, '', `${this.state.as}`)
     }
-}
+  }
 
   render() {
     const { // Declare data arrays used in class
-      posSystemData,
-      walletData,
-      countryData,
-      versionData,
-      labsData,
+      view,
+      showSidebar,
+      countryList,
+      activeTab,
     } = this.state
 
     return (
-      <main>
+      <Container fluid>
         <Header></Header>
         <NavBar
           showPage="labs"
         />
-        <section className="pagewrapper">
-          <div className="monthTab" id='explorer' value={this.state.labsTabId == 'explorer' ? "Active" :
-            "Inactive"} onClick={this.handleSelectTab}><p className="monthTabText">Proposals</p></div>
-          <div className="monthTab" id='POSsystems' value={this.state.labsTabId == 'POSsystems' ? "Active" :
-            "Inactive"} onClick={this.handleSelectTab}><p className="monthTabText">POS Systems</p></div>
-          <div className="monthTab" id='wallets' value={this.state.labsTabId == 'wallets' ? "Active" :
-            "Inactive"} onClick={this.handleSelectTab}><p className="monthTabText">Wallets</p></div>
-          <div className="monthPageWrapper">
-            <section className="plotWrapper" value={this.state.labsTabId == 'explorer' ? "Active" :
-              "Inactive"}>
-              {
-                (labsData.length > 0) ? (
-                  <div>
-                    <KpiExplorer
-                      labsData={labsData}
-                      queryFunction={this.handleQueries}
-                      project={this.state.project}
-                      kpi={this.state.kpi}
-                    />
-                  </div>
-                ) : (
-                    <section>
-                      Loading&hellip;
-                  </section>
-                  )
-              }
-            </section>
-            <section className="plotWrapper" value={this.state.labsTabId == 'POSsystems' ? "Active" :
-              "Inactive"}>
-              {
-                (posSystemData.length > 0) ? (
-                  <div>
-                    <PosSystems
-                      posSystemData={posSystemData}
-                      queryFunction={this.handleQueries}
-                      showAnypay={this.state.showAnypay}
-                      showPaylive={this.state.showPaylive}
-                      showDashRetail={this.state.showDashRetail}
-                      showPosChart={this.state.showPosChart}
-                    />
-                  </div>
-                ) : (
-                    null
-                  )
-              }
-            </section>
-            <section className="plotWrapper" value={this.state.labsTabId == 'wallets' ? "Active" :
-              "Inactive"}>
-              {
-                (walletData.length > 0) ? (
-                  <div>
-                    <Wallets
-                      walletData={walletData}
-                      countryData={countryData}
-                      versionData={versionData}
-                      queryFunction={this.handleQueries}
-                      showDashCore={this.state.showDashCore}
-                      showElectrum={this.state.showElectrum}
-                      showCoreAndroid={this.state.showCoreAndroid}
-                      showCoreiOS={this.state.showCoreiOS}
-                      showWalletChart={this.state.showWalletChart}
-                      showWalletType={this.state.showWalletType}
-                      showWalletCountry={this.state.showWalletCountry}
-                    />
-                  </div>
-                ) : (
-                    null
-                  )
-              }
-            </section>
-          </div>
+        <section style={{
+          marginTop: '10px',
+        }}>
+          <Menu>
+            <Menu.Item
+              name='overview'
+              active={activeTab === 'overview'}
+              onClick={this.handleSelectTab}
+            >
+              Overview
+        </Menu.Item>
+            <Menu.Item
+              name='wallets'
+              active={activeTab === 'wallets'}
+              onClick={this.handleSelectTab}
+            >
+              Wallets
+              </Menu.Item>
+            <Menu.Item
+              name='websites'
+              active={activeTab === 'websites'}
+              onClick={this.handleSelectTab}
+            >
+              Websites
+              </Menu.Item>
+            <Menu.Item
+              name='kpiExplorer'
+              active={activeTab === 'kpiExplorer'}
+              onClick={this.handleSelectTab}
+
+            >
+              KPI Explorer
+              </Menu.Item>
+          </Menu>
+          {
+            (countryList.length !== 0 && view == 'largeScreen') && (
+              <section>
+                {
+                  activeTab == 'overview' &&
+                  <LabsOverview
+                    countryList={countryList}
+                  />
+                }
+                {
+                  activeTab == 'wallets' &&
+                  <Wallets
+                    countryList={countryList}
+                  />
+                }
+                {
+                  activeTab == 'websites' &&
+                  <Websites
+                    countryList={countryList}
+                  />
+                }
+                {
+                  activeTab == 'kpiExplorer' &&
+                  <KpiExplorer
+                    countryList={countryList}
+                  />
+                }
+              </section>
+            ) || (<Segment loading height={20} />)
+          }
         </section>
-      </main>
+      </Container>
     )
   }
 }
