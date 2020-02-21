@@ -82,6 +82,7 @@ class WalletTableRow extends React.Component {
         this.handleAccordionClick = this.handleAccordionClick.bind(this)
     }
 
+    // Function to add the active devices accordion
     handleAccordionClick() {    
         this.setState({ walletAccordionState: !this.state.walletAccordionState })
       }
@@ -122,7 +123,7 @@ class WalletTableRow extends React.Component {
                 <Segment>
                     <Label ribbon>Android Wallet Metrics</Label>
                     <h4>Month: {walletListsDate}</h4>
-                    <p>The table lists the countries with the most active installations and the largest growth in new installation, both in % and absolute numbers, of the Dash Android wallet in the month of {walletListsDate}. More countries are available in the wallet section.</p>
+                    <p>The table lists the countries with the most active installations and the largest growth in new installation, both in % and absolute numbers, of the Dash Android wallet in the month of {walletListsDate}. Other countries are available in the wallet section.</p>
                     <Accordion fluid styled>
                         <Accordion.Title
                             active={walletAccordionState}
@@ -239,7 +240,7 @@ class WebsiteTableRow extends React.Component {
                     <Label ribbon>Dash.org Metrics</Label>
                     <h4>Month: {websiteListsDate}</h4>
                     <p>The table lists the countries with the most users and the largest growth in users, both in % and absolute numbers, of the Dash.org website in the month of {websiteListsDate}. More countries are available in the Websites section.</p>
-                    <Divider fitted />
+                    <Divider fitted hidden />
                     <Grid stackable>
                         <Grid.Row width={16}>
                             <Grid.Column mobile={16} tablet={5} computer={5} widescreen={5}>
@@ -303,7 +304,7 @@ class OverviewTable extends React.Component {
         return (
             <Table selectable singleLine unstackable fixed>
                 <Table.Header>
-                    <Table.Row singleLine>
+                    <Table.Row>
                         <Table.HeaderCell>Country</Table.HeaderCell>
                         <Table.HeaderCell textAlign='right'>{dataColumnLabel}</Table.HeaderCell>
                     </Table.Row>

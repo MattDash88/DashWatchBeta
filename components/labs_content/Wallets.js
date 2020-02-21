@@ -1,6 +1,8 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
 import {
+    Accordion,
+    Divider,
     Dropdown,
     Label,
     Segment,
@@ -70,10 +72,10 @@ class Wallets extends React.Component {
                 <Grid stackable columns={3}>
                     <Grid.Row stretched>                        
                         <Grid.Column mobile={16} tablet={8} computer={8} widescreen={5}>
-                            <AndroidGlobalChart />
+                            <OtherWalletsChart />
                         </Grid.Column>
                         <Grid.Column mobile={16} tablet={8} computer={8} widescreen={5}>
-                            <OtherWalletsChart />
+                            <AndroidGlobalChart />
                         </Grid.Column>
                         <Grid.Column mobile={16} tablet={8} computer={8} widescreen={5}>
                             <AndroidCountryChart
@@ -223,8 +225,7 @@ class AndroidCountryChart extends React.Component {
             <main>
                 <Segment attached='top'>
                 <Label ribbon>Android Wallet Metrics per Country</Label>
-                <br></br>
-                <br></br>
+                <Divider hidden /> 
                 <Dropdown
                     placeholder='Select a country'
                     scrolling
@@ -311,6 +312,7 @@ class AndroidGlobalChart extends React.Component {
         this.state = {
             shouldRedraw: false,    // Toggle redraw for charts
             activeGlobalTab: 'activeDevices',
+            walletAccordionState: false,
 
             // States for Global datasets
             globalActiveDevicesChartData: '',
@@ -318,8 +320,14 @@ class AndroidGlobalChart extends React.Component {
             globalPercentageInstallsChartData: '',
         }
         // Binding functions used in this Class
+        this.handleAccordionClick = this.handleAccordionClick.bind(this)
         this.handleGlobalTab = this.handleGlobalTab.bind(this)
     }
+
+    // Function to add the active devices  accordion
+    handleAccordionClick() {    
+        this.setState({ walletAccordionState: !this.state.walletAccordionState })
+      }
 
     // Function to handle selection of item from the KPI dropdown menu
     handleGlobalTab(e, { value }) {
@@ -357,6 +365,8 @@ class AndroidGlobalChart extends React.Component {
         const {
             activeGlobalTab,
             shouldRedraw,
+            walletAccordionState,
+
             globalActiveDevicesChartData,
             globalDeltaInstallsChartData,
             globalPercentageInstallsChartData,
@@ -370,6 +380,23 @@ class AndroidGlobalChart extends React.Component {
             <main>
                 <Segment attached='top'>
                 <Label ribbon>Android Wallet Metrics global</Label>
+                <Divider hidden /> 
+                <Accordion fluid styled>
+                        <Accordion.Title
+                            active={walletAccordionState}
+                            color='grey'
+                            index={0}
+                            onClick={this.handleAccordionClick}
+                             >
+                        <Icon name='dropdown' />
+                        What are Active Devices?
+                    </Accordion.Title>
+                        <Accordion.Content active={walletAccordionState}>
+                            <p>
+                            Active devices are Android devices that have the Dash Wallet app installed and have been online at least once in the past 30 days.
+                            </p>
+                        </Accordion.Content>
+                    </Accordion>
                 {
                     globalActiveDevicesChartData.length !== 0 && (
                         <section>
