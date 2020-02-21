@@ -79,7 +79,7 @@ class NavBar extends React.Component {
                                 href='/proposals' target=''
                                 onClick={this.handleItemClick}
                             >
-                                <h4>Proposals</h4>
+                                <h3>Proposals</h3>
                             </Menu.Item>
 
                             <Menu.Item
@@ -102,7 +102,7 @@ class NavBar extends React.Component {
                                 href='/elections' target=''
                                 onClick={this.handleItemClick}
                             >
-                                <h4>Elections</h4>
+                                <h3>Elections</h3>
                             </Menu.Item>
 
                             <Menu.Item
@@ -112,7 +112,7 @@ class NavBar extends React.Component {
                                 href='/labs' target=''
                                 onClick={this.handleItemClick}
                             >
-                                <h4>Labs</h4>
+                                <h3>Labs</h3>
                             </Menu.Item>
                             <Menu.Item
                                 style={{ width: '10%', alignItems: 'middle' }}
@@ -121,7 +121,7 @@ class NavBar extends React.Component {
                                 href='/about' target=''
                                 onClick={this.handleItemClick}
                             >
-                                <h4>About</h4>
+                                <h3>About</h3>
                             </Menu.Item>
                         </Menu>
                     </Grid.Row>
