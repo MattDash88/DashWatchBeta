@@ -269,19 +269,9 @@ class MonthReportRow extends React.Component {
             } else {
                 reportLink = (                    
                     <div className="monthItem" id="reportsColumn">
-                    {
-                        typeof list_data.kpi_link !== 'undefined' ? (
-                            <div>
-                                <a className="monthReportLink" href={list_data.report_link} target="_blank" title={list_data.report_link} onClick={this.callEvent}><img id="PDF" src="/static/images/PDF.png" height="30"></img> Report</a> 
-                                <div className="monthLinkSeparator"></div> 
-                                <a className="monthKpiLink" href={list_data.kpi_link} target="_blank" title={list_data.kpi_link} onClick={this.callEvent}><img id="Charts" src="/static/images/Charts.png" height="30"></img> KPIs</a>
-                            </div>
-                        ) : (
-                            <div>
-                                <a className="monthReportLink" href={list_data.report_link} target="_blank" title={list_data.report_link} onClick={this.callEvent}><img id="PDF" src="/static/images/PDF.png" height="30"></img> Report</a>
-                            </div>
-                        )
-                    }
+                        <div>
+                            <a className="monthReportLink" href={list_data.report_link} target="_blank" title={list_data.report_link} onClick={this.callEvent}><img id="PDF" src="/static/images/PDF.png" height="30"></img> Report</a> 
+                        </div>
                     </div>
                 )
             }
