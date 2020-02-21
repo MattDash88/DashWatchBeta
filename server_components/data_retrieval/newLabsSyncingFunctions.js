@@ -121,7 +121,7 @@ const KpiValues = function getLabsKpiEntries() {
         const apiQuery = {
             pageSize: 100,
             sort: [{ field: 'Project Name', direction: 'asc' }],
-            filterByFormula: '{Date Added} > "2020-01-01"',
+            filterByFormula: '{Date Added} > "2020-02-18"',
         }
 
         // Get the data from the table

@@ -160,13 +160,13 @@ class Month extends React.Component {
                     showPage="reports"
                 />
                 <section className="pagewrapper">
-                    <div className="monthTab" id='Apr19' value={this.state.monthId == 'Nov19' ? "Active" :
+                    <div className="monthTab" id='Nov19' value={this.state.monthId == 'Nov19' ? "Active" :
                         "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">November 2019</p></div>
-                    <div className="monthTab" id='May19' value={this.state.monthId == 'Dec19' ? "Active" :
+                    <div className="monthTab" id='Dec19' value={this.state.monthId == 'Dec19' ? "Active" :
                         "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">December 2019</p></div>
-                    <div className="monthTab" id='Jun19' value={this.state.monthId == 'Jan20' ? "Active" :
+                    <div className="monthTab" id='Jan20' value={this.state.monthId == 'Jan20' ? "Active" :
                         "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">January 2020</p></div>
-                    <div className="monthTab" id='Jul19' value={this.state.monthId == 'Feb20' ? "Active" :
+                    <div className="monthTab" id='Feb20' value={this.state.monthId == 'Feb20' ? "Active" :
                         "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">February 2020</p></div>
                     <div className="monthPageWrapper">
                         <div className="monthHeaderWrapper">

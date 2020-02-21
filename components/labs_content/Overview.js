@@ -131,7 +131,7 @@ class WalletTableRow extends React.Component {
                             onClick={this.handleAccordionClick}
                              >
                         <Icon name='dropdown' />
-                        What are Active Devices
+                        What are Active Devices?
                     </Accordion.Title>
                         <Accordion.Content active={walletAccordionState}>
                             <p>
@@ -139,7 +139,7 @@ class WalletTableRow extends React.Component {
                             </p>
                         </Accordion.Content>
                     </Accordion>    
-                    <Divider hidden fitted />                
+                    <Divider hidden />                
                     <Grid stackable>
                         <Grid.Row width={16}>
                             <Grid.Column mobile={16} tablet={5} computer={5} widescreen={5}>
