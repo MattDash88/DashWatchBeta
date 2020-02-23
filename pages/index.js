@@ -173,13 +173,8 @@ class Month extends React.Component {
                             <a className="reportPageLink" id="oldReports" href="/oldreports"><i id="oldReports"></i>Older Reports</a>
                             <div className="monthHeader">{monthText}</div>
                         </div>
-                        {this.state.monthId=='Aug19' && <div className='monthTabMessage'>
-                            <p>Hey everyone,</p>
-                            <p>As you may know Dash Watch was not able to be funded this cycle for the first time in over 1.7 years despite having a greater than 10 to 1 yes to no vote ratio. It appears some votes were reversed at the last minute in order to keep other proposals funded which may have been on their last funding attempt. We totally understand the budgetary constraints the DAO is under, however without funding we are not able to report on the month of August.</p>                            
-                            <p> If you would like to see us resume reporting in September, we submitted a new proposal (<a className="votingLink" id="votingLink" href='https://app.dashnexus.org/proposals/dash-watch-12th-proposal-september-2019-funding-request/overview'>link</a>). Thank you for the continued support, it's been an honor serving the Dash community.</p>
-                            <p>Kind Regards, <br></br>
-                            Dash Watch Report Team
-                            </p>
+                        {this.state.monthId == 'Feb20' && <div className='monthTabMessage'>
+                            <p>The new Labs section is now live <a className="reportPageLink" id="labs" href="/labs">link here</a>. Please, check it out and let is know what you think.</p>
                         </div>}
 
                         {this.state.monthId!=='Aug19' && <section>
