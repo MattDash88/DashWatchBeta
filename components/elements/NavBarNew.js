@@ -212,7 +212,7 @@ class NavBar extends React.Component {
                                 href='/' target=''
                                 onClick={this.handleItemClick}
                             >
-                                <Image id="Home" src="/static/images/logo_white20.png" size='small '/>
+                                <Image id="Home" src="/static/images/logo_white20.png" size='small'/>
                             </Menu.Item>
                         </Menu>
                     </Grid.Row>
