@@ -174,7 +174,7 @@ class Month extends React.Component {
                             <div className="monthHeader">{monthText}</div>
                         </div>
                         {this.state.monthId == 'Feb20' && <div className='monthTabMessage'>
-                            <p>The new Labs section is now live <a className="reportPageLink" id="labs" href="/labs">link here</a>. Please, check it out and let is know what you think.</p>
+                            <p>The new Labs section is now live <a className="reportPageLink" id="labs" href="/labs">link here</a>. Please, check it out and let us know what you think.</p>
                         </div>}
 
                         {this.state.monthId!=='Aug19' && <section>
