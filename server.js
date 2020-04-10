@@ -7,6 +7,7 @@ const fetch = require('isomorphic-unfetch');
 
 const dev = process.env.NODE_ENV !== 'production';
 const port = process.env.PORT;
+const clientUrl = process.env.CLIENT_URL;
 var gaKey = process.env.GAKEY;
 const app = next({ dev });
 const ReactGA = require('react-ga');
@@ -18,6 +19,7 @@ var cacheExpirationTime = process.env.CACHEEXPIRATION;  //Time until cache expir
 // Get data processing functions from another file
 var airtableFunctions = require('./server_components/airtableFunctions');
 var labsFunctions = require('./server_components/main_api_functions/labsApiFunctions');
+var listFunctions = require('./server_components/main_api_functions/listApiFunctions');
 var datasetBuildingFunctions = require('./server_components/datasetBuildingFunctions');
 //var databaseFunctions = require('./server_components/db_functions');
 var labsAirtableFunctions = require('./server_components/labsAirtableFunctions');
@@ -504,9 +506,6 @@ const getLabsAllData = (refreshCache) => {
 app.prepare()
   .then(() => {
     const server = express()
-
-
-
     // Internal API call to get Airtable data
     server.get('/api/get/posts', (req, res) => {
       var refreshCache = false    // Load from cache if available
@@ -689,13 +688,38 @@ app.prepare()
       });
     })
 
+    // API call to get labs Wallet data
+    server.get('/api/list/listOfMonths', (req, res) => {
+      Promise.resolve(listFunctions.getListOfMonths()).then(function (results) {
+        res.set('Access-Control-Allow-Origin', [clientUrl])
+        res.status(200).send(results);
+      }).catch((error) => {                                                           // Run this if the retrieving functions returns an error
+        res.set('Access-Control-Allow-Origin', [clientUrl])
+        res.status(200).send('error')
+      })
+    })
+
+    // API call to get labs Wallet data
+    server.get('/api/list/labsCountryList', (req, res) => {
+      var refreshCache = true   // Request cache refresh
+      Promise.resolve(labsFunctions.getLabsCountryList(refreshCache)).then(function (results) {
+        res.set('Access-Control-Allow-Origin', [clientUrl])
+        res.status(200).send(results);
+      }).catch((error) => {                                                           // Run this if the retrieving functions returns an error
+        res.set('Access-Control-Allow-Origin', [clientUrl])
+        res.status(200).send('error')
+      })
+    })
+
     // API call to get labs Wallet top lists
     server.get('/api/list/labsProjectsWithKpis', (req, res) => {
       var refreshCache = true   // Request cache refresh
       Promise.resolve(labsFunctions.getLabsKpiProjectList(refreshCache)).then(function (results) {
+        res.set('Access-Control-Allow-Origin', [clientUrl])
         res.status(200).send(results);
       }).catch((error) => {                                                           // Run this if the retrieving functions returns an error
-        res.status(200).send(serialize(error))
+        res.set('Access-Control-Allow-Origin', [clientUrl])
+        res.status(200).send('error')
       })
     })
 
@@ -703,9 +727,24 @@ app.prepare()
     server.get('/api/list/ListOfKpis', (req, res) => {
       var project = req.query.hash 
       Promise.resolve(labsFunctions.getLabsListOfKpis(project)).then(function (results) {
+        res.set('Access-Control-Allow-Origin', [clientUrl])
         res.status(200).send(results);
       }).catch((error) => {                                                           // Run this if the retrieving functions returns an error
-        res.status(200).send(serialize(error))
+        res.set('Access-Control-Allow-Origin', [clientUrl])
+        res.status(200).send('error')
+      })
+    })
+
+    // API call to get labs Wallet top lists
+    server.get('/dataset/reportList', (req, res) => {
+      var year = req.query.year 
+      var month = req.query.month
+      Promise.resolve(listFunctions.getListReportData(year, month)).then(function (results) {
+        res.set('Access-Control-Allow-Origin', [clientUrl])
+        res.status(200).send(results);
+      }).catch((error) => {                                                           // Run this if the retrieving functions returns an error
+        res.set('Access-Control-Allow-Origin', [clientUrl])
+        res.status(200).send('error')
       })
     })
 
@@ -713,9 +752,11 @@ app.prepare()
     server.get('/api/dataset/labsWalletTopLists', (req, res) => {
       var refreshCache = true   // Request cache refresh
       Promise.resolve(labsFunctions.getLabsTopWalletList(refreshCache)).then(function (results) {
+        res.set('Access-Control-Allow-Origin', [clientUrl])
         res.status(200).send(results);
       }).catch((error) => {                                                           // Run this if the retrieving functions returns an error
-        res.status(200).send(serialize(error))
+        res.set('Access-Control-Allow-Origin', [clientUrl])
+        res.status(200).send('error')
       })
     })
 
@@ -723,9 +764,11 @@ app.prepare()
     server.get('/api/dataset/labsWebsiteTopLists', (req, res) => {
       var refreshCache = true   // Request cache refresh
       Promise.resolve(labsFunctions.getLabsTopWebsiteList(refreshCache)).then(function (results) {
+        res.set('Access-Control-Allow-Origin', [clientUrl])
         res.status(200).send(results);
       }).catch((error) => {                                                           // Run this if the retrieving functions returns an error
-        res.status(200).send(serialize(error))
+        res.set('Access-Control-Allow-Origin', [clientUrl])
+        res.status(200).send('error')
       })
     })
 
@@ -733,9 +776,11 @@ app.prepare()
     server.get('/api/dataset/labsCountryWalletData', (req, res) => {
       var refreshCache = true   // Request cache refresh
       Promise.resolve(labsFunctions.getLabsWalletsCountryData(refreshCache)).then(function (results) {
+        res.set('Access-Control-Allow-Origin', [clientUrl])
         res.status(200).send(results);
       }).catch((error) => {                                                           // Run this if the retrieving functions returns an error
-        res.status(200).send(serialize(error))
+        res.set('Access-Control-Allow-Origin', [clientUrl])
+        res.status(200).send('error')
       })
     })
 
@@ -743,9 +788,11 @@ app.prepare()
     server.get('/api/dataset/labsWalletAndroidGlobalData', (req, res) => {
       var refreshCache = true   // Request cache refresh
       Promise.resolve(labsFunctions.getLabsWalletAndroidGlobalData(refreshCache)).then(function (results) {
+        res.set('Access-Control-Allow-Origin', [clientUrl])
         res.status(200).send(results);
       }).catch((error) => {                                                           // Run this if the retrieving functions returns an error
-        res.status(200).send(serialize(error))
+        res.set('Access-Control-Allow-Origin', [clientUrl])
+        res.status(200).send('error')
       })
     })
 
@@ -753,19 +800,11 @@ app.prepare()
     server.get('/api/dataset/labsOtherWalletData', (req, res) => {
       var refreshCache = true   // Request cache refresh
       Promise.resolve(labsFunctions.getLabsOtherWalletsData(refreshCache)).then(function (results) {
+        res.set('Access-Control-Allow-Origin', [clientUrl])
         res.status(200).send(results);
       }).catch((error) => {                                                           // Run this if the retrieving functions returns an error
-        res.status(200).send(serialize(error))
-      })
-    })
-
-    // API call to get labs Wallet data
-    server.get('/api/dataset/labsCountryList', (req, res) => {
-      var refreshCache = true   // Request cache refresh
-      Promise.resolve(labsFunctions.getLabsCountryList(refreshCache)).then(function (results) {
-        res.status(200).send(results);
-      }).catch((error) => {                                                           // Run this if the retrieving functions returns an error
-        res.status(200).send(serialize(error))
+        res.set('Access-Control-Allow-Origin', [clientUrl])
+        res.status(200).send('error')
       })
     })
 
@@ -773,9 +812,11 @@ app.prepare()
     server.get('/api/dataset/labsWebsiteCountryData', (req, res) => {
       var refreshCache = true   // Request cache refresh
       Promise.resolve(labsFunctions.getLabsWebsiteCountryData(refreshCache)).then(function (results) {
+        res.set('Access-Control-Allow-Origin', [clientUrl])
         res.status(200).send(results);
       }).catch((error) => {                                                           // Run this if the retrieving functions returns an error
-        res.status(200).send(serialize(error))
+        res.set('Access-Control-Allow-Origin', [clientUrl])
+        res.status(200).send('error')
       })
     })
 
@@ -783,9 +824,11 @@ app.prepare()
     server.get('/api/dataset/labsWebsiteGlobalData', (req, res) => {
       var refreshCache = true   // Request cache refresh
       Promise.resolve(labsFunctions.getLabsWebsiteGlobalData(refreshCache)).then(function (results) {
+        res.set('Access-Control-Allow-Origin', [clientUrl])
         res.status(200).send(results);
       }).catch((error) => {                                                           // Run this if the retrieving functions returns an error
-        res.status(200).send(serialize(error))
+        res.set('Access-Control-Allow-Origin', [clientUrl])
+        res.status(200).send('error')
       })
     })
 
@@ -793,9 +836,11 @@ app.prepare()
     server.get('/api/dataset/labsKpiData', (req, res) => {
       var kpiID = req.query.kpi 
       Promise.resolve(labsFunctions.getLabsKpiValuesDataset(kpiID)).then(function (results) {
+        res.set('Access-Control-Allow-Origin', [clientUrl])
         res.status(200).send(results);
       }).catch((error) => {                                                           // Run this if the retrieving functions returns an error
-        res.status(200).send(serialize(error))
+        res.set('Access-Control-Allow-Origin', [clientUrl])
+        res.status(200).send('error')
       })
     })
 
@@ -822,36 +867,6 @@ app.prepare()
         res.writeHead(200, { 'Content-Type': 'application/json' })
         return res.end(serialize({}))
       });
-    })
-
-    // Routing for reports for /r
-    server.get('/r/:month/:reportId', (req, res) => {
-      const actualPage = routingFunctions.reportRedirects(req.params.month, req.params.reportId)
-      res.redirect(actualPage);
-    })
-
-    // Routing for reports for /reports
-    server.get('/reports/:month/:reportId', (req, res) => {
-      const actualPage = routingFunctions.reportRedirects(req.params.month, req.params.reportId)
-      res.redirect(actualPage);
-    })
-
-    // Routing to main page
-    server.get('/reportlist', (req, res) => {
-      const actualPage = '/index'
-
-      const queryParams_reports = req.query // Pass on queries
-
-      app.render(req, res, actualPage, queryParams_reports)
-    })
-
-    // Routing to main page
-    server.get('/oldreports', (req, res) => {
-      const actualPage = '/old_reports'
-
-      const queryParams_reports = req.query // Pass on queries
-
-      app.render(req, res, actualPage, queryParams_reports)
     })
 
     // Routing to the proposal list page
@@ -909,15 +924,14 @@ app.prepare()
     })
 
     // Routing for reports for /r
-//    server.get('/database/sync', (req, res) => {
-//      var refreshCache = true   // Request cache refresh
-//      Promise.resolve(labsSyncingFunctions.KpiValues()).then(function (results) {
+    server.get('/database/sync', (req, res) => {
+      Promise.resolve(labsSyncingFunctions.syncMonthList()).then(function (results) {
 //        //console.log(results)
-//        res.status(200).send(results);
-//      }).catch((error) => {                                                           // Run this if the retrieving functions returns an error
-//        res.status(200).send(serialize(error))
-//      })
-//    })
+        res.status(200).send(results);
+      }).catch((error) => {                                                           // Run this if the retrieving functions returns an error
+        res.status(200).send(serialize(error))
+      })
+    })
 
     // Routing for reports for /r
     server.get('/database/test2', (req, res) => {
@@ -941,13 +955,13 @@ app.prepare()
     })
 
     // Routing to main page
-    server.get('*', (req, res) => {
-      const actualPage = '/index'
+    //server.get('*', (req, res) => {
+    //  const actualPage = '/index'
 
-      const queryParams = '' // Pass on queries
+    //  const queryParams = '' // Pass on queries
 
-      app.render(req, res, actualPage, queryParams)
-    })
+    //  app.render(req, res, actualPage, queryParams)
+    //})
 
     server.listen(port, (err) => {
       if (err) throw err
