@@ -71,6 +71,11 @@ class VoteResults extends React.Component {
                             )
                     }
                 </section>
+                <section className="tpPageTopSection" value={electionId == "TPE2020" ? "Active" : "Inactive"}>
+                    <h1 className="tpHeader">2020 Dash Trust Protector Elections Results</h1>
+                    <p>Results will be posted here a few days after the elections have ended.</p>
+                    
+                </section>
             </main>
         )
     }

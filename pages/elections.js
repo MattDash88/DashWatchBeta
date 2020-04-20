@@ -37,7 +37,7 @@ class TrustElections extends React.Component {
     static async getInitialProps(ctx) {
         const props = {
             tab: typeof ctx.query.tab == "undefined" ? "candidates" : ctx.query.tab,   // Default no month to latest
-            election: typeof ctx.query.tab == "undefined" ? "DIF2019" : ctx.query.election,   // Default no month to latest
+            election: typeof ctx.query.tab == "undefined" ? "TPE2020" : ctx.query.election,   // Default no month to latest
             url: ctx.pathname,
             as: ctx.asPath,
         }
@@ -170,7 +170,9 @@ class TrustElections extends React.Component {
             electionName = "2019 Foundation Supervisors"
         } else if (electionId == "TPE2019") {
             electionName = "2019 Trust Protectors"
-        } else {
+        } else if (electionId == "TPE2020") {
+            electionName = "2020 Trust Protectors"
+        }else {
             electionName = "Select an election"
         }
 
@@ -194,6 +196,7 @@ class TrustElections extends React.Component {
                     {
                         this.state.showMenu ? (
                             <div className="electionsDropdownMenu" id="dropdownMenu">
+                                <button id="dropdownMenu" value="TPE2020" className="electionsDropdownItem" onClick={this.handleSelectElection}>2020 Trust Protectors</button>
                                 <button id="dropdownMenu" value="DIF2019" className="electionsDropdownItem" onClick={this.handleSelectElection}>2019 Foundation Supervisors</button>
                                 <button id="dropdownMenu" value="TPE2019" className="electionsDropdownItem" onClick={this.handleSelectElection}>2019 Trust Protectors</button>
                             </div>
