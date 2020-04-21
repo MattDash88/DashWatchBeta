@@ -1,4 +1,8 @@
 dispatch:
+  # All traffic routed to tpe-2020 app
+  - url: "tpe2020.dashwatch.org/*"
+    service: dw-tpe2020
+  
   # All traffic routed to dash-watch-beta app
   - url: "beta.dashwatch.org/*"
     service: dash-watch-beta
