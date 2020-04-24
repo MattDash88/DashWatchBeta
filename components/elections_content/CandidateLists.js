@@ -85,8 +85,8 @@ class CandidateLists extends React.Component {
                 </section>
                 <section className="tpPageTopSection" value={electionId == "TPE2020" ? "Active" : "Inactive"}>
                 <h1 className="tpHeader">2020 Dash Trust Protector Candidates</h1>
-                <p className="tpText">The application deadline for the Trust Protectors 2020 Elections has been extended and will now close on Thursday April 23, 2020 at 23.59 UTC.</p>
-                <p className="tpText">One or two days after the application deadline is closed the voting app will be available at <a className="tpHowToLink" id="results" href={`https://tpe2020.dashwatch.org`}>tpe2020.dashwatch.org</a>.</p>
+                <p className="tpText">Voting for the Trust Protector 2020 Elections is now open. The voting app is available at <a className="tpHowToLink" id="results" href={`https://tpe2020.dashwatch.org`}>tpe2020.dashwatch.org</a>.</p>
+                <p className="tpText">Voting will end on Friday May 1st, 2020 at 23.59 UTC.</p>
                 <div className="electionsIndexWrapper">
                     <div className="electionsIndexItemFirst"><p className="tpColumnTitle">Candidate</p></div>
                     <div className="electionsIndexItem"><p className="tpColumnTitle">Contact</p></div>
