@@ -2,7 +2,7 @@ import fetch from 'isomorphic-unfetch';
 import React from 'react';
 
 // Analytics
-import {trackPage, trackEvent} from '../components/functions/analytics';
+import { trackPage, trackEvent } from '../components/functions/analytics';
 
 // Import pages
 
@@ -36,7 +36,7 @@ const getMonthList = () => {
 class Month extends React.Component {
     static async getInitialProps(ctx) {
         const props = {
-            year: typeof ctx.query.year == "undefined" ? "2019" : ctx.query.year,   // Default no month to latest
+            year: typeof ctx.query.year == "undefined" ? "2020" : ctx.query.year,   // Default no month to latest
             month: typeof ctx.query.month == "undefined" ? "January" : ctx.query.month,   // Default no month to latest
             url: ctx.pathname,
             as: ctx.asPath,
@@ -80,7 +80,7 @@ class Month extends React.Component {
         this.setState({
             yearId: event.currentTarget.id,        // Change state to load different month
             as: `/oldreports?year=${event.currentTarget.id}`,
-        })        
+        })
         trackEvent('Old Reports Page', 'Changed Year')                 // Track Event on Google Analytics    
     }
 
@@ -89,7 +89,7 @@ class Month extends React.Component {
         event.preventDefault();
         this.setState({
             showMenu: !this.state.showMenu,
-        }) 
+        })
     }
 
     // Function to handle showing the month selected from the dropdown menu
@@ -107,11 +107,11 @@ class Month extends React.Component {
     // Function ran when the eventlistener is activated. Close dropdown menu if clicked outside of it
     handleClick = (event) => {
         if (event.target.id !== "dropdownMenu") {
-        this.setState({
-            showMenu: false,
-        }) 
+            this.setState({
+                showMenu: false,
+            })
         }
-      }
+    }
 
     // Google Analytics function to track User interaction on page
     callEvent(event) {
@@ -149,7 +149,7 @@ class Month extends React.Component {
         // Stop event listener when modal is unloaded
         window.removeEventListener('mousedown', this.handleClick);
     }
-  
+
     render() {
         const { // Declare data arrays used in class
             monthListData,
@@ -193,51 +193,60 @@ class Month extends React.Component {
                     <div className="monthTab" id='2019' value={this.state.yearId == '2019' ? "Active" :
                         "Inactive"} onClick={this.handleTab}><p className="monthTabText">2019</p>
                     </div>
-                    <div className="monthPageWrapper"> 
+                    <div className="monthTab" id='2020' value={this.state.yearId == '2020' ? "Active" :
+                        "Inactive"} onClick={this.handleTab}><p className="monthTabText">2020</p>
+                    </div>
+                    <div className="monthPageWrapper">
                         <div className="monthHeaderWrapper">
                             <div className="monthHeader">Dash Watch {monthId} {yearId} reports</div>
                             <a className="reportPageLink" id="newReports" href="/reportlist">New Reports<i id="newReports"></i></a>
                         </div>
-                        <p className="monthText">Select a month:</p> 
+                        <p className="monthText">Select a month:</p>
                         <div className="dropdown" id="dropdownmenu">
                             <div id="dropdownMenu" onClick={this.handleDropdown} className="dropbtn"><i id="dropdownMenu"></i>{monthId} {yearId}</div>
-                            {   
+                            {
                                 this.state.showMenu ? (
                                     this.state.yearId == "2018" ? (
-                                    <div className="dropdownMenu" id="dropdownMenu">
-                                        <button id="dropdownMenu" value="December" className="dropdownItem"  onClick={this.handleSelectMonth}>December {this.state.yearId}</button>
-                                        <button id="dropdownMenu" value="November" className="dropdownItem"  onClick={this.handleSelectMonth}>November {this.state.yearId}</button>
-                                        <button id="dropdownMenu" value="October" className="dropdownItem"  onClick={this.handleSelectMonth}>October {this.state.yearId}</button>
-                                        <button id="dropdownMenu" value="September" className="dropdownItem"  onClick={this.handleSelectMonth}>September {this.state.yearId}</button>
-                                        <button id="dropdownMenu" value="August" className="dropdownItem"  onClick={this.handleSelectMonth}>August {this.state.yearId}</button>
-                                        <button id="dropdownMenu" value="July" className="dropdownItem"  onClick={this.handleSelectMonth}>July {this.state.yearId}</button>
-                                   </div>
+                                        <div className="dropdownMenu" id="dropdownMenu">
+                                            <button id="dropdownMenu" value="December" className="dropdownItem" onClick={this.handleSelectMonth}>December {this.state.yearId}</button>
+                                            <button id="dropdownMenu" value="November" className="dropdownItem" onClick={this.handleSelectMonth}>November {this.state.yearId}</button>
+                                            <button id="dropdownMenu" value="October" className="dropdownItem" onClick={this.handleSelectMonth}>October {this.state.yearId}</button>
+                                            <button id="dropdownMenu" value="September" className="dropdownItem" onClick={this.handleSelectMonth}>September {this.state.yearId}</button>
+                                            <button id="dropdownMenu" value="August" className="dropdownItem" onClick={this.handleSelectMonth}>August {this.state.yearId}</button>
+                                            <button id="dropdownMenu" value="July" className="dropdownItem" onClick={this.handleSelectMonth}>July {this.state.yearId}</button>
+                                        </div>
                                     ) : (
-                                        this.state.yearId == "2019" ? (  
-                                            <div className="dropdownMenu" id="dropdownMenu">
-                                                <button id="dropdownMenu" value="January" className="dropdownItem"  onClick={this.handleSelectMonth}>January {this.state.yearId}</button>
-                                                <button id="dropdownMenu" value="February" className="dropdownItem"  onClick={this.handleSelectMonth}>February {this.state.yearId}</button>
-                                                <button id="dropdownMenu" value="March" className="dropdownItem"  onClick={this.handleSelectMonth}>March {this.state.yearId}</button>
-                                                <button id="dropdownMenu" value="April" className="dropdownItem"  onClick={this.handleSelectMonth}>April {this.state.yearId}</button>
-                                                <button id="dropdownMenu" value="May" className="dropdownItem"  onClick={this.handleSelectMonth}>May {this.state.yearId}</button>
-                                                <button id="dropdownMenu" value="June" className="dropdownItem"  onClick={this.handleSelectMonth}>June {this.state.yearId}</button>
-                                                <button id="dropdownMenu" value="July" className="dropdownItem"  onClick={this.handleSelectMonth}>July {this.state.yearId}</button>
-                                                <button id="dropdownMenu" value="September" className="dropdownItem"  onClick={this.handleSelectMonth}>September {this.state.yearId}</button>
-                                                <button id="dropdownMenu" value="October" className="dropdownItem"  onClick={this.handleSelectMonth}>October {this.state.yearId}</button>
-                                                <button id="dropdownMenu" value="November" className="dropdownItem"  onClick={this.handleSelectMonth}>November {this.state.yearId}</button>
-                                                <button id="dropdownMenu" value="December" className="dropdownItem"  onClick={this.handleSelectMonth}>December {this.state.yearId}</button>
-                                            </div>
-                                        ) : (
-                                            <div className="dropdownMenu" id="dropdownMenu">
-                                                <button id="dropdownMenu" value="January" className="dropdownItem">No reports available</button>
-                                            </div>
+                                            this.state.yearId == "2019" ? (
+                                                <div className="dropdownMenu" id="dropdownMenu">
+                                                    <button id="dropdownMenu" value="January" className="dropdownItem" onClick={this.handleSelectMonth}>January {this.state.yearId}</button>
+                                                    <button id="dropdownMenu" value="February" className="dropdownItem" onClick={this.handleSelectMonth}>February {this.state.yearId}</button>
+                                                    <button id="dropdownMenu" value="March" className="dropdownItem" onClick={this.handleSelectMonth}>March {this.state.yearId}</button>
+                                                    <button id="dropdownMenu" value="April" className="dropdownItem" onClick={this.handleSelectMonth}>April {this.state.yearId}</button>
+                                                    <button id="dropdownMenu" value="May" className="dropdownItem" onClick={this.handleSelectMonth}>May {this.state.yearId}</button>
+                                                    <button id="dropdownMenu" value="June" className="dropdownItem" onClick={this.handleSelectMonth}>June {this.state.yearId}</button>
+                                                    <button id="dropdownMenu" value="July" className="dropdownItem" onClick={this.handleSelectMonth}>July {this.state.yearId}</button>
+                                                    <button id="dropdownMenu" value="September" className="dropdownItem" onClick={this.handleSelectMonth}>September {this.state.yearId}</button>
+                                                    <button id="dropdownMenu" value="October" className="dropdownItem" onClick={this.handleSelectMonth}>October {this.state.yearId}</button>
+                                                    <button id="dropdownMenu" value="November" className="dropdownItem" onClick={this.handleSelectMonth}>November {this.state.yearId}</button>
+                                                    <button id="dropdownMenu" value="December" className="dropdownItem" onClick={this.handleSelectMonth}>December {this.state.yearId}</button>
+                                                </div>
+                                            ) : (
+                                                    this.state.yearId == "2020" ? (
+                                                        <div className="dropdownMenu" id="dropdownMenu">
+                                                            <button id="dropdownMenu" value="January" className="dropdownItem" onClick={this.handleSelectMonth}>January {this.state.yearId}</button>
+                                                        </div>
+                                                    ) : (
+                                                            <div className="dropdownMenu" id="dropdownMenu">
+                                                                <button id="dropdownMenu" value="January" className="dropdownItem">No reports available</button>
+                                                            </div>
+                                                        )
+                                                )
                                         )
-                                    )
                                 ) : (
                                         null
-                                )
+                                    )
                             }
-                        </div>  
+                        </div>
                         <div className="monthIndexWrapper">
                             <div className="monthIndexItem" id="proposalColumn"><p className="monthColumnTitle">Proposal</p></div>
                             <div className="monthIndexItem" id="reportsColumn"><p className="monthColumnTitle">Report Link</p></div>
@@ -347,7 +356,7 @@ class MonthReportRow extends React.Component {
 
         // Output for the month list rows
         return (
-            <div className="monthProposalWrapper" month={this.props.showMonth+this.props.showYear == list_data.published_month ? "Active" :
+            <div className="monthProposalWrapper" month={this.props.showMonth + this.props.showYear == list_data.published_month ? "Active" :
                 "Inactive"} response={list_data.response_status == "No" ? "No" :
                     "Yes"}>
                 <div className="monthItem" id="proposalColumn" onClick={this.showModal}><p className="monthProposalName">{list_data.project_name}</p>
