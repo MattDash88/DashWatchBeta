@@ -234,6 +234,7 @@ class Month extends React.Component {
                                                     this.state.yearId == "2020" ? (
                                                         <div className="dropdownMenu" id="dropdownMenu">
                                                             <button id="dropdownMenu" value="January" className="dropdownItem" onClick={this.handleSelectMonth}>January {this.state.yearId}</button>
+                                                            <button id="dropdownMenu" value="February" className="dropdownItem" onClick={this.handleSelectMonth}>February {this.state.yearId}</button>
                                                         </div>
                                                     ) : (
                                                             <div className="dropdownMenu" id="dropdownMenu">
