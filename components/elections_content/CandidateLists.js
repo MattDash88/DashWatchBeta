@@ -23,7 +23,7 @@ class CandidateLists extends React.Component {
             <main>                
                 <section className="tpPageTopSection" value={electionId == "TPE2019" ? "Active" : "Inactive"}>
                 <h1 className="tpHeader">2019 Dash Trust Protector Candidates</h1>
-                <p className="tpText">Voting for the Trust Protectors Elections 2019 ended on March 31, 2019. The results are available <a className="tpHowToLink" id="results" href={`/elections?tab=results&election=${electionId}`}>Here</a>.</p>
+                <p className="tpText">Voting for the Trust Protectors Elections 2019 has ended. The results are available on the <a className="tpHowToLink" id="results" href={`/elections?tab=results&election=${electionId}`}>results tab</a>.</p>
                 <div className="electionsIndexWrapper">
                     <div className="electionsIndexItemFirst"><p className="tpColumnTitle">Candidate</p></div>
                     <div className="electionsIndexItem"><p className="tpColumnTitle">Contact</p></div>
@@ -58,7 +58,7 @@ class CandidateLists extends React.Component {
                 </section>   
                 <section className="tpPageTopSection" value={electionId == "DIF2019" ? "Active" : "Inactive"}>
                     <h1 className="tpHeader">2019 Investment Foundation Supervisor Candidates</h1>
-                    <p className="tpText">Voting is now closed. The voting results should be published shortly on the <a className="votingLink" id="votingLink" href='/elections?tab=results&election=DIF2019'>results tab</a>.</p>
+                    <p className="tpText">Voting for the Dash Investment Foundation Supervisors Elections 2020 has ended. The results are available on the <a className="votingLink" id="votingLink" href='/elections?tab=results&election=DIF2019'>results tab</a>.</p>
                     <div className="electionsIndexWrapper">
                     <div className="electionsIndexItem" id="nameColumn"><p className="tpColumnTitle">Candidate</p></div>
                     <div className="electionsIndexItem"><p className="tpColumnTitle">Contact</p></div>
@@ -85,8 +85,7 @@ class CandidateLists extends React.Component {
                 </section>
                 <section className="tpPageTopSection" value={electionId == "TPE2020" ? "Active" : "Inactive"}>
                 <h1 className="tpHeader">2020 Dash Trust Protector Candidates</h1>
-                <p className="tpText">Voting for the Trust Protector 2020 Elections is now open. The voting app is available at <a className="tpHowToLink" id="results" href={`https://tpe2020.dashwatch.org`}>tpe2020.dashwatch.org</a>.</p>
-                <p className="tpText">Voting will end on Friday May 1st, 2020 at 23.59 UTC.</p>
+                <p className="tpText">Voting for the Trust Protectors Elections 2020 has ended. The results are available on the <a className="votingLink" id="votingLink" href='/elections?tab=results&election=TPE2020'>results tab</a>.</p>
                 <div className="electionsIndexWrapper">
                     <div className="electionsIndexItemFirst"><p className="tpColumnTitle">Candidate</p></div>
                     <div className="electionsIndexItem"><p className="tpColumnTitle">Contact</p></div>
@@ -109,7 +108,33 @@ class CandidateLists extends React.Component {
                             </div>
                         )
                 }
-                </section>              
+                </section>  
+                <section className="tpPageTopSection" value={electionId == "DIF2020" ? "Active" : "Inactive"}>
+                    <h1 className="tpHeader">2020 Investment Foundation Supervisor Candidates</h1>
+                    <p className="tpText"></p>
+                    <div className="electionsIndexWrapper">
+                    <div className="electionsIndexItem" id="nameColumn"><p className="tpColumnTitle">Candidate</p></div>
+                    <div className="electionsIndexItem"><p className="tpColumnTitle">Contact</p></div>
+                    <div className="electionsIndexItem"><p className="tpColumnTitle">Dash Involvement</p></div>
+                    <div className="electionsIndexItem"><p className="tpColumnTitle">Profile Link</p></div>
+                </div>
+                {
+                    candidateListData.length == 0 ? (
+                        <div>
+                            <p>Loading&hellip;</p>
+                        </div>
+                    ) : (
+                            <div>
+                                {candidateListData.DIF2020.map((post) =>
+                                    <DIFCandidateListRow
+                                        key={`${post.id}`}
+                                        airtableData={post}      // Elements for the Month report list    
+                                    />
+                                )}
+                            </div>
+                        )
+                }
+                </section>            
             </main>
         )
     }

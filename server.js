@@ -310,35 +310,58 @@ const getElectionsData = (refreshCache) => {
         var TPE2019CandidatePromise = Promise.resolve(airtableFunctions.ElectionsCandidateList('Candidate List - TPE2019'));
         var DIF2019CandidatePromise = Promise.resolve(airtableFunctions.ElectionsCandidateList('Candidate List - DIF2019'));
         var TPE2020CandidatePromise = Promise.resolve(airtableFunctions.ElectionsCandidateList('Candidate List - TPE2020'));
+        var DIF2020CandidatePromise = Promise.resolve(airtableFunctions.ElectionsCandidateList('Candidate List - DIF2020'));
         var TPE2019VoteDataPromise = Promise.resolve(airtableFunctions.VoteData('Vote Data - TPE2019'));
         var DIF2019VoteDataPromise = Promise.resolve(airtableFunctions.VoteData('Vote Data - DIF2019'));
         var TPE2020VoteDataPromise = Promise.resolve(airtableFunctions.VoteData('Vote Data - TPE2020'));
+        var DIF2020VoteDataPromise = Promise.resolve(airtableFunctions.VoteData('Vote Data - DIF2020'));
         var TPE2019VoteResultsPromise = Promise.resolve(airtableFunctions.VoteResults('Vote Results - TPE2019'));
         var DIF2019VoteResultsPromise = Promise.resolve(airtableFunctions.VoteResults('Vote Results - DIF2019'));
         var TPE2020VoteResultsPromise = Promise.resolve(airtableFunctions.VoteResults('Vote Results - TPE2020'));
+        var DIF2020VoteResultsPromise = Promise.resolve(airtableFunctions.VoteResults('Vote Results - DIF2020'));
 
-        Promise.all([TPE2019CandidatePromise, DIF2019CandidatePromise, TPE2020CandidatePromise, TPE2019VoteDataPromise, DIF2019VoteDataPromise, TPE2020VoteDataPromise, TPE2019VoteResultsPromise, DIF2019VoteResultsPromise, TPE2020VoteResultsPromise]).then(function (valArray) {
+        Promise.all([
+          TPE2019CandidatePromise,
+          DIF2019CandidatePromise,
+          TPE2020CandidatePromise,
+          DIF2020CandidatePromise,
+          TPE2019VoteDataPromise,
+          DIF2019VoteDataPromise,
+          TPE2020VoteDataPromise,
+          DIF2020VoteDataPromise,
+          TPE2019VoteResultsPromise,
+          DIF2019VoteResultsPromise,
+          TPE2020VoteResultsPromise,
+          DIF2020VoteResultsPromise
+        ]).then(function (valArray) {
+
           TPE2019CandidateList = valArray[0]
           DIF2019CandidateList = valArray[1]
           TPE2020CandidateList = valArray[2]
+          DIF2020CandidateList = valArray[3]
 
-          TPE2019ParticipationData = valArray[3]
-          DIF2019ParticipationData = valArray[4]
-          TPE2020ParticipationData = valArray[5]
+          TPE2019ParticipationData = valArray[4]
+          DIF2019ParticipationData = valArray[5]
+          TPE2020ParticipationData = valArray[6]
+          DIF2020ParticipationData = valArray[7]
 
-          TPE2019ResultsData = valArray[6]
-          DIF2019ResultsData = valArray[7]
-          TPE2020ResultsData = valArray[8]
+          TPE2019ResultsData = valArray[8]
+          DIF2019ResultsData = valArray[9]
+          TPE2020ResultsData = valArray[10]
+          DIF2020ResultsData = valArray[11]
 
           var TPE2019CandidateData = []
           var DIF2019CandidateData = []
           var TPE2020CandidateData = []
+          var DIF2020CandidateData = []
           var TPE2019VoteData = []
           var DIF2019VoteData = []
           var TPE2020VoteData = []
+          var DIF2020VoteData = []
           var TPE2019VoteResultsData = []
           var DIF2019VoteResultsData = []
           var TPE2020VoteResultsData = []
+          var DIF2020VoteResultsData = []
 
           // Check if TPE2019 candidate name exists
           Object.values(TPE2019CandidateList).map((item) => {            
@@ -361,6 +384,13 @@ const getElectionsData = (refreshCache) => {
             }
           })
 
+          // Check if TPE2020 candidate name exists
+          Object.values(DIF2020CandidateList).map((item) => {            
+            if (typeof item.candidate_name !== 'undefined') {    //Check if record exists
+              DIF2020CandidateData.push(item)
+            }
+          })
+
           // Check if participation data and values were entered correctly
           Object.values(TPE2019ParticipationData).map((item) => {            
             if (typeof item.date !== 'undefined' && typeof item.vote_participation !== 'undefined') {    //Check if record exists
@@ -379,6 +409,13 @@ const getElectionsData = (refreshCache) => {
           Object.values(TPE2020ParticipationData).map((item) => {            
             if (typeof item.date !== 'undefined' && typeof item.vote_participation !== 'undefined') {    //Check if record exists
               TPE2020VoteData.push(item)
+            }
+          })
+
+          // Check if participation data and values were entered correctly
+          Object.values(DIF2020ParticipationData).map((item) => {            
+            if (typeof item.date !== 'undefined' && typeof item.vote_participation !== 'undefined') {    //Check if record exists
+              DIF2020VoteData.push(item)
             }
           })
           
@@ -403,22 +440,32 @@ const getElectionsData = (refreshCache) => {
             }
           })
 
+          // Check if candidate results were entered correctly
+          Object.values(DIF2020ResultsData).map((item) => {            
+            if (typeof item.candidate_name !== 'undefined' && typeof item.votes !== 'undefined') {    //Check if record exists
+              DIF2020VoteResultsData.push(item)
+            }
+          })
+
           // Create the data construct
           const electionsAllData = {
             candidate_data: {
               TPE2019: TPE2019CandidateData,
               DIF2019: DIF2019CandidateData,
               TPE2020: TPE2020CandidateData,
+              DIF2020: DIF2020CandidateData,
             },
             vote_metrics: {
               TPE2019: TPE2019VoteData,
               DIF2019: DIF2019VoteData,
               TPE2020: TPE2020VoteData,
+              DIF2020: DIF2020VoteData,
             },
             vote_results: {
               TPE2019: TPE2019VoteResultsData,
               DIF2019: DIF2019VoteResultsData,
               TPE2020: TPE2020VoteResultsData,
+              DIF2020: DIF2020VoteResultsData,
             },
           }
           if (!redisConnectionFailure) {

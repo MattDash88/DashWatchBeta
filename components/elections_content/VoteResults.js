@@ -102,6 +102,34 @@ class VoteResults extends React.Component {
                     }
                     
                 </section>
+                <section className="tpPageTopSection" value={electionId == "DIF2020" ? "Active" : "Inactive"}>
+                    <h1 className="tpHeader">2020 Investment Foundation Supervisor Elections Results</h1>
+                    {
+                        (vote_results.length == 0) ? (
+                            <section>
+                                <p>Loading&hellip;</p>
+                            </section>
+                        ) : (
+                                (vote_results.DIF2020.length == 0) ? (
+                                    <section><div className="tpText">The Dash Investment Foundation Supervisor election results will be published here shortly.</div></section>
+                                ) : (
+                                        <section>
+                                            <div className="electionsResultsWrapper">
+                                                <div className="electionsIndexItemFirst"><p className="tpColumnTitle">Candidate</p></div>
+                                                <div className="electionsIndexItem"><p className="tpColumnTitle">Results</p></div>
+                                            </div>
+                                            {vote_results.DIF2020.map((post) =>
+                                                <ResultsListRow
+                                                    key={`${post.id}`}
+                                                    airtableData={post}      // Elements for the Month report list    
+                                                />
+                                            )}
+                                        </section>
+                                    )
+
+                            )
+                    }
+                </section>
             </main>
         )
     }
