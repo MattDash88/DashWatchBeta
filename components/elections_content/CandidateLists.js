@@ -58,7 +58,7 @@ class CandidateLists extends React.Component {
                 </section>   
                 <section className="tpPageTopSection" value={electionId == "DIF2019" ? "Active" : "Inactive"}>
                     <h1 className="tpHeader">2019 Investment Foundation Supervisor Candidates</h1>
-                    <p className="tpText">Voting for the Dash Investment Foundation Supervisors Elections 2020 has ended. The results are available on the <a className="votingLink" id="votingLink" href='/elections?tab=results&election=DIF2019'>results tab</a>.</p>
+                    <p className="tpText">Voting for the Dash Investment Foundation Supervisors Elections 2019 has ended. The results are available on the <a className="votingLink" id="votingLink" href='/elections?tab=results&election=DIF2019'>results tab</a>.</p>
                     <div className="electionsIndexWrapper">
                     <div className="electionsIndexItem" id="nameColumn"><p className="tpColumnTitle">Candidate</p></div>
                     <div className="electionsIndexItem"><p className="tpColumnTitle">Contact</p></div>
@@ -111,7 +111,8 @@ class CandidateLists extends React.Component {
                 </section>  
                 <section className="tpPageTopSection" value={electionId == "DIF2020" ? "Active" : "Inactive"}>
                     <h1 className="tpHeader">2020 Investment Foundation Supervisor Candidates</h1>
-                    <p className="tpText"></p>
+                    <p className="tpText">Voting for the Dash Investment Foundation Supervisors 2020 Elections will open on June 29, 2020 at <a className="tpHowToLink" id="results" href={`https://dif2020.dashwatch.org`}>dif2020.dashwatch.org</a>.</p>
+                    <p className="tpText">Voting will end on Friday July 10, 2020 at 23.59 UTC.</p>
                     <div className="electionsIndexWrapper">
                     <div className="electionsIndexItem" id="nameColumn"><p className="tpColumnTitle">Candidate</p></div>
                     <div className="electionsIndexItem"><p className="tpColumnTitle">Contact</p></div>
@@ -126,7 +127,7 @@ class CandidateLists extends React.Component {
                     ) : (
                             <div>
                                 {candidateListData.DIF2020.map((post) =>
-                                    <DIFCandidateListRow
+                                    <TPECandidateListRow
                                         key={`${post.id}`}
                                         airtableData={post}      // Elements for the Month report list    
                                     />
