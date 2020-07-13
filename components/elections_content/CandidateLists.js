@@ -111,8 +111,7 @@ class CandidateLists extends React.Component {
                 </section>  
                 <section className="tpPageTopSection" value={electionId == "DIF2020" ? "Active" : "Inactive"}>
                     <h1 className="tpHeader">2020 Investment Foundation Supervisor Candidates</h1>
-                    <p className="tpText">Voting for the Dash Investment Foundation Supervisors 2020 Elections is now open. The voting app is available at <a className="tpHowToLink" id="results" href={`https://dif2020.dashwatch.org`}>dif2020.dashwatch.org</a>.</p>
-                    <p className="tpText">Voting will end on Friday July 10, 2020 at 23.59 UTC.</p>
+                    <p className="tpText">Voting for the Dash Investment Foundation Supervisors 2020 Elections has ended. The results are available on the <a className="votingLink" id="votingLink" href='/elections?tab=results&election=DIF2020'>results tab</a>.</p>
                     <div className="electionsIndexWrapper">
                     <div className="electionsIndexItem" id="nameColumn"><p className="tpColumnTitle">Candidate</p></div>
                     <div className="electionsIndexItem"><p className="tpColumnTitle">Contact</p></div>
