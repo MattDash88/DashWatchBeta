@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@zeit/next-css": "^1.0.1",
-    "airtable": "^0.7.2",
+    "airtable": "^0.10.0",
     "babel-plugin-styled-components": "^1.10.7",
     "chart.js": "^2.9.3",
     "dotenv": "^8.2.0",
