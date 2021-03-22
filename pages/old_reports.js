@@ -243,7 +243,7 @@ class Month extends React.Component {
                                                             <button id="dropdownMenu" value="August" className="dropdownItem" onClick={this.handleSelectMonth}>August {this.state.yearId}</button>
                                                             <button id="dropdownMenu" value="September" className="dropdownItem" onClick={this.handleSelectMonth}>September {this.state.yearId}</button>
                                                             <button id="dropdownMenu" value="October" className="dropdownItem" onClick={this.handleSelectMonth}>October {this.state.yearId}</button>
-                                                            <button id="dropdownMenu" value="October" className="dropdownItem" onClick={this.handleSelectMonth}>November {this.state.yearId}</button>
+                                                            <button id="dropdownMenu" value="November" className="dropdownItem" onClick={this.handleSelectMonth}>November {this.state.yearId}</button>
                                                         </div>
                                                     ) : (
                                                             <div className="dropdownMenu" id="dropdownMenu">
