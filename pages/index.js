@@ -173,8 +173,8 @@ class Month extends React.Component {
                             <a className="reportPageLink" id="oldReports" href="/oldreports"><i id="oldReports"></i>Older Reports</a>
                             <div className="monthHeader">{monthText}</div>
                         </div>
-                        {this.state.monthId == 'Feb20' && <div className='monthTabMessage'>
-                            <p>The new Labs section is now live <a className="reportPageLink" id="labs" href="/labs">link here</a>. Please, check it out and let us know what you think.</p>
+                        {this.state.monthId == 'Mar21' && <div className='monthTabMessage'>
+                            <p>The Trust Protector 2021 Elections are now live at <a className="reportPageLink" id="tpe2021" href="https://tpe2021.dashwatch.org">link here</a>. Candidates profiles will be published in the elections section of this website over the next few days.</p>
                         </div>}
 
                         {this.state.monthId !== 'Aug19' && <section>
