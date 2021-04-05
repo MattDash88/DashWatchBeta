@@ -134,7 +134,33 @@ class CandidateLists extends React.Component {
                             </div>
                         )
                 }
-                </section>            
+                </section>       
+                <section className="tpPageTopSection" value={electionId == "TPE2021" ? "Active" : "Inactive"}>
+                <h1 className="tpHeader">2021 Dash Trust Protector Candidates</h1>
+                <p>The Trust Protector 2021 Election is now live at <a className="reportPageLink" id="tpe2021" href="https://tpe2021.dashwatch.org">link here</a>.</p>
+                <div className="electionsIndexWrapper">
+                    <div className="electionsIndexItemFirst"><p className="tpColumnTitle">Candidate</p></div>
+                    <div className="electionsIndexItem"><p className="tpColumnTitle">Contact</p></div>
+                    <div className="electionsIndexItem"><p className="tpColumnTitle">Dash Involvement</p></div>
+                    <div className="electionsIndexItem"><p className="tpColumnTitle">Profile Link</p></div>
+                </div>
+                {
+                    candidateListData.length == 0 ? (
+                        <div>
+                            <p>Loading&hellip;</p>
+                        </div>
+                    ) : (
+                            <div>
+                                {candidateListData.TPE2021.map((post) =>
+                                    <TPECandidateListRow
+                                        key={`${post.id}`}
+                                        airtableData={post}      // Elements for the Month report list    
+                                    />
+                                )}
+                            </div>
+                        )
+                }
+                </section>       
             </main>
         )
     }
