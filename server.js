@@ -441,7 +441,7 @@ const getElectionsData = (refreshCache) => {
           // Check if participation data and values were entered correctly
           Object.values(TPE2021ParticipationData).map((item) => {            
             if (typeof item.date !== 'undefined' && typeof item.vote_participation !== 'undefined') {    //Check if record exists
-              TPE2020VoteData.push(item)
+              TPE2021VoteData.push(item)
             }
           })
           
@@ -476,7 +476,7 @@ const getElectionsData = (refreshCache) => {
           // Check if candidate results were entered correctly
           Object.values(TPE2021ResultsData).map((item) => {            
             if (typeof item.candidate_name !== 'undefined' && typeof item.votes !== 'undefined') {    //Check if record exists
-              TPE2020VoteResultsData.push(item)
+              TPE2021VoteResultsData.push(item)
             }
           })
 
