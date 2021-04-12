@@ -137,7 +137,7 @@ class CandidateLists extends React.Component {
                 </section>       
                 <section className="tpPageTopSection" value={electionId == "TPE2021" ? "Active" : "Inactive"}>
                 <h1 className="tpHeader">2021 Dash Trust Protector Candidates</h1>
-                <p>The Trust Protector 2021 Election is now live at <a className="reportPageLink" id="tpe2021" href="https://tpe2021.dashwatch.org">link here</a>.</p>
+                <p>Voting for the Trust Protectors Elections 2020 has ended. The results are available on the <a className="votingLink" id="votingLink" href='/elections?tab=results&election=TPE2021'>results tab</a>.</p>
                 <div className="electionsIndexWrapper">
                     <div className="electionsIndexItemFirst"><p className="tpColumnTitle">Candidate</p></div>
                     <div className="electionsIndexItem"><p className="tpColumnTitle">Contact</p></div>

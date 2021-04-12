@@ -174,7 +174,7 @@ class Month extends React.Component {
                             <div className="monthHeader">{monthText}</div>
                         </div>
                         {this.state.monthId == 'Mar21' && <div className='monthTabMessage'>
-                            <p>The Trust Protector 2021 Election is now live at <a className="reportPageLink" id="tpe2021" href="https://tpe2021.dashwatch.org">link here</a>. Candidates profiles are being be published in the <a className="reportPageLink" id="elections" href="https://dashwatch.org/elections">elections section</a> of this website as they come in.</p>
+                            <p></p>
                         </div>}
 
                         {this.state.monthId !== 'Aug19' && <section>
