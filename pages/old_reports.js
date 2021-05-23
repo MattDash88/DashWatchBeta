@@ -36,7 +36,7 @@ const getMonthList = () => {
 class Month extends React.Component {
     static async getInitialProps(ctx) {
         const props = {
-            year: typeof ctx.query.year == "undefined" ? "2020" : ctx.query.year,   // Default no month to latest
+            year: typeof ctx.query.year == "undefined" ? "2021" : ctx.query.year,   // Default no month to latest
             month: typeof ctx.query.month == "undefined" ? "January" : ctx.query.month,   // Default no month to latest
             url: ctx.pathname,
             as: ctx.asPath,
@@ -196,6 +196,9 @@ class Month extends React.Component {
                     <div className="monthTab" id='2020' value={this.state.yearId == '2020' ? "Active" :
                         "Inactive"} onClick={this.handleTab}><p className="monthTabText">2020</p>
                     </div>
+                    <div className="monthTab" id='2021' value={this.state.yearId == '2021' ? "Active" :
+                        "Inactive"} onClick={this.handleTab}><p className="monthTabText">2021</p>
+                    </div>
                     <div className="monthPageWrapper">
                         <div className="monthHeaderWrapper">
                             <div className="monthHeader">Dash Watch {monthId} {yearId} reports</div>
@@ -247,11 +250,17 @@ class Month extends React.Component {
                                                             <button id="dropdownMenu" value="December" className="dropdownItem" onClick={this.handleSelectMonth}>December {this.state.yearId}</button>
                                                         </div>
                                                     ) : (
+                                                        this.state.yearId == "2021" ? (
+                                                            <div className="dropdownMenu" id="dropdownMenu">
+                                                                <button id="dropdownMenu" value="January" className="dropdownItem" onClick={this.handleSelectMonth}>January {this.state.yearId}</button>
+                                                            </div>
+                                                        ) : (
                                                             <div className="dropdownMenu" id="dropdownMenu">
                                                                 <button id="dropdownMenu" value="January" className="dropdownItem">No reports available</button>
                                                             </div>
                                                         )
                                                 )
+                                            )
                                         )
                                 ) : (
                                         null
