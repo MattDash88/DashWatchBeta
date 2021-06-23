@@ -36,7 +36,7 @@ const getMonthList = () => {
 class Month extends React.Component {
     static async getInitialProps(ctx) {
         const props = {
-            month: typeof ctx.query.month == "undefined" ? "May21" : ctx.query.month,   // Default no query month to latest
+            month: typeof ctx.query.month == "undefined" ? "Jun21" : ctx.query.month,   // Default no query month to latest
             url: ctx.pathname,
             as: ctx.asPath,
         }
@@ -110,14 +110,14 @@ class Month extends React.Component {
         } = this.state
 
         let monthText
-        if (monthId == "Feb21") {
-            monthText = "Dash Watch February 2021 Reports"
-        } else if (monthId == "Mar21") {
+        if (monthId == "Mar21") {
             monthText = "Dash Watch March 2021 Reports"
         } else if (monthId == "Apr21") {
             monthText = "Dash Watch April 2021 Reports"
         } else if (monthId == "May21") {
             monthText = "Dash Watch May 2021 Reports"
+        } else if (monthId == "Jun21") {
+            monthText = "Dash Watch June 2021 Reports"
         } else {
             monthText = "Please select a month tab to view reports"
         }
@@ -160,14 +160,14 @@ class Month extends React.Component {
                     showPage="reports"
                 />
                 <section className="pagewrapper">
-                    <div className="monthTab" id='Feb21' value={this.state.monthId == 'Feb21' ? "Active" :
-                        "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">February 2021</p></div>
                         <div className="monthTab" id='Mar21' value={this.state.monthId == 'Mar21' ? "Active" :
                         "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">March 2021</p></div>
                         <div className="monthTab" id='Apr21' value={this.state.monthId == 'Apr21' ? "Active" :
                         "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">April 2021</p></div>
                          <div className="monthTab" id='May21' value={this.state.monthId == 'May21' ? "Active" :
                         "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">May 2021</p></div>
+                        <div className="monthTab" id='Jun21' value={this.state.monthId == 'May21' ? "Active" :
+                        "Inactive"} onClick={this.handleSelectMonth}><p className="monthTabText">June 2021</p></div>
                     <div className="monthPageWrapper">
                         <div className="monthHeaderWrapper">
                             <a className="reportPageLink" id="oldReports" href="/oldreports"><i id="oldReports"></i>Older Reports</a>

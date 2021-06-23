@@ -37,7 +37,7 @@ class Month extends React.Component {
     static async getInitialProps(ctx) {
         const props = {
             year: typeof ctx.query.year == "undefined" ? "2021" : ctx.query.year,   // Default no month to latest
-            month: typeof ctx.query.month == "undefined" ? "January" : ctx.query.month,   // Default no month to latest
+            month: typeof ctx.query.month == "undefined" ? "February" : ctx.query.month,   // Default no month to latest
             url: ctx.pathname,
             as: ctx.asPath,
         }
@@ -253,6 +253,7 @@ class Month extends React.Component {
                                                         this.state.yearId == "2021" ? (
                                                             <div className="dropdownMenu" id="dropdownMenu">
                                                                 <button id="dropdownMenu" value="January" className="dropdownItem" onClick={this.handleSelectMonth}>January {this.state.yearId}</button>
+                                                                <button id="dropdownMenu" value="February" className="dropdownItem" onClick={this.handleSelectMonth}>February {this.state.yearId}</button>
                                                             </div>
                                                         ) : (
                                                             <div className="dropdownMenu" id="dropdownMenu">
