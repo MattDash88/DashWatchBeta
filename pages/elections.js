@@ -33,11 +33,14 @@ const getElectionsData = () => {
     )
 }
 
+var currentDefaultElection = "DIF2021"
+var currentDefaultTab = "candidates"
+
 class TrustElections extends React.Component {
     static async getInitialProps(ctx) {
         const props = {
-            tab: typeof ctx.query.tab == "undefined" ? "candidates" : ctx.query.tab,   // Default no month to latest
-            election: typeof ctx.query.tab == "undefined" ? "TPE2021" : ctx.query.election,   // Default no month to latest
+            tab: typeof ctx.query.tab == "undefined" ? currentDefaultTab : ctx.query.tab,   // Default no month to latest
+            election: typeof ctx.query.tab == "undefined" ? currentDefaultElection : ctx.query.election,   // Default no month to latest
             url: ctx.pathname,
             as: ctx.asPath,
         }
@@ -167,16 +170,18 @@ class TrustElections extends React.Component {
 
         let electionName
         if (electionId == "DIF2019") {
-            electionName = "2019 Foundation Supervisors"
+            electionName = "2019 DIF Supervisors"
         } else if (electionId == "TPE2019") {
             electionName = "2019 Trust Protectors"
         } else if (electionId == "TPE2020") {
             electionName = "2020 Trust Protectors"
         } else if (electionId == "DIF2020") {
-            electionName = "2020 Foundation Supervisors"
+            electionName = "2020 DIF Supervisors"
         } else if (electionId == "TPE2021") {
             electionName = "2021 Trust Protectors"
-        } else {
+        } else if (electionId == "TPE2021") {
+            electionName = "2021 DIF Supervisors"
+        } else { 
             electionName = "Select an election"
         }
 

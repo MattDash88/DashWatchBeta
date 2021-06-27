@@ -161,6 +161,10 @@ class VoteCharts extends React.Component {
                     <h1 className="tpHeader">2021 TP Supervisor Elections voting participation</h1>
                     <p className="tpText">The chart was updated once a day during the elections.</p>
                 </section>
+                <section className="tpPageTopSection" value={electionId == "DIF2021" ? "Active" : "Inactive"}>
+                    <h1 className="tpHeader">2021 DIF Supervisor Elections voting participation</h1>
+                    <p className="tpText">The chart will be updated once a day during the elections.</p>
+                </section>
                 <div className="tpChartStatsDiv">
                 <div className="tpChartStatsTitle">Last updated:</div><div className="tpChartStatsItem" title={pageProps.last_updated}>{pageProps.last_updated}</div><br></br>
                     <div className="tpChartStatsTitle">Number of eligible MNs:</div><div className="tpChartStatsItem" title={pageProps.number_of_masternodes}>{pageProps.number_of_masternodes}</div><br></br>

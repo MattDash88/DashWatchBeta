@@ -160,7 +160,33 @@ class CandidateLists extends React.Component {
                             </div>
                         )
                 }
-                </section>       
+                </section>   
+                <section className="tpPageTopSection" value={electionId == "DIF2021" ? "Active" : "Inactive"}>
+                    <h1 className="tpHeader">2021 DIF Supervisor Candidates</h1>
+                    <p className="tpText">Voting for the Dash Investment Foundation Supervisors 2021 will start on Monday June 28, 2021.</p>
+                    <div className="electionsIndexWrapper">
+                    <div className="electionsIndexItem" id="nameColumn"><p className="tpColumnTitle">Candidate</p></div>
+                    <div className="electionsIndexItem"><p className="tpColumnTitle">Contact</p></div>
+                    <div className="electionsIndexItem"><p className="tpColumnTitle">Dash Involvement</p></div>
+                    <div className="electionsIndexItem"><p className="tpColumnTitle">Profile Link</p></div>
+                </div>
+                {
+                    candidateListData.length == 0 ? (
+                        <div>
+                            <p>Loading&hellip;</p>
+                        </div>
+                    ) : (
+                            <div>
+                                {candidateListData.DIF2021.map((post) =>
+                                    <TPECandidateListRow
+                                        key={`${post.id}`}
+                                        airtableData={post}      // Elements for the Month report list    
+                                    />
+                                )}
+                            </div>
+                        )
+                }
+                </section>     
             </main>
         )
     }

@@ -46,7 +46,7 @@ class VoteResults extends React.Component {
                     }
                 </section>
                 <section className="tpPageTopSection" value={electionId == "DIF2019" ? "Active" : "Inactive"}>
-                    <h1 className="tpHeader">2019 Investment Foundation Supervisor Elections Results</h1>
+                    <h1 className="tpHeader">2019 DIF Supervisor Elections Results</h1>
                     {
                         (vote_results.length == 0) ? (
                             <section>
@@ -54,7 +54,7 @@ class VoteResults extends React.Component {
                             </section>
                         ) : (
                                 (vote_results.DIF2019.length == 0) ? (
-                                    <section><div className="tpText">The Dash Investment Foundation Supervisor election results will be published here shortly.</div></section>
+                                    <section><div className="tpText">Something went wrong retrieving the voting results.</div></section>
                                 ) : (
                                         <section>
                                             <div className="electionsResultsWrapper">
@@ -82,7 +82,7 @@ class VoteResults extends React.Component {
                             </section>
                         ) : (
                                 (vote_results.TPE2020.length == 0) ? (
-                                    <section><div className="tpText">The Dash Investment Foundation Supervisor election results will be published here shortly.</div></section>
+                                    <section><div className="tpText">Something went wrong retrieving the voting results.</div></section>
                                 ) : (
                                         <section>
                                             <div className="electionsResultsWrapper">
@@ -103,7 +103,7 @@ class VoteResults extends React.Component {
                     
                 </section>
                 <section className="tpPageTopSection" value={electionId == "DIF2020" ? "Active" : "Inactive"}>
-                    <h1 className="tpHeader">2020 Investment Foundation Supervisor Elections Results</h1>
+                    <h1 className="tpHeader">2020 DIF Supervisor Elections Results</h1>
                     {
                         (vote_results.length == 0) ? (
                             <section>
@@ -111,7 +111,7 @@ class VoteResults extends React.Component {
                             </section>
                         ) : (
                                 (vote_results.DIF2020.length == 0) ? (
-                                    <section><div className="tpText">The Dash Investment Foundation Supervisor election results will be published here shortly.</div></section>
+                                    <section><div className="tpText">Something went wrong retrieving the voting results.</div></section>
                                 ) : (
                                         <section>
                                             <div className="electionsResultsWrapper">
@@ -158,6 +158,34 @@ class VoteResults extends React.Component {
                             )
                     }
                     
+                </section>
+                <section className="tpPageTopSection" value={electionId == "DIF2021" ? "Active" : "Inactive"}>
+                    <h1 className="tpHeader">2021 DIF Supervisor Elections Results</h1>
+                    {
+                        (vote_results.length == 0) ? (
+                            <section>
+                                <p>Loading&hellip;</p>
+                            </section>
+                        ) : (
+                                (vote_results.DIF2021.length == 0) ? (
+                                    <section><div className="tpText">The DIF Supervisor election results will be published here after the election has ended.</div></section>
+                                ) : (
+                                        <section>
+                                            <div className="electionsResultsWrapper">
+                                                <div className="electionsIndexItemFirst"><p className="tpColumnTitle">Candidate</p></div>
+                                                <div className="electionsIndexItem"><p className="tpColumnTitle">Results</p></div>
+                                            </div>
+                                            {vote_results.DIF2021.map((post) =>
+                                                <ResultsListRow
+                                                    key={`${post.id}`}
+                                                    airtableData={post}      // Elements for the Month report list    
+                                                />
+                                            )}
+                                        </section>
+                                    )
+
+                            )
+                    }
                 </section>
             </main>
         )
