@@ -205,10 +205,11 @@ class TrustElections extends React.Component {
                     {
                         this.state.showMenu ? (
                             <div className="electionsDropdownMenu" id="dropdownMenu">
+                                <button id="dropdownMenu" value="DIF2021" className="electionsDropdownItem" onClick={this.handleSelectElection}>2021 DIF Supervisors</button>
                                 <button id="dropdownMenu" value="TPE2021" className="electionsDropdownItem" onClick={this.handleSelectElection}>2021 Trust Protectors</button>
-                                <button id="dropdownMenu" value="DIF2020" className="electionsDropdownItem" onClick={this.handleSelectElection}>2020 Foundation Supervisors</button>
+                                <button id="dropdownMenu" value="DIF2020" className="electionsDropdownItem" onClick={this.handleSelectElection}>2020 DIF Supervisors</button>
                                 <button id="dropdownMenu" value="TPE2020" className="electionsDropdownItem" onClick={this.handleSelectElection}>2020 Trust Protectors</button>
-                                <button id="dropdownMenu" value="DIF2019" className="electionsDropdownItem" onClick={this.handleSelectElection}>2019 Foundation Supervisors</button>
+                                <button id="dropdownMenu" value="DIF2019" className="electionsDropdownItem" onClick={this.handleSelectElection}>2019 DIF Supervisors</button>
                                 <button id="dropdownMenu" value="TPE2019" className="electionsDropdownItem" onClick={this.handleSelectElection}>2019 Trust Protectors</button>
                             </div>
                         ) : (
