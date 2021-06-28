@@ -179,7 +179,7 @@ class TrustElections extends React.Component {
             electionName = "2020 DIF Supervisors"
         } else if (electionId == "TPE2021") {
             electionName = "2021 Trust Protectors"
-        } else if (electionId == "TPE2021") {
+        } else if (electionId == "DIF2021") {
             electionName = "2021 DIF Supervisors"
         } else { 
             electionName = "Select an election"
