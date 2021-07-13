@@ -137,7 +137,7 @@ class CandidateLists extends React.Component {
                 </section>       
                 <section className="tpPageTopSection" value={electionId == "TPE2021" ? "Active" : "Inactive"}>
                 <h1 className="tpHeader">2021 Dash Trust Protector Candidates</h1>
-                <p>Voting for the Trust Protectors Elections 2020 has ended. The results are available on the <a className="votingLink" id="votingLink" href='/elections?tab=results&election=TPE2021'>results tab</a>.</p>
+                <p>Voting for the Trust Protectors Elections 2021 has ended. The results are available on the <a className="votingLink" id="votingLink" href='/elections?tab=results&election=TPE2021'>results tab</a>.</p>
                 <div className="electionsIndexWrapper">
                     <div className="electionsIndexItemFirst"><p className="tpColumnTitle">Candidate</p></div>
                     <div className="electionsIndexItem"><p className="tpColumnTitle">Contact</p></div>
@@ -163,7 +163,7 @@ class CandidateLists extends React.Component {
                 </section>   
                 <section className="tpPageTopSection" value={electionId == "DIF2021" ? "Active" : "Inactive"}>
                     <h1 className="tpHeader">2021 DIF Supervisor Candidates</h1>
-                    <p className="tpText">Voting for the DIF Supervisors 2021 elections is now open at <a href="https://dif2021.dashwatch.org" target="_blank">dif2021.dashwatch.org</a>.</p>
+                    <p>Voting for the DIF Supervisor Elections 2021 has ended. The results are available on the <a className="votingLink" id="votingLink" href='/elections?tab=results&election=DIF2021'>results tab</a>.</p>
                     <div className="electionsIndexWrapper">
                     <div className="electionsIndexItem" id="nameColumn"><p className="tpColumnTitle">Candidate</p></div>
                     <div className="electionsIndexItem"><p className="tpColumnTitle">Contact</p></div>
