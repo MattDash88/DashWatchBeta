@@ -142,6 +142,7 @@ class VoteResults extends React.Component {
                                     <section><div className="tpText">The Dash Investment Foundation Supervisor election results will be published here after the election has ended.</div></section>
                                 ) : (
                                         <section>
+                                            <p>Votedata is available <a className="votingLink" id="votingLink" href='https://files.dashwatch.org/poll_results/2021-04-10_tpe_elections_2021_votedata.json'>here</a>.</p>
                                             <div className="electionsResultsWrapper">
                                                 <div className="electionsIndexItemFirst"><p className="tpColumnTitle">Candidate</p></div>
                                                 <div className="electionsIndexItem"><p className="tpColumnTitle">Results</p></div>
@@ -171,6 +172,7 @@ class VoteResults extends React.Component {
                                     <section><div className="tpText">The DIF Supervisor election results will be published here after the election has ended.</div></section>
                                 ) : (
                                         <section>
+                                            <p>Votedata is available <a className="votingLink" id="votingLink" href='https://files.dashwatch.org/poll_results/2021-07-10_dif_elections_2021_votedata.json'>here</a>.</p>
                                             <div className="electionsResultsWrapper">
                                                 <div className="electionsIndexItemFirst"><p className="tpColumnTitle">Candidate</p></div>
                                                 <div className="electionsIndexItem"><p className="tpColumnTitle">Results</p></div>
