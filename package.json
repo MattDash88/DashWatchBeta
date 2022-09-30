@@ -29,7 +29,7 @@
     "react-chartjs-2": "^2.9.0",
     "react-dom": "^16.13.1",
     "react-ga": "^2.7.0",
-    "recharts": "^1.8.5",
+    "recharts": "^2.1.14",
     "redis": "^2.8.0",
     "semantic-ui-react": "^0.87.3",
     "shortid": "^2.2.15",
